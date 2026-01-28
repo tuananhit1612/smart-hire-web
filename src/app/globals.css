@@ -1,15 +1,24 @@
 @import "tailwindcss";
 
+@plugin "tailwindcss-animate";
+
+@custom-variant dark (&:is(.dark *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
 }
 
-@theme inline {
+@theme {
+  --font-sans: var(--font-plus-jakarta);
+  --font-orbitron: var(--font-orbitron);
+  --radius: 1rem;
+  /* More rounded for Ultra feel */
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  /* ... keep existing overrides or add new ones ... */
 }
 
 @media (prefers-color-scheme: dark) {
