@@ -24,13 +24,15 @@
 
   /* SURFACES */
   --background: #F8FAFC;
+  /* Slate 50 */
   --foreground: #0F172A;
+  /* Slate 900 */
   --card: #FFFFFF;
   --card-foreground: #0F172A;
-  
+
   /* GLASS EFFECT */
-  --glass: rgba(255, 255, 255, 0.6);
-  --glass-border: rgba(255, 255, 255, 0.4);
+  --glass: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.6);
 
   /* MUTED */
   --muted: #F1F5F9;
@@ -39,13 +41,13 @@
 
   /* EFFECTS */
   --radius: 1.5rem;
-  --glow-primary: rgba(79, 70, 229, 0.5);
+  --glow-primary: rgba(79, 70, 229, 0.25);
 }
 
 @theme {
-  --font-sans: var(--font-plus-jakarta);
+  --font-sans: var(--font-be-vietnam);
   --font-orbitron: var(--font-orbitron);
-  --radius: 1rem;
+  --radius: 1.5rem;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -62,18 +64,21 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0B0F19;
-    --foreground: #F1F5F9;
+    --background: #0F172A;
+    /* Slate 900 for deeper contrast */
+    --foreground: #F8FAFC;
     --primary: #818CF8;
     --secondary: #A78BFA;
-    --card: rgba(15, 23, 42, 0.8);
-    --card-foreground: #F1F5F9;
-    --muted: #1E293B;
+    --card: #1E293B;
+    /* Slate 800 - Distinct card surface */
+    --card-foreground: #F8FAFC;
+    --muted: #334155;
     --muted-foreground: #94A3B8;
-    --border: rgba(255, 255, 255, 0.1);
-    --glass: rgba(0, 0, 0, 0.4);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --glow-primary: rgba(129, 140, 248, 0.4);
+    --border: rgba(255, 255, 255, 0.08);
+    /* More subtle border */
+    --glass: rgba(15, 23, 42, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glow-primary: rgba(129, 140, 248, 0.3);
   }
 }
 
@@ -105,7 +110,7 @@ body {
   border-radius: var(--radius);
 }
 
-.holographic-border > * {
+.holographic-border>* {
   background: var(--card);
   border-radius: calc(var(--radius) - 1px);
 }
@@ -151,15 +156,37 @@ body {
 }
 
 @media (min-width: 768px) {
-  .aurora-blob-1 { width: 500px; height: 500px; }
-  .aurora-blob-2 { width: 400px; height: 400px; }
-  .aurora-blob-3 { width: 350px; height: 350px; }
+  .aurora-blob-1 {
+    width: 500px;
+    height: 500px;
+  }
+
+  .aurora-blob-2 {
+    width: 400px;
+    height: 400px;
+  }
+
+  .aurora-blob-3 {
+    width: 350px;
+    height: 350px;
+  }
 }
 
 @media (min-width: 1024px) {
-  .aurora-blob-1 { width: 600px; height: 600px; }
-  .aurora-blob-2 { width: 500px; height: 500px; }
-  .aurora-blob-3 { width: 400px; height: 400px; }
+  .aurora-blob-1 {
+    width: 600px;
+    height: 600px;
+  }
+
+  .aurora-blob-2 {
+    width: 500px;
+    height: 500px;
+  }
+
+  .aurora-blob-3 {
+    width: 400px;
+    height: 400px;
+  }
 }
 
 /* Grain Texture Overlay */
@@ -175,8 +202,13 @@ body {
 
 /* Skeleton Shimmer */
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 .skeleton {
