@@ -27,7 +27,7 @@
   --foreground: #0F172A;
   --card: #FFFFFF;
   --card-foreground: #0F172A;
-  
+
   /* GLASS EFFECT */
   --glass: rgba(255, 255, 255, 0.6);
   --glass-border: rgba(255, 255, 255, 0.4);
@@ -105,7 +105,7 @@ body {
   border-radius: var(--radius);
 }
 
-.holographic-border > * {
+.holographic-border>* {
   background: var(--card);
   border-radius: calc(var(--radius) - 1px);
 }
@@ -151,15 +151,37 @@ body {
 }
 
 @media (min-width: 768px) {
-  .aurora-blob-1 { width: 500px; height: 500px; }
-  .aurora-blob-2 { width: 400px; height: 400px; }
-  .aurora-blob-3 { width: 350px; height: 350px; }
+  .aurora-blob-1 {
+    width: 500px;
+    height: 500px;
+  }
+
+  .aurora-blob-2 {
+    width: 400px;
+    height: 400px;
+  }
+
+  .aurora-blob-3 {
+    width: 350px;
+    height: 350px;
+  }
 }
 
 @media (min-width: 1024px) {
-  .aurora-blob-1 { width: 600px; height: 600px; }
-  .aurora-blob-2 { width: 500px; height: 500px; }
-  .aurora-blob-3 { width: 400px; height: 400px; }
+  .aurora-blob-1 {
+    width: 600px;
+    height: 600px;
+  }
+
+  .aurora-blob-2 {
+    width: 500px;
+    height: 500px;
+  }
+
+  .aurora-blob-3 {
+    width: 400px;
+    height: 400px;
+  }
 }
 
 /* Grain Texture Overlay */
@@ -175,8 +197,13 @@ body {
 
 /* Skeleton Shimmer */
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 .skeleton {
@@ -184,4 +211,8 @@ body {
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: 0.5rem;
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite linear;
 }
