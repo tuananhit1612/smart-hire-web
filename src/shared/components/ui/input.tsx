@@ -8,16 +8,15 @@ export interface InputProps
     error?: string;
     label?: string;
     leftIcon?: React.ReactNode;
-}
-
-const Input = React.forwardRef<HTMLInputElement, InputProps>(
-    ({ className, type, error, label, leftIcon, ...props }, ref) => {
     startIcon?: React.ReactNode;
     endIcon?: React.ReactNode;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-    ({ className, type, error, label, startIcon, endIcon, ...props }, ref) => {
+    ({ className, type, error, label, leftIcon, startIcon, endIcon, ...props }, ref) => {
+        // Use leftIcon as fallback for startIcon
+        const start = startIcon || leftIcon;
+
         return (
             <div className="w-full space-y-2">
                 {label && (
@@ -26,22 +25,18 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
                     </label>
                 )}
                 <div className="relative">
-                    {leftIcon && (
-                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none z-10">
-                            {leftIcon}
-                    {startIcon && (
-                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">
-                            {startIcon}
+                    {start && (
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 pointer-events-none z-10">
+                            {start}
                         </div>
                     )}
                     <input
                         type={type}
                         className={cn(
                             "flex h-11 w-full rounded-xl border border-gray-200 bg-transparent px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-900/50 dark:ring-offset-zinc-950 dark:placeholder:text-gray-400 dark:text-white transition-all duration-200",
-                            startIcon && "pl-10",
+                            start && "pl-10",
                             endIcon && "pr-10",
                             error && "border-red-500 focus-visible:ring-red-500",
-                            leftIcon && "pl-11",
                             className
                         )}
                         ref={ref}
