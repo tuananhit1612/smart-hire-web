@@ -9,6 +9,7 @@ import { ProfileEducation } from "./profile-education";
 import { ProfileProjects } from "./profile-projects";
 import { ProfileCertificates } from "./profile-certificates";
 import { ProfileLanguages } from "./profile-languages";
+import { ProfileCompletionWidget } from "./profile-completion-widget";
 import { useProfileStore } from "../stores/profile-store";
 
 export function ProfileView() {
@@ -25,6 +26,9 @@ export function ProfileView() {
       <div className="relative z-10 container mx-auto px-4 pt-24 pb-6 sm:pt-28 sm:pb-10 md:pt-32 md:pb-16 max-w-5xl">
         <div className="space-y-6 sm:space-y-8">
           <ProfileHeader profile={profile} />
+
+          {/* Completion Widget */}
+          <ProfileCompletionWidget profile={profile} />
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Main Column */}
