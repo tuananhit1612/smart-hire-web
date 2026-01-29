@@ -33,6 +33,9 @@ src/
 
 #### `src/app/` (Application Layer)
 - Chỉ chứa logic routing, layout, loading, error.
+- Sử dụng **Route Groups** để phân chia logic:
+    - `(auth)/`: Chứa các trang Authentication (`login`, `register`, `forgot-password`, `reset-password`).
+    - `(main)/`: Chứa các trang chính của ứng dụng (`page.tsx`, `cv-builder`, `dashboard`...).
 - **KHÔNG** viết business logic phức tạp tại đây.
 
 #### `src/features/` (Feature Layer)
