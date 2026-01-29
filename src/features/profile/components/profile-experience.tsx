@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { Briefcase } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/shared/components/ui/card";
 import { Experience } from "../types/profile";
 import Image from "next/image";
 
@@ -17,56 +16,66 @@ export function ProfileExperience({ experiences }: ProfileExperienceProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
     >
-      <Card className="h-full border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm shadow-sm">
-        <CardHeader className="pb-3">
-          <div className="flex items-center gap-2">
-            <Briefcase className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-            <CardTitle className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">Experience</CardTitle>
+      <div className="glass-card p-4 sm:p-6 md:p-8">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="p-2 rounded-xl bg-primary/10">
+            <Briefcase className="h-5 w-5 text-primary" />
           </div>
-        </CardHeader>
-        <CardContent className="space-y-6">
+          <h2 className="text-xl font-semibold tracking-tight text-foreground">
+            Experience
+          </h2>
+        </div>
+        
+        <div className="space-y-6">
           {experiences.map((exp, index) => (
-            <div key={exp.id} className="relative pl-6 last:pb-0">
-               {/* Timeline Line */}
+            <motion.div 
+              key={exp.id} 
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.4, delay: 0.1 * index }}
+              className="relative pl-8"
+            >
+              {/* Timeline Line with Gradient */}
               {index !== experiences.length - 1 && (
-                <div className="absolute left-[11px] top-8 bottom-0 w-px bg-zinc-200 dark:bg-zinc-800" />
+                <div className="absolute left-[11px] top-10 bottom-0 w-px bg-gradient-to-b from-primary/40 to-border/30" />
               )}
               
               <div className="flex gap-4">
-                 {/* Timeline Dot or Logo */}
-                 <div className="relative shrink-0 z-10">
-                    {exp.logoUrl ? (
-                        <div className="h-6 w-6 rounded flex items-center justify-center bg-white border border-zinc-200 overflow-hidden">
-                             <Image src={exp.logoUrl} alt={exp.company} width={24} height={24} className="object-contain" />
-                        </div>
-                    ) : (
-                        <div className="h-6 w-6 rounded-full bg-blue-100 dark:bg-blue-900/30 border-2 border-white dark:border-zinc-900 ring-1 ring-blue-600/20 flex items-center justify-center">
-                            <div className="h-2 w-2 rounded-full bg-blue-600 dark:bg-blue-400" />
-                        </div>
-                    )}
-                 </div>
-
-                 <div className="flex-1 space-y-1 -mt-1">
-                    <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
-                        <h4 className="font-semibold text-zinc-900 dark:text-zinc-50">{exp.role}</h4>
-                        <span className="text-sm text-zinc-500 font-medium tabular-nums">
-                            {exp.startDate} - {exp.endDate || "Present"}
-                        </span>
+                {/* Glowing Timeline Dot */}
+                <div className="relative shrink-0 z-10">
+                  {exp.logoUrl ? (
+                    <div className="h-6 w-6 rounded-lg flex items-center justify-center bg-card border border-border overflow-hidden shadow-sm">
+                      <Image src={exp.logoUrl} alt={exp.company} width={24} height={24} className="object-contain" />
                     </div>
-                    <div className="text-sm font-medium text-blue-600 dark:text-blue-400">{exp.company}</div>
-                    <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed pt-1">
-                        {exp.description}
-                    </p>
-                 </div>
+                  ) : (
+                    <div className="h-6 w-6 rounded-full bg-primary/20 border-2 border-card ring-2 ring-primary/30 flex items-center justify-center shadow-[0_0_8px_rgba(79,70,229,0.3)]">
+                      <div className="h-2 w-2 rounded-full bg-primary" />
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex-1 space-y-1.5 -mt-1">
+                  <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
+                    <h4 className="font-semibold text-foreground">{exp.role}</h4>
+                    <span className="text-xs text-muted-foreground font-medium tabular-nums uppercase tracking-wider">
+                      {exp.startDate} - {exp.endDate || "Present"}
+                    </span>
+                  </div>
+                  <div className="text-sm font-medium text-primary">{exp.company}</div>
+                  <p className="text-sm text-muted-foreground leading-relaxed pt-1">
+                    {exp.description}
+                  </p>
+                </div>
               </div>
-            </div>
+            </motion.div>
           ))}
 
           {experiences.length === 0 && (
-              <p className="text-zinc-500 text-sm italic">No experience listed yet.</p>
+            <p className="text-muted-foreground text-sm italic">No experience listed yet.</p>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </motion.div>
   );
 }
+

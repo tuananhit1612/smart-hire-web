@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/shared/components/ui/card";
 import { Skill } from "../types/profile";
 import { cn } from "@/lib/utils";
 
@@ -17,36 +16,42 @@ export function ProfileSkills({ skills }: ProfileSkillsProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.4 }}
     >
-      <Card className="h-full border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm shadow-sm">
-        <CardHeader className="pb-3">
-            <div className="flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                <CardTitle className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">Skills</CardTitle>
-            </div>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-2">
-            {skills.map((skill) => (
-              <div
-                key={skill.id}
-                className={cn(
-                    "px-3 py-1 rounded-full text-sm font-medium border transition-colors cursor-default",
-                    skill.level === "Expert" ? "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800" :
-                    skill.level === "Advanced" ? "bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-900/20 dark:text-indigo-300 dark:border-indigo-800" :
-                    "bg-zinc-50 text-zinc-700 border-zinc-200 dark:bg-zinc-800/50 dark:text-zinc-300 dark:border-zinc-700"
-                )}
-                title={skill.level}
-              >
-                {skill.name}
-              </div>
-            ))}
-            
-             {skills.length === 0 && (
-              <p className="text-zinc-500 text-sm italic">No skills listed yet.</p>
-          )}
+      <div className="glass-card p-4 sm:p-6 md:p-8">
+        <div className="flex items-center gap-3 mb-5">
+          <div className="p-2 rounded-xl bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-pink-500/20">
+            <Sparkles className="h-5 w-5 text-primary" />
           </div>
-        </CardContent>
-      </Card>
+          <h2 className="text-xl font-semibold tracking-tight text-foreground">
+            Skills
+          </h2>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {skills.map((skill, index) => (
+            <motion.div
+              key={skill.id}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3, delay: 0.05 * index }}
+              className={cn(
+                "px-4 py-1.5 rounded-full text-sm font-medium border transition-all duration-300 cursor-default",
+                skill.level === "Expert" 
+                  ? "bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 text-primary border-primary/30 hover:shadow-[0_0_12px_rgba(79,70,229,0.3)]" 
+                  : skill.level === "Advanced" 
+                    ? "bg-secondary/10 text-secondary border-secondary/30 hover:shadow-[0_0_10px_rgba(99,102,241,0.2)]" 
+                    : "bg-muted text-muted-foreground border-border/50"
+              )}
+              title={skill.level}
+            >
+              {skill.name}
+            </motion.div>
+          ))}
+          
+          {skills.length === 0 && (
+            <p className="text-muted-foreground text-sm italic">No skills listed yet.</p>
+          )}
+        </div>
+      </div>
     </motion.div>
   );
 }
+

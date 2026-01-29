@@ -11,28 +11,34 @@ export function ProfileView() {
     const profile = MOCK_PROFILE;
 
     return (
-        <div className="min-h-screen bg-zinc-50/50 dark:bg-zinc-950/50 py-10">
-            <div className="container mx-auto px-4 max-w-5xl space-y-6">
-                {/* Header Section */}
-                <ProfileHeader profile={profile} />
+        <div className="relative min-h-screen bg-background overflow-hidden grain-overlay">
+            {/* Aurora Background Blobs */}
+            <div className="aurora-blob aurora-blob-1" />
+            <div className="aurora-blob aurora-blob-2" />
+            <div className="aurora-blob aurora-blob-3" />
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {/* Left Column (Main Info) */}
-                    <div className="md:col-span-2 space-y-6">
-                        <ProfileAbout about={profile.about} />
-                        <ProfileExperience experiences={profile.experiences} />
-                        <ProfileEducation educations={profile.educations} />
-                    </div>
+            {/* Main Content */}
+            <div className="relative z-10 py-6 sm:py-10 md:py-16">
+                <div className="container mx-auto px-4 sm:px-6 max-w-5xl space-y-6 sm:space-y-8">
+                    {/* Header Section */}
+                    <ProfileHeader profile={profile} />
 
-                    {/* Right Column (Sidebar) */}
-                    <div className="space-y-6">
-                        <ProfileSkills skills={profile.skills} />
-                        
-                        {/* Potential future widgets: Resume, Portfolio, Languages, etc. */}
-                        {/* <ProfileResume /> */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+                        {/* Left Column (Main Info) */}
+                        <div className="lg:col-span-2 space-y-6 sm:space-y-8">
+                            <ProfileAbout about={profile.about} />
+                            <ProfileExperience experiences={profile.experiences} />
+                            <ProfileEducation educations={profile.educations} />
+                        </div>
+
+                        {/* Right Column (Sidebar) */}
+                        <div className="space-y-6 sm:space-y-8">
+                            <ProfileSkills skills={profile.skills} />
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     )
 }
+
