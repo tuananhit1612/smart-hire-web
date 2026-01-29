@@ -217,3 +217,7 @@ body {
   animation: shimmer 1.5s infinite;
   border-radius: 0.5rem;
 }
+
+.animate-shimmer {
+  animation: shimmer 2s infinite linear;
+}
