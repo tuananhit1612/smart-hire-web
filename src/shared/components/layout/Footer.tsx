@@ -1,45 +1,54 @@
+"use client";
+
 import Link from "next/link";
+import { Layers, Globe2 } from "lucide-react";
 
 export function Footer() {
     return (
-        <footer className="w-full border-t border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-zinc-900/50">
-            <div className="container mx-auto px-4 py-12 md:px-6">
-                <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
-                    <div className="space-y-4">
-                        <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                            SmartHire
-                        </span>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                            Kết nối nhân tài với những cơ hội tốt nhất. Nền tảng tuyển dụng thông minh hàng đầu Việt Nam.
+        <footer className="w-full border-t border-sky-100 dark:border-sky-900 bg-white/60 dark:bg-slate-900/60 backdrop-blur-sm pt-20 pb-12 relative z-10">
+            <div className="container mx-auto px-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-16">
+                    <div className="col-span-2 md:col-span-1 pr-8">
+                        <div className="flex items-center gap-2.5 mb-6">
+                            <div className="bg-gradient-to-tr from-blue-600 to-sky-500 h-8 w-8 rounded-full flex items-center justify-center shadow-md">
+                                <Layers className="h-4 w-4 text-white" />
+                            </div>
+                            <span className="text-xl font-bold text-slate-900 dark:text-white font-sans">SmartHire</span>
+                        </div>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
+                            Kết nối nhân tài với cơ hội thông qua công nghệ AI thông minh, nhân văn và minh bạch.
                         </p>
                     </div>
                     <div>
-                        <h3 className="mb-4 text-sm font-semibold text-gray-900 dark:text-white">Ứng viên</h3>
-                        <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                            <li><Link href="/jobs" className="hover:text-blue-600 dark:hover:text-blue-400">Tìm việc làm</Link></li>
-                            <li><Link href="/companies" className="hover:text-blue-600 dark:hover:text-blue-400">Danh sách công ty</Link></li>
-                            <li><Link href="/cv-builder" className="hover:text-blue-600 dark:hover:text-blue-400">Tạo CV</Link></li>
+                        <h4 className="font-bold text-slate-900 dark:text-white mb-6">Sản Phẩm</h4>
+                        <ul className="space-y-3 text-sm text-slate-500 dark:text-slate-400">
+                            <li><Link href="#" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Tính Năng</Link></li>
+                            <li><Link href="#" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Bảng Giá</Link></li>
+                            <li><Link href="#" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Doanh Nghiệp</Link></li>
                         </ul>
                     </div>
                     <div>
-                        <h3 className="mb-4 text-sm font-semibold text-gray-900 dark:text-white">Nhà tuyển dụng</h3>
-                        <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                            <li><Link href="/post-job" className="hover:text-blue-600 dark:hover:text-blue-400">Đăng tin tuyển dụng</Link></li>
-                            <li><Link href="/pricing" className="hover:text-blue-600 dark:hover:text-blue-400">Báo giá dịch vụ</Link></li>
-                            <li><Link href="/search-candidates" className="hover:text-blue-600 dark:hover:text-blue-400">Tìm hồ sơ</Link></li>
+                        <h4 className="font-bold text-slate-900 dark:text-white mb-6">Công Ty</h4>
+                        <ul className="space-y-3 text-sm text-slate-500 dark:text-slate-400">
+                            <li><Link href="#" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Về Chúng Tôi</Link></li>
+                            <li><Link href="#" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Tuyển Dụng</Link></li>
+                            <li><Link href="#" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Blog</Link></li>
                         </ul>
                     </div>
                     <div>
-                        <h3 className="mb-4 text-sm font-semibold text-gray-900 dark:text-white">Hỗ trợ</h3>
-                        <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                            <li><Link href="/contact" className="hover:text-blue-600 dark:hover:text-blue-400">Liên hệ</Link></li>
-                            <li><Link href="/terms" className="hover:text-blue-600 dark:hover:text-blue-400">Điều khoản</Link></li>
-                            <li><Link href="/privacy" className="hover:text-blue-600 dark:hover:text-blue-400">Chính sách bảo mật</Link></li>
+                        <h4 className="font-bold text-slate-900 dark:text-white mb-6">Pháp Lý</h4>
+                        <ul className="space-y-3 text-sm text-slate-500 dark:text-slate-400">
+                            <li><Link href="#" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Bảo Mật</Link></li>
+                            <li><Link href="#" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Điều Khoản</Link></li>
+                            <li><Link href="#" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">An Toàn</Link></li>
                         </ul>
                     </div>
                 </div>
-                <div className="mt-12 border-t border-gray-200 pt-8 text-center text-sm text-gray-500 dark:border-gray-800 dark:text-gray-400">
-                    © {new Date().getFullYear()} SmartHire Inc. All rights reserved.
+                <div className="pt-8 border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6">
+                    <p className="text-sm text-slate-500 font-medium">&copy; 2030 SmartHire Inc. All rights reserved.</p>
+                    <div className="flex items-center gap-6">
+                        <Globe2 className="h-5 w-5 text-slate-400 hover:text-blue-600 transition-colors cursor-pointer" />
+                    </div>
                 </div>
             </div>
         </footer>
