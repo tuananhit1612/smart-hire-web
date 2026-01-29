@@ -1,70 +1,182 @@
+"use client";
+
 import Link from "next/link";
+import { motion, useScroll, useSpring } from "framer-motion";
+import { ArrowRight, Search, Zap, UserCheck, Briefcase, Layers, BarChart3, Globe2 } from "lucide-react";
+import { useRef, useState } from "react";
+
+// --- Components for the Modern Professional Blue Design ---
+
+const ProfessionalBackground = () => {
+  return (
+    <div className="absolute inset-0 -z-10 overflow-hidden bg-background">
+      <div className="absolute top-0 inset-x-0 h-[600px] bg-gradient-to-b from-blue-50/50 to-transparent dark:from-sky-950/20" />
+      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.02] mix-blend-multiply dark:mix-blend-overlay" />
+    </div>
+  );
+};
+
+const HoverButton = ({ children, className, variant = "primary", ...props }: any) => {
+  return (
+    <button
+      className={`relative inline-flex items-center justify-center h-12 px-6 rounded-lg font-semibold tracking-tight transition-all duration-200 active:scale-95 ${variant === "primary"
+        ? "bg-blue-600 text-white shadow-[0_4px_14px_0_rgba(37,99,235,0.39)] hover:bg-blue-700 hover:shadow-[0_6px_20px_rgba(37,99,235,0.23)]"
+        : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:text-slate-900 dark:bg-transparent dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-800"
+        } ${className}`}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+};
+
+interface FeatureCardProps {
+  icon: any;
+  title: string;
+  description: string;
+  delay: number;
+}
+
+const FeatureCard = ({ icon: Icon, title, description, delay }: FeatureCardProps) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay }}
+      className="group p-8 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-xl hover:shadow-blue-900/5 hover:border-blue-200 transition-all dark:bg-slate-900 dark:border-slate-800 dark:hover:border-blue-800"
+    >
+      <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+        <Icon className="h-6 w-6" />
+      </div>
+      <h3 className="mb-3 text-lg font-bold text-slate-900 dark:text-white">{title}</h3>
+      <p className="text-slate-500 leading-relaxed text-base dark:text-slate-400">
+        {description}
+      </p>
+    </motion.div>
+  );
+};
 
 export default function Home() {
-  return (
-    <div className="flex flex-col items-center">
-      {/* Hero Section */}
-      <section className="w-full bg-gradient-to-b from-white to-gray-50 py-20 dark:from-black dark:to-zinc-900">
-        <div className="container mx-auto px-4 text-center md:px-6">
-          <h1 className="mb-6 text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-6xl">
-            Tìm công việc mơ ước <br className="hidden sm:inline" />
-            <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              tại SmartHire
-            </span>
-          </h1>
-          <p className="mx-auto mb-8 max-w-2xl text-lg text-gray-600 dark:text-gray-300">
-            Nền tảng tuyển dụng thông minh giúp bạn kết nối với hàng nghìn doanh nghiệp hàng đầu.
-            Ứng tuyển nhanh chóng, dễ dàng và hiệu quả.
-          </p>
-          <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Link
-              href="/jobs"
-              className="inline-flex h-12 w-full items-center justify-center rounded-lg bg-blue-600 px-8 text-base font-medium text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-black sm:w-auto"
-            >
-              Tìm việc ngay
-            </Link>
-            <Link
-              href="/post-job"
-              className="inline-flex h-12 w-full items-center justify-center rounded-lg border border-gray-300 bg-white px-8 text-base font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-gray-700 dark:bg-zinc-900 dark:text-gray-300 dark:hover:bg-zinc-800 dark:focus:ring-offset-black sm:w-auto"
-            >
-              Đăng tin tuyển dụng
-            </Link>
-          </div>
-        </div>
-      </section>
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
 
-      {/* Grid Features */}
-      <section className="container mx-auto py-20 px-4 md:px-6">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-          <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm transition-shadow hover:shadow-md dark:border-gray-800 dark:bg-zinc-900">
-            <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-search"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
+  return (
+    <div className="relative min-h-screen font-inter overflow-x-hidden text-foreground selection:bg-sky-100 selection:text-sky-900">
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-0.5 bg-blue-600 origin-left z-50"
+        style={{ scaleX }}
+      />
+
+      <ProfessionalBackground />
+
+      {/* Modern Header */}
+      {/* Header handled by RootLayout */}
+
+      <main className="flex flex-col items-center w-full relative">
+        {/* Hero Section */}
+        <section className="relative w-full pt-40 pb-24 lg:pt-48 lg:pb-32 z-10">
+          <div className="container mx-auto px-4 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="max-w-4xl mx-auto"
+            >
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-sky-100 bg-white/50 backdrop-blur-sm text-sky-700 dark:border-sky-800 dark:bg-sky-900/30 dark:text-sky-300 text-sm font-medium mb-8 shadow-sm">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+                </span>
+                AI Matching 2.0 is Live
+              </div>
+
+              <h1 className="mb-6 text-5xl md:text-7xl font-bold tracking-tight text-foreground leading-[1.1] drop-shadow-sm">
+                Hiring made <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-green-500">
+                  Humanly Possible.
+                </span>
+              </h1>
+
+              <p className="mx-auto mb-10 max-w-2xl text-xl text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
+                The friendly AI platform that understands people, not just keywords.
+                Find your perfect match in minutes.
+              </p>
+
+              <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+                <Link href="/jobs">
+                  <HoverButton variant="primary" className="min-w-[180px] rounded-full bg-gradient-to-r from-sky-600 to-sky-500 hover:from-sky-500 hover:to-sky-400 border-0 shadow-lg shadow-sky-500/25">
+                    Start Hiring
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </HoverButton>
+                </Link>
+                <Link href="/post-job" className="group">
+                  <div className="flex items-center gap-2 px-6 py-3 rounded-full bg-white dark:bg-sky-900/30 border border-sky-100 dark:border-sky-800 text-sky-700 dark:text-sky-300 font-semibold hover:bg-sky-50 dark:hover:bg-sky-900/50 transition-all">
+                    <Zap className="h-4 w-4 text-green-500 group-hover:scale-110 transition-transform" />
+                    Find Talent
+                  </div>
+                </Link>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Stats Strip */}
+        <section className="w-full border-y border-border bg-white/60 dark:bg-sky-950/30 backdrop-blur-sm py-12 z-10">
+          <div className="container mx-auto px-4">
+            <div className="flex flex-wrap justify-between items-center gap-8 px-4 md:px-12 text-center md:text-left">
+              {[
+                { label: "Matches Made", value: "1M+", color: "text-green-500" },
+                { label: "Happy Companies", value: "500+", color: "text-sky-500" },
+                { label: "Talent Pool", value: "10k+", color: "text-sky-600" },
+                { label: "Time Saved", value: "40%", color: "text-green-600" },
+              ].map((stat, i) => (
+                <div key={i} className="flex flex-col">
+                  <span className={`text-4xl font-extrabold ${stat.color} mb-1`}>{stat.value}</span>
+                  <span className="text-sm font-semibold text-slate-500 uppercase tracking-wider">{stat.label}</span>
+                </div>
+              ))}
             </div>
-            <h3 className="mb-2 text-xl font-bold text-gray-900 dark:text-white">Tìm kiếm thông minh</h3>
-            <p className="text-gray-600 dark:text-gray-400">
-              Hệ thống gợi ý việc làm phù hợp dựa trên kỹ năng và kinh nghiệm của bạn.
+          </div>
+        </section>
+
+        {/* Features Grid */}
+        <section className="container mx-auto py-24 px-4 md:px-6">
+          <div className="text-center mb-16 max-w-2xl mx-auto">
+            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">Enterprise-grade capabilities</h2>
+            <p className="text-slate-500 dark:text-slate-400 text-lg">
+              Everything you need to build and manage your workforce with precision.
             </p>
           </div>
-          <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm transition-shadow hover:shadow-md dark:border-gray-800 dark:bg-zinc-900">
-            <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-file-user"><path d="M14 2v4a2 2 0 0 0 2 2h4" /><path d="M15 18a3 3 0 1 0-6 0" /><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z" /><circle cx="12" cy="13" r="2" /></svg>
-            </div>
-            <h3 className="mb-2 text-xl font-bold text-gray-900 dark:text-white">Hồ sơ chuyên nghiệp</h3>
-            <p className="text-gray-600 dark:text-gray-400">
-              Tạo CV ấn tượng với các mẫu thiết kế chuẩn ATS, giúp bạn nổi bật trước nhà tuyển dụng.
-            </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <FeatureCard
+              icon={Search}
+              title="Smart Search"
+              description="Advanced filtering and semantic search to find the exact skills you need in seconds."
+              delay={0.1}
+            />
+            <FeatureCard
+              icon={UserCheck}
+              title="Verified Profiles"
+              description="Automated background checks and skill assessments to ensure quality."
+              delay={0.2}
+            />
+            <FeatureCard
+              icon={BarChart3}
+              title="Analytics"
+              description="Real-time insights into your hiring pipeline and market trends."
+              delay={0.3}
+            />
           </div>
-          <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm transition-shadow hover:shadow-md dark:border-gray-800 dark:bg-zinc-900">
-            <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-building-2"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z" /><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" /><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2" /><path d="M10 6h4" /><path d="M10 10h4" /><path d="M10 14h4" /><path d="M10 18h4" /></svg>
-            </div>
-            <h3 className="mb-2 text-xl font-bold text-gray-900 dark:text-white">Công ty hàng đầu</h3>
-            <p className="text-gray-600 dark:text-gray-400">
-              Kết nối trực tiếp với các doanh nghiệp uy tín và môi trường làm việc chuyên nghiệp.
-            </p>
-          </div>
-        </div>
-      </section>
+        </section>
+      </main>
+
+      {/* Footer handled by RootLayout */}
     </div>
   );
 }

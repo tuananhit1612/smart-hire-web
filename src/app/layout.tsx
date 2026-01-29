@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Orbitron } from "next/font/google"; // Added Orbitron
+import { Be_Vietnam_Pro, Orbitron } from "next/font/google"; // Added Orbitron
 import "./globals.css";
-import { Header } from "@/shared/components/layout/Header";
-import { Footer } from "@/shared/components/layout/Footer";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { ToastProvider } from "@/shared/components/ui/toast";
 
-const plusJakarta = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  variable: "--font-plus-jakarta",
+import { ParticleBackground } from "@/shared/components/effects/ParticleBackground";
+
+const beVietnamPro = Be_Vietnam_Pro({
+  subsets: ["latin", "vietnamese"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-be-vietnam",
   display: "swap",
 });
 
@@ -31,8 +32,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${plusJakarta.variable} ${orbitron.variable} font-sans antialiased flex flex-col min-h-screen bg-slate-50 dark:bg-[#0B0F19]`}
+        className={`${beVietnamPro.variable} ${orbitron.variable} font-sans antialiased flex flex-col min-h-screen bg-slate-50 dark:bg-[#0B0F19]`}
       >
+        <ParticleBackground />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -40,11 +42,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <ToastProvider>
-            <Header />
-            <main className="flex-1">
-              {children}
-            </main>
-            <Footer />
+            {children}
           </ToastProvider>
         </ThemeProvider>
       </body>
