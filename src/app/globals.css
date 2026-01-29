@@ -9,39 +9,47 @@
    ============================================ */
 
 :root {
-  /* ULTRA PRIMARY: Deep Indigo */
-  --primary: #4F46E5;
+  color-scheme: light;
+  /* Force browser to use light mode user-agent styles */
+  /* PRIMARY: Sky Blue (Trust & Intelligence) */
+  --primary: #0369A1;
+  /* Sky 700 */
   --primary-foreground: #FFFFFF;
 
-  /* SECONDARY */
-  --secondary: #6366F1;
+  /* SECONDARY: Lighter Sky */
+  --secondary: #0EA5E9;
+  /* Sky 500 */
   --secondary-foreground: #FFFFFF;
 
-  /* HOLOGRAPHIC GRADIENT */
-  --holographic-start: #6366F1;
-  --holographic-mid: #A855F7;
-  --holographic-end: #EC4899;
+  /* CTA / ACCENT: Vibrant Green (Growth & Success) */
+  --cta: #22C55E;
+  /* Green 500 */
+  --cta-foreground: #FFFFFF;
 
   /* SURFACES */
-  --background: #F8FAFC;
-  /* Slate 50 */
-  --foreground: #0F172A;
-  /* Slate 900 */
+  --background: #F0F9FF;
+  /* Sky 50 - Soft & Airy */
+  --foreground: #0C4A6E;
+  /* Sky 900 - High Contrast Text */
   --card: #FFFFFF;
-  --card-foreground: #0F172A;
+  --card-foreground: #0C4A6E;
 
   /* GLASS EFFECT */
-  --glass: rgba(255, 255, 255, 0.8);
-  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.5);
 
   /* MUTED */
-  --muted: #F1F5F9;
+  --muted: #E0F2FE;
+  /* Sky 100 */
   --muted-foreground: #64748B;
-  --border: #E2E8F0;
+  /* Slate 500 */
+  --border: #BAE6FD;
+  /* Sky 200 */
 
   /* EFFECTS */
   --radius: 1.5rem;
-  --glow-primary: rgba(79, 70, 229, 0.25);
+  /* Rounder corners = Friendlier */
+  --glow-primary: rgba(14, 165, 233, 0.25);
 }
 
 @theme {
@@ -64,21 +72,27 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0F172A;
-    /* Slate 900 for deeper contrast */
-    --foreground: #F8FAFC;
-    --primary: #818CF8;
-    --secondary: #A78BFA;
-    --card: #1E293B;
-    /* Slate 800 - Distinct card surface */
-    --card-foreground: #F8FAFC;
-    --muted: #334155;
-    --muted-foreground: #94A3B8;
-    --border: rgba(255, 255, 255, 0.08);
-    /* More subtle border */
-    --glass: rgba(15, 23, 42, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --glow-primary: rgba(129, 140, 248, 0.3);
+    --background: #0C4A6E;
+    /* Sky 900 */
+    --foreground: #F0F9FF;
+    /* Sky 50 */
+    --primary: #38BDF8;
+    /* Sky 400 */
+    --secondary: #7DD3FC;
+    /* Sky 300 */
+    --cta: #4ADE80;
+    /* Green 400 */
+    --card: #075985;
+    /* Sky 800 */
+    --card-foreground: #F0F9FF;
+    --muted: #0369A1;
+    /* Sky 700 */
+    --muted-foreground: #BAE6FD;
+    /* Sky 200 */
+    --border: rgba(255, 255, 255, 0.1);
+    --glass: rgba(12, 74, 110, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glow-primary: rgba(56, 189, 248, 0.3);
   }
 }
 

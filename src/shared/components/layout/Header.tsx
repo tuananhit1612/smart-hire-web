@@ -22,36 +22,30 @@ export function Header() {
     });
 
     return (
-        <motion.header 
+        <header
             className="fixed top-4 inset-x-0 mx-auto w-full max-w-7xl z-40 px-4 md:px-6"
-            initial={{ y: 0, opacity: 1 }}
-            animate={{ 
-                y: isVisible ? 0 : -100, 
-                opacity: isVisible ? 1 : 0 
-            }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
         >
-            <div className="bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/20 dark:border-slate-800 shadow-sm rounded-full h-16 px-6 flex items-center justify-between">
+            <div className="bg-white/80 backdrop-blur-xl border border-white/40 shadow-sm rounded-full h-16 px-6 flex items-center justify-between">
                 <Link href="/" className="flex items-center gap-2.5 cursor-pointer group">
                     <div className="bg-gradient-to-tr from-blue-600 to-sky-500 h-9 w-9 rounded-full flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform duration-200">
                         <Layers className="h-5 w-5 text-white" />
                     </div>
-                    <span className="text-lg font-bold tracking-tight text-slate-800 dark:text-white font-sans">SmartHire</span>
+                    <span className="text-lg font-bold tracking-tight text-sky-900 font-sans">SmartHire</span>
                 </Link>
-                <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600 dark:text-slate-300">
+                <div className="hidden md:flex items-center gap-8 text-sm font-medium text-sky-700">
                     {[
                         { label: 'Sản Phẩm', href: '#' },
                         { label: 'Giải Pháp', href: '#' },
                         { label: 'Doanh Nghiệp', href: '#' },
                         { label: 'Bảng Giá', href: '#' }
                     ].map((item) => (
-                        <Link key={item.label} href={item.href} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                        <Link key={item.label} href={item.href} className="hover:text-sky-500 transition-colors">
                             {item.label}
                         </Link>
                     ))}
                 </div>
                 <div className="flex items-center gap-4">
-                    <Link href="/login" className="text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-blue-600 transition-colors">
+                    <Link href="/login" className="text-sm font-bold text-sky-700 hover:text-sky-500 transition-colors">
                         Đăng Nhập
                     </Link>
                     <Link href="/register">
@@ -61,6 +55,6 @@ export function Header() {
                     </Link>
                 </div>
             </div>
-        </motion.header>
+        </header>
     );
 }
