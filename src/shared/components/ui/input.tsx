@@ -16,6 +16,7 @@ export interface InputProps
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
     ({ className, type, error, label, startIcon, leftIcon, endIcon, ...props }, ref) => {
         const iconLeft = startIcon || leftIcon;
+
         return (
             <div className="w-full space-y-2">
                 {label && (
