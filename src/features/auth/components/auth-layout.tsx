@@ -1,48 +1,42 @@
 "use client";
 
 import { motion } from "framer-motion";
-// import { ThemeToggle } from "@/shared/components/ThemeToggle";
-// Wait, the header has a theme toggle? Project guide says "Header" has links.
-// I'll skip ThemeToggle import for now and just focus on layout structure.
+import { Layers } from "lucide-react";
+import Link from "next/link";
 
 export function AuthLayout({ children }: { children: React.ReactNode }) {
     return (
-        <div className="flex h-screen w-full overflow-hidden bg-white dark:bg-black">
-            {/* Left Side - Form */}
-            <div className="flex w-full flex-col justify-center px-4 sm:px-12 md:w-1/2 lg:w-[45%] xl:w-[40%] xl:px-24">
-                <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="w-full max-w-sm mx-auto"
-                >
-                    {children}
-                </motion.div>
+        <div className="flex min-h-screen w-full items-center justify-center overflow-hidden relative px-4">
+            {/* Subtle Background Pattern */}
+            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] mix-blend-multiply dark:mix-blend-overlay pointer-events-none" />
+
+            {/* Subtle Ambient Glow */}
+            <div className="absolute top-[-20%] left-[-10%] h-[800px] w-[800px] rounded-full bg-blue-500/5 blur-[120px] mix-blend-multiply dark:mix-blend-screen pointer-events-none" />
+            <div className="absolute bottom-[-20%] right-[-10%] h-[800px] w-[800px] rounded-full bg-indigo-500/5 blur-[120px] mix-blend-multiply dark:mix-blend-screen pointer-events-none" />
+
+            {/* Logo for Auth Pages */}
+            <div className="absolute top-8 left-8 z-20">
+                <Link href="/" className="flex items-center gap-2 cursor-pointer">
+                    <div className="bg-blue-600 h-8 w-8 rounded-lg flex items-center justify-center shadow-lg shadow-blue-600/20">
+                        <Layers className="h-5 w-5 text-white" />
+                    </div>
+                    <span className="text-lg font-bold tracking-tight text-slate-900 dark:text-white">SmartHire</span>
+                </Link>
             </div>
 
-            {/* Right Side - Artistic Background */}
-            <div className="relative hidden w-0 flex-1 bg-zinc-900 md:block">
-                <div className="absolute inset-0 h-full w-full bg-[url('https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center">
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent" />
-                </div>
+            {/* Central Form Container */}
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                className="relative z-10 w-full max-w-[480px] bg-card p-8 md:p-10 rounded-3xl shadow-2xl shadow-slate-200/50 dark:shadow-black/50 border border-border"
+            >
+                {children}
+            </motion.div>
 
-                <div className="absolute bottom-0 left-0 right-0 p-12 text-white">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.3, duration: 0.6 }}
-                    >
-                        <blockquote className="space-y-2">
-                            <p className="text-lg font-medium leading-relaxed">
-                                &ldquo;SmartHire đã giúp tôi tìm được công việc mơ ước chỉ trong vòng 3 ngày.
-                                Giao diện quá đẹp và dễ sử dụng!&rdquo;
-                            </p>
-                            <footer className="text-sm font-semibold text-gray-300">
-                                — Nguyễn Văn A, Senior React Developer
-                            </footer>
-                        </blockquote>
-                    </motion.div>
-                </div>
+            {/* Footer Link / Copyright for Auth */}
+            <div className="absolute bottom-6 text-center text-xs text-slate-400 font-medium">
+                &copy; 2030 SmartHire Inc. All rights reserved.
             </div>
         </div>
     );
