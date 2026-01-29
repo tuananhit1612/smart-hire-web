@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/shared/components/layout/Header";
 import { Footer } from "@/shared/components/layout/Footer";
 import { ThemeProvider } from "@/providers/theme-provider";
+import { ToastProvider } from "@/shared/components/ui/toast";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -38,13 +39,16 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Header />
-          <main className="flex-1">
-            {children}
-          </main>
-          <Footer />
+          <ToastProvider>
+            <Header />
+            <main className="flex-1">
+              {children}
+            </main>
+            <Footer />
+          </ToastProvider>
         </ThemeProvider>
       </body>
     </html>
   );
 }
+
