@@ -1,6 +1,76 @@
 import { CandidateProfile } from "./profile";
 
-export const mockProfile: CandidateProfile = {
+/**
+ * Empty profile fixture - for new users or testing empty states
+ * Shows 0% completion in ProfileCompletionWidget
+ */
+export const emptyProfile: CandidateProfile = {
+  id: "empty-1",
+  fullName: "",
+  headline: "",
+  title: "",
+  email: "",
+  phone: "",
+  location: "",
+  avatarUrl: "",
+  about: "",
+  summary: "",
+  yearsOfExperience: 0,
+  expectedSalary: "",
+  skills: [],
+  experiences: [],
+  educations: [],
+  certificates: [],
+  projects: [],
+  languages: [],
+  socialLinks: [],
+};
+
+/**
+ * Partial profile fixture - for testing intermediate states
+ * Shows ~40% completion in ProfileCompletionWidget
+ */
+export const partialProfile: CandidateProfile = {
+  id: "partial-1",
+  fullName: "Trần Thị Bình",
+  headline: "",
+  title: "Junior Developer",
+  email: "binh.tran@example.com",
+  phone: "+84 909 123 456",
+  location: "Hà Nội, Việt Nam",
+  avatarUrl: "",
+  about: "Mới bắt đầu sự nghiệp lập trình.",
+  summary: "",
+  yearsOfExperience: 1,
+  expectedSalary: "",
+  skills: [
+    { id: "1", name: "JavaScript", level: "Beginner" },
+    { id: "2", name: "HTML/CSS", level: "Intermediate" },
+  ],
+  experiences: [],
+  educations: [
+    {
+      id: "1",
+      degree: "Cử nhân",
+      school: "Đại học Công nghệ Hà Nội",
+      fieldOfStudy: "Công nghệ thông tin",
+      startDate: "2019",
+      endDate: "2023",
+    },
+  ],
+  certificates: [],
+  projects: [],
+  languages: [
+    { id: "1", language: "Tiếng Việt", proficiency: "Native" },
+  ],
+  socialLinks: [],
+};
+
+/**
+ * Filled profile fixture - for testing complete states
+ * Shows 100% completion in ProfileCompletionWidget
+ */
+export const filledProfile: CandidateProfile = {
   id: "1",
   fullName: "Nguyễn Văn An",
   headline: "Kỹ sư Frontend Cao cấp | Chuyên gia React & Next.js",
@@ -115,3 +185,19 @@ export const mockProfile: CandidateProfile = {
     { platform: "Website", url: "https://example.com" },
   ],
 };
+
+/**
+ * Default export - alias for filledProfile (backward compatibility)
+ */
+export const mockProfile = filledProfile;
+
+/**
+ * All fixtures for easy access
+ */
+export const profileFixtures = {
+  empty: emptyProfile,
+  partial: partialProfile,
+  filled: filledProfile,
+} as const;
+
+export type ProfileFixtureType = keyof typeof profileFixtures;

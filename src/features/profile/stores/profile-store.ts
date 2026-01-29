@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { CandidateProfile } from "@/features/profile/types/profile";
-import { mockProfile } from "@/features/profile/types/mock-data";
+import { emptyProfile    } from "@/features/profile/types/mock-data";
 
 interface ProfileStore {
   profile: CandidateProfile;
@@ -9,7 +9,7 @@ interface ProfileStore {
 }
 
 export const useProfileStore = create<ProfileStore>((set) => ({
-  profile: mockProfile,
+  profile: emptyProfile   ,
   setProfile: (profile) => set({ profile }),
   updateProfile: (updates) =>
     set((state) => ({ profile: { ...state.profile, ...updates } })),
