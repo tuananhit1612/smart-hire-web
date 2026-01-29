@@ -4,40 +4,213 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ============================================
+   ULTRA PREMIUM Design System - SmartHire
+   ============================================ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* ULTRA PRIMARY: Deep Indigo */
+  --primary: #4F46E5;
+  --primary-foreground: #FFFFFF;
+
+  /* SECONDARY */
+  --secondary: #6366F1;
+  --secondary-foreground: #FFFFFF;
+
+  /* HOLOGRAPHIC GRADIENT */
+  --holographic-start: #6366F1;
+  --holographic-mid: #A855F7;
+  --holographic-end: #EC4899;
+
+  /* SURFACES */
+  --background: #F8FAFC;
+  --foreground: #0F172A;
+  --card: #FFFFFF;
+  --card-foreground: #0F172A;
+
+  /* GLASS EFFECT */
+  --glass: rgba(255, 255, 255, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.4);
+
+  /* MUTED */
+  --muted: #F1F5F9;
+  --muted-foreground: #64748B;
+  --border: #E2E8F0;
+
+  /* EFFECTS */
+  --radius: 1.5rem;
+  --glow-primary: rgba(79, 70, 229, 0.5);
 }
 
 @theme {
   --font-sans: var(--font-plus-jakarta);
   --font-orbitron: var(--font-orbitron);
   --radius: 1rem;
-  /* More rounded for Ultra feel */
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-
-  /* ... keep existing overrides or add new ones ... */
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-border: var(--border);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0B0F19;
+    --foreground: #F1F5F9;
+    --primary: #818CF8;
+    --secondary: #A78BFA;
+    --card: rgba(15, 23, 42, 0.8);
+    --card-foreground: #F1F5F9;
+    --muted: #1E293B;
+    --muted-foreground: #94A3B8;
+    --border: rgba(255, 255, 255, 0.1);
+    --glass: rgba(0, 0, 0, 0.4);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glow-primary: rgba(129, 140, 248, 0.4);
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
 }
 
-/* Shimmer animation for skeleton loading */
+/* ============================================
+   ULTRA PREMIUM Utilities
+   ============================================ */
+
+/* Deep Glass Card */
+.glass-card {
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+/* Holographic Border */
+.holographic-border {
+  position: relative;
+  background: linear-gradient(135deg, var(--holographic-start), var(--holographic-mid), var(--holographic-end));
+  padding: 1px;
+  border-radius: var(--radius);
+}
+
+.holographic-border>* {
+  background: var(--card);
+  border-radius: calc(var(--radius) - 1px);
+}
+
+/* Glow Effect */
+.glow-primary {
+  box-shadow: 0 0 20px var(--glow-primary), 0 0 40px var(--glow-primary);
+}
+
+/* Aurora Background Blobs */
+.aurora-blob {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.aurora-blob-1 {
+  width: 300px;
+  height: 300px;
+  background: #6366F1;
+  top: -100px;
+  right: -50px;
+}
+
+.aurora-blob-2 {
+  width: 250px;
+  height: 250px;
+  background: #A855F7;
+  bottom: -100px;
+  left: -50px;
+}
+
+.aurora-blob-3 {
+  width: 200px;
+  height: 200px;
+  background: #EC4899;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@media (min-width: 768px) {
+  .aurora-blob-1 {
+    width: 500px;
+    height: 500px;
+  }
+
+  .aurora-blob-2 {
+    width: 400px;
+    height: 400px;
+  }
+
+  .aurora-blob-3 {
+    width: 350px;
+    height: 350px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .aurora-blob-1 {
+    width: 600px;
+    height: 600px;
+  }
+
+  .aurora-blob-2 {
+    width: 500px;
+    height: 500px;
+  }
+
+  .aurora-blob-3 {
+    width: 400px;
+    height: 400px;
+  }
+}
+
+/* Grain Texture Overlay */
+.grain-overlay::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Skeleton Shimmer */
 @keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--muted) 25%, var(--border) 50%, var(--muted) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 0.5rem;
 }
 
 .animate-shimmer {

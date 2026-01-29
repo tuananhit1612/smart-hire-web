@@ -7,34 +7,34 @@ export interface InputProps
     extends React.InputHTMLAttributes<HTMLInputElement> {
     error?: string;
     label?: string;
-    leftIcon?: React.ReactNode;
     startIcon?: React.ReactNode;
+    /** @deprecated Use startIcon instead */
+    leftIcon?: React.ReactNode;
     endIcon?: React.ReactNode;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-    ({ className, type, error, label, leftIcon, startIcon, endIcon, ...props }, ref) => {
-        // Use leftIcon as fallback for startIcon
-        const start = startIcon || leftIcon;
+    ({ className, type, error, label, startIcon, leftIcon, endIcon, ...props }, ref) => {
+        const iconLeft = startIcon || leftIcon;
 
         return (
             <div className="w-full space-y-2">
                 {label && (
-                    <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-700 dark:text-gray-300">
+                    <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-foreground">
                         {label}
                     </label>
                 )}
                 <div className="relative">
-                    {start && (
-                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 pointer-events-none z-10">
-                            {start}
+                    {iconLeft && (
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none">
+                            {iconLeft}
                         </div>
                     )}
                     <input
                         type={type}
                         className={cn(
-                            "flex h-11 w-full rounded-xl border border-gray-200 bg-transparent px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-900/50 dark:ring-offset-zinc-950 dark:placeholder:text-gray-400 dark:text-white transition-all duration-200",
-                            start && "pl-10",
+                            "flex h-11 w-full rounded-xl border border-border bg-card/50 px-4 py-2 text-sm text-foreground ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200",
+                            iconLeft && "pl-10",
                             endIcon && "pr-10",
                             error && "border-red-500 focus-visible:ring-red-500",
                             className
@@ -43,13 +43,13 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
                         {...props}
                     />
                     {endIcon && (
-                        <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                             {endIcon}
                         </div>
                     )}
                 </div>
                 {error && (
-                    <p className="text-xs font-medium text-red-500 flex items-center gap-1 mt-1">
+                    <p className="text-xs font-medium text-red-500 flex items-center gap-1">
                         {error}
                     </p>
                 )}
