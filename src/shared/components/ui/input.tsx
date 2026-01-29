@@ -7,6 +7,11 @@ export interface InputProps
     extends React.InputHTMLAttributes<HTMLInputElement> {
     error?: string;
     label?: string;
+    leftIcon?: React.ReactNode;
+}
+
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+    ({ className, type, error, label, leftIcon, ...props }, ref) => {
     startIcon?: React.ReactNode;
     endIcon?: React.ReactNode;
 }
@@ -21,6 +26,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
                     </label>
                 )}
                 <div className="relative">
+                    {leftIcon && (
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none z-10">
+                            {leftIcon}
                     {startIcon && (
                         <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">
                             {startIcon}
@@ -33,6 +41,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
                             startIcon && "pl-10",
                             endIcon && "pr-10",
                             error && "border-red-500 focus-visible:ring-red-500",
+                            leftIcon && "pl-11",
                             className
                         )}
                         ref={ref}
