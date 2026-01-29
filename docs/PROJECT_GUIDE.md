@@ -33,6 +33,9 @@ src/
 
 #### `src/app/` (Application Layer)
 - Chỉ chứa logic routing, layout, loading, error.
+- Sử dụng **Route Groups** để phân chia logic:
+    - `(auth)/`: Chứa các trang Authentication (`login`, `register`, `forgot-password`, `reset-password`).
+    - `(main)/`: Chứa các trang chính của ứng dụng (`page.tsx`, `cv-builder`, `dashboard`...).
 - **KHÔNG** viết business logic phức tạp tại đây.
 
 #### `src/features/` (Feature Layer)
@@ -132,49 +135,5 @@ Mọi thành viên team bắt buộc tuân thủ các quy tắc dưới đây đ
 ---
 
 ## 5. UI/UX Guidelines (Standard: UI UX Pro Max)
-
-Dự án áp dụng tiêu chuẩn **[UI UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)**. Yêu cầu bắt buộc:
-
-### 5.1. Design Aesthetics (Thẩm mỹ & Giao diện)
-- **Premium Interface**:
-    - Giao diện phải mang lại cảm giác "Cao cấp", chuyên nghiệp (Fintech/SaaS standard).
-    - Sử dụng **Glassmorphism**, **Bento Grid** cho Dashboard, **Minimalism** cho Content.
-- **Color & Typography**:
-    - Sử dụng bảng màu hài hòa (Harmonious Palettes). Tránh màu thuần (như pure red `#FF0000`, pure black `#000000`).
-    - Typography phải được curated (Google Fonts như Inter, Roboto, Outfit).
-- **Micro-interactions**:
-    - Các element (Button, Card) phải có hover state, active state rõ ràng.
-    - Transition phải mượt mà (`transition-all duration-200`).
-- **No Placeholders**:
-    - Cấm để giao diện sơ sài "cho có". Phải hoàn thiện chỉn chu ngay từ đầu.
-    - Nếu thiếu ảnh, dùng `generate_image` hoặc ảnh stock chất lượng cao.
-
-### 5.2. Design System Documentation
-Áp dụng mô hình **Master + Overrides Pattern**:
-
-- **Nguồn chân lý (Source of Truth)**:
-    - Team sẽ duy trì file `design-system/MASTER.md` (nếu cần thiết) để định nghĩa Colors, Spacing, Typography chuẩn.
-- **Page Specifics**:
-    - Khi làm page đặc thù (VD: Checkout, Complex Dashboard), nếu có style riêng biệt quá khác biệt, note lại vào `design-system/pages/<page-name>.md`.
-
-### 5.3. Mobile First & Accessibility
-- **Responsive**: Mọi giao diện phải đẹp trên Mobile trước tiên hoặc ít nhất là tương thích hoàn toàn.
-- **Accessibility**: Đảm bảo contrast ratio, aria-label cho các nút không có text, keyboard navigation support.
-
+\docs\DESIGN_STANDARD.md
 ---
-
-## 6. Quy trình Pull Request (PR) & Definition of Done (DoD)
-
-### 6.1. Quy tắc PR
-- **Kích thước**: PR nên nhỏ, dễ review (lý tưởng $< 400$ dòng thay đổi).
-- **Mô tả**: Ghi rõ PR làm gì, ảnh hưởng module nào.
-- **Review**: Cần ít nhất 1 thành viên khác review và approve.
-
-### 6.2. Definition of Done (DoD)
-Một task được coi là hoàn thành khi:
-- [ ] Code chạy đúng logic yêu cầu.
-- [ ] UI ĐẸP, đúng chuẩn **UI UX Pro Max**.
-- [ ] Đã handle các Edge Cases cơ bản (rỗng, lỗi mạng, input sai).
-- [ ] Code đã được Format và Linting (không lỗi).
-- [ ] Clean code: không code thừa, comment thừa.
-- [ ] (Optional) Có Unit Test tối thiểu cho các hàm logic quan trọng.

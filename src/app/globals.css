@@ -1,4 +1,7 @@
 @import "tailwindcss";
+@plugin "tailwindcss-animate";
+
+@custom-variant dark (&:is(.dark *));
 
 /* ============================================
    ULTRA PREMIUM Design System - SmartHire
@@ -39,7 +42,11 @@
   --glow-primary: rgba(79, 70, 229, 0.5);
 }
 
-@theme inline {
+@theme {
+  --font-sans: var(--font-plus-jakarta);
+  --font-orbitron: var(--font-orbitron);
+  --radius: 1rem;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-primary: var(--primary);
@@ -51,10 +58,6 @@
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-border: var(--border);
-  --radius: var(--radius);
-
-  --font-sans: "Plus Jakarta Sans", var(--font-geist-sans), system-ui, sans-serif;
-  --font-display: "Orbitron", var(--font-geist-mono), monospace;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -217,4 +220,3 @@ body {
   animation: shimmer 1.5s infinite;
   border-radius: 0.5rem;
 }
-
