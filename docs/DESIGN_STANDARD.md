@@ -1,102 +1,79 @@
-# SmartHire Design Standard (UI/UX Pro Max - ULTRA TIER)
+# SmartHire Design Standard (Friendly/Modern)
 
-> **Status:** **ULTRA PREMIUM** (Official Design Guide - v2.0)
-> **Standard:** **Future-Tech Minimalism** (Exaggerated Minimalism + Holographic AI + Luxury)
-> **Goal:** Create a platform that feels like it's from 2030. "Wow" at every interaction.
-
----
-
-## 1. Design Philosophy: "Holographic Intelligence"
-
-We are moving beyond standard "clean SaaS" to an **Immersive AI Experience**. The interface should feel alive, intelligent, and breathable.
-
-**Core Aesthetic:** **Exaggerated Minimalism + Holographic Touches**
--   **Structure:** Massive whitespace, oversized typography (Heading-first), Micro-interactions everywhere.
--   **AI Identity:** Use **"Holographic/Cyberpunk"** aesthetics for AI features (gradients of Violet/Cyan/Deep Blue) against a clean backdrops.
--   **Anti-Pattern:** No dense tables. No "boring" inputs. Everything must have a state transition.
+> **Philosophy:** "Friendly Intelligence."
+> SmartHire is approachable, optimistic, and human-centric. We use AI to connect people, not just process data.
+> Our design should feel **alive** (animations), **trustworthy** (blue/white), and **growing** (green).
 
 ---
 
-## 2. Ultra-Premium Prompts for Developers
+## 1. Visual Identity
 
-Use these prompts to force the AI/Dev to generate top-tier code.
+### Color Palette
+| Role | Color | Hex | Tailwind | Usage |
+|:---|:---|:---|:---|:---|
+| **Primary** | **Sky Blue** | `#0369A1` | `bg-sky-700` | Headlines, trust indicators, primary links. |
+| **Secondary** | **Light Sky** | `#0EA5E9` | `bg-sky-500` | Gradients, hover states, secondary actions. |
+| **Accent / CTA** | **Growth Green** | `#22C55E` | `bg-green-500` | **Primary Buttons**, "New" badges, success states. |
+| **Background** | **Soft White** | `#F0F9FF` | `bg-slate-50` | Page background (Site-wide). |
+| **Text** | **Deep Sky** | `#0C4A6E` | `text-sky-900` | High contrast text for readability. |
 
-### The "Ultra" Prompt Template
-```text
-Build a [Page/Component Name] for a distinct AI-Recruitment Platform called "SmartHire Ultra".
-Style: Exaggerated Minimalism, Holographic Glassmorphism, Future-Tech.
-Stack: React 19, Tailwind CSS 4, Framer Motion (Advanced Stagger/LayoutId), Lucide Icons.
-Rules:
-1. "Wow" Factor: Use heavy gradients for accents, deep animated shadows, and glass blur.
-2. Typography: Massive headings (clamp functions). High contrast.
-3. Interaction: Everything reacts to mouse cursor.
-4. AI: Use "magical" visual metaphors (glowing borders, animated gradients) for AI sections.
-Requirement: [Specific Requirements].
-```
+### Typography (Localized)
+-   **Primary Font:** `Be Vietnam Pro` (Optimized for Vietnamese & readability).
+    -   *Usage:* All UI text, headings, body.
+    -   *Variable:* `var(--font-be-vietnam)` / `font-sans`.
+-   **Display Font:** `Orbitron` (Tech/AI/Numbers).
+    -   *Usage:* Large numbers (`1M+`), AI badges.
+    -   *Variable:* `var(--font-orbitron)`.
 
-### Specific Feature Prompts (Ultra Tier)
-
-| Feature | Ultra Prompt Strategy |
-| :--- | :--- |
-| **Auth** | "Create a split-screen 'Portal' entrance. Left: Ultra-minimal form with floating labels. Right: Interactive 3D/WebGL-style abstract background (using CSS gradients/blur) that follows mouse movement." |
-| **AI Resume** | "Build a 'Holographic Scanner' effect. The resume analysis should feel like a sci-fi scan—progress bars filling with liquid gradients, skills popping with neon badges." |
-| **Job Feed** | "Design a 'Flow State' job feed. Cards should have deep glass layers (`backdrop-blur-xl`), tilt effects on hover (`preserve-3d`), and reveal detailed AI matches only on hover." |
-
----
-
-## 3. Visual Identity (The "Luxury Fintech" Palette)
-
-We are darkening the "Blue" to be more serious and introducing a vibrant "Holographic" spectrum.
-
-### 3.1. Colors
-
-| Role | Hex | Tailwind | Context |
-| :--- | :--- | :--- | :--- |
-| **Ultra Primary** | `#4F46E5` | `indigo-600` | Deep, confident primary action. |
-| **Secondary** | `#6366F1` | `indigo-500` | Hover states, softened accents. |
-| **Holographic** | `Gradient` | `from-indigo-500 via-purple-500 to-pink-500` | AI features, "Magic" buttons. |
-| **Dark Surface** | `#0B0F19` | `gray-950` | Rich dark mode background (not just black). |
-| **Light Surface** | `#F8FAFC` | `slate-50` | Clean, crisp light mode background. |
-| **Glass** | `#FFFFFF` | `bg-white/60` | Higher transparency, higher blur (`backdrop-blur-xl`). |
-
-### 3.2. Typography (Impactful)
-
-**Font Pair:** **Orbitron** (for AI efficiency stats) + **Plus Jakarta Sans** (Primary).
-
--   **Hero Heading:** `text-6xl` to `text-8xl`, `font-bold`, `tracking-tighter`.
--   **Section Title:** `text-3xl`, `tracking-tight`.
--   **Detail:** `text-xs`, `uppercase`, `tracking-widest`, `opacity-60`.
-
-### 3.3. "Pro Max" Effects
-
-**1. The "Deep Glass" Card**
-```tsx
-className="bg-white/60 dark:bg-black/40 backdrop-blur-xl border border-white/40 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.12)] rounded-3xl"
-```
-
-**2. The "Holographic" Border**
-```tsx
-className="relative p-[1px] rounded-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
-{/* Inner content needs its own bg to mask the center */}
-```
-
-**3. The "Aurora" Background (CSS)**
-Use generous, blurred blobs of color (`blue-400`, `purple-400`, `pink-400`) fixed in the background with `blur-[100px]` and `opacity-30` to create a moving aurora effect.
+### Global Animation
+-   **Particle Background:** A site-wide `<ParticleBackground />` component resides in `layout.tsx`.
+    -   *Effect:* Floating colorful confetti/particles.
+    -   *Rule:* Do **NOT** use opaque backgrounds (`bg-white` or `bg-background`) on the root container of your pages, or you will hide this effect. Use `transparent` or `bg-white/60` with blur for overlay cards.
 
 ---
 
-## 4. Interaction Rules (Make it Alive)
+## 2. Component Guidelines
 
-1.  **Parallax effects:** Elements should move at slightly different speeds on scroll.
-2.  **Magnetic Buttons:** Buttons should slightly "stick" to the cursor (optional advanced implementation).
-3.  **Skeleton Loading:** NEVER show a spinner. Show a shimmering skeleton UI (`animate-pulse` on steroids).
+### Buttons
+-   **Shape:** Fully rounded (`rounded-full`).
+-   **Primary:** Gradient Blue/Sky or Solid Green. Shadow `shadow-lg`.
+-   **Hover:** SCALE UP (`hover:scale-105`) to feel tactile.
+-   **Secondary:** White background with Sky border (`border-sky-100`).
+
+### Cards & Containers
+-   **Shape:** Softer corners (`rounded-2xl` or `rounded-3xl`).
+-   **Material:** Glassmorphism.
+    -   *Light:* `bg-white/70 backdrop-blur-xl border-white/20`.
+    -   *Dark:* `bg-sky-950/30 backdrop-blur-xl border-sky-800/30`.
+-   **Shadow:** Soft, diffuse shadows (`shadow-xl shadow-blue-900/5`).
 
 ---
 
-## 5. Implementation Checklist (Ultra Tier)
+## 3. Localization (Vietnamese)
+-   **Tone:** Professional but friendly (Thân thiện, Chuyên nghiệp).
+-   **Formatting:** Use sentence case for headers.
+-   **Terms:**
+    -   *AI Matching* -> "Kết nối AI" or keep "AI Matching".
+    -   *Hiring* -> "Tuyển Dụng".
+    -   *Get Started* -> "Bắt Đầu Ngay".
 
--   [ ] **No boring borders:** Use gradients or subtle shadows instead of harsh 1px gray lines.
--   [ ] **Motion First:** Does the element animate in? Does it animate out?
--   [ ] **Noise/Texture:** Add subtle grain texture (`opacity-5`) to backgrounds for a premium feel.
--   [ ] **Glows:** Key actions must have a subtle glow (`shadow-indigo-500/50`).
--   [ ] **Typography:** Check letter-spacing (`tracking-tight` for headings, `tracking-wide` for captions).
+---
+
+## 4. Developer Rules
+1.  **Z-Index:** The Particle Background is `z-0`. Content must be `z-10` or higher.
+2.  **No Sharps:** Avoid sharp corners (`rounded-none` or `rounded-sm`). Use `rounded-lg` minimum.
+3.  **Alive:** Every interactive element should have a micro-interaction (hover scale, color shift, or glow).
+
+---
+
+## 5. Animation & Dynamics (High Priority)
+> **Goal:** The website must feel **"Alive"** and **"Wow"**. Static interfaces are unacceptable.
+
+### Principles
+-   **Prioritize Movement:** Prefer animated transitions over static displays.
+-   **Canvas First:** Use HTML5 Canvas for complex backgrounds or high-performance effects (like the Global Particles).
+-   **Libraries:**
+    -   Use **Framer Motion** for UI transitions (fade-in, slide-up, stagger).
+    -   Use **Three.js / React Three Fiber** if 3D elements are required.
+-   **Micro-interactions:** Buttons, cards, and links **MUST** react to user input (Hover, Click, Focus).
+-   **Flow:** Data and gradients should appearing to be "flowing" or "breathing" to represent AI intelligence.
