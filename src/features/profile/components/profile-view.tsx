@@ -10,6 +10,7 @@ import { ProfileProjects } from "./profile-projects";
 import { ProfileCertificates } from "./profile-certificates";
 import { ProfileLanguages } from "./profile-languages";
 import { ProfileCompletionWidget } from "./profile-completion-widget";
+import { JobRecommendationWidget } from "@/features/jobs/components/job-recommendation-widget";
 import { useProfileStore } from "../stores/profile-store";
 
 export function ProfileView() {
@@ -29,6 +30,9 @@ export function ProfileView() {
 
           {/* Completion Widget */}
           <ProfileCompletionWidget profile={profile} />
+
+          {/* Job Recommendations */}
+          <JobRecommendationWidget profile={profile} />
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Main Column */}

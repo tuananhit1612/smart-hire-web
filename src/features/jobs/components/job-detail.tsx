@@ -86,21 +86,21 @@ export function JobDetail({ job }: JobDetailProps) {
   const mapsUrl = getGoogleMapsUrl();
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950/50">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950/50 pt-20">
       {/* Company Cover Image */}
       {job.companyInfo?.coverImageUrl && (
-        <div className="relative h-48 md:h-64 w-full overflow-hidden">
+        <div className="relative h-48 md:h-56 w-full overflow-hidden">
           <img
             src={job.companyInfo.coverImageUrl}
             alt={`${job.company} office`}
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-50 dark:from-slate-950/50 via-transparent to-transparent" />
         </div>
       )}
 
-      {/* Navigation */}
-      <div className={`max-w-7xl mx-auto px-4 md:px-6 ${job.companyInfo?.coverImageUrl ? "pt-4" : "pt-28"} pb-4`}>
+      {/* Navigation - Between cover and card */}
+      <div className="max-w-7xl mx-auto px-4 md:px-6 pt-4 pb-4">
         <Link
           href="/jobs"
           className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-sky-600 transition-colors"
@@ -118,7 +118,7 @@ export function JobDetail({ job }: JobDetailProps) {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className={`bg-white dark:bg-slate-900/50 backdrop-blur-md border border-slate-200 dark:border-slate-700/50 rounded-3xl p-6 md:p-8 ${job.companyInfo?.coverImageUrl ? "-mt-16 relative z-10" : ""}`}
+              className="bg-white dark:bg-slate-900/50 backdrop-blur-md border border-slate-200 dark:border-slate-700/50 rounded-3xl p-6 md:p-8"
             >
               <div className="flex flex-col md:flex-row gap-6">
                 {/* Logo */}
