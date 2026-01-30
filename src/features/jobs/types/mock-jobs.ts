@@ -1,0 +1,108 @@
+import { Job } from "./job";
+
+export const mockJobs: Job[] = [
+  {
+    id: "1",
+    title: "Senior Frontend Engineer",
+    company: "TechFlow Solutions",
+    logoUrl: "https://api.dicebear.com/7.x/initials/svg?seed=TF",
+    location: "TP. Hồ Chí Minh",
+    type: "Full-time",
+    level: "Senior",
+    salary: "$2,000 - $3,500",
+    postedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString(), // 2 days ago
+    description: "Chúng tôi đang tìm kiếm Senior Frontend Engineer để dẫn dắt team phát triển sản phẩm cốt lõi sử dụng React và Next.js.",
+    skills: ["React", "TypeScript", "Next.js", "Tailwind CSS"],
+  },
+  {
+    id: "2",
+    title: "Product Designer (UI/UX)",
+    company: "Creative Pulse",
+    logoUrl: "https://api.dicebear.com/7.x/initials/svg?seed=CP",
+    location: "Remote",
+    type: "Remote",
+    level: "Middle",
+    salary: "$1,500 - $2,500",
+    postedAt: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString(), // 5 hours ago
+    description: "Tham gia team thiết kế để tạo ra trải nghiệm người dùng tuyệt vời cho các khách hàng toàn cầu.",
+    skills: ["Figma", "UI/UX", "Prototyping"],
+  },
+  {
+    id: "3",
+    title: "Backend Developer (Go)",
+    company: "NextGen Fintech",
+    logoUrl: "https://api.dicebear.com/7.x/initials/svg?seed=NG",
+    location: "Hà Nội",
+    type: "Full-time",
+    level: "Junior",
+    salary: "$800 - $1,500",
+    postedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 1).toISOString(), // 1 day ago
+    description: "Cơ hội tuyệt vời cho Junior Developer học hỏi và làm việc với hệ thống Microservices hiệu năng cao.",
+    skills: ["Go", "PostgreSQL", "Docker", "gRPC"],
+  },
+  {
+    id: "4",
+    title: "Fullstack Engineer",
+    company: "Global Tech",
+    logoUrl: "https://api.dicebear.com/7.x/initials/svg?seed=GT",
+    location: "Đà Nẵng",
+    type: "Contract",
+    level: "Senior",
+    salary: "$2,500 - $4,000",
+    postedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5).toISOString(), // 5 days ago
+    description: "Xây dựng các hệ thống phức tạp using Node.js và React. Yêu cầu kinh nghiệm 5+ năm.",
+    skills: ["Node.js", "React", "MongoDB", "AWS"],
+  },
+  {
+    id: "5",
+    title: "React Native Developer",
+    company: "AppMasters",
+    logoUrl: "https://api.dicebear.com/7.x/initials/svg?seed=AM",
+    location: "TP. Hồ Chí Minh",
+    type: "Full-time",
+    level: "Middle",
+    salary: "$1,200 - $2,200",
+    postedAt: new Date(Date.now() - 1000 * 60 * 30).toISOString(), // 30 mins ago
+    description: "Phát triển ứng dụng mobile tiên tiến cho hàng triệu người dùng trên iOS và Android.",
+    skills: ["React Native", "TypeScript", "iOS", "Android"],
+  },
+  {
+    id: "6",
+    title: "AI Research Intern",
+    company: "SmartAI Lab",
+    logoUrl: "https://api.dicebear.com/7.x/initials/svg?seed=SA",
+    location: "Remote",
+    type: "Internship",
+    level: "Intern",
+    salary: "$300 - $600",
+    postedAt: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(), // 1 day ago
+    description: "Nghiên cứu và triển khai các mô hình NLP mới nhất. Được hướng dẫn bởi các chuyên gia.",
+    skills: ["Python", "PyTorch", "NLP", "Machine Learning"],
+  },
+  {
+    id: "7",
+    title: "DevOps Engineer",
+    company: "CloudScale",
+    logoUrl: "https://api.dicebear.com/7.x/initials/svg?seed=CS",
+    location: "Remote",
+    type: "Remote",
+    level: "Senior",
+    salary: "$3,000 - $5,000",
+    postedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3).toISOString(), // 3 days ago
+    description: "Mở rộng hạ tầng sử dụng Kubernetes và Terraform. Tối ưu hóa quy trình CI/CD.",
+    skills: ["Kubernetes", "AWS", "Terraform", "CI/CD"],
+  },
+  {
+    id: "8",
+    title: "Marketing Lead",
+    company: "GrowthHackerz",
+    logoUrl: "https://api.dicebear.com/7.x/initials/svg?seed=GH",
+    location: "TP. Hồ Chí Minh",
+    type: "Full-time",
+    level: "Lead",
+    salary: "$2,500 - $4,500",
+    postedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7).toISOString(), // 1 week ago
+    description: "Dẫn dắt các chiến dịch marketing và thúc đẩy tăng trưởng cho sản phẩm SaaS.",
+    skills: ["Digital Marketing", "SEO", "Content Strategy", "Analytics"],
+  },
+];
