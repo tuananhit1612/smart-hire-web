@@ -108,9 +108,9 @@ export default function Home() {
               </p>
 
               <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-                <Link href="/cv-templates">
+                <Link href="/jobs">
                   <HoverButton variant="primary" className="min-w-[180px] rounded-full bg-gradient-to-r from-sky-600 to-sky-500 hover:from-sky-500 hover:to-sky-400 border-0 shadow-lg shadow-sky-500/25">
-                    Tạo CV Ngay
+                    Tìm Việc Ngay
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </HoverButton>
                 </Link>
