@@ -34,11 +34,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             primary:
                 "bg-green-500 text-white hover:bg-green-600 shadow-lg shadow-green-500/20 border-transparent hover:scale-105",
             secondary:
-                "bg-white text-sky-900 border-sky-100 hover:bg-sky-50 dark:bg-zinc-800 dark:text-white dark:border-zinc-700 dark:hover:bg-zinc-700 hover:scale-105",
+                "bg-white text-sky-900 border-sky-200 hover:bg-sky-50 hover:scale-105",
             outline:
-                "bg-transparent border-sky-200 text-sky-700 hover:bg-sky-50 dark:border-zinc-700 dark:text-gray-300 dark:hover:bg-zinc-800 border hover:scale-105",
+                "bg-transparent border-sky-200 text-sky-700 hover:bg-sky-50 border hover:scale-105",
             ghost:
-                "bg-transparent text-sky-600 hover:bg-sky-100 dark:text-gray-400 dark:hover:bg-zinc-800 hover:scale-105",
+                "bg-transparent text-sky-600 hover:bg-sky-100 hover:scale-105",
             glass:
                 "bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 shadow-xl hover:scale-105",
             danger:

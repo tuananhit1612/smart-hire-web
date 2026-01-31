@@ -127,7 +127,7 @@ export function CVBuilderForm({
             </AnimatePresence>
 
             {/* Navigation Footer */}
-            <div className="flex items-center justify-between pt-6 border-t border-gray-200 dark:border-white/10">
+            <div className="flex items-center justify-between pt-6 border-t border-gray-100">
                 <Button
                     variant="outline"
                     size="md"
@@ -145,10 +145,10 @@ export function CVBuilderForm({
                             key={section.id}
                             onClick={() => onSectionChange(section.id)}
                             className={`w-2 h-2 rounded-full transition-all duration-200 ${index === currentIndex
-                                    ? "w-6 bg-gradient-to-r from-indigo-500 to-purple-500"
-                                    : index < currentIndex
-                                        ? "bg-indigo-300 dark:bg-indigo-700"
-                                        : "bg-gray-200 dark:bg-gray-700"
+                                ? "w-6 bg-green-500 shadow-lg shadow-green-500/30"
+                                : index < currentIndex
+                                    ? "bg-sky-400"
+                                    : "bg-gray-200"
                                 }`}
                         />
                     ))}

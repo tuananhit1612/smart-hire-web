@@ -15,7 +15,7 @@ interface SortDropdownProps {
 const sortOptions: { value: SortOption; label: string; icon: React.ElementType; color: string }[] = [
     { value: 'popular', label: 'Phổ biến nhất', icon: TrendingUp, color: "text-amber-500" },
     { value: 'newest', label: 'Mới nhất', icon: Clock, color: "text-emerald-500" },
-    { value: 'name', label: 'Tên A-Z', icon: SortAsc, color: "text-blue-500" }
+    { value: 'name', label: 'Tên A-Z', icon: SortAsc, color: "text-sky-500" }
 ];
 
 export function SortDropdown({ value, onChange }: SortDropdownProps) {
@@ -45,9 +45,9 @@ export function SortDropdown({ value, onChange }: SortDropdownProps) {
                 onClick={() => setIsOpen(!isOpen)}
                 className={cn(
                     "flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300",
-                    "bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800",
-                    "hover:border-indigo-300 dark:hover:border-indigo-700 hover:shadow-md",
-                    isOpen && "border-indigo-500 dark:border-indigo-500 ring-4 ring-indigo-500/10 shadow-lg"
+                    "bg-white border border-gray-200",
+                    "hover:border-sky-300 hover:shadow-md",
+                    isOpen && "border-sky-500 ring-4 ring-sky-500/10 shadow-lg"
                 )}
             >
                 <motion.div
@@ -56,7 +56,7 @@ export function SortDropdown({ value, onChange }: SortDropdownProps) {
                 >
                     <CurrentIcon className={cn("w-4 h-4", currentOption.color)} />
                 </motion.div>
-                <span className="text-gray-700 dark:text-gray-300">{currentOption.label}</span>
+                <span className="text-gray-700">{currentOption.label}</span>
                 <motion.div
                     animate={{ rotate: isOpen ? 180 : 0 }}
                     transition={{ duration: 0.2 }}
@@ -73,10 +73,10 @@ export function SortDropdown({ value, onChange }: SortDropdownProps) {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -10, scale: 0.95 }}
                         transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                        className="absolute right-0 top-full mt-2 w-52 py-2 bg-white dark:bg-zinc-900 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-2xl z-50 overflow-hidden"
+                        className="absolute right-0 top-full mt-2 w-52 py-2 bg-white rounded-xl border border-gray-200 shadow-2xl z-50 overflow-hidden"
                     >
                         {/* Decorative gradient line */}
-                        <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" />
+                        <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-sky-500 via-blue-500 to-emerald-500" />
 
                         {sortOptions.map((option, index) => {
                             const Icon = option.icon;
@@ -96,8 +96,8 @@ export function SortDropdown({ value, onChange }: SortDropdownProps) {
                                     className={cn(
                                         "w-full flex items-center gap-3 px-4 py-3 text-sm transition-all duration-200",
                                         isSelected
-                                            ? "bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950/50 dark:to-purple-950/50"
-                                            : "hover:bg-gray-50 dark:hover:bg-zinc-800/50"
+                                            ? "bg-gradient-to-r from-sky-50 to-emerald-50"
+                                            : "hover:bg-gray-50"
                                     )}
                                 >
                                     <motion.div
@@ -109,8 +109,8 @@ export function SortDropdown({ value, onChange }: SortDropdownProps) {
                                     <span className={cn(
                                         "flex-1 text-left",
                                         isSelected
-                                            ? "font-semibold text-indigo-600 dark:text-indigo-400"
-                                            : "text-gray-700 dark:text-gray-300"
+                                            ? "font-semibold text-sky-600"
+                                            : "text-gray-700"
                                     )}>
                                         {option.label}
                                     </span>
@@ -123,7 +123,7 @@ export function SortDropdown({ value, onChange }: SortDropdownProps) {
                                                 animate={{ scale: 1, rotate: 0 }}
                                                 exit={{ scale: 0, rotate: 180 }}
                                                 transition={{ type: "spring", stiffness: 300 }}
-                                                className="w-5 h-5 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center"
+                                                className="w-5 h-5 rounded-full bg-gradient-to-r from-sky-500 to-emerald-500 flex items-center justify-center"
                                             >
                                                 <Check className="w-3 h-3 text-white" />
                                             </motion.div>
