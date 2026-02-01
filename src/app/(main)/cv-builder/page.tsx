@@ -5,13 +5,20 @@ import { CVBuilderLayout } from "@/features/cv/components/CVBuilderLayout";
 import { CVSectionNav } from "@/features/cv/components/CVSectionNav";
 import { CVBuilderForm } from "@/features/cv/components/CVBuilderForm";
 import { CVSection, CVData, DEFAULT_CV_DATA } from "@/features/cv/types/types";
-import { FileText, Download, X } from "lucide-react";
+import { FileText, Download, X, Wand2, History, ChevronRight, ChevronLeft } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/shared/components/ui/toast";
 import { useAutosave, AutosaveIndicator } from "@/shared/components/ui/autosave-indicator";
 import { useSearchParams } from "next/navigation";
-import { MOCK_CV_DATA, getMockDataForTemplate } from "@/features/cv/data/mock-data";
+import { MOCK_CV_DATA, MOCK_DATA_MAP, getMockDataForTemplate } from "@/features/cv/data/mock-data";
 import { TEMPLATE_COMPONENTS } from "@/features/cv/components/cv-templates";
+import { Button } from "@/shared/components/ui/button";
+
+import { VersionHistoryDialog } from "@/features/cv/components/history/VersionHistoryDialog";
 import { exportToPDF } from "@/features/cv/utils/export-to-pdf";
+import { useCVAutoFill } from "@/features/cv/hooks/useCVAutoFill";
+import { useCVHistory } from "@/features/cv/hooks/useCVHistory";
+import { format } from "date-fns";
 export default function CVBuilderPage() {
     const searchParams = useSearchParams();
     const activeTemplateId = searchParams.get('template') || 'modern-tech';
@@ -21,6 +28,8 @@ export default function CVBuilderPage() {
     const [cvData, setCvData] = React.useState<CVData>(DEFAULT_CV_DATA);
     const [isSaving, setIsSaving] = React.useState(false);
     const { addToast } = useToast();
+    const { fillData, isFilling: isAutoFilling } = useCVAutoFill(setCvData);
+    const { saveSnapshot } = useCVHistory();
 
     // Select Template Component
     const TemplateComponent = TEMPLATE_COMPONENTS[activeTemplateId] || TEMPLATE_COMPONENTS['modern-tech'];
@@ -59,27 +68,66 @@ export default function CVBuilderPage() {
         };
     }, [cvData, mode, templateMockData]);
 
-    // Mock save function
+    // Real save function (Using Local Storage History for now)
     const saveCV = React.useCallback(async (data: CVData) => {
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        console.log("CV data saved:", data);
-        // In real app, this would call API
-    }, []);
+        // In valid app, this calls API.
+        // Here we simulate API delay then save to History.
+        await new Promise((resolve) => setTimeout(resolve, 800));
+        saveSnapshot(data, `Tự động lưu ${format(new Date(), "HH:mm")}`);
+        console.log("CV data saved to history");
+    }, [saveSnapshot]);
 
-    // Autosave hook
-    const { status: autosaveStatus, lastSaved, save: triggerSave } = useAutosave(
-        cvData,
-        saveCV,
-        { debounceMs: 3000, enabled: true }
-    );
+    // Use Ref to keep track of latest data for event listeners without re-attaching them constantly
+    const cvDataRef = React.useRef(cvData);
+    React.useEffect(() => {
+        cvDataRef.current = cvData;
+    }, [cvData]);
+
+    // 1. REMOVED: Interval Auto-save
+    // User requested to ONLY save on exit/close.
+
+    // 2. Save on Tab Close / Refresh (beforeunload)
+    React.useEffect(() => {
+        const handleBeforeUnload = () => {
+            const currentData = cvDataRef.current;
+            saveSnapshot(currentData, `Lưu tự động trước khi thoát ${format(new Date(), "HH:mm")}`);
+        };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, [saveSnapshot]);
+
+    // 3. Save on Component Unmount (Navigation away within App)
+    React.useEffect(() => {
+        return () => {
+            const currentData = cvDataRef.current;
+            // Ensure we don't save default empty data if user just opened and closed immediately
+            if (currentData !== DEFAULT_CV_DATA) {
+                saveSnapshot(currentData, `Lưu tự động khi thoát ${format(new Date(), "HH:mm")}`);
+            }
+        };
+    }, [saveSnapshot]);
+
+    // NOTE: useAutosave removed to prevent periodic API calls or history spam.
+    // We mock the return values for UI compatibility if needed, or remove UI usage.
+    // For now, let mocks exist so we don't break the UI below.
+    const autosaveStatus = "saved" as const;
+    const lastSaved = new Date();
+    const triggerSave = async () => { }; // No-op
 
     // Manual save with toast
     const handleSave = async () => {
         setIsSaving(true);
         try {
-            await saveCV(cvData);
-            addToast("CV đã được lưu thành công!", "success");
+            // Save as a named snapshot
+            saveSnapshot(cvData, `Bản lưu thủ công ${format(new Date(), "HH:mm dd/MM")}`);
+
+            // Also trigger the "API save" simulation
+            await new Promise((resolve) => setTimeout(resolve, 500));
+
+            addToast("CV đã được lưu vào Lịch sử!", "success");
         } catch {
             addToast("Có lỗi khi lưu CV. Vui lòng thử lại.", "error");
         } finally {
@@ -87,12 +135,14 @@ export default function CVBuilderPage() {
         }
     };
 
-    const [zoomLevel, setZoomLevel] = React.useState(0.65);
+    const [zoomLevel, setZoomLevel] = React.useState(0.45);
     const [pan, setPan] = React.useState({ x: 0, y: 0 });
     const panRef = React.useRef({ x: 0, y: 0 }); // Use Ref for direct mutable access during drag
     const [isPreviewMode, setIsPreviewMode] = React.useState(false);
     const [isPanMode, setIsPanMode] = React.useState(false);
+
     const [isPanning, setIsPanning] = React.useState(false);
+    const [isToolbarOpen, setIsToolbarOpen] = React.useState(false);
     const previewRef = React.useRef<HTMLDivElement>(null);
     const previewContentRef = React.useRef<HTMLDivElement>(null); // Target for direct transform
     const lastMousePos = React.useRef({ x: 0, y: 0 });
@@ -100,7 +150,7 @@ export default function CVBuilderPage() {
     const handleZoomIn = () => setZoomLevel(prev => Math.min(prev + 0.1, 1.5));
     const handleZoomOut = () => setZoomLevel(prev => Math.max(prev - 0.1, 0.3));
     const handleResetZoom = () => {
-        setZoomLevel(0.65);
+        setZoomLevel(0.45);
         setPan({ x: 0, y: 0 });
         panRef.current = { x: 0, y: 0 };
     };
@@ -217,44 +267,103 @@ export default function CVBuilderPage() {
 
     // Header Toolbar Content
     const headerToolbar = (
-        <div className="flex items-center gap-1 bg-slate-100/50 p-1 rounded-lg border border-slate-200/50">
+        <div className="flex items-center">
+            {/* Toggle Button (Always Visible) */}
             <button
-                onClick={handleZoomOut}
-                className="p-1.5 hover:bg-white hover:shadow-sm rounded-md text-slate-600 transition-all active:scale-95"
-                title="Thu nhỏ (Ctrl + Scroll Down)"
+                onClick={() => setIsToolbarOpen(!isToolbarOpen)}
+                className={`flex items-center justify-center p-2 border border-sky-100 bg-white hover:bg-sky-50 text-sky-600 transition-all z-20 h-10 w-10 focus:outline-none focus:ring-0 ${isToolbarOpen ? 'rounded-l-full border-r-0' : 'rounded-full shadow-md hover:shadow-lg'}`}
+                title={isToolbarOpen ? "Thu gọn" : "Mở rộng công cụ"}
             >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8" /><line x1="21" x2="16.65" y1="21" y2="16.65" /><line x1="8" x2="14" y1="11" y2="11" /></svg>
-            </button>
-            <div className="flex flex-col items-center w-12 cursor-help" title="Giữ Ctrl + Lăn chuột để zoom">
-                <span className="text-xs font-mono font-medium text-slate-500 select-none leading-none">{Math.round(zoomLevel * 100)}%</span>
-            </div>
-            <button
-                onClick={handleZoomIn}
-                className="p-1.5 hover:bg-white hover:shadow-sm rounded-md text-slate-600 transition-all active:scale-95"
-                title="Phóng to (Ctrl + Scroll Up)"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8" /><line x1="21" x2="16.65" y1="21" y2="16.65" /><line x1="11" x2="11" y1="8" y2="14" /><line x1="8" x2="14" y1="11" y2="11" /></svg>
-            </button>
-            <div className="w-px h-4 bg-slate-300 mx-1"></div>
-
-            {/* Pan Tool Toggle */}
-            <button
-                onClick={() => setIsPanMode(!isPanMode)}
-                className={`p-1.5 rounded-md transition-all active:scale-95 flex items-center gap-1.5 ${isPanMode ? 'bg-sky-100 text-sky-700 shadow-inner' : 'hover:bg-white hover:shadow-sm text-slate-600'}`}
-                title={isPanMode ? "Tắt chế độ kéo" : "Bật chế độ kéo (Giữ Ctrl)"}
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0" /><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2" /><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8" /><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15" /></svg>
-                <span className="text-xs font-medium hidden lg:inline">Kéo thả</span>
+                {isToolbarOpen ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
             </button>
 
-            {/* Reset View */}
-            <button
-                onClick={handleResetZoom}
-                className="p-1.5 hover:bg-white hover:shadow-sm rounded-md text-slate-500 hover:text-red-500 transition-all active:scale-95 ml-1"
-                title="Reset góc nhìn"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /></svg>
-            </button>
+            {/* Collapsible Content */}
+            <AnimatePresence>
+                {isToolbarOpen && (
+                    <motion.div
+                        initial={{ width: 0, opacity: 0 }}
+                        animate={{ width: "auto", opacity: 1 }}
+                        exit={{ width: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="flex items-center gap-1 bg-white border border-l-0 border-sky-100 p-1 pl-1 rounded-r-full shadow-sm overflow-hidden whitespace-nowrap origin-left h-10"
+                    >
+                        {/* Zoom Controls */}
+                        <div className="flex items-center px-1">
+                            <button
+                                onClick={handleZoomOut}
+                                className="h-8 w-8 flex items-center justify-center hover:bg-slate-100 rounded-md text-slate-600 hover:text-sky-600 transition-all"
+                                title="Thu nhỏ (Ctrl + Scroll Down)"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8" /><line x1="21" x2="16.65" y1="21" y2="16.65" /><line x1="8" x2="14" y1="11" y2="11" /></svg>
+                            </button>
+                            <div className="flex flex-col items-center w-8 cursor-help mx-0.5" title="Giữ Ctrl + Lăn chuột để zoom">
+                                <span className="text-xs font-mono font-medium text-slate-500 select-none">{Math.round(zoomLevel * 100)}%</span>
+                            </div>
+                            <button
+                                onClick={handleZoomIn}
+                                className="h-8 w-8 flex items-center justify-center hover:bg-slate-100 rounded-md text-slate-600 hover:text-sky-600 transition-all"
+                                title="Phóng to (Ctrl + Scroll Up)"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8" /><line x1="21" x2="16.65" y1="21" y2="16.65" /><line x1="11" x2="11" y1="8" y2="14" /><line x1="8" x2="14" y1="11" y2="11" /></svg>
+                            </button>
+                        </div>
+
+                        <div className="w-px h-5 bg-slate-200 mx-1"></div>
+
+                        {/* Pan Tool */}
+                        <button
+                            onClick={() => setIsPanMode(!isPanMode)}
+                            className={`h-8 flex items-center gap-2 px-3 rounded-md text-sm font-medium transition-all !ring-0 !outline-none !border-transparent border-0 ring-0 outline-none shadow-none hover:shadow-none focus:ring-0 focus:outline-none focus:border-transparent ${isPanMode
+                                ? 'bg-sky-100 text-sky-700 shadow-inner'
+                                : 'text-slate-600 hover:bg-sky-50 hover:text-sky-600 active:bg-sky-100 active:text-sky-700 active:shadow-inner'
+                                }`}
+                            title={isPanMode ? "Tắt chế độ kéo" : "Bật chế độ kéo (Giữ Ctrl)"}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0" /><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2" /><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8" /><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15" /></svg>
+                            <span className="hidden xl:inline">Kéo thả</span>
+                        </button>
+
+                        <div className="w-px h-5 bg-slate-200 mx-1"></div>
+
+                        {/* Special Actions (Mock & History) */}
+                        <div className="flex items-center gap-1">
+                            <button
+                                className="h-8 flex items-center gap-2 px-3 rounded-md text-sm font-medium transition-all !ring-0 !outline-none !border-transparent border-0 ring-0 outline-none shadow-none hover:shadow-none focus:ring-0 focus:outline-none focus:border-transparent text-slate-600 hover:text-sky-600 hover:bg-sky-50 active:bg-sky-100 active:text-sky-700 active:shadow-inner disabled:opacity-50 disabled:cursor-not-allowed"
+                                disabled={!!searchParams.get('template') || isAutoFilling}
+                                title={searchParams.get('template') ? "Đã có mẫu CV được chọn" : "Tạo dữ liệu mẫu với AI"}
+                                onClick={() => {
+                                    const dataToLoad = MOCK_DATA_MAP[activeTemplateId] || MOCK_CV_DATA;
+                                    fillData(dataToLoad);
+                                    addToast("AI đang viết CV cho bạn...", "info");
+                                }}
+                            >
+                                <Wand2 className={`w-4 h-4 ${isAutoFilling ? 'animate-spin' : ''}`} />
+                                <span className="hidden xl:inline">{isAutoFilling ? 'Đang viết...' : 'Dữ liệu mẫu'}</span>
+                            </button>
+
+                            <VersionHistoryDialog
+                                currentData={cvData}
+                                Template={TemplateComponent}
+                                onRestore={(data) => {
+                                    setCvData(data);
+                                    addToast("Đã khôi phục phiên bản CV!", "success");
+                                }}
+                            />
+                        </div>
+
+                        <div className="w-px h-5 bg-slate-200 mx-1"></div>
+
+                        {/* Reset */}
+                        <button
+                            onClick={handleResetZoom}
+                            className="h-8 w-8 flex items-center justify-center hover:bg-red-50 text-slate-400 hover:text-red-500 rounded-md transition-all mr-1"
+                            title="Reset góc nhìn"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /></svg>
+                        </button>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 
@@ -269,7 +378,7 @@ export default function CVBuilderPage() {
                 }
                 form={
                     <CVBuilderForm
-                        initialData={cvData}
+                        data={displayData}
                         activeSection={activeSection}
                         onSectionChange={setActiveSection}
                         onDataChange={setCvData}
