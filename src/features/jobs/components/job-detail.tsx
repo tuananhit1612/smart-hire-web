@@ -1,9 +1,12 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Job } from "../types/job";
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
+import { useToast } from "@/shared/components/ui/toast";
+import { ApplyModal } from "./apply-modal";
 import {
   MapPin,
   Briefcase,
@@ -31,6 +34,31 @@ interface JobDetailProps {
 }
 
 export function JobDetail({ job }: JobDetailProps) {
+  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
+  const { addToast } = useToast();
+
+  // Auto-open modal when returning from CV preview (check URL on mount)
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get("openApply") === "true") {
+        setIsApplyModalOpen(true);
+        // Clean up URL
+        window.history.replaceState({}, "", `/jobs/${job.id}`);
+      }
+    }
+  }, [job.id]);
+
+  // Handle apply success
+  const handleApplySuccess = () => {
+    addToast(
+      "Ứng tuyển thành công!",
+      "success",
+      4000,
+      `Hồ sơ của bạn đã được gửi đến ${job.company}. Chúc bạn may mắn!`
+    );
+  };
+
   // Format relative time
   const getRelativeTime = (dateString: string) => {
     const date = new Date(dateString);
@@ -181,7 +209,10 @@ export function JobDetail({ job }: JobDetailProps) {
 
               {/* Actions (Mobile) */}
               <div className="flex gap-3 mt-6 lg:hidden">
-                <Button className="flex-1 bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-700 hover:to-sky-600 text-white shadow-lg shadow-blue-500/25 rounded-full font-semibold h-12">
+                <Button
+                  onClick={() => setIsApplyModalOpen(true)}
+                  className="flex-1 bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-700 hover:to-sky-600 text-white shadow-lg shadow-blue-500/25 rounded-full font-semibold h-12"
+                >
                   Ứng tuyển ngay
                 </Button>
                 <Button
@@ -491,7 +522,10 @@ export function JobDetail({ job }: JobDetailProps) {
               className="sticky top-28 bg-white dark:bg-slate-900/50 backdrop-blur-md border border-slate-200 dark:border-slate-700/50 rounded-3xl p-6 space-y-6"
             >
               {/* Apply Button */}
-              <Button className="w-full bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-700 hover:to-sky-600 text-white shadow-lg shadow-blue-500/25 rounded-full font-semibold h-12 text-base">
+              <Button
+                onClick={() => setIsApplyModalOpen(true)}
+                className="w-full bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-700 hover:to-sky-600 text-white shadow-lg shadow-blue-500/25 rounded-full font-semibold h-12 text-base"
+              >
                 Ứng tuyển ngay
               </Button>
 
@@ -591,6 +625,14 @@ export function JobDetail({ job }: JobDetailProps) {
           </div>
         </div>
       </div>
+
+      {/* Apply Modal */}
+      <ApplyModal
+        job={job}
+        isOpen={isApplyModalOpen}
+        onClose={() => setIsApplyModalOpen(false)}
+        onSuccess={handleApplySuccess}
+      />
     </div>
   );
 }
