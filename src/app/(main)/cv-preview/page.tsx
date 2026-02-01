@@ -97,9 +97,8 @@ export default function CVPreviewPage() {
 
   const handleSelectCV = () => {
     if (params.returnTo === "apply" && params.jobId) {
-      // Store selected CV in sessionStorage
-      sessionStorage.setItem("selectedCVId", params.cvId);
-      router.push(`/jobs/${params.jobId}?openApply=true`);
+      // Pass CV ID directly in URL instead of sessionStorage
+      router.push(`/jobs/${params.jobId}?openApply=true&selectedCV=${params.cvId}`);
     } else {
       router.back();
     }
