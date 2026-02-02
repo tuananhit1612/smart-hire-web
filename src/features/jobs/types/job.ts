@@ -1,5 +1,6 @@
 export type JobType = "Full-time" | "Part-time" | "Contract" | "Remote" | "Internship" | "Freelance";
 export type JobLevel = "Intern" | "Fresher" | "Junior" | "Middle" | "Senior" | "Lead" | "Manager";
+export type JobStatus = "open" | "closed";
 
 export interface CompanyInfo {
   name: string;
@@ -22,6 +23,13 @@ export interface LocationInfo {
   };
 }
 
+export interface ContactInfo {
+  name: string;
+  title?: string; // e.g., "HR Manager", "Recruiter"
+  email: string;
+  phone: string;
+}
+
 export interface Job {
   id: string;
   title: string;
@@ -35,6 +43,10 @@ export interface Job {
   description: string; // Short description for card
   skills: string[];
   
+  // Job status
+  status?: JobStatus; // Default is "open"
+  closedAt?: string; // ISO Date string when job was closed
+  
   // Extended fields for detail page
   fullDescription?: string;
   requirements?: string[];
@@ -46,7 +58,9 @@ export interface Job {
   // New fields for richer detail
   companyInfo?: CompanyInfo;
   locationInfo?: LocationInfo;
+  contactInfo?: ContactInfo;
   workingHours?: string;
   teamSize?: string;
   reportTo?: string;
 }
+

@@ -1,9 +1,13 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Job } from "../types/job";
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
+import { useToast } from "@/shared/components/ui/toast";
+import { ApplyModal } from "./apply-modal";
+import { useApplicationStore } from "../stores/application-store";
 import {
   MapPin,
   Briefcase,
@@ -18,8 +22,13 @@ import {
   Globe,
   Users,
   CalendarDays,
+  Phone,
+  Mail,
   ExternalLink,
+  AlertTriangle,
+  XCircle,
   Navigation,
+  User,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -28,6 +37,36 @@ interface JobDetailProps {
 }
 
 export function JobDetail({ job }: JobDetailProps) {
+  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
+  const { addToast } = useToast();
+  const { hasApplied, getApplicationDate } = useApplicationStore();
+  
+  const isJobClosed = job.status === "closed";
+  const hasUserApplied = hasApplied(job.id);
+  const applicationDate = getApplicationDate(job.id);
+
+  // Auto-open modal when returning from CV preview (check URL on mount)
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get("openApply") === "true") {
+        setIsApplyModalOpen(true);
+        // Clean up URL
+        window.history.replaceState({}, "", `/jobs/${job.id}`);
+      }
+    }
+  }, [job.id]);
+
+  // Handle apply success
+  const handleApplySuccess = () => {
+    addToast(
+      "Ứng tuyển thành công!",
+      "success",
+      4000,
+      `Hồ sơ của bạn đã được gửi đến ${job.company}. Chúc bạn may mắn!`
+    );
+  };
+
   // Format relative time
   const getRelativeTime = (dateString: string) => {
     const date = new Date(dateString);
@@ -178,9 +217,24 @@ export function JobDetail({ job }: JobDetailProps) {
 
               {/* Actions (Mobile) */}
               <div className="flex gap-3 mt-6 lg:hidden">
-                <Button className="flex-1 bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-700 hover:to-sky-600 text-white shadow-lg shadow-blue-500/25 rounded-full font-semibold h-12">
-                  Ứng tuyển ngay
-                </Button>
+                {isJobClosed ? (
+                  <div className="flex-1 flex items-center justify-center gap-2 h-12 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500">
+                    <XCircle className="w-5 h-5" />
+                    <span className="font-medium">Tin đã đóng</span>
+                  </div>
+                ) : hasUserApplied ? (
+                  <div className="flex-1 flex items-center justify-center gap-2 h-12 rounded-full bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border border-green-200 dark:border-green-800">
+                    <CheckCircle2 className="w-5 h-5" />
+                    <span className="font-medium">Đã ứng tuyển</span>
+                  </div>
+                ) : (
+                  <Button
+                    onClick={() => setIsApplyModalOpen(true)}
+                    className="flex-1 bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-700 hover:to-sky-600 text-white shadow-lg shadow-blue-500/25 rounded-full font-semibold h-12"
+                  >
+                    Ứng tuyển ngay
+                  </Button>
+                )}
                 <Button
                   variant="outline"
                   size="icon"
@@ -428,6 +482,55 @@ export function JobDetail({ job }: JobDetailProps) {
                 </div>
               </motion.div>
             )}
+
+            {/* Contact Info Section */}
+            {job.contactInfo && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20 border border-sky-200 dark:border-sky-800/50 rounded-3xl p-6 md:p-8"
+              >
+                <h2 className="text-xl font-bold text-sky-800 dark:text-sky-300 mb-4">
+                  Thông tin liên hệ
+                </h2>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-sky-100 dark:bg-sky-900/30 rounded-full flex items-center justify-center">
+                      <User className="w-5 h-5 text-sky-600 dark:text-sky-400" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-slate-900 dark:text-white">
+                        {job.contactInfo.name}
+                      </p>
+                      {job.contactInfo.title && (
+                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                          {job.contactInfo.title}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Mail className="w-5 h-5 text-sky-600 dark:text-sky-400" />
+                    <a
+                      href={`mailto:${job.contactInfo.email}`}
+                      className="text-slate-600 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
+                    >
+                      {job.contactInfo.email}
+                    </a>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Phone className="w-5 h-5 text-sky-600 dark:text-sky-400" />
+                    <a
+                      href={`tel:${job.contactInfo.phone}`}
+                      className="text-slate-600 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
+                    >
+                      {job.contactInfo.phone}
+                    </a>
+                  </div>
+                </div>
+              </motion.div>
+            )}
           </div>
 
           {/* Sidebar */}
@@ -439,9 +542,24 @@ export function JobDetail({ job }: JobDetailProps) {
               className="sticky top-28 bg-white dark:bg-slate-900/50 backdrop-blur-md border border-slate-200 dark:border-slate-700/50 rounded-3xl p-6 space-y-6"
             >
               {/* Apply Button */}
-              <Button className="w-full bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-700 hover:to-sky-600 text-white shadow-lg shadow-blue-500/25 rounded-full font-semibold h-12 text-base">
-                Ứng tuyển ngay
-              </Button>
+              {isJobClosed ? (
+                <div className="w-full flex items-center justify-center gap-2 h-12 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500">
+                  <XCircle className="w-5 h-5" />
+                  <span className="font-semibold">Tin đã đóng</span>
+                </div>
+              ) : hasUserApplied ? (
+                <div className="w-full flex items-center justify-center gap-2 h-12 rounded-full bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border border-green-200 dark:border-green-800">
+                  <CheckCircle2 className="w-5 h-5" />
+                  <span className="font-semibold">Đã ứng tuyển</span>
+                </div>
+              ) : (
+                <Button
+                  onClick={() => setIsApplyModalOpen(true)}
+                  className="w-full bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-700 hover:to-sky-600 text-white shadow-lg shadow-blue-500/25 rounded-full font-semibold h-12 text-base"
+                >
+                  Ứng tuyển ngay
+                </Button>
+              )}
 
               <div className="flex gap-3">
                 <Button
@@ -539,6 +657,14 @@ export function JobDetail({ job }: JobDetailProps) {
           </div>
         </div>
       </div>
+
+      {/* Apply Modal */}
+      <ApplyModal
+        job={job}
+        isOpen={isApplyModalOpen}
+        onClose={() => setIsApplyModalOpen(false)}
+        onSuccess={handleApplySuccess}
+      />
     </div>
   );
 }
