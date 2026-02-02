@@ -19,7 +19,7 @@ import { exportToPDF } from "@/features/cv/utils/export-to-pdf";
 import { useCVAutoFill } from "@/features/cv/hooks/useCVAutoFill";
 import { useCVHistory } from "@/features/cv/hooks/useCVHistory";
 import { format } from "date-fns";
-export default function CVBuilderPage() {
+function CVBuilderContent() {
     const searchParams = useSearchParams();
     const activeTemplateId = searchParams.get('template') || 'modern-tech';
     const mode = searchParams.get('mode'); // 'new' or null
@@ -465,5 +465,20 @@ export default function CVBuilderPage() {
                 </div>
             )}
         </>
+    );
+}
+
+export default function CVBuilderPage() {
+    return (
+        <React.Suspense fallback={
+            <div className="flex items-center justify-center h-screen bg-slate-50">
+                <div className="flex flex-col items-center gap-3">
+                    <div className="w-8 h-8 border-4 border-sky-500 border-t-transparent rounded-full animate-spin"></div>
+                    <p className="text-slate-500 font-medium text-sm">Đang tải trình tạo CV...</p>
+                </div>
+            </div>
+        }>
+            <CVBuilderContent />
+        </React.Suspense>
     );
 }

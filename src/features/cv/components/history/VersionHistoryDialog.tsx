@@ -51,7 +51,7 @@ export function VersionHistoryDialog({ currentData, Template, onRestore }: Versi
 
     // Multi-select Logic
     const toggleSelection = (id: string, multi: boolean) => {
-        let newSet;
+        let newSet: Set<string>;
 
         if (multi) {
             newSet = new Set(selectedIds);
