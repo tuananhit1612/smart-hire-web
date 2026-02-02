@@ -270,6 +270,8 @@ export const mockJobs: Job[] = [
     type: "Full-time",
     level: "Lead",
     salary: "$2,500 - $4,500",
+    status: "closed",
+    closedAt: "2026-01-30T10:00:00.000Z",
     postedAt: "2026-01-24T10:00:00.000Z",
     description: "Dẫn dắt các chiến dịch marketing và thúc đẩy tăng trưởng cho sản phẩm SaaS.",
     skills: ["Digital Marketing", "SEO", "Content Strategy", "Analytics"],
