@@ -20,6 +20,9 @@ import {
   CalendarDays,
   ExternalLink,
   Navigation,
+  Mail,
+  Phone,
+  User,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -425,6 +428,55 @@ export function JobDetail({ job }: JobDetailProps) {
                       <ExternalLink className="w-3 h-3" />
                     </a>
                   )}
+                </div>
+              </motion.div>
+            )}
+
+            {/* Contact Info Section */}
+            {job.contactInfo && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20 border border-sky-200 dark:border-sky-800/50 rounded-3xl p-6 md:p-8"
+              >
+                <h2 className="text-xl font-bold text-sky-800 dark:text-sky-300 mb-4">
+                  Thông tin liên hệ
+                </h2>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-sky-100 dark:bg-sky-900/30 rounded-full flex items-center justify-center">
+                      <User className="w-5 h-5 text-sky-600 dark:text-sky-400" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-slate-900 dark:text-white">
+                        {job.contactInfo.name}
+                      </p>
+                      {job.contactInfo.title && (
+                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                          {job.contactInfo.title}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Mail className="w-5 h-5 text-sky-600 dark:text-sky-400" />
+                    <a
+                      href={`mailto:${job.contactInfo.email}`}
+                      className="text-slate-600 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
+                    >
+                      {job.contactInfo.email}
+                    </a>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Phone className="w-5 h-5 text-sky-600 dark:text-sky-400" />
+                    <a
+                      href={`tel:${job.contactInfo.phone}`}
+                      className="text-slate-600 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
+                    >
+                      {job.contactInfo.phone}
+                    </a>
+                  </div>
                 </div>
               </motion.div>
             )}

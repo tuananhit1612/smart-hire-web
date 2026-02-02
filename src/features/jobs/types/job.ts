@@ -22,6 +22,13 @@ export interface LocationInfo {
   };
 }
 
+export interface ContactInfo {
+  name: string;
+  title?: string; // e.g., "HR Manager", "Recruiter"
+  email: string;
+  phone: string;
+}
+
 export interface Job {
   id: string;
   title: string;
@@ -46,6 +53,7 @@ export interface Job {
   // New fields for richer detail
   companyInfo?: CompanyInfo;
   locationInfo?: LocationInfo;
+  contactInfo?: ContactInfo;
   workingHours?: string;
   teamSize?: string;
   reportTo?: string;
