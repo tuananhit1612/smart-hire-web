@@ -4,6 +4,8 @@ import * as React from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Sparkles } from "lucide-react";
+import { ParticleBackground } from "@/shared/components/effects/ParticleBackground";
+import { Header } from "@/shared/components/layout/Header";
 import { JobPosition, TemplateStyle, CVTemplate, TEMPLATES } from "@/features/cv/types/template-types";
 import {
     PositionSelector,
@@ -31,111 +33,44 @@ export default function CVTemplatesPage() {
     };
 
     const handleStartFromScratch = () => {
-        router.push('/cv-builder');
+        router.push('/cv-builder?mode=new');
     };
 
     return (
-        <div className="min-h-screen relative overflow-hidden bg-gray-50 dark:bg-zinc-950">
-            {/* Animated Aurora background */}
-            <div className="fixed inset-0 overflow-hidden pointer-events-none">
-                {/* Blob 1 - Purple */}
-                <motion.div
-                    animate={{
-                        x: [0, 30, -20, 0],
-                        y: [0, -50, 20, 0],
-                        scale: [1, 1.1, 0.9, 1]
-                    }}
-                    transition={{
-                        duration: 7,
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                    }}
-                    className="absolute top-0 -left-40 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-[120px] opacity-25 dark:opacity-35"
-                />
-                {/* Blob 2 - Indigo */}
-                <motion.div
-                    animate={{
-                        x: [0, -30, 20, 0],
-                        y: [0, 30, -40, 0],
-                        scale: [1, 0.9, 1.1, 1]
-                    }}
-                    transition={{
-                        duration: 8,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                        delay: 1
-                    }}
-                    className="absolute top-20 -right-40 w-96 h-96 bg-indigo-400 rounded-full mix-blend-multiply filter blur-[120px] opacity-25 dark:opacity-35"
-                />
-                {/* Blob 3 - Pink */}
-                <motion.div
-                    animate={{
-                        x: [0, 40, -30, 0],
-                        y: [0, -30, 40, 0],
-                        scale: [1, 1.2, 0.8, 1]
-                    }}
-                    transition={{
-                        duration: 9,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                        delay: 2
-                    }}
-                    className="absolute -bottom-40 left-1/3 w-96 h-96 bg-pink-400 rounded-full mix-blend-multiply filter blur-[120px] opacity-25 dark:opacity-35"
-                />
-                {/* Blob 4 - Cyan (new) */}
-                <motion.div
-                    animate={{
-                        x: [0, -20, 40, 0],
-                        y: [0, 40, -20, 0],
-                        scale: [1, 0.85, 1.15, 1]
-                    }}
-                    transition={{
-                        duration: 10,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                        delay: 3
-                    }}
-                    className="absolute top-1/2 right-1/4 w-80 h-80 bg-cyan-400 rounded-full mix-blend-multiply filter blur-[100px] opacity-20 dark:opacity-30"
-                />
-            </div>
+        <div className="min-h-screen relative overflow-hidden bg-white">
+            {/* Animated Background - Particle Theme */}
+            <ParticleBackground />
+            <Header />
 
-            {/* Content */}
-            <div className="relative z-10 max-w-7xl mx-auto px-4 py-8 md:py-12">
+            {/* Content - Added padding top for header */}
+            <div className="relative z-10 max-w-7xl mx-auto px-4 py-8 md:py-12 pt-24 lg:pt-28">
                 {/* Header */}
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="text-center mb-8 md:mb-12"
                 >
-                    {/* Back button */}
-                    <button
-                        onClick={() => router.back()}
-                        className="absolute left-4 top-8 md:top-12 p-2 rounded-xl hover:bg-white/50 dark:hover:bg-zinc-800/50 transition-colors"
-                    >
-                        <ArrowLeft className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                    </button>
-
                     {/* Badge */}
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 0.1 }}
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 mb-4"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-sky-50 border border-sky-100 mb-4"
                     >
-                        <Sparkles className="w-4 h-4 text-indigo-500" />
-                        <span className="text-sm font-medium text-indigo-600 dark:text-indigo-400">
+                        <Sparkles className="w-4 h-4 text-sky-500" />
+                        <span className="text-sm font-medium text-sky-600">
                             Thư viện mẫu CV
                         </span>
                     </motion.div>
 
                     {/* Title */}
-                    <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white mb-3">
+                    <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-gray-900 mb-3">
                         Chọn mẫu CV
-                        <span className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+                        <span className="bg-gradient-to-r from-sky-500 via-blue-500 to-emerald-500 bg-clip-text text-transparent">
                             {" "}phù hợp với bạn
                         </span>
                     </h1>
-                    <p className="text-gray-500 dark:text-gray-400 text-base md:text-lg max-w-2xl mx-auto">
+                    <p className="text-gray-500 text-base md:text-lg max-w-2xl mx-auto">
                         Khám phá bộ sưu tập mẫu CV chuyên nghiệp, được thiết kế tối ưu cho từng ngành nghề
                     </p>
                 </motion.div>

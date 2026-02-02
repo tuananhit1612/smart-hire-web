@@ -97,14 +97,14 @@ export function TemplatesGrid({
                         className="space-y-4"
                     >
                         <div className="flex items-center gap-3">
-                            <div className="p-2 rounded-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
+                            <div className="p-2 rounded-xl bg-gradient-to-r from-sky-500 to-green-500">
                                 <Crown className="w-5 h-5 text-white" />
                             </div>
                             <div>
-                                <h3 className="font-bold text-lg text-gray-900 dark:text-white">
+                                <h3 className="font-bold text-lg text-gray-900">
                                     Đề xuất cho bạn
                                 </h3>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                <p className="text-sm text-gray-500">
                                     Mẫu CV được đánh giá cao nhất cho vị trí này
                                 </p>
                             </div>
@@ -131,10 +131,10 @@ export function TemplatesGrid({
                         {/* Divider */}
                         <div className="relative py-4">
                             <div className="absolute inset-0 flex items-center">
-                                <div className="w-full border-t border-gray-200 dark:border-zinc-800" />
+                                <div className="w-full border-t border-gray-200" />
                             </div>
                             <div className="relative flex justify-center">
-                                <span className="px-4 bg-gray-50 dark:bg-zinc-950 text-sm text-gray-500 dark:text-gray-400">
+                                <span className="px-4 bg-white text-sm text-gray-500">
                                     Tất cả mẫu CV
                                 </span>
                             </div>
@@ -145,14 +145,14 @@ export function TemplatesGrid({
 
             {/* Results count & Sort */}
             <div className="flex items-center justify-between">
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                    <span className="font-semibold text-gray-900 dark:text-white">
+                <p className="text-sm text-gray-500">
+                    <span className="font-semibold text-gray-900">
                         {filteredTemplates.length}
                     </span>{" "}
                     mẫu CV phù hợp
                     {searchQuery && (
                         <span className="ml-1">
-                            cho "<span className="font-medium text-indigo-600 dark:text-indigo-400">{searchQuery}</span>"
+                            cho "<span className="font-medium text-sky-600">{searchQuery}</span>"
                         </span>
                     )}
                 </p>
@@ -170,24 +170,24 @@ export function TemplatesGrid({
                     whileHover={{ y: -8, scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={onStartFromScratch}
-                    className="group relative aspect-[3/4] rounded-3xl border-2 border-dashed border-gray-300 dark:border-zinc-700 hover:border-indigo-400 dark:hover:border-indigo-500 transition-all duration-300 flex flex-col items-center justify-center gap-4 bg-white/40 dark:bg-zinc-900/40 backdrop-blur-sm"
+                    className="group relative aspect-[3/4] rounded-3xl border-2 border-dashed border-gray-300 hover:border-sky-400 transition-all duration-300 flex flex-col items-center justify-center gap-4 bg-white hover:bg-sky-50/50"
                 >
                     {/* Icon */}
-                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500/10 to-purple-500/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                        <Plus className="w-8 h-8 text-indigo-500" />
+                    <div className="w-16 h-16 rounded-2xl bg-sky-100 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <Plus className="w-8 h-8 text-sky-600" />
                     </div>
 
                     <div className="text-center space-y-1">
-                        <p className="font-semibold text-gray-900 dark:text-white">
+                        <p className="font-semibold text-gray-900">
                             Tạo CV từ đầu
                         </p>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                        <p className="text-sm text-gray-500">
                             Bắt đầu với template trống
                         </p>
                     </div>
 
                     {/* Hover glow */}
-                    <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-indigo-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="absolute inset-0 rounded-3xl bg-sky-400/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </motion.button>
 
                 {/* Template cards (exclude recommended if already shown) */}
@@ -220,13 +220,13 @@ export function TemplatesGrid({
                     animate={{ opacity: 1, y: 0 }}
                     className="text-center py-16"
                 >
-                    <div className="w-20 h-20 rounded-2xl bg-gray-100 dark:bg-zinc-800 flex items-center justify-center mx-auto mb-4">
+                    <div className="w-20 h-20 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-4">
                         <FileText className="w-10 h-10 text-gray-400" />
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
                         Không tìm thấy mẫu CV phù hợp
                     </h3>
-                    <p className="text-gray-500 dark:text-gray-400 mb-4">
+                    <p className="text-gray-500 mb-4">
                         {searchQuery
                             ? `Không có kết quả cho "${searchQuery}"`
                             : "Thử thay đổi bộ lọc hoặc tạo CV từ đầu"
@@ -234,7 +234,7 @@ export function TemplatesGrid({
                     </p>
                     <button
                         onClick={onStartFromScratch}
-                        className="px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-semibold"
+                        className="px-6 py-3 rounded-xl bg-gradient-to-r from-sky-500 to-emerald-500 text-white font-semibold shadow-lg shadow-sky-500/20"
                     >
                         Tạo CV từ đầu
                     </button>

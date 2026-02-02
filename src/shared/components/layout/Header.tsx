@@ -12,18 +12,27 @@ export function Header() {
     const { scrollY } = useScroll();
 
     useMotionValueEvent(scrollY, "change", (latest) => {
-        // Show header when scrolling up, hide when scrolling down
-        if (latest < lastScrollY || latest < 100) {
+        // Only show header when at the very top of the page
+        if (latest < 50) {
             setIsVisible(true);
-        } else if (latest > lastScrollY && latest > 100) {
+        } else {
             setIsVisible(false);
         }
         setLastScrollY(latest);
     });
 
+    const headerVariants = {
+        visible: { y: 0, opacity: 1 },
+        hidden: { y: -100, opacity: 0 },
+    };
+
     return (
-        <header
+        <motion.header
             className="fixed top-4 inset-x-0 mx-auto w-full max-w-7xl z-40 px-4 md:px-6"
+            variants={headerVariants}
+            initial="visible"
+            animate={isVisible ? "visible" : "hidden"}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
         >
             <div className="bg-white/80 backdrop-blur-xl border border-white/40 shadow-sm rounded-full h-16 px-6 flex items-center justify-between">
                 <Link href="/" className="flex items-center gap-2.5 cursor-pointer group">
@@ -55,6 +64,6 @@ export function Header() {
                     </Link>
                 </div>
             </div>
-        </header>
+        </motion.header>
     );
 }

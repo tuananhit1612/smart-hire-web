@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/providers/theme-provider";
 import { ToastProvider } from "@/shared/components/ui/toast";
 
 import { ParticleBackground } from "@/shared/components/effects/ParticleBackground";
+import { FloatingBackButton } from "@/shared/components/navigation/FloatingBackButton";
 
 const beVietnamPro = Be_Vietnam_Pro({
   subsets: ["latin", "vietnamese"],
@@ -35,6 +36,7 @@ export default function RootLayout({
         className={`${beVietnamPro.variable} ${orbitron.variable} font-sans antialiased flex flex-col min-h-screen bg-white`}
       >
         <ParticleBackground />
+        <FloatingBackButton />
         <ThemeProvider
           attribute="class"
           defaultTheme="light"

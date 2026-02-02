@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, X, Sparkles, FileCheck, Minimize2, Palette, Code, Briefcase, TrendingUp, LayoutGrid } from "lucide-react";
+import { Search, X, Minimize2, Palette, Code, Briefcase, TrendingUp, LayoutGrid, Zap } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
 
 interface SearchBarProps {
@@ -13,10 +13,10 @@ interface SearchBarProps {
 
 // Quick search tags like Canva
 const quickTags = [
-    { label: "ATS-friendly", icon: FileCheck, color: "from-emerald-500 to-teal-500", shadow: "shadow-emerald-500/30" },
+    { label: "ATS-friendly", icon: Zap, color: "from-emerald-500 to-teal-500", shadow: "shadow-emerald-500/30" },
     { label: "Minimal", icon: Minimize2, color: "from-slate-500 to-zinc-600", shadow: "shadow-slate-500/30" },
     { label: "Creative", icon: Palette, color: "from-pink-500 to-rose-500", shadow: "shadow-pink-500/30" },
-    { label: "Tech", icon: Code, color: "from-blue-500 to-cyan-500", shadow: "shadow-blue-500/30" },
+    { label: "Tech", icon: Code, color: "from-sky-500 to-blue-500", shadow: "shadow-sky-500/30" },
     { label: "Business", icon: Briefcase, color: "from-amber-500 to-orange-500", shadow: "shadow-amber-500/30" },
     { label: "Marketing", icon: TrendingUp, color: "from-purple-500 to-violet-500", shadow: "shadow-purple-500/30" },
     { label: "Clean layout", icon: LayoutGrid, color: "from-indigo-500 to-blue-500", shadow: "shadow-indigo-500/30" }
@@ -43,10 +43,10 @@ export function SearchBar({ value, onChange, placeholder = "Tìm kiếm trong h�
         >
             {/* Search input - Larger like Canva */}
             <div className="relative max-w-3xl mx-auto">
-                {/* Animated glow effect */}
+                {/* Animated glow effect - Sky/Green */}
                 <motion.div
                     className={cn(
-                        "absolute -inset-1 rounded-2xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 blur-md transition-opacity duration-500",
+                        "absolute -inset-1 rounded-2xl bg-gradient-to-r from-sky-500 via-emerald-400 to-lime-500 blur-md transition-opacity duration-500",
                         isFocused ? "opacity-60" : "opacity-0"
                     )}
                     animate={isFocused ? {
@@ -56,10 +56,10 @@ export function SearchBar({ value, onChange, placeholder = "Tìm kiếm trong h�
                     style={{ backgroundSize: "200% 200%" }}
                 />
 
-                <div className="relative bg-white dark:bg-zinc-900 rounded-2xl shadow-xl shadow-gray-200/50 dark:shadow-black/20">
+                <div className="relative bg-white rounded-2xl shadow-xl shadow-gray-200/50">
                     <Search className={cn(
                         "absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 transition-all duration-300",
-                        isFocused ? "text-indigo-500 scale-110" : "text-gray-400"
+                        isFocused ? "text-sky-500 scale-110" : "text-gray-400"
                     )} />
 
                     <input
@@ -72,8 +72,8 @@ export function SearchBar({ value, onChange, placeholder = "Tìm kiếm trong h�
                         className={cn(
                             "w-full h-16 pl-14 pr-14 rounded-2xl text-base",
                             "bg-transparent",
-                            "border-2 border-gray-100 dark:border-zinc-800",
-                            "text-gray-900 dark:text-white placeholder:text-gray-400",
+                            "border-2 border-gray-100",
+                            "text-gray-900 placeholder:text-gray-400",
                             "focus:outline-none focus:border-transparent",
                             "transition-all duration-300"
                         )}
@@ -88,7 +88,7 @@ export function SearchBar({ value, onChange, placeholder = "Tìm kiếm trong h�
                                 exit={{ scale: 0, rotate: 90 }}
                                 transition={{ type: "spring", stiffness: 300 }}
                                 onClick={() => onChange("")}
-                                className="absolute right-5 top-1/2 -translate-y-1/2 p-2 rounded-full bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors"
+                                className="absolute right-5 top-1/2 -translate-y-1/2 p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
                             >
                                 <X className="w-4 h-4 text-gray-500" />
                             </motion.button>
@@ -98,7 +98,7 @@ export function SearchBar({ value, onChange, placeholder = "Tìm kiếm trong h�
                     {/* Submit arrow */}
                     {!value && (
                         <motion.div
-                            className="absolute right-5 top-1/2 -translate-y-1/2 p-3 rounded-xl bg-gray-100 dark:bg-zinc-800"
+                            className="absolute right-5 top-1/2 -translate-y-1/2 p-3 rounded-xl bg-gray-100"
                             whileHover={{ scale: 1.05, x: 3 }}
                         >
                             <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -135,7 +135,7 @@ export function SearchBar({ value, onChange, placeholder = "Tìm kiếm trong h�
                                 "relative flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300",
                                 isActive
                                     ? `bg-gradient-to-r ${tag.color} text-white shadow-lg ${tag.shadow}`
-                                    : "bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 text-gray-600 dark:text-gray-400 hover:border-gray-300 dark:hover:border-zinc-600 hover:shadow-md"
+                                    : "bg-white border border-gray-200 text-gray-600 hover:border-gray-300 hover:shadow-md"
                             )}
                         >
                             {/* Ripple effect on active */}

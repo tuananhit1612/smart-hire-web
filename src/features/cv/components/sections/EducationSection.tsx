@@ -69,8 +69,8 @@ export function EducationSection({ data, onChange }: EducationSectionProps) {
                 {/* Section Header */}
                 <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                     <div>
-                        <h2 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white flex items-center gap-2 md:gap-3">
-                            <div className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white flex-shrink-0">
+                        <h2 className="text-xl md:text-2xl font-bold tracking-tight text-sky-900 flex items-center gap-2 md:gap-3">
+                            <div className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-gradient-to-r from-sky-500 to-green-500 text-white flex-shrink-0 shadow-lg shadow-sky-500/20">
                                 <GraduationCap className="w-4 h-4 md:w-5 md:h-5" />
                             </div>
                             <span>Học vấn</span>
@@ -99,8 +99,8 @@ export function EducationSection({ data, onChange }: EducationSectionProps) {
                             exit={{ opacity: 0, scale: 0.95 }}
                             className="border-2 border-dashed border-gray-200 dark:border-zinc-800 rounded-2xl p-8 text-center"
                         >
-                            <GraduationCap className="w-12 h-12 mx-auto text-gray-300 dark:text-gray-600 mb-3" />
-                            <p className="text-gray-500 dark:text-gray-400 text-sm">
+                            <GraduationCap className="w-12 h-12 mx-auto text-sky-200 mb-3" />
+                            <p className="text-gray-500 text-sm">
                                 Chưa có thông tin học vấn
                             </p>
                             <Button
@@ -133,7 +133,7 @@ export function EducationSection({ data, onChange }: EducationSectionProps) {
                                     </button>
 
                                     {/* Item Number Badge */}
-                                    <div className="absolute -left-3 top-6 flex items-center justify-center w-6 h-6 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-xs font-bold shadow-lg hidden md:flex">
+                                    <div className="absolute -left-3 top-6 flex items-center justify-center w-6 h-6 rounded-full bg-gradient-to-r from-sky-500 to-green-500 text-white text-xs font-bold shadow-lg hidden md:flex">
                                         {index + 1}
                                     </div>
 
@@ -141,7 +141,7 @@ export function EducationSection({ data, onChange }: EducationSectionProps) {
                                         {/* Mobile Drag Handle & Number */}
                                         <div className="flex items-center gap-2 md:hidden">
                                             {dragHandle}
-                                            <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400">
+                                            <span className="text-xs font-semibold text-sky-600">
                                                 #{index + 1}
                                             </span>
                                         </div>
