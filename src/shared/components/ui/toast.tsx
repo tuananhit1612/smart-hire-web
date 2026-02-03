@@ -44,34 +44,38 @@ export function useToastHelpers() {
     };
 }
 
-const TOAST_CONFIG: Record<ToastType, { icon: React.ElementType; color: string; bgColor: string; borderColor: string; stripColor: string }> = {
+const TOAST_CONFIG: Record<ToastType, { icon: React.ElementType; color: string; bgColor: string; borderColor: string; stripColor: string; shadowColor: string }> = {
     success: {
         icon: Check,
-        color: "text-emerald-600 dark:text-emerald-400",
-        bgColor: "bg-emerald-50 dark:bg-emerald-900/20",
-        borderColor: "border-emerald-200 dark:border-emerald-800",
-        stripColor: "bg-emerald-500 dark:bg-emerald-500"
+        color: "text-emerald-600",
+        bgColor: "bg-emerald-100/50",
+        borderColor: "border-emerald-200",
+        stripColor: "bg-emerald-500",
+        shadowColor: "shadow-emerald-500/10"
     },
     error: {
         icon: XCircle,
-        color: "text-rose-600 dark:text-rose-400",
-        bgColor: "bg-rose-50 dark:bg-rose-900/20",
-        borderColor: "border-rose-200 dark:border-rose-800",
-        stripColor: "bg-rose-500 dark:bg-rose-500"
+        color: "text-rose-600",
+        bgColor: "bg-rose-100/50",
+        borderColor: "border-rose-200",
+        stripColor: "bg-rose-500",
+        shadowColor: "shadow-rose-500/10"
     },
     warning: {
         icon: AlertTriangle,
-        color: "text-amber-600 dark:text-amber-400",
-        bgColor: "bg-amber-50 dark:bg-amber-900/20",
-        borderColor: "border-amber-200 dark:border-amber-800",
-        stripColor: "bg-amber-500 dark:bg-amber-500"
+        color: "text-amber-600",
+        bgColor: "bg-amber-100/50",
+        borderColor: "border-amber-200",
+        stripColor: "bg-amber-500",
+        shadowColor: "shadow-amber-500/10"
     },
     info: {
         icon: Info,
-        color: "text-blue-600 dark:text-blue-400",
-        bgColor: "bg-blue-50 dark:bg-blue-900/20",
-        borderColor: "border-blue-200 dark:border-blue-800",
-        stripColor: "bg-blue-500 dark:bg-blue-500"
+        color: "text-sky-600",
+        bgColor: "bg-sky-100/50",
+        borderColor: "border-sky-200",
+        stripColor: "bg-sky-500",
+        shadowColor: "shadow-sky-500/10"
     }
 };
 
@@ -90,31 +94,34 @@ function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: () => void }) 
     return (
         <motion.div
             layout
-            initial={{ opacity: 0, x: 20, scale: 0.95 }}
+            initial={{ opacity: 0, x: 50, scale: 0.9 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: 20, scale: 0.9 }}
-            transition={{ type: "spring", stiffness: 350, damping: 25 }}
+            transition={{ type: "spring", stiffness: 400, damping: 30 }}
             className={cn(
-                "group relative flex w-full max-w-sm overflow-hidden rounded-2xl border bg-white/95 p-4 shadow-[0_8px_30px_rgb(0,0,0,0.08)] backdrop-blur-3xl dark:bg-zinc-900/95 transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)]",
-                config.borderColor
+                "group relative flex w-full max-w-sm overflow-hidden rounded-2xl border bg-white/80 p-4 shadow-xl backdrop-blur-2xl transition-all hover:scale-[1.02]",
+                config.borderColor,
+                config.shadowColor
             )}
         >
-            {/* Colored Strip on Left */}
-            {/* Colored Strip on Left */}
+            {/* Colored Glow Background */}
+            <div className={cn("absolute inset-0 opacity-20 pointer-events-none", config.bgColor)} />
+
+            {/* Colored Strip on Left (Gradient) */}
             <div className={cn("absolute left-0 top-0 bottom-0 w-1.5", config.stripColor)} />
 
             {/* Icon Container */}
-            <div className={cn("mr-4 flex h-10 w-10 shrink-0 items-center justify-center rounded-full", config.bgColor)}>
-                <Icon className={cn("h-5 w-5", config.color)} />
+            <div className={cn("relative mr-4 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white shadow-sm border border-white/50", config.color)}>
+                <Icon className="h-5 w-5" />
             </div>
 
             {/* Content */}
-            <div className="flex-1 pr-4">
-                <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+            <div className="flex-1 pr-6 relative">
+                <h4 className="text-sm font-bold text-gray-800">
                     {toast.message}
                 </h4>
                 {toast.description && (
-                    <p className="mt-1 text-xs font-medium text-gray-500 dark:text-gray-400">
+                    <p className="mt-1 text-xs font-medium text-gray-500 leading-relaxed">
                         {toast.description}
                     </p>
                 )}
@@ -123,9 +130,9 @@ function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: () => void }) 
             {/* Close Button */}
             <button
                 onClick={onRemove}
-                className="absolute right-2 top-2 rounded-lg p-1.5 text-gray-400 opacity-0 transition-all hover:bg-gray-100 group-hover:opacity-100 dark:hover:bg-zinc-800"
+                className="absolute right-2 top-2 rounded-full p-1.5 text-gray-400 opacity-60 transition-all hover:bg-gray-100 hover:text-gray-600 hover:opacity-100"
             >
-                <X className="h-4 w-4" />
+                <X className="h-3.5 w-3.5" />
             </button>
         </motion.div>
     );

@@ -18,11 +18,12 @@ export function ParticleBackground() {
         // Configuration
         const particleCount = 100;
         const colors = [
-            "#0369A1", // Sky Blue
-            "#0EA5E9", // Lighter Sky
-            "#22C55E", // Green
-            "#A855F7", // Purple (from original palette for variety)
-            "#EC4899"  // Pink (accent)
+            "#0EA5E9", // Sky 500
+            "#38BDF8", // Sky 400
+            "#10B981", // Emerald 500
+            "#34D399", // Emerald 400
+            "#06B6D4", // Cyan 500
+            "#F0F9FF"  // Sky 50 (very light for bubbles)
         ];
 
         class Particle {

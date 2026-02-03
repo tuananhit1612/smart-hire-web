@@ -19,7 +19,7 @@ export function ProfileAbout({ about }: ProfileAboutProps) {
         <div className="p-2 rounded-xl bg-primary/10">
           <User className="h-5 w-5 text-primary" />
         </div>
-        <h2 className="text-xl font-semibold text-foreground">About</h2>
+        <h2 className="text-xl font-semibold text-foreground">Giới thiệu</h2>
       </div>
       <p className="text-muted-foreground leading-relaxed">{about}</p>
     </motion.div>

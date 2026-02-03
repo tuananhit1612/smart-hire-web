@@ -5,6 +5,17 @@ import { motion } from "framer-motion";
 import { Eye, Check, Star, Zap } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
 import { CVTemplate } from "@/features/cv/types/template-types";
+import { TEMPLATE_COMPONENTS } from "@/features/cv/components/cv-templates";
+import {
+    MOCK_DATA_INTERN,
+    MOCK_DATA_LEADER,
+    MOCK_DATA_SENIOR,
+    MOCK_DATA_SALES_ADMIN,
+    MOCK_DATA_CHRO,
+    MOCK_DATA_SALES_EXEC,
+    MOCK_DATA_BA,
+    getMockDataForTemplate
+} from "@/features/cv/data/mock-data";
 
 interface TemplateCardProps {
     template: CVTemplate;
@@ -17,6 +28,30 @@ export function TemplateCard({ template, onSelect, onPreview, isRecommended }: T
     const [isHovered, setIsHovered] = React.useState(false);
     const [mousePosition, setMousePosition] = React.useState({ x: 0, y: 0 });
     const cardRef = React.useRef<HTMLDivElement>(null);
+    const containerRef = React.useRef<HTMLDivElement>(null);
+    const [scale, setScale] = React.useState(0.22);
+
+    React.useEffect(() => {
+        const updateScale = () => {
+            if (containerRef.current) {
+                const containerWidth = containerRef.current.offsetWidth;
+                // A4 width is 210mm approx 794px at 96dpi
+                // We calculate scale to fit the width perfectly
+                const newScale = containerWidth / 794;
+                setScale(newScale);
+            }
+        };
+
+        // Initial calculation
+        updateScale();
+
+        const observer = new ResizeObserver(updateScale);
+        if (containerRef.current) {
+            observer.observe(containerRef.current);
+        }
+
+        return () => observer.disconnect();
+    }, []);
 
     // 3D Tilt effect
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -49,9 +84,9 @@ export function TemplateCard({ template, onSelect, onPreview, isRecommended }: T
             }}
             className="group relative transition-transform duration-200 ease-out"
         >
-            {/* Holographic border on hover */}
+            {/* Holographic border on hover - Sky/Green */}
             <div className={cn(
-                "absolute -inset-[2px] rounded-3xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 opacity-0 transition-opacity duration-500",
+                "absolute -inset-[2px] rounded-3xl bg-gradient-to-r from-sky-500 via-emerald-400 to-lime-500 opacity-0 transition-opacity duration-500",
                 isHovered && "opacity-100"
             )} />
 
@@ -61,7 +96,7 @@ export function TemplateCard({ template, onSelect, onPreview, isRecommended }: T
                     <motion.div
                         initial={{ scale: 0, y: 10 }}
                         animate={{ scale: 1, y: 0 }}
-                        className="px-3 py-1 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white text-xs font-bold shadow-lg flex items-center gap-1"
+                        className="px-3 py-1 rounded-full bg-gradient-to-r from-sky-500 via-emerald-500 to-lime-500 text-white text-xs font-bold shadow-lg flex items-center gap-1"
                     >
                         <Star className="w-3 h-3 fill-current" />
                         Phù hợp nhất
@@ -71,67 +106,30 @@ export function TemplateCard({ template, onSelect, onPreview, isRecommended }: T
 
             {/* Card */}
             <div className={cn(
-                "relative bg-white dark:bg-zinc-900 backdrop-blur-xl rounded-3xl overflow-hidden",
-                "border border-gray-200/50 dark:border-zinc-800/50",
-                "shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)]",
+                "relative bg-white backdrop-blur-xl rounded-3xl overflow-hidden",
+                "border border-gray-200",
+                "shadow-[0_8px_30px_rgb(0,0,0,0.06)]",
                 "transition-shadow duration-500",
                 isHovered && "shadow-2xl"
             )}>
                 {/* Thumbnail */}
-                <div className="relative aspect-[3/4] bg-gradient-to-br from-gray-100 to-gray-200 dark:from-zinc-800 dark:to-zinc-900 overflow-hidden">
-                    {/* Placeholder CV preview */}
-                    <div
-                        className="absolute inset-4 bg-white dark:bg-zinc-950 rounded-lg shadow-lg p-4 space-y-3 transition-transform duration-300"
-                        style={{ transform: `translateZ(${isHovered ? 20 : 0}px)` }}
-                    >
-                        {/* Header */}
-                        <div className="flex items-center gap-3">
-                            <div
-                                className="w-10 h-10 rounded-full"
-                                style={{ backgroundColor: template.colors.primary + '30' }}
-                            />
-                            <div className="flex-1 space-y-1.5">
-                                <div
-                                    className="h-2.5 rounded-full w-3/4"
-                                    style={{ backgroundColor: template.colors.primary }}
-                                />
-                                <div className="h-2 bg-gray-200 dark:bg-zinc-700 rounded-full w-1/2" />
-                            </div>
-                        </div>
+                <div className="relative aspect-[3/4] bg-gray-50 overflow-hidden" ref={containerRef}>
+                    {/* Live CV Preview */}
+                    <div className="absolute inset-0 w-full h-full overflow-hidden bg-gray-100/50">
+                        <div
+                            className="w-[210mm] min-h-[297mm] bg-white text-[10px] transform origin-top-left shadow-sm transition-transform duration-75 ease-out"
+                            style={{ transform: `scale(${scale})` }}
+                        >
+                            {(() => {
+                                const TemplateComponent = TEMPLATE_COMPONENTS[template.id] || TEMPLATE_COMPONENTS['modern-tech'];
+                                const mockData = getMockDataForTemplate(template.id);
 
-                        {/* Sections */}
-                        <div className="space-y-2">
-                            <div
-                                className="h-1.5 rounded-full w-1/4"
-                                style={{ backgroundColor: template.colors.secondary }}
-                            />
-                            <div className="space-y-1">
-                                <div className="h-1.5 bg-gray-200 dark:bg-zinc-700 rounded-full w-full" />
-                                <div className="h-1.5 bg-gray-200 dark:bg-zinc-700 rounded-full w-5/6" />
-                                <div className="h-1.5 bg-gray-200 dark:bg-zinc-700 rounded-full w-4/6" />
-                            </div>
-                        </div>
-
-                        <div className="space-y-2">
-                            <div
-                                className="h-1.5 rounded-full w-1/3"
-                                style={{ backgroundColor: template.colors.secondary }}
-                            />
-                            <div className="space-y-1">
-                                <div className="h-1.5 bg-gray-200 dark:bg-zinc-700 rounded-full w-full" />
-                                <div className="h-1.5 bg-gray-200 dark:bg-zinc-700 rounded-full w-3/4" />
-                            </div>
-                        </div>
-
-                        {/* Skills */}
-                        <div className="flex gap-1 flex-wrap">
-                            {[1, 2, 3].map((i) => (
-                                <div
-                                    key={i}
-                                    className="h-4 px-2 rounded-full"
-                                    style={{ backgroundColor: template.colors.accent + '40' }}
-                                />
-                            ))}
+                                return (
+                                    <div className="pointer-events-none select-none">
+                                        <TemplateComponent data={mockData} />
+                                    </div>
+                                );
+                            })()}
                         </div>
                     </div>
 
@@ -139,7 +137,7 @@ export function TemplateCard({ template, onSelect, onPreview, isRecommended }: T
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: isHovered ? 1 : 0 }}
-                        className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex items-end justify-center pb-6"
+                        className="absolute inset-0 bg-gradient-to-t from-sky-900/60 via-sky-900/20 to-transparent flex items-end justify-center pb-6"
                     >
                         <div className="flex gap-3">
                             <motion.button
@@ -155,7 +153,7 @@ export function TemplateCard({ template, onSelect, onPreview, isRecommended }: T
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 onClick={() => onSelect(template)}
-                                className="px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-sm font-medium flex items-center gap-2 shadow-lg shadow-indigo-500/25"
+                                className="px-4 py-2 rounded-xl bg-gradient-to-r from-sky-500 to-green-500 text-white text-sm font-medium flex items-center gap-2 shadow-lg shadow-sky-500/25"
                             >
                                 <Check className="w-4 h-4" />
                                 Chọn
@@ -182,10 +180,10 @@ export function TemplateCard({ template, onSelect, onPreview, isRecommended }: T
 
                 {/* Info */}
                 <div className="p-4 space-y-2">
-                    <h3 className="font-semibold text-gray-900 dark:text-white">
+                    <h3 className="font-semibold text-gray-900">
                         {template.name}
                     </h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
+                    <p className="text-sm text-gray-500 line-clamp-2">
                         {template.description}
                     </p>
 
@@ -194,7 +192,7 @@ export function TemplateCard({ template, onSelect, onPreview, isRecommended }: T
                         {template.features.slice(0, 3).map((feature) => (
                             <span
                                 key={feature}
-                                className="px-2 py-0.5 rounded-md bg-gray-100 dark:bg-zinc-800 text-xs text-gray-600 dark:text-gray-400"
+                                className="px-2 py-0.5 rounded-md bg-gray-100 text-xs text-gray-600"
                             >
                                 {feature}
                             </span>

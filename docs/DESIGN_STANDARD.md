@@ -8,14 +8,14 @@
 
 ## 1. Visual Identity
 
-### Color Palette
+### Color Palette (Single Theme: Light/White)
 | Role | Color | Hex | Tailwind | Usage |
 |:---|:---|:---|:---|:---|
 | **Primary** | **Sky Blue** | `#0369A1` | `bg-sky-700` | Headlines, trust indicators, primary links. |
 | **Secondary** | **Light Sky** | `#0EA5E9` | `bg-sky-500` | Gradients, hover states, secondary actions. |
 | **Accent / CTA** | **Growth Green** | `#22C55E` | `bg-green-500` | **Primary Buttons**, "New" badges, success states. |
-| **Background** | **Soft White** | `#F0F9FF` | `bg-slate-50` | Page background (Site-wide). |
-| **Text** | **Deep Sky** | `#0C4A6E` | `text-sky-900` | High contrast text for readability. |
+| **Background** | **Pure White** | `#FFFFFF` | `bg-white` | **Strictly White** page backgrounds. |
+| **Text** | **Deep Sky** | `#0C4A6E` | `text-sky-900` | High contrast text (No Slate/Gray). |
 
 ### Typography (Localized)
 -   **Primary Font:** `Be Vietnam Pro` (Optimized for Vietnamese & readability).
@@ -28,7 +28,7 @@
 ### Global Animation
 -   **Particle Background:** A site-wide `<ParticleBackground />` component resides in `layout.tsx`.
     -   *Effect:* Floating colorful confetti/particles.
-    -   *Rule:* Do **NOT** use opaque backgrounds (`bg-white` or `bg-background`) on the root container of your pages, or you will hide this effect. Use `transparent` or `bg-white/60` with blur for overlay cards.
+    -   *Rule:* Backgrounds must be `transparent` or `bg-white` (solid) where necessary. **Do NOT use dark backgrounds.**
 
 ---
 
@@ -38,14 +38,14 @@
 -   **Shape:** Fully rounded (`rounded-full`).
 -   **Primary:** Gradient Blue/Sky or Solid Green. Shadow `shadow-lg`.
 -   **Hover:** SCALE UP (`hover:scale-105`) to feel tactile.
--   **Secondary:** White background with Sky border (`border-sky-100`).
+-   **Secondary:** White background with Sky border (`border-sky-200`).
 
 ### Cards & Containers
 -   **Shape:** Softer corners (`rounded-2xl` or `rounded-3xl`).
--   **Material:** Glassmorphism.
-    -   *Light:* `bg-white/70 backdrop-blur-xl border-white/20`.
-    -   *Dark:* `bg-sky-950/30 backdrop-blur-xl border-sky-800/30`.
+-   **Material:** Glassmorphism or Solid White.
+    -   *Style:* `bg-white/80 backdrop-blur-xl border-white/40` OR `bg-white border-sky-100`.
 -   **Shadow:** Soft, diffuse shadows (`shadow-xl shadow-blue-900/5`).
+-   **NO DARK MODE:** Do not implementations `dark:` modifiers. The site is strictly light.
 
 ---
 

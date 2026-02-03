@@ -6,9 +6,10 @@ import { cn } from "@/shared/utils/cn";
 
 interface SkeletonProps {
     className?: string;
+    style?: React.CSSProperties;
 }
 
-export function Skeleton({ className }: SkeletonProps) {
+export function Skeleton({ className, style }: SkeletonProps) {
     return (
         <motion.div
             className={cn(
@@ -16,6 +17,7 @@ export function Skeleton({ className }: SkeletonProps) {
                 "bg-[length:200%_100%] rounded-lg",
                 className
             )}
+            style={style}
             animate={{
                 backgroundPosition: ["200% 0", "-200% 0"]
             }}

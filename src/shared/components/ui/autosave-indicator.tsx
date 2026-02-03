@@ -71,13 +71,26 @@ export function AutosaveIndicator({
                     </motion.div>
                 )}
 
+                {status === "idle" && !lastSaved && (
+                    <motion.div
+                        key="ready"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        className="flex items-center gap-2 text-gray-400"
+                    >
+                        <Cloud className="w-4 h-4" />
+                        <span className="text-xs">Sẵn sàng</span>
+                    </motion.div>
+                )}
+
                 {status === "idle" && lastSaved && (
                     <motion.div
                         key="idle"
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.8 }}
-                        className="flex items-center gap-2 text-gray-400 dark:text-gray-500"
+                        className="flex items-center gap-2 text-gray-400"
                     >
                         <Cloud className="w-4 h-4" />
                         <span className="text-xs">Lưu lần cuối: {formatLastSaved()}</span>

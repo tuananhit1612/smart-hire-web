@@ -15,10 +15,10 @@ interface SkillsSectionProps {
 }
 
 const SKILL_LEVELS: { value: Skill["level"]; label: string; color: string; bgColor: string }[] = [
-    { value: "beginner", label: "Cơ bản", color: "bg-gray-400", bgColor: "bg-gray-100 dark:bg-gray-800" },
-    { value: "intermediate", label: "Trung bình", color: "bg-blue-500", bgColor: "bg-blue-50 dark:bg-blue-900/20" },
-    { value: "advanced", label: "Nâng cao", color: "bg-indigo-500", bgColor: "bg-indigo-50 dark:bg-indigo-900/20" },
-    { value: "expert", label: "Chuyên gia", color: "bg-amber-500", bgColor: "bg-amber-50 dark:bg-amber-900/20" },
+    { value: "beginner", label: "Cơ bản", color: "bg-gray-400", bgColor: "bg-gray-100" },
+    { value: "intermediate", label: "Trung bình", color: "bg-sky-500", bgColor: "bg-sky-50" },
+    { value: "advanced", label: "Nâng cao", color: "bg-green-500", bgColor: "bg-green-50" },
+    { value: "expert", label: "Chuyên gia", color: "bg-teal-500", bgColor: "bg-teal-50" },
 ];
 
 // Technical skill suggestions
@@ -70,14 +70,14 @@ function LevelDropdown({
                 onClick={() => setIsOpen(!isOpen)}
                 className={cn(
                     "flex items-center gap-2 h-9 px-3 rounded-xl border border-gray-200 dark:border-zinc-700",
-                    "bg-white dark:bg-zinc-800 text-sm font-medium",
-                    "hover:border-indigo-400 dark:hover:border-indigo-500",
-                    "focus:outline-none focus:ring-2 focus:ring-indigo-500",
+                    "bg-white text-sm font-medium",
+                    "hover:border-sky-400",
+                    "focus:outline-none focus:ring-2 focus:ring-sky-500",
                     "transition-all duration-200 flex-1"
                 )}
             >
                 <span className={cn("w-2.5 h-2.5 rounded-full", currentLevel.color)} />
-                <span className="text-gray-700 dark:text-white flex-1 text-left">
+                <span className="text-gray-700 flex-1 text-left">
                     {currentLevel.label}
                 </span>
                 <ChevronDown className={cn(
@@ -94,7 +94,7 @@ function LevelDropdown({
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -8, scale: 0.95 }}
                         transition={{ duration: 0.15 }}
-                        className="absolute z-30 mt-1 w-full min-w-[140px] bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl shadow-lg overflow-hidden"
+                        className="absolute z-30 mt-1 w-full min-w-[140px] bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden"
                     >
                         {SKILL_LEVELS.map((level) => (
                             <button
@@ -115,7 +115,7 @@ function LevelDropdown({
                                     {level.label}
                                 </span>
                                 {value === level.value && (
-                                    <Check className="w-4 h-4 text-indigo-500" />
+                                    <Check className="w-4 h-4 text-sky-500" />
                                 )}
                             </button>
                         ))}
@@ -350,7 +350,7 @@ export function SkillsSection({ data, onChange }: SkillsSectionProps) {
                                     key={skill}
                                     type="button"
                                     onClick={() => onSelectSuggestion(skill)}
-                                    className="w-full px-3 py-2 text-left text-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/20 text-gray-700 dark:text-gray-300"
+                                    className="w-full px-3 py-2 text-left text-sm hover:bg-sky-50 text-gray-700"
                                 >
                                     {skill}
                                 </button>
@@ -409,13 +409,13 @@ export function SkillsSection({ data, onChange }: SkillsSectionProps) {
             >
                 {/* Section Header */}
                 <div>
-                    <h2 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white flex items-center gap-2 md:gap-3">
-                        <div className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white flex-shrink-0">
+                    <h2 className="text-xl md:text-2xl font-bold tracking-tight text-sky-900 flex items-center gap-2 md:gap-3">
+                        <div className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-gradient-to-r from-sky-500 to-green-500 text-white flex-shrink-0 shadow-lg shadow-sky-500/20">
                             <Zap className="w-4 h-4 md:w-5 md:h-5" />
                         </div>
                         <span>Kỹ năng</span>
                     </h2>
-                    <p className="text-sm md:text-base text-gray-500 dark:text-gray-400 mt-2">
+                    <p className="text-sm md:text-base text-gray-500 mt-2">
                         Liệt kê kỹ năng chuyên môn và kỹ năng mềm của bạn
                     </p>
                 </div>
@@ -426,7 +426,7 @@ export function SkillsSection({ data, onChange }: SkillsSectionProps) {
                     <SkillColumn
                         title="Kỹ năng chuyên môn"
                         icon={Code}
-                        iconColor="bg-blue-500"
+                        iconColor="bg-sky-500"
                         skills={technicalSkills}
                         inputValue={newTechnicalSkill}
                         onInputChange={setNewTechnicalSkill}
@@ -444,7 +444,7 @@ export function SkillsSection({ data, onChange }: SkillsSectionProps) {
                     <SkillColumn
                         title="Kỹ năng mềm"
                         icon={Users}
-                        iconColor="bg-purple-500"
+                        iconColor="bg-green-500"
                         skills={softSkills}
                         inputValue={newSoftSkill}
                         onInputChange={setNewSoftSkill}

@@ -1,13 +1,21 @@
 // CV Data Types for SmartHire CV Builder
 
+export interface SocialLink {
+    id: string;
+    network: 'LinkedIn' | 'GitHub' | 'Website' | 'Behance' | 'Dribbble' | 'Twitter' | 'Facebook' | 'Instagram' | 'Other';
+    url: string;
+}
+
 export interface PersonalInfo {
     fullName: string;
+    title?: string;
     email: string;
     phone: string;
     location: string;
+    website?: string; // Deprecated, use socials
     avatarUrl?: string;
-    linkedIn?: string;
-    portfolio?: string;
+    socials: SocialLink[];
+    additionalInfo?: { label: string; value: string }[];
 }
 
 export interface Education {
@@ -34,13 +42,15 @@ export interface Experience {
 export interface Skill {
     id: string;
     name: string;
-    level: 'beginner' | 'intermediate' | 'advanced' | 'expert';
+    level: number | 'beginner' | 'intermediate' | 'advanced' | 'expert';
     category: 'technical' | 'soft';
+    description?: string;
 }
 
 export interface Project {
     id: string;
     name: string;
+    role?: string;
     description: string;
     technologies: string[];
     link?: string;
@@ -88,10 +98,12 @@ export const CV_SECTIONS: CVSectionConfig[] = [
 // Default empty CV data
 export const DEFAULT_CV_DATA: CVData = {
     personalInfo: {
-        fullName: '',
-        email: '',
-        phone: '',
-        location: '',
+        fullName: "",
+        title: "",
+        email: "",
+        phone: "",
+        location: "",
+        socials: [],
     },
     summary: '',
     education: [],

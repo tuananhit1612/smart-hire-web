@@ -13,24 +13,19 @@ import { SkillsSection } from "./sections/SkillsSection";
 import { ProjectsSection } from "./sections/ProjectsSection";
 
 interface CVBuilderFormProps {
-    initialData?: CVData;
+    data?: CVData;
     activeSection: CVSection;
     onSectionChange: (section: CVSection) => void;
     onDataChange?: (data: CVData) => void;
 }
 
 export function CVBuilderForm({
-    initialData = DEFAULT_CV_DATA,
+    data = DEFAULT_CV_DATA,
     activeSection,
     onSectionChange,
     onDataChange,
 }: CVBuilderFormProps) {
-    const [cvData, setCvData] = React.useState<CVData>(initialData);
-
-    // Notify parent of data changes
-    React.useEffect(() => {
-        onDataChange?.(cvData);
-    }, [cvData, onDataChange]);
+    // REMOVED LOCAL STATE - Now strictly controlled by parent
 
     // Get current section index
     const currentIndex = CV_SECTIONS.findIndex((s) => s.id === activeSection);
@@ -49,61 +44,59 @@ export function CVBuilderForm({
         }
     };
 
+    // Helper to safely update data
+    const updateData = (section: keyof CVData, value: any) => {
+        if (onDataChange) {
+            onDataChange({
+                ...data,
+                [section]: value
+            });
+        }
+    };
+
     // Render current section
     const renderSection = () => {
         switch (activeSection) {
             case "personal":
                 return (
                     <PersonalInfoSection
-                        data={cvData.personalInfo}
-                        onChange={(personalInfo) =>
-                            setCvData((prev) => ({ ...prev, personalInfo }))
-                        }
+                        data={data.personalInfo}
+                        onChange={(personalInfo) => updateData("personalInfo", personalInfo)}
                     />
                 );
             case "summary":
                 return (
                     <SummarySection
-                        data={cvData.summary}
-                        onChange={(summary) =>
-                            setCvData((prev) => ({ ...prev, summary }))
-                        }
+                        data={data.summary}
+                        onChange={(summary) => updateData("summary", summary)}
                     />
                 );
             case "education":
                 return (
                     <EducationSection
-                        data={cvData.education}
-                        onChange={(education) =>
-                            setCvData((prev) => ({ ...prev, education }))
-                        }
+                        data={data.education}
+                        onChange={(education) => updateData("education", education)}
                     />
                 );
             case "experience":
                 return (
                     <ExperienceSection
-                        data={cvData.experience}
-                        onChange={(experience) =>
-                            setCvData((prev) => ({ ...prev, experience }))
-                        }
+                        data={data.experience}
+                        onChange={(experience) => updateData("experience", experience)}
                     />
                 );
             case "skills":
                 return (
                     <SkillsSection
-                        data={cvData.skills}
-                        onChange={(skills) =>
-                            setCvData((prev) => ({ ...prev, skills }))
-                        }
+                        data={data.skills}
+                        onChange={(skills) => updateData("skills", skills)}
                     />
                 );
             case "projects":
                 return (
                     <ProjectsSection
-                        data={cvData.projects}
-                        onChange={(projects) =>
-                            setCvData((prev) => ({ ...prev, projects }))
-                        }
+                        data={data.projects}
+                        onChange={(projects) => updateData("projects", projects)}
                     />
                 );
             default:
@@ -127,7 +120,7 @@ export function CVBuilderForm({
             </AnimatePresence>
 
             {/* Navigation Footer */}
-            <div className="flex items-center justify-between pt-6 border-t border-gray-200 dark:border-white/10">
+            <div className="flex items-center justify-between pt-6 border-t border-gray-100">
                 <Button
                     variant="outline"
                     size="md"
@@ -145,10 +138,10 @@ export function CVBuilderForm({
                             key={section.id}
                             onClick={() => onSectionChange(section.id)}
                             className={`w-2 h-2 rounded-full transition-all duration-200 ${index === currentIndex
-                                    ? "w-6 bg-gradient-to-r from-indigo-500 to-purple-500"
-                                    : index < currentIndex
-                                        ? "bg-indigo-300 dark:bg-indigo-700"
-                                        : "bg-gray-200 dark:bg-gray-700"
+                                ? "w-6 bg-green-500 shadow-lg shadow-green-500/30"
+                                : index < currentIndex
+                                    ? "bg-sky-400"
+                                    : "bg-gray-200"
                                 }`}
                         />
                     ))}
