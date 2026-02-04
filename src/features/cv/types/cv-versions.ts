@@ -29,9 +29,11 @@ export const mockCVVersions: CVVersion[] = [
         email: "an.nguyen@email.com",
         phone: "+84 909 123 456",
         location: "TP. Hồ Chí Minh, Việt Nam",
-        linkedIn: "https://linkedin.com/in/annguyen",
-        portfolio: "https://annguyen.dev",
         avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=An",
+        socials: [
+          { id: "s1", network: "LinkedIn" as const, url: "https://linkedin.com/in/annguyen" },
+          { id: "s2", network: "Website" as const, url: "https://annguyen.dev" }
+        ]
       },
       summary: "Frontend Developer với hơn 3 năm kinh nghiệm chuyên sâu trong phát triển web applications sử dụng React, TypeScript và Next.js. Có kinh nghiệm làm việc trong môi trường Agile, phối hợp chặt chẽ với team Backend và Design để xây dựng các sản phẩm có trải nghiệm người dùng xuất sắc. Đam mê với clean code, performance optimization và các công nghệ mới nhất trong hệ sinh thái JavaScript.",
       education: [
@@ -148,8 +150,10 @@ export const mockCVVersions: CVVersion[] = [
         email: "an.nguyen@email.com",
         phone: "+84 909 123 456",
         location: "Ho Chi Minh City, Vietnam",
-        linkedIn: "https://linkedin.com/in/annguyen",
-        portfolio: "https://annguyen.dev",
+        socials: [
+          { id: "s3", network: "LinkedIn" as const, url: "https://linkedin.com/in/annguyen" },
+          { id: "s4", network: "Website" as const, url: "https://annguyen.dev" }
+        ]
       },
       summary: "Passionate Frontend Developer with 3+ years of experience building scalable web applications using React, TypeScript, and Next.js. Proven track record of leading development teams, optimizing performance, and delivering high-quality user experiences. Strong advocate for clean code, modern best practices, and continuous learning.",
       education: [
@@ -220,8 +224,10 @@ export const mockCVVersions: CVVersion[] = [
         email: "an.nguyen@email.com",
         phone: "+84 909 123 456",
         location: "TP. Hồ Chí Minh",
-        linkedIn: "https://linkedin.com/in/annguyen",
-        portfolio: "https://annguyen.dev",
+        socials: [
+          { id: "s5", network: "LinkedIn" as const, url: "https://linkedin.com/in/annguyen" },
+          { id: "s6", network: "Website" as const, url: "https://annguyen.dev" }
+        ]
       },
       summary: "Fullstack Developer với kinh nghiệm vững chắc cả Frontend (React, Next.js) và Backend (Node.js, Go). Có khả năng thiết kế và xây dựng hệ thống end-to-end, từ database design đến API development và UI implementation. Luôn tìm kiếm cơ hội thử thách và học hỏi công nghệ mới.",
       education: [
@@ -300,7 +306,9 @@ export const mockCVVersions: CVVersion[] = [
         email: "an.nguyen@email.com",
         phone: "+84 909 123 456",
         location: "TP. Hồ Chí Minh",
-        linkedIn: "https://linkedin.com/in/annguyen",
+        socials: [
+          { id: "s7", network: "LinkedIn" as const, url: "https://linkedin.com/in/annguyen" }
+        ]
       },
       summary: "Fresh graduate đam mê công nghệ, đặc biệt là lập trình web. Có nền tảng vững chắc về Computer Science và kinh nghiệm thực tập tại công ty công nghệ. Mong muốn tìm vị trí Junior Developer để phát triển kỹ năng và đóng góp vào dự án thực tế.",
       education: [
@@ -379,8 +387,10 @@ export const mockCVVersions: CVVersion[] = [
         email: "an.nguyen@email.com",
         phone: "+84 909 123 456",
         location: "Remote - Vietnam (GMT+7)",
-        linkedIn: "https://linkedin.com/in/annguyen",
-        portfolio: "https://annguyen.dev",
+        socials: [
+          { id: "s8", network: "LinkedIn" as const, url: "https://linkedin.com/in/annguyen" },
+          { id: "s9", network: "Website" as const, url: "https://annguyen.dev" }
+        ]
       },
       summary: "Remote-first Frontend Developer với 3+ năm kinh nghiệm làm việc với các team phân tán toàn cầu. Thành thạo giao tiếp async, tự quản lý thời gian hiệu quả và có kinh nghiệm overlap với múi giờ US/EU. Sẵn sàng cho các vị trí remote full-time hoặc contract.",
       education: [

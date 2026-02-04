@@ -9,6 +9,18 @@ interface TemplateProps {
 export function ModernSalesTemplate({ data }: TemplateProps) {
     const { personalInfo, summary, experience, education, skills, projects } = data;
 
+    // Helper to normalize skill level to number
+    const getSkillLevel = (level: string | number): number => {
+        if (typeof level === 'number') return level;
+        const levelMap: Record<string, number> = {
+            beginner: 20,
+            intermediate: 40,
+            advanced: 60,
+            expert: 80,
+        };
+        return levelMap[level.toLowerCase()] || 40;
+    };
+
     return (
         <div className="w-full bg-white min-h-[1000px] grid grid-cols-12 text-slate-800 font-sans">
             {/* Left Sidebar - Blue Theme */}
@@ -100,7 +112,7 @@ export function ModernSalesTemplate({ data }: TemplateProps) {
                                         {[1, 2, 3, 4, 5].map((star) => (
                                             <div
                                                 key={star}
-                                                className={`h-2.5 w-6 rounded-sm ${star * 20 <= skill.level ? 'bg-white' : 'bg-blue-800/30'}`}
+                                                className={`h-2.5 w-6 rounded-sm ${star * 20 <= getSkillLevel(skill.level) ? 'bg-white' : 'bg-blue-800/30'}`}
                                             />
                                         ))}
                                     </div>

@@ -3,15 +3,15 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { 
-  ArrowLeft, 
-  Save, 
-  Mail, 
-  Phone, 
-  MapPin, 
-  Briefcase, 
-  GraduationCap, 
-  Code, 
+import {
+  ArrowLeft,
+  Save,
+  Mail,
+  Phone,
+  MapPin,
+  Briefcase,
+  GraduationCap,
+  Code,
   FolderKanban,
   Globe,
   Linkedin,
@@ -29,7 +29,7 @@ import { useToast } from "@/shared/components/ui/toast";
 
 export default function CVPreviewPage() {
   const router = useRouter();
-  
+
   // Parse URL params on client side
   const [params, setParams] = useState({ cvId: "", returnTo: "", jobId: "" });
   const [cv, setCv] = useState<CVVersion | null>(null);
@@ -46,7 +46,7 @@ export default function CVPreviewPage() {
       const returnTo = urlParams.get("returnTo") || "";
       const jobId = urlParams.get("jobId") || "";
       setParams({ cvId, returnTo, jobId });
-      
+
       // Load CV
       const foundCV = getCVVersionById(cvId);
       if (foundCV) {
@@ -68,9 +68,9 @@ export default function CVPreviewPage() {
 
   const saveEdit = (field: string) => {
     if (!cv) return;
-    
+
     const updatedCV = { ...cv };
-    
+
     // Update the appropriate field
     if (field === "summary") {
       updatedCV.data.summary = editValue;
@@ -83,7 +83,7 @@ export default function CVPreviewPage() {
     } else if (field === "location") {
       updatedCV.data.personalInfo.location = editValue;
     }
-    
+
     setCv(updatedCV);
     setIsEditing(null);
     setEditValue("");
@@ -115,12 +115,23 @@ export default function CVPreviewPage() {
     );
   }
 
-  const getLevelBadge = (level: string) => {
+  const getLevelBadge = (level: string | number) => {
+    let normalizedLevel = level;
+
+    if (typeof level === 'number') {
+      if (level >= 80) normalizedLevel = 'expert';
+      else if (level >= 60) normalizedLevel = 'advanced';
+      else if (level >= 40) normalizedLevel = 'intermediate';
+      else normalizedLevel = 'beginner';
+    }
+
+    const levelKey = String(normalizedLevel);
+
     const colors: Record<string, string> = {
-      beginner: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
-      intermediate: "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400",
-      advanced: "bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400",
-      expert: "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400",
+      beginner: "bg-gray-100 text-gray-600",
+      intermediate: "bg-blue-100 text-blue-600",
+      advanced: "bg-purple-100 text-purple-600",
+      expert: "bg-green-100 text-green-600",
     };
     const labels: Record<string, string> = {
       beginner: "Cơ bản",
@@ -128,7 +139,7 @@ export default function CVPreviewPage() {
       advanced: "Thành thạo",
       expert: "Chuyên gia",
     };
-    return { color: colors[level] || colors.beginner, label: labels[level] || level };
+    return { color: colors[levelKey] || colors.beginner, label: labels[levelKey] || levelKey };
   };
 
   return (
@@ -211,7 +222,7 @@ export default function CVPreviewPage() {
                   onChange={setEditValue}
                   className="text-3xl font-bold mb-2"
                 />
-                
+
                 <div className="flex flex-wrap gap-4 mt-4">
                   <EditableFieldInline
                     icon={<Mail className="w-4 h-4" />}
@@ -248,32 +259,27 @@ export default function CVPreviewPage() {
                   />
                 </div>
 
-                {(cv.data.personalInfo.linkedIn || cv.data.personalInfo.portfolio) && (
+                {(cv.data.personalInfo.socials && cv.data.personalInfo.socials.length > 0) && (
                   <div className="flex gap-4 mt-3">
-                    {cv.data.personalInfo.linkedIn && (
-                      <a
-                        href={cv.data.personalInfo.linkedIn}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1 text-sm text-white/80 hover:text-white"
-                      >
-                        <Linkedin className="w-4 h-4" />
-                        LinkedIn
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
-                    )}
-                    {cv.data.personalInfo.portfolio && (
-                      <a
-                        href={cv.data.personalInfo.portfolio}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1 text-sm text-white/80 hover:text-white"
-                      >
-                        <Globe className="w-4 h-4" />
-                        Portfolio
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
-                    )}
+                    {cv.data.personalInfo.socials.map((social) => {
+                      const Icon = social.network === 'LinkedIn' ? Linkedin :
+                        social.network === 'GitHub' ? Code :
+                          Globe;
+
+                      return (
+                        <a
+                          key={social.id}
+                          href={social.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1 text-sm text-white/80 hover:text-white"
+                        >
+                          <Icon className="w-4 h-4" />
+                          {social.network}
+                          <ExternalLink className="w-3 h-3" />
+                        </a>
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -406,7 +412,7 @@ export default function CVPreviewPage() {
                         })}
                     </div>
                   </div>
-                  
+
                   {cv.data.skills.some((s) => s.category === "soft") && (
                     <div>
                       <h5 className="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-3">

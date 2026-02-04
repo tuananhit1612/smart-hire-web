@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import * as React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Eye, Save, Download, Menu, X } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
