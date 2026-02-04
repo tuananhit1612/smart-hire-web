@@ -128,10 +128,10 @@ export default function CVPreviewPage() {
     const levelKey = String(normalizedLevel);
 
     const colors: Record<string, string> = {
-      beginner: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
-      intermediate: "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400",
-      advanced: "bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400",
-      expert: "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400",
+      beginner: "bg-gray-100 text-gray-600",
+      intermediate: "bg-blue-100 text-blue-600",
+      advanced: "bg-purple-100 text-purple-600",
+      expert: "bg-green-100 text-green-600",
     };
     const labels: Record<string, string> = {
       beginner: "Cơ bản",
@@ -264,7 +264,7 @@ export default function CVPreviewPage() {
                     {cv.data.personalInfo.socials.map((social) => {
                       const Icon = social.network === 'LinkedIn' ? Linkedin :
                         social.network === 'GitHub' ? Code :
-                          social.network === 'Twitter' ? Code : // Placeholder, should be Twitter icon
+                          social.network === 'Twitter' ? Code : // Placeholder for Twitter
                             Globe;
 
                       return (
