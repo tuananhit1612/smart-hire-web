@@ -9,16 +9,16 @@ interface TemplateProps {
 export function ModernSalesTemplate({ data }: TemplateProps) {
     const { personalInfo, summary, experience, education, skills, projects } = data;
 
-    // Helper to normalize skill level to number
-    const getSkillLevel = (level: string | number): number => {
+    // Helper to convert skill level to number (0-100)
+    const getSkillLevel = (level: number | string): number => {
         if (typeof level === 'number') return level;
-        const levelMap: Record<string, number> = {
-            beginner: 20,
-            intermediate: 40,
-            advanced: 60,
-            expert: 80,
-        };
-        return levelMap[level.toLowerCase()] || 40;
+        switch (level) {
+            case 'beginner': return 20;
+            case 'intermediate': return 50;
+            case 'advanced': return 80;
+            case 'expert': return 100;
+            default: return 50;
+        }
     };
 
     return (

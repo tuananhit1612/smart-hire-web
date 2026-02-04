@@ -264,7 +264,8 @@ export default function CVPreviewPage() {
                     {cv.data.personalInfo.socials.map((social) => {
                       const Icon = social.network === 'LinkedIn' ? Linkedin :
                         social.network === 'GitHub' ? Code :
-                          Globe;
+                          social.network === 'Twitter' ? Code : // Placeholder for Twitter
+                            Globe;
 
                       return (
                         <a
