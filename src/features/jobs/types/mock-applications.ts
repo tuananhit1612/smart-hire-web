@@ -32,6 +32,7 @@ const getJobOrThrow = (id: string): Job => {
 }
 
 export const mockApplications: ReadonlyArray<Application> = [
+  // 1. Interview Stage (In Progress)
   {
     id: "app-01",
     jobId: "1",
@@ -45,6 +46,7 @@ export const mockApplications: ReadonlyArray<Application> = [
         { id: "e3", stage: "INTERVIEW", title: "Phỏng vấn", description: "Lịch: 14:00 06/02/2026", date: "2026-02-06T07:00:00Z", isCompleted: false }
     ]
   },
+  // 2. Just Applied (Early Stage)
   {
     id: "app-02",
     jobId: "2",
@@ -56,6 +58,7 @@ export const mockApplications: ReadonlyArray<Application> = [
         { id: "e1", stage: "APPLIED", title: "Đã nộp hồ sơ", date: "2026-02-05T08:00:00Z", isCompleted: true }
     ]
   },
+  // 3. Rejected (End State)
   {
       id: "app-03",
       jobId: "3",
@@ -66,6 +69,37 @@ export const mockApplications: ReadonlyArray<Application> = [
       timeline: [
           { id: "e1", stage: "APPLIED", title: "Đã nộp hồ sơ", date: "2026-01-20T10:00:00Z", isCompleted: true },
           { id: "e2", stage: "REJECTED", title: "Từ chối", description: "CV chưa phù hợp", date: "2026-01-25T15:00:00Z", isCompleted: true }
+      ]
+  },
+  // 4. Offer Received (Success Path)
+  {
+      id: "app-04",
+      jobId: "1", // Same job as app-01 for testing, or distinct job if available
+      job: getJobOrThrow("2"), // Reuse job 2 for variety
+      status: ApplicationStage.OFFER,
+      appliedAt: "2026-01-15T08:00:00Z",
+      lastUpdated: "2026-02-01T16:00:00Z",
+      timeline: [
+          { id: "e1", stage: "APPLIED", title: "Đã nộp hồ sơ", date: "2026-01-15T08:00:00Z", isCompleted: true },
+          { id: "e2", stage: "SCREENING", title: "Duyệt hồ sơ", date: "2026-01-16T10:00:00Z", isCompleted: true },
+          { id: "e3", stage: "INTERVIEW", title: "Phỏng vấn kỹ thuật", description: "Đã hoàn thành", date: "2026-01-20T14:00:00Z", isCompleted: true },
+          { id: "e4", stage: "OFFER", title: "Đề nghị nhận việc", description: "Chờ phản hồi trước 10/02", date: "2026-02-01T09:00:00Z", isCompleted: false },
+      ]
+  },
+  // 5. Hired (Completed Success)
+  {
+      id: "app-05",
+      jobId: "3",
+      job: getJobOrThrow("3"),
+      status: ApplicationStage.HIRED,
+      appliedAt: "2025-12-01T09:00:00Z",
+      lastUpdated: "2025-12-20T10:00:00Z",
+      timeline: [
+          { id: "e1", stage: "APPLIED", title: "Đã nộp hồ sơ", date: "2025-12-01T09:00:00Z", isCompleted: true },
+          { id: "e2", stage: "SCREENING", title: "Duyệt hồ sơ", date: "2025-12-02T10:00:00Z", isCompleted: true },
+          { id: "e3", stage: "INTERVIEW", title: "Phỏng vấn", date: "2025-12-05T14:00:00Z", isCompleted: true },
+          { id: "e4", stage: "OFFER", title: "Đề nghị nhận việc", date: "2025-12-10T09:00:00Z", isCompleted: true },
+          { id: "e5", stage: "HIRED", title: "Đã nhận việc", description: "Chào mừng gia nhập!", date: "2025-12-20T08:00:00Z", isCompleted: true },
       ]
   }
 ];
