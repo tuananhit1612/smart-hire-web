@@ -20,10 +20,11 @@ import { ApplicationStage } from "@/shared/types/application";
 
 interface ApplicantCardProps {
     applicant: EmployerApplicant;
+    onSelect: (applicant: EmployerApplicant) => void;
 }
 
-export function ApplicantCard({ applicant }: ApplicantCardProps) {
-    // Determine Score Color
+export function ApplicantCard({ applicant, onSelect }: ApplicantCardProps) {
+    // ... (keep score and status config logic)
     const getScoreColor = (score: number) => {
         if (score >= 80) return "text-green-600 bg-green-50 border-green-200 ring-green-500/20";
         if (score >= 50) return "text-amber-600 bg-amber-50 border-amber-200 ring-amber-500/20";
@@ -32,7 +33,6 @@ export function ApplicantCard({ applicant }: ApplicantCardProps) {
 
     const scoreColorClass = getScoreColor(applicant.aiAnalysis.matchScore);
 
-    // Status Badge Configuration
     const getStatusConfig = (status: string) => {
         switch (status) {
             case ApplicationStage.APPLIED:
@@ -58,7 +58,8 @@ export function ApplicantCard({ applicant }: ApplicantCardProps) {
         <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="group relative bg-white rounded-2xl border border-slate-200 p-5 hover:shadow-lg hover:border-sky-200 transition-all duration-300"
+            onClick={() => onSelect(applicant)}
+            className="group relative bg-white rounded-2xl border border-slate-200 p-5 hover:shadow-lg hover:border-sky-200 transition-all duration-300 cursor-pointer"
         >
             <div className="flex items-start justify-between mb-4">
                 {/* User Info */}
@@ -127,7 +128,14 @@ export function ApplicantCard({ applicant }: ApplicantCardProps) {
                     <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-slate-400 hover:text-sky-600 hover:bg-sky-50">
                         <FileText className="w-4 h-4" />
                     </Button>
-                    <Button size="sm" className="rounded-full bg-sky-50 text-sky-600 hover:bg-sky-100 border border-sky-200 h-8 text-xs font-semibold px-4">
+                    <Button 
+                        size="sm" 
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onSelect(applicant);
+                        }}
+                        className="rounded-full bg-sky-50 text-sky-600 hover:bg-sky-100 border border-sky-200 h-8 text-xs font-semibold px-4"
+                    >
                         Chi tiết
                     </Button>
                 </div>

@@ -1,10 +1,10 @@
-// src/app/(main)/employer/jobs/[id]/applicants/page.tsx
 "use client";
 
-import { useMemo, useState } from "react";
-import { mockEmployerApplicants } from "@/features/employer/types/mock-applicants";
+import { useMemo, useState, useEffect } from "react";
+import { mockEmployerApplicants, EmployerApplicant } from "@/features/employer/types/mock-applicants";
 import { ApplicantList } from "@/features/employer/components/applicant-list";
 import { ApplicantsFilter } from "@/features/employer/components/applicants-filter";
+import { ApplicantDrawer } from "@/features/employer/components/applicant-drawer";
 import { Button } from "@/shared/components/ui/button";
 import { ArrowLeft, Users, Sparkles } from "lucide-react";
 import Link from "next/link";
@@ -17,6 +17,20 @@ export default function EmployerApplicantsPage({ params }: { params: { id: strin
 
     const [searchQuery, setSearchQuery] = useState("");
     const [sortBy, setSortBy] = useState<"score-desc" | "score-asc" | "date-desc">("score-desc");
+    const [selectedApplicant, setSelectedApplicant] = useState<EmployerApplicant | null>(null);
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+    // Auto-open drawer based on URL is a bit complex without useSearchParams, doing local state for now
+    const handleSelectApplicant = (applicant: EmployerApplicant) => {
+        setSelectedApplicant(applicant);
+        setIsDrawerOpen(true);
+    };
+
+    const handleCloseDrawer = () => {
+        setIsDrawerOpen(false);
+        // Delay clearing selected applicant to allow close animation to finish
+        setTimeout(() => setSelectedApplicant(null), 300);
+    };
 
     const filteredApplicants = useMemo(() => {
         let result = [...mockEmployerApplicants];
@@ -108,7 +122,17 @@ export default function EmployerApplicantsPage({ params }: { params: { id: strin
                 />
 
                 {/* List */}
-                <ApplicantList applicants={filteredApplicants} />
+                <ApplicantList 
+                    applicants={filteredApplicants} 
+                    onSelectApplicant={handleSelectApplicant}
+                />
+
+                {/* Detail Drawer */}
+                <ApplicantDrawer 
+                    applicant={selectedApplicant}
+                    isOpen={isDrawerOpen}
+                    onClose={handleCloseDrawer}
+                />
             </div>
         </div>
     );

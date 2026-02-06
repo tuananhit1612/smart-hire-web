@@ -9,6 +9,19 @@ export interface AIAnalysis {
     readonly summary: string;
 }
 
+export interface ApplicantNote {
+    id: string;
+    author: string;
+    text: string;
+    createdAt: string;
+}
+
+export interface ActivityLog {
+    id: string;
+    action: string;
+    timestamp: string;
+}
+
 export interface EmployerApplicant {
     readonly id: string;
     readonly name: string;
@@ -22,6 +35,8 @@ export interface EmployerApplicant {
     readonly skills: string[];
     readonly aiAnalysis: AIAnalysis;
     readonly cvUrl: string;
+    readonly notes: ApplicantNote[];
+    readonly activities: ActivityLog[];
 }
 
 export const mockEmployerApplicants: ReadonlyArray<EmployerApplicant> = [
@@ -42,7 +57,13 @@ export const mockEmployerApplicants: ReadonlyArray<EmployerApplicant> = [
             strengths: ["Strong React ecosystem knowledge", "5 years experience matches Senior level", "Experience with exact tech stack"],
             gaps: [],
             summary: "Ứng viên rất phù hợp về mặt kỹ thuật. Kinh nghiệm dày dạn với React/Next.js."
-        }
+        },
+        notes: [
+            { id: "n1", author: "HR Recruit", text: "Ứng viên tiềm năng, cần check kỹ tiếng Anh.", createdAt: "2026-02-05T10:00:00Z" }
+        ],
+        activities: [
+            { id: "a1", action: "Nộp hồ sơ", timestamp: "2026-02-05T09:00:00Z" }
+        ]
     },
     {
         id: "cand-002",
@@ -61,7 +82,12 @@ export const mockEmployerApplicants: ReadonlyArray<EmployerApplicant> = [
             strengths: ["Solid React fundamentals", "Good cultural fit potential"],
             gaps: ["Lacks TypeScript experience", "Experience below Senior requirement"],
             summary: "Ứng viên tiềm năng nhưng cần đào tạo thêm về TypeScript. Phù hợp vị trí Mid-level hơn."
-        }
+        },
+        notes: [],
+        activities: [
+            { id: "a2", action: "Nộp hồ sơ", timestamp: "2026-02-04T14:30:00Z" },
+            { id: "a3", action: "Chuyển sang Screening", timestamp: "2026-02-05T08:00:00Z" }
+        ]
     },
     {
         id: "cand-003",
@@ -79,7 +105,14 @@ export const mockEmployerApplicants: ReadonlyArray<EmployerApplicant> = [
             strengths: ["Strong UI/UX design skills"],
             gaps: ["No React/Next.js experience", "Mainly design focused"],
             summary: "Chuyên môn thiên về Design, không đáp ứng yêu cầu lập trình Frontend chuyên sâu."
-        }
+        },
+        notes: [
+            { id: "n2", author: "Lead Dev", text: "Thiếu kiến thức lập trình logic.", createdAt: "2026-02-03T14:00:00Z" }
+        ],
+        activities: [
+            { id: "a4", action: "Nộp hồ sơ", timestamp: "2026-02-01T10:00:00Z" },
+            { id: "a5", action: "Từ chối hồ sơ", timestamp: "2026-02-03T15:00:00Z" }
+        ]
     },
     {
         id: "cand-004",
@@ -98,6 +131,10 @@ export const mockEmployerApplicants: ReadonlyArray<EmployerApplicant> = [
             strengths: ["Fullstack capabilities", "Backend knowledge adds value"],
             gaps: ["Less focus on UI/UX nuances"],
             summary: "Ứng viên Fullstack mạnh, có thể hỗ trợ cả Backend khi cần."
-        }
+        },
+        notes: [],
+        activities: [
+            { id: "a6", action: "Nộp hồ sơ", timestamp: "2026-02-06T08:00:00Z" }
+        ]
     }
 ];

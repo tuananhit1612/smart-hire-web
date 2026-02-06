@@ -6,9 +6,10 @@ import { ApplicantCard } from "./applicant-card";
 
 interface ApplicantListProps {
     applicants: ReadonlyArray<EmployerApplicant>;
+    onSelectApplicant: (applicant: EmployerApplicant) => void;
 }
 
-export function ApplicantList({ applicants }: ApplicantListProps) {
+export function ApplicantList({ applicants, onSelectApplicant }: ApplicantListProps) {
     if (applicants.length === 0) {
         return (
             <div className="text-center py-20 bg-slate-50 rounded-3xl border border-dashed border-slate-200">
@@ -20,7 +21,11 @@ export function ApplicantList({ applicants }: ApplicantListProps) {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {applicants.map(applicant => (
-                <ApplicantCard key={applicant.id} applicant={applicant} />
+                <ApplicantCard 
+                    key={applicant.id} 
+                    applicant={applicant} 
+                    onSelect={onSelectApplicant}
+                />
             ))}
         </div>
     );
