@@ -12,7 +12,7 @@ import {
   AlertCircle,
   ArrowRight
 } from "lucide-react";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
@@ -202,19 +202,72 @@ function ApplicationCard({ application }: { application: Application }) {
   );
 }
 
+import { useApplicationStore } from "@/features/jobs/stores/application-store";
+import { mockJobs } from "@/features/jobs/types/mock-jobs";
+
+// ... previous imports
+
 export default function ApplicationsPage() {
   const [activeTab, setActiveTab] = useState<"active" | "archived">("active");
   const [searchQuery, setSearchQuery] = useState("");
+  
+  // Get local state from store
+  const { appliedJobIds, applicationDates } = useApplicationStore();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  const allApplications = useMemo(() => {
+    if (!isMounted) return mockApplications;
+
+    // 1. Convert local Applied Job IDs to Application objects
+    const userApplications = appliedJobIds.map(jobId => {
+       const job = mockJobs.find(j => j.id === jobId);
+       if (!job) return null;
+       
+       const appliedAt = applicationDates[jobId] || new Date().toISOString();
+       
+       // Create a dynamic application object for locally applied jobs
+       const newApp: Application = {
+         id: `local-${jobId}`,
+         jobId: job.id,
+         job: job,
+         status: "APPLIED" as ApplicationStatus,
+         appliedAt: appliedAt,
+         lastUpdated: appliedAt,
+         timeline: [
+            { 
+               id: `evt-${jobId}-1`, 
+               stage: "APPLIED" as ApplicationStatus, 
+               title: "Đã nộp hồ sơ", 
+               date: appliedAt, 
+               isCompleted: true 
+            }
+         ],
+         notes: "Ứng tuyển gần đây"
+       };
+       return newApp;
+    }).filter((app): app is Application => app !== null);
+    
+    // 2. Merge with mock applications
+    // Filter out mock apps if they are already in userApplications (by job ID) to avoid duplicates if we had overlapping IDs
+    const userJobIds = new Set(userApplications.map(app => app.jobId));
+    const nonDuplicateMocks = mockApplications.filter(app => !userJobIds.has(app.jobId));
+    
+    return [...userApplications, ...nonDuplicateMocks];
+  }, [appliedJobIds, applicationDates, isMounted]);
 
   const filteredApplications = useMemo(() => {
     const query = searchQuery.toLowerCase().trim();
-    return mockApplications.filter(app => {
+    return allApplications.filter(app => {
       const isActive = ACTIVE_STAGES.has(app.status as ApplicationStage);
       const matchesTab = activeTab === "active" ? isActive : !isActive;
       if (!matchesTab) return false;
       return !query || app.job.title.toLowerCase().includes(query) || app.job.company.toLowerCase().includes(query);
     });
-  }, [activeTab, searchQuery]);
+  }, [activeTab, searchQuery, allApplications]);
 
   return (
     // Background: Transparent to show ParticleBackground, but Content Z-Index > 0 to sit ABOVE particles
