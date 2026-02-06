@@ -1,9 +1,10 @@
 // src/features/employer/components/applicant-drawer.tsx
 "use client";
 
-import { EmployerApplicant } from "../types/mock-applicants";
+import { AIAnalysis, EmployerApplicant } from "../types/mock-applicants";
 import { Button } from "@/shared/components/ui/button";
 import { Badge } from "@/shared/components/ui/badge";
+import { ScoreBreakdown } from "./score-breakdown";
 import { 
     X, 
     Mail, 
@@ -157,7 +158,10 @@ export function ApplicantDrawer({ applicant, isOpen, onClose }: ApplicantDrawerP
                                             </div>
                                         </div>
 
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        {/* Score Breakdown */}
+                                        <ScoreBreakdown breakdown={applicant.aiAnalysis.breakdown} />
+
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 pt-6 border-t border-slate-100">
                                             <div className="space-y-2">
                                                 <div className="text-sm font-medium text-green-700 flex items-center gap-1.5">
                                                     <ThumbsUp className="w-4 h-4" /> Điểm mạnh
