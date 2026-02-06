@@ -1,10 +1,8 @@
-// src/features/employer/components/applicant-drawer.tsx
-"use client";
-
 import { AIAnalysis, EmployerApplicant } from "../types/mock-applicants";
 import { Button } from "@/shared/components/ui/button";
 import { Badge } from "@/shared/components/ui/badge";
 import { ScoreBreakdown } from "./score-breakdown";
+import { AISkeleton } from "./ai-skeleton";
 import { 
     X, 
     Mail, 
@@ -17,7 +15,9 @@ import {
     MessageSquare,
     Brain,
     ThumbsUp,
-    AlertTriangle
+    AlertTriangle,
+    RefreshCcw,
+    Loader2
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
@@ -32,6 +32,15 @@ interface ApplicantDrawerProps {
 
 export function ApplicantDrawer({ applicant, isOpen, onClose }: ApplicantDrawerProps) {
     const [activeTab, setActiveTab] = useState<"overview" | "notes">("overview");
+    const [isAnalyzing, setIsAnalyzing] = useState(false);
+
+    const handleReAnalyze = () => {
+        setIsAnalyzing(true);
+        // Simulate API call
+        setTimeout(() => {
+            setIsAnalyzing(false);
+        }, 2500);
+    };
 
     if (!applicant) return null;
 
@@ -56,7 +65,7 @@ export function ApplicantDrawer({ applicant, isOpen, onClose }: ApplicantDrawerP
                         transition={{ type: "spring", damping: 25, stiffness: 200 }}
                         className="fixed inset-y-0 right-0 w-full sm:w-[500px] lg:w-[600px] bg-white shadow-2xl z-50 flex flex-col"
                     >
-                        {/* Header */}
+                        {/* Header and content structure remains same until inner content */}
                         <div className="p-6 border-b border-slate-100 flex items-start justify-between bg-white z-10 sticky top-0">
                             <div className="flex gap-4">
                                 <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center overflow-hidden border border-slate-100 shrink-0">
@@ -116,74 +125,89 @@ export function ApplicantDrawer({ applicant, isOpen, onClose }: ApplicantDrawerP
                         <div className="flex-1 overflow-y-auto p-6 bg-slate-50/50">
                             {activeTab === "overview" && (
                                 <div className="space-y-6">
-                                    {/* AI Match Score */}
-                                    <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
-                                        <h3 className="font-semibold text-slate-900 mb-4 flex items-center gap-2">
-                                            <Brain className="w-5 h-5 text-purple-500" />
-                                            Phân tích AI
-                                        </h3>
-                                        
-                                        <div className="flex items-center gap-6 mb-6">
-                                            <div className="relative w-24 h-24 shrink-0">
-                                                <svg className="w-full h-full transform -rotate-90">
-                                                    <circle
-                                                        cx="48"
-                                                        cy="48"
-                                                        r="40"
-                                                        fill="transparent"
-                                                        stroke="#e2e8f0"
-                                                        strokeWidth="8"
-                                                    />
-                                                    <circle
-                                                        cx="48"
-                                                        cy="48"
-                                                        r="40"
-                                                        fill="transparent"
-                                                        stroke={applicant.aiAnalysis.matchScore >= 80 ? "#22c55e" : applicant.aiAnalysis.matchScore >= 50 ? "#f59e0b" : "#ef4444"}
-                                                        strokeWidth="8"
-                                                        strokeDasharray={`${2 * Math.PI * 40}`}
-                                                        strokeDashoffset={`${2 * Math.PI * 40 * (1 - applicant.aiAnalysis.matchScore / 100)}`}
-                                                        strokeLinecap="round"
-                                                    />
-                                                </svg>
-                                                <div className="absolute inset-0 flex items-center justify-center flex-col">
-                                                    <span className="text-2xl font-bold text-slate-900">{applicant.aiAnalysis.matchScore}%</span>
-                                                    <span className="text-[10px] text-slate-400 uppercase font-bold">Match</span>
+                                    {/* AI Match Score / Loading State */}
+                                    {isAnalyzing ? (
+                                        <AISkeleton />
+                                    ) : (
+                                        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                                            <div className="flex justify-between items-center mb-4">
+                                                <h3 className="font-semibold text-slate-900 flex items-center gap-2">
+                                                    <Brain className="w-5 h-5 text-purple-500" />
+                                                    Phân tích AI
+                                                </h3>
+                                                <Button 
+                                                    variant="ghost" 
+                                                    size="sm" 
+                                                    onClick={handleReAnalyze}
+                                                    className="h-8 text-xs text-slate-500 hover:text-sky-600 hover:bg-sky-50 rounded-full"
+                                                >
+                                                    <RefreshCcw className="w-3.5 h-3.5 mr-1" />
+                                                    Phân tích lại
+                                                </Button>
+                                            </div>
+                                            
+                                            <div className="flex items-center gap-6 mb-6">
+                                                <div className="relative w-24 h-24 shrink-0">
+                                                    <svg className="w-full h-full transform -rotate-90">
+                                                        <circle
+                                                            cx="48"
+                                                            cy="48"
+                                                            r="40"
+                                                            fill="transparent"
+                                                            stroke="#e2e8f0"
+                                                            strokeWidth="8"
+                                                        />
+                                                        <circle
+                                                            cx="48"
+                                                            cy="48"
+                                                            r="40"
+                                                            fill="transparent"
+                                                            stroke={applicant.aiAnalysis.matchScore >= 80 ? "#22c55e" : applicant.aiAnalysis.matchScore >= 50 ? "#f59e0b" : "#ef4444"}
+                                                            strokeWidth="8"
+                                                            strokeDasharray={`${2 * Math.PI * 40}`}
+                                                            strokeDashoffset={`${2 * Math.PI * 40 * (1 - applicant.aiAnalysis.matchScore / 100)}`}
+                                                            strokeLinecap="round"
+                                                        />
+                                                    </svg>
+                                                    <div className="absolute inset-0 flex items-center justify-center flex-col">
+                                                        <span className="text-2xl font-bold text-slate-900">{applicant.aiAnalysis.matchScore}%</span>
+                                                        <span className="text-[10px] text-slate-400 uppercase font-bold">Match</span>
+                                                    </div>
+                                                </div>
+                                                <div className="flex-1">
+                                                    <p className="text-sm text-slate-600 italic border-l-2 border-purple-200 pl-3">
+                                                    "{applicant.aiAnalysis.summary}"
+                                                    </p>
                                                 </div>
                                             </div>
-                                            <div className="flex-1">
-                                                <p className="text-sm text-slate-600 italic border-l-2 border-purple-200 pl-3">
-                                                   "{applicant.aiAnalysis.summary}"
-                                                </p>
+
+                                            {/* Score Breakdown */}
+                                            <ScoreBreakdown breakdown={applicant.aiAnalysis.breakdown} />
+
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 pt-6 border-t border-slate-100">
+                                                <div className="space-y-2">
+                                                    <div className="text-sm font-medium text-green-700 flex items-center gap-1.5">
+                                                        <ThumbsUp className="w-4 h-4" /> Điểm mạnh
+                                                    </div>
+                                                    <ul className="space-y-1">
+                                                        {applicant.aiAnalysis.strengths.map((str, i) => (
+                                                            <li key={i} className="text-sm text-slate-600 pl-2 border-l border-green-200">{str}</li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <div className="text-sm font-medium text-amber-600 flex items-center gap-1.5">
+                                                        <AlertTriangle className="w-4 h-4" /> Điểm cần cải thiện
+                                                    </div>
+                                                    <ul className="space-y-1">
+                                                        {applicant.aiAnalysis.gaps.map((gap, i) => (
+                                                            <li key={i} className="text-sm text-slate-600 pl-2 border-l border-amber-200">{gap}</li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
                                             </div>
                                         </div>
-
-                                        {/* Score Breakdown */}
-                                        <ScoreBreakdown breakdown={applicant.aiAnalysis.breakdown} />
-
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 pt-6 border-t border-slate-100">
-                                            <div className="space-y-2">
-                                                <div className="text-sm font-medium text-green-700 flex items-center gap-1.5">
-                                                    <ThumbsUp className="w-4 h-4" /> Điểm mạnh
-                                                </div>
-                                                <ul className="space-y-1">
-                                                    {applicant.aiAnalysis.strengths.map((str, i) => (
-                                                        <li key={i} className="text-sm text-slate-600 pl-2 border-l border-green-200">{str}</li>
-                                                    ))}
-                                                </ul>
-                                            </div>
-                                            <div className="space-y-2">
-                                                <div className="text-sm font-medium text-amber-600 flex items-center gap-1.5">
-                                                    <AlertTriangle className="w-4 h-4" /> Điểm cần cải thiện
-                                                </div>
-                                                <ul className="space-y-1">
-                                                    {applicant.aiAnalysis.gaps.map((gap, i) => (
-                                                        <li key={i} className="text-sm text-slate-600 pl-2 border-l border-amber-200">{gap}</li>
-                                                    ))}
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    )}
 
                                     {/* Skills */}
                                     <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
