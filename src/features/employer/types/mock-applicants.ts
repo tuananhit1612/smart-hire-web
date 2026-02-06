@@ -54,25 +54,53 @@ export const mockEmployerApplicants: ReadonlyArray<EmployerApplicant> = [
         appliedAt: "2026-02-05T09:00:00Z",
         status: ApplicationStage.APPLIED,
         currentTitle: "Senior Frontend Developer",
-        experienceYears: 5,
-        skills: ["React", "TypeScript", "Next.js", "Tailwind CSS"],
+        experienceYears: 6,
+        skills: ["React", "TypeScript", "Next.js", "Tailwind CSS", "GraphQL"],
         cvUrl: "#",
         aiAnalysis: {
-            matchScore: 92,
-            strengths: ["Strong React ecosystem knowledge", "5 years experience matches Senior level", "Experience with exact tech stack"],
+            matchScore: 96,
+            strengths: ["Expert level React/Next.js", "Strong leadership experience", "Perfect tech stack match"],
             gaps: [],
-            summary: "Ứng viên rất phù hợp về mặt kỹ thuật. Kinh nghiệm dày dạn với React/Next.js.",
+            summary: "Ứng viên hoàn hảo cho vị trí Senior. Kỹ năng chuyên môn xuất sắc và có kinh nghiệm lead team.",
             breakdown: {
-                skillMatch: 95,
-                experienceMatch: 90,
-                semanticMatch: 88
+                skillMatch: 98,
+                experienceMatch: 95,
+                semanticMatch: 92
             }
         },
         notes: [
-            { id: "n1", author: "HR Recruit", text: "Ứng viên tiềm năng, cần check kỹ tiếng Anh.", createdAt: "2026-02-05T10:00:00Z" }
+            { id: "n1", author: "HR Recruit", text: "CV rất ấn tượng, nên phỏng vấn sớm.", createdAt: "2026-02-05T10:00:00Z" }
         ],
         activities: [
             { id: "a1", action: "Nộp hồ sơ", timestamp: "2026-02-05T09:00:00Z" }
+        ]
+    },
+    {
+        id: "cand-004",
+        name: "Phạm Minh D",
+        email: "pham.d@example.com",
+        phone: "0987654321",
+        avatarUrl: "https://i.pravatar.cc/150?u=cand004",
+        appliedAt: "2026-02-06T08:00:00Z",
+        status: ApplicationStage.APPLIED,
+        currentTitle: "Fullstack Developer",
+        experienceYears: 4,
+        skills: ["Node.js", "React", "PostgreSQL", "Docker", "AWS"],
+        cvUrl: "#",
+        aiAnalysis: {
+            matchScore: 88,
+            strengths: ["Strong Fullstack profile", "Backend knowledge adds value", "Cloud experience"],
+            gaps: ["Less focus on advanced frontend performance"],
+            summary: "Ứng viên mạnh, có thể cân được cả task Backend. Phù hợp nếu team cần Fullstack.",
+            breakdown: {
+                skillMatch: 90,
+                experienceMatch: 85,
+                semanticMatch: 85
+            }
+        },
+        notes: [],
+        activities: [
+            { id: "a6", action: "Nộp hồ sơ", timestamp: "2026-02-06T08:00:00Z" }
         ]
     },
     {
@@ -88,14 +116,14 @@ export const mockEmployerApplicants: ReadonlyArray<EmployerApplicant> = [
         skills: ["React", "JavaScript", "CSS", "Redux"],
         cvUrl: "#",
         aiAnalysis: {
-            matchScore: 75,
+            matchScore: 72,
             strengths: ["Solid React fundamentals", "Good cultural fit potential"],
             gaps: ["Lacks TypeScript experience", "Experience below Senior requirement"],
-            summary: "Ứng viên tiềm năng nhưng cần đào tạo thêm về TypeScript. Phù hợp vị trí Mid-level hơn.",
+            summary: "Tiềm năng nhưng còn non kinh nghiệm (Junior+). Cần đào tạo thêm về TypeScript.",
             breakdown: {
-                skillMatch: 70,
-                experienceMatch: 65,
-                semanticMatch: 90
+                skillMatch: 75,
+                experienceMatch: 60,
+                semanticMatch: 85
             }
         },
         notes: [],
@@ -105,25 +133,53 @@ export const mockEmployerApplicants: ReadonlyArray<EmployerApplicant> = [
         ]
     },
     {
+        id: "cand-005",
+        name: "Hoàng Văn E",
+        email: "hoang.e@example.com",
+        phone: "0933333333",
+        avatarUrl: "https://i.pravatar.cc/150?u=cand005",
+        appliedAt: "2026-02-06T11:00:00Z",
+        status: ApplicationStage.APPLIED,
+        currentTitle: "Freelance Web Dev",
+        experienceYears: 3,
+        skills: ["WordPress", "jQuery", "PHP", "Basic React"],
+        cvUrl: "#",
+        aiAnalysis: {
+            matchScore: 65,
+            strengths: ["Broad web knowledge", "Good communication"],
+            gaps: ["Outdated tech stack", "Minimal Modern React experience"],
+            summary: "Kỹ năng hơi cũ so với yêu cầu hiện tại. Phù hợp dự án maintain hơn là dev mới.",
+            breakdown: {
+                skillMatch: 60,
+                experienceMatch: 65,
+                semanticMatch: 70
+            }
+        },
+        notes: [],
+        activities: [
+            { id: "a7", action: "Nộp hồ sơ", timestamp: "2026-02-06T11:00:00Z" }
+        ]
+    },
+    {
         id: "cand-003",
         name: "Lê Văn C",
         email: "le.c@example.com",
         phone: "0912345678",
         appliedAt: "2026-02-01T10:00:00Z",
         status: ApplicationStage.REJECTED,
-        currentTitle: "Web Designer",
+        currentTitle: "Graphic Designer",
         experienceYears: 3,
-        skills: ["Figma", "HTML", "CSS", "Basic JS"],
+        skills: ["Figma", "Photoshop", "HTML", "CSS"],
         cvUrl: "#",
         aiAnalysis: {
-            matchScore: 45,
-            strengths: ["Strong UI/UX design skills"],
-            gaps: ["No React/Next.js experience", "Mainly design focused"],
-            summary: "Chuyên môn thiên về Design, không đáp ứng yêu cầu lập trình Frontend chuyên sâu.",
+            matchScore: 35,
+            strengths: ["Great eye for design", "UI/UX mindset"],
+            gaps: ["Zero JavaScript programming skills", "Wrong career path application"],
+            summary: "Ứng viên là Designer, không có kỹ năng lập trình để làm Frontend Dev.",
             breakdown: {
-                skillMatch: 40,
+                skillMatch: 20,
                 experienceMatch: 30,
-                semanticMatch: 65
+                semanticMatch: 60
             }
         },
         notes: [
@@ -132,34 +188,6 @@ export const mockEmployerApplicants: ReadonlyArray<EmployerApplicant> = [
         activities: [
             { id: "a4", action: "Nộp hồ sơ", timestamp: "2026-02-01T10:00:00Z" },
             { id: "a5", action: "Từ chối hồ sơ", timestamp: "2026-02-03T15:00:00Z" }
-        ]
-    },
-    {
-        id: "cand-004",
-        name: "Phạm Minh D",
-        email: "pham.d@example.com",
-        phone: "0987654321",
-        avatarUrl: "https://i.pravatar.cc/150?u=cand004",
-        appliedAt: "2026-02-06T08:00:00Z",
-        status: ApplicationStage.APPLIED,
-        currentTitle: "Fullstack Developer",
-        experienceYears: 4,
-        skills: ["Node.js", "React", "PostgreSQL", "Docker"],
-        cvUrl: "#",
-        aiAnalysis: {
-            matchScore: 88,
-            strengths: ["Fullstack capabilities", "Backend knowledge adds value"],
-            gaps: ["Less focus on UI/UX nuances"],
-            summary: "Ứng viên Fullstack mạnh, có thể hỗ trợ cả Backend khi cần.",
-            breakdown: {
-                skillMatch: 90,
-                experienceMatch: 85,
-                semanticMatch: 80
-            }
-        },
-        notes: [],
-        activities: [
-            { id: "a6", action: "Nộp hồ sơ", timestamp: "2026-02-06T08:00:00Z" }
         ]
     }
 ];
