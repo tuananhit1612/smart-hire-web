@@ -7,6 +7,11 @@ export interface AIAnalysis {
     readonly strengths: string[];
     readonly gaps: string[];
     readonly summary: string;
+    readonly breakdown: {
+        skillMatch: number;      // 0-100
+        experienceMatch: number; // 0-100
+        semanticMatch: number;   // 0-100 (Culture/Communication)
+    };
 }
 
 export interface ApplicantNote {
@@ -56,7 +61,12 @@ export const mockEmployerApplicants: ReadonlyArray<EmployerApplicant> = [
             matchScore: 92,
             strengths: ["Strong React ecosystem knowledge", "5 years experience matches Senior level", "Experience with exact tech stack"],
             gaps: [],
-            summary: "Ứng viên rất phù hợp về mặt kỹ thuật. Kinh nghiệm dày dạn với React/Next.js."
+            summary: "Ứng viên rất phù hợp về mặt kỹ thuật. Kinh nghiệm dày dạn với React/Next.js.",
+            breakdown: {
+                skillMatch: 95,
+                experienceMatch: 90,
+                semanticMatch: 88
+            }
         },
         notes: [
             { id: "n1", author: "HR Recruit", text: "Ứng viên tiềm năng, cần check kỹ tiếng Anh.", createdAt: "2026-02-05T10:00:00Z" }
@@ -81,7 +91,12 @@ export const mockEmployerApplicants: ReadonlyArray<EmployerApplicant> = [
             matchScore: 75,
             strengths: ["Solid React fundamentals", "Good cultural fit potential"],
             gaps: ["Lacks TypeScript experience", "Experience below Senior requirement"],
-            summary: "Ứng viên tiềm năng nhưng cần đào tạo thêm về TypeScript. Phù hợp vị trí Mid-level hơn."
+            summary: "Ứng viên tiềm năng nhưng cần đào tạo thêm về TypeScript. Phù hợp vị trí Mid-level hơn.",
+            breakdown: {
+                skillMatch: 70,
+                experienceMatch: 65,
+                semanticMatch: 90
+            }
         },
         notes: [],
         activities: [
@@ -104,7 +119,12 @@ export const mockEmployerApplicants: ReadonlyArray<EmployerApplicant> = [
             matchScore: 45,
             strengths: ["Strong UI/UX design skills"],
             gaps: ["No React/Next.js experience", "Mainly design focused"],
-            summary: "Chuyên môn thiên về Design, không đáp ứng yêu cầu lập trình Frontend chuyên sâu."
+            summary: "Chuyên môn thiên về Design, không đáp ứng yêu cầu lập trình Frontend chuyên sâu.",
+            breakdown: {
+                skillMatch: 40,
+                experienceMatch: 30,
+                semanticMatch: 65
+            }
         },
         notes: [
             { id: "n2", author: "Lead Dev", text: "Thiếu kiến thức lập trình logic.", createdAt: "2026-02-03T14:00:00Z" }
@@ -130,7 +150,12 @@ export const mockEmployerApplicants: ReadonlyArray<EmployerApplicant> = [
             matchScore: 88,
             strengths: ["Fullstack capabilities", "Backend knowledge adds value"],
             gaps: ["Less focus on UI/UX nuances"],
-            summary: "Ứng viên Fullstack mạnh, có thể hỗ trợ cả Backend khi cần."
+            summary: "Ứng viên Fullstack mạnh, có thể hỗ trợ cả Backend khi cần.",
+            breakdown: {
+                skillMatch: 90,
+                experienceMatch: 85,
+                semanticMatch: 80
+            }
         },
         notes: [],
         activities: [
