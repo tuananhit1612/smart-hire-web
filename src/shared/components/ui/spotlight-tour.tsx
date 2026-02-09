@@ -7,75 +7,7 @@ import { Button } from "./button";
 import { cn } from "@/lib/utils";
 
 // Mascot SVG Component - Cute robot guide
-function MascotGuide({ isWaving = false }: { isWaving?: boolean }) {
-    return (
-        <motion.div
-            animate={isWaving ? { rotate: [0, -5, 5, -5, 0] } : {}}
-            transition={{ duration: 0.5, repeat: isWaving ? Infinity : 0, repeatDelay: 2 }}
-            className="relative"
-        >
-            <svg width="70" height="70" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                {/* Body */}
-                <rect x="20" y="30" width="40" height="35" rx="8" fill="url(#bodyGradient)" />
-                {/* Head */}
-                <rect x="15" y="8" width="50" height="28" rx="10" fill="url(#headGradient)" />
-                {/* Eyes */}
-                <circle cx="30" cy="20" r="6" fill="white" />
-                <circle cx="50" cy="20" r="6" fill="white" />
-                <motion.circle
-                    cx="30" cy="20" r="3" fill="#1a1a2e"
-                    animate={{ y: [0, -1, 0, 1, 0] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                />
-                <motion.circle
-                    cx="50" cy="20" r="3" fill="#1a1a2e"
-                    animate={{ y: [0, -1, 0, 1, 0] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                />
-                {/* Smile */}
-                <path d="M32 28 Q40 34 48 28" stroke="#1a1a2e" strokeWidth="2" strokeLinecap="round" fill="none" />
-                {/* Antenna */}
-                <line x1="40" y1="8" x2="40" y2="2" stroke="url(#antennaGradient)" strokeWidth="3" strokeLinecap="round" />
-                <motion.circle
-                    cx="40" cy="2" r="4" fill="#fbbf24"
-                    animate={{ scale: [1, 1.2, 1] }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
-                />
-                {/* Arms */}
-                <motion.rect
-                    x="8" y="35" width="12" height="8" rx="4" fill="url(#bodyGradient)"
-                    animate={isWaving ? { rotate: [0, 20, 0] } : {}}
-                    style={{ originX: 1, originY: 0.5 }}
-                    transition={{ duration: 0.5, repeat: isWaving ? Infinity : 0 }}
-                />
-                <rect x="60" y="35" width="12" height="8" rx="4" fill="url(#bodyGradient)" />
-                {/* Legs */}
-                <rect x="25" y="65" width="10" height="10" rx="3" fill="url(#bodyGradient)" />
-                <rect x="45" y="65" width="10" height="10" rx="3" fill="url(#bodyGradient)" />
-                {/* Chest light */}
-                <motion.circle
-                    cx="40" cy="47" r="5" fill="#60a5fa"
-                    animate={{ opacity: [0.5, 1, 0.5] }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
-                />
-                <defs>
-                    <linearGradient id="headGradient" x1="15" y1="8" x2="65" y2="36">
-                        <stop stopColor="#6366f1" />
-                        <stop offset="1" stopColor="#a855f7" />
-                    </linearGradient>
-                    <linearGradient id="bodyGradient" x1="20" y1="30" x2="60" y2="65">
-                        <stop stopColor="#818cf8" />
-                        <stop offset="1" stopColor="#c084fc" />
-                    </linearGradient>
-                    <linearGradient id="antennaGradient" x1="40" y1="8" x2="40" y2="2">
-                        <stop stopColor="#6366f1" />
-                        <stop offset="1" stopColor="#fbbf24" />
-                    </linearGradient>
-                </defs>
-            </svg>
-        </motion.div>
-    );
-}
+// (Moved to bottom to avoid clutter)
 
 interface TourStep {
     id: string;
@@ -94,6 +26,14 @@ const TOUR_STEPS: TourStep[] = [
         description: "Mình là Robo - sẽ hướng dẫn bạn sử dụng CV Builder để tạo CV chuyên nghiệp!",
         position: "center",
         mascotMood: "wave",
+    },
+    {
+        id: "header",
+        targetId: "cv-builder-header",
+        title: "Thanh công cụ 🛠️",
+        description: "Quản lý file CV, lưu trữ và các tùy chọn hiển thị nằm ở đây.",
+        position: "bottom",
+        mascotMood: "point",
     },
     {
         id: "sidebar",
@@ -120,14 +60,6 @@ const TOUR_STEPS: TourStep[] = [
         mascotMood: "happy",
     },
     {
-        id: "buttons",
-        targetId: "preview-button",
-        title: "Xem trước & Lưu 👁️",
-        description: "Nhấn 'Xem trước' để xem CV hoàn chỉnh, hoặc 'Lưu CV' để lưu ngay lập tức.",
-        position: "bottom",
-        mascotMood: "point",
-    },
-    {
         id: "preview",
         targetId: "cv-preview-panel",
         title: "Bản xem trước 📄",
@@ -145,7 +77,7 @@ const TOUR_STEPS: TourStep[] = [
     },
 ];
 
-const STORAGE_KEY = "cv-builder-spotlight-tour-completed";
+const STORAGE_KEY = "cv-builder-tour-v2-completed";
 
 interface SpotlightPosition {
     top: number;
@@ -167,6 +99,18 @@ export function SpotlightTour() {
         }
     }, []);
 
+    // Lock body scroll when tour is open
+    React.useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "";
+        }
+        return () => {
+            document.body.style.overflow = "";
+        };
+    }, [isOpen]);
+
     React.useEffect(() => {
         if (!isOpen) return;
 
@@ -179,6 +123,9 @@ export function SpotlightTour() {
 
         const element = document.getElementById(step.targetId);
         if (element) {
+            // Simple scroll to element to ensure it's in view
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
             const rect = element.getBoundingClientRect();
             const padding = 8;
             setSpotlightPos({
@@ -269,7 +216,7 @@ export function SpotlightTour() {
             </div>
 
             {/* Card */}
-            <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-zinc-700 overflow-hidden">
+            <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
                 {/* Content */}
                 <div className="p-5">
                     <motion.div
@@ -277,17 +224,17 @@ export function SpotlightTour() {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                     >
-                        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                        <h3 className="text-lg font-bold text-gray-900 mb-2">
                             {currentTourStep.title}
                         </h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                        <p className="text-sm text-gray-600 leading-relaxed">
                             {currentTourStep.description}
                         </p>
                     </motion.div>
                 </div>
 
                 {/* Footer */}
-                <div className="px-5 py-3 bg-gray-50 dark:bg-zinc-800/50 flex items-center justify-between border-t border-gray-200 dark:border-zinc-700">
+                <div className="px-5 py-3 bg-gray-50 flex items-center justify-between border-t border-gray-200">
                     {/* Progress dots */}
                     <div className="flex items-center gap-1.5">
                         {TOUR_STEPS.map((_, index) => (
@@ -296,10 +243,10 @@ export function SpotlightTour() {
                                 className={cn(
                                     "h-2 rounded-full transition-all",
                                     index === currentStep
-                                        ? "w-5 bg-indigo-500"
+                                        ? "w-5 bg-sky-500"
                                         : index < currentStep
-                                            ? "w-2 bg-indigo-300"
-                                            : "w-2 bg-gray-300 dark:bg-gray-600"
+                                            ? "w-2 bg-sky-300"
+                                            : "w-2 bg-gray-300"
                                 )}
                             />
                         ))}
@@ -310,27 +257,22 @@ export function SpotlightTour() {
                         {!isFirstStep && (
                             <button
                                 onClick={handlePrev}
-                                className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors"
+                                className="p-2 rounded-lg hover:bg-gray-200 transition-colors"
                             >
-                                <ChevronLeft className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                                <ChevronLeft className="w-4 h-4 text-gray-600" />
                             </button>
                         )}
-                        <Button variant="primary" size="sm" onClick={handleNext}>
-                            {isLastStep ? "Bắt đầu!" : "Tiếp"}
-                            {!isLastStep && <ChevronRight className="w-4 h-4 ml-1" />}
+                        <Button
+                            variant="primary"
+                            size="sm"
+                            onClick={handleNext}
+                            rightIcon={!isLastStep ? <ChevronRight className="w-4 h-4" /> : undefined}
+                            className="bg-sky-600 hover:bg-sky-700 text-white border-none shadow-lg shadow-sky-500/20"
+                        >
+                            {isLastStep ? "Bắt đầu ngay!" : "Tiếp theo"}
                         </Button>
                     </div>
                 </div>
-            </div>
-
-            {/* Skip button */}
-            <div className="text-center mt-3">
-                <button
-                    onClick={handleComplete}
-                    className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors"
-                >
-                    Bỏ qua hướng dẫn
-                </button>
             </div>
         </>
     );
@@ -419,6 +361,77 @@ export function SpotlightTour() {
                 </>
             )}
         </AnimatePresence>
+    );
+}
+
+// Separate component needed because we used Mascot in header now
+function MascotGuide({ isWaving = false }: { isWaving?: boolean }) {
+    return (
+        <motion.div
+            animate={isWaving ? { rotate: [0, -5, 5, -5, 0] } : {}}
+            transition={{ duration: 0.5, repeat: isWaving ? Infinity : 0, repeatDelay: 2 }}
+            className="relative scale-90"
+        >
+            <svg width="70" height="70" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                {/* Body */}
+                <rect x="20" y="30" width="40" height="35" rx="8" fill="url(#bodyGradient)" />
+                {/* Head */}
+                <rect x="15" y="8" width="50" height="28" rx="10" fill="url(#headGradient)" />
+                {/* Eyes */}
+                <circle cx="30" cy="20" r="6" fill="white" />
+                <circle cx="50" cy="20" r="6" fill="white" />
+                <motion.circle
+                    cx="30" cy="20" r="3" fill="#0f172a"
+                    animate={{ y: [0, -1, 0, 1, 0] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                />
+                <motion.circle
+                    cx="50" cy="20" r="3" fill="#0f172a"
+                    animate={{ y: [0, -1, 0, 1, 0] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                />
+                {/* Smile */}
+                <path d="M32 28 Q40 34 48 28" stroke="#0f172a" strokeWidth="2" strokeLinecap="round" fill="none" />
+                {/* Antenna */}
+                <line x1="40" y1="8" x2="40" y2="2" stroke="url(#antennaGradient)" strokeWidth="3" strokeLinecap="round" />
+                <motion.circle
+                    cx="40" cy="2" r="4" fill="#fbbf24"
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                />
+                {/* Arms */}
+                <motion.rect
+                    x="8" y="35" width="12" height="8" rx="4" fill="url(#bodyGradient)"
+                    animate={isWaving ? { rotate: [0, 20, 0] } : {}}
+                    style={{ originX: 1, originY: 0.5 }}
+                    transition={{ duration: 0.5, repeat: isWaving ? Infinity : 0 }}
+                />
+                <rect x="60" y="35" width="12" height="8" rx="4" fill="url(#bodyGradient)" />
+                {/* Legs */}
+                <rect x="25" y="65" width="10" height="10" rx="3" fill="url(#bodyGradient)" />
+                <rect x="45" y="65" width="10" height="10" rx="3" fill="url(#bodyGradient)" />
+                {/* Chest light */}
+                <motion.circle
+                    cx="40" cy="47" r="5" fill="#38bdf8"
+                    animate={{ opacity: [0.5, 1, 0.5] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                />
+                <defs>
+                    <linearGradient id="headGradient" x1="15" y1="8" x2="65" y2="36">
+                        <stop stopColor="#0284c7" />
+                        <stop offset="1" stopColor="#0ea5e9" />
+                    </linearGradient>
+                    <linearGradient id="bodyGradient" x1="20" y1="30" x2="60" y2="65">
+                        <stop stopColor="#0369a1" />
+                        <stop offset="1" stopColor="#0ea5e9" />
+                    </linearGradient>
+                    <linearGradient id="antennaGradient" x1="40" y1="8" x2="40" y2="2">
+                        <stop stopColor="#0369a1" />
+                        <stop offset="1" stopColor="#fbbf24" />
+                    </linearGradient>
+                </defs>
+            </svg>
+        </motion.div>
     );
 }
 

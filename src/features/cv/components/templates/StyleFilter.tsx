@@ -36,8 +36,8 @@ export function StyleFilter({ selectedStyle, onSelect }: StyleFilterProps) {
                             "relative px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300",
                             "flex items-center gap-2",
                             isSelected
-                                ? "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white shadow-lg shadow-indigo-500/25"
-                                : "bg-white/60 dark:bg-zinc-900/60 backdrop-blur-xl border border-gray-200 dark:border-zinc-800 text-gray-700 dark:text-gray-300 hover:border-indigo-400 dark:hover:border-indigo-500"
+                                ? "bg-gradient-to-r from-sky-500 via-emerald-400 to-green-500 text-white shadow-lg shadow-sky-500/25"
+                                : "bg-white/60 backdrop-blur-xl border border-gray-200 text-gray-700 hover:border-sky-400"
                         )}
                     >
                         <Icon className="w-4 h-4" />

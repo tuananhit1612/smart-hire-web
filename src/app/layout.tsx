@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Be_Vietnam_Pro, Orbitron } from "next/font/google"; // Added Orbitron
+import { Be_Vietnam_Pro, Orbitron } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { ToastProvider } from "@/shared/components/ui/toast";
 
 import { ParticleBackground } from "@/shared/components/effects/ParticleBackground";
+import { FloatingBackButton } from "@/shared/components/navigation/FloatingBackButton";
 
 const beVietnamPro = Be_Vietnam_Pro({
   subsets: ["latin", "vietnamese"],
@@ -33,13 +34,15 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         suppressHydrationWarning
-        className={`${beVietnamPro.variable} ${orbitron.variable} font-sans antialiased flex flex-col min-h-screen bg-slate-50 dark:bg-[#0B0F19]`}
+        className={`${beVietnamPro.variable} ${orbitron.variable} font-sans antialiased flex flex-col min-h-screen bg-white`}
       >
         <ParticleBackground />
+        <FloatingBackButton />
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          defaultTheme="light"
+          forcedTheme="light"
+          enableSystem={false}
           disableTransitionOnChange
         >
           <ToastProvider>
@@ -50,4 +53,3 @@ export default function RootLayout({
     </html>
   );
 }
-

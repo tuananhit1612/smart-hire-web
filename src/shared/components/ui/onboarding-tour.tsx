@@ -90,6 +90,8 @@ export function OnboardingTour({ onComplete }: OnboardingTourProps) {
 
     const handleComplete = () => {
         localStorage.setItem(STORAGE_KEY, "true");
+        // Dispatch event so Layout can catch it immediately
+        window.dispatchEvent(new Event("onboarding-completed"));
         setIsOpen(false);
         onComplete?.();
     };

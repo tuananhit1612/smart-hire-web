@@ -66,47 +66,56 @@ export function ConfirmDialog({
 
                     {/* Dialog */}
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                        initial={{ opacity: 0, scale: 0.9, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                        className="fixed inset-0 z-50 flex items-center justify-center p-4"
+                        exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                        className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
                     >
-                        <div className="relative w-full max-w-md bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-zinc-800 p-6">
+                        <div className="relative w-full max-w-sm bg-white/90 backdrop-blur-2xl rounded-[24px] shadow-2xl ring-1 ring-white/60 pointer-events-auto p-6 overflow-hidden">
+                            {/* Decorative Top Gradient */}
+                            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-sky-400 via-sky-500 to-green-400 opacity-50"></div>
+
                             {/* Close button */}
                             <button
                                 onClick={onClose}
-                                className="absolute top-4 right-4 p-1 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
+                                className="absolute top-4 right-4 p-2 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100/50 transition-all active:scale-95"
                             >
                                 <X className="w-5 h-5" />
                             </button>
 
                             {/* Content */}
-                            <div className="flex items-start gap-4">
-                                <div className={`p-3 rounded-xl ${iconColors[variant]}`}>
-                                    <AlertTriangle className="w-6 h-6" />
+                            <div className="flex flex-col items-center text-center gap-4 mt-2">
+                                <div className={`p-4 rounded-2xl shadow-inner ${iconColors[variant]} mb-2`}>
+                                    <AlertTriangle className="w-8 h-8" />
                                 </div>
-                                <div className="flex-1 pt-1">
-                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                                <div>
+                                    <h3 className="text-xl font-bold text-slate-800 font-be-vietnam">
                                         {title}
                                     </h3>
-                                    <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                                    <p className="mt-2 text-sm text-slate-500 font-medium leading-relaxed">
                                         {message}
                                     </p>
                                 </div>
                             </div>
 
                             {/* Actions */}
-                            <div className="flex items-center justify-end gap-3 mt-6">
-                                <Button variant="outline" size="md" onClick={onClose}>
+                            <div className="grid grid-cols-2 gap-3 mt-8">
+                                <Button
+                                    variant="outline"
+                                    size="lg"
+                                    onClick={onClose}
+                                    className="rounded-full border-slate-200 hover:bg-slate-50 text-slate-600 font-bold h-12"
+                                >
                                     {cancelText}
                                 </Button>
                                 <Button
                                     variant={confirmVariant}
-                                    size="md"
+                                    size="lg"
                                     onClick={() => {
                                         onConfirm();
                                         onClose();
                                     }}
+                                    className="rounded-full font-bold shadow-lg shadow-sky-200 h-12"
                                 >
                                     {confirmText}
                                 </Button>
@@ -126,6 +135,8 @@ export function useConfirmDialog() {
         title: string;
         message: string;
         variant: "danger" | "warning" | "info";
+        confirmText?: string;
+        cancelText?: string;
         onConfirm: () => void;
     }>({
         isOpen: false,
@@ -140,6 +151,8 @@ export function useConfirmDialog() {
             title: string;
             message: string;
             variant?: "danger" | "warning" | "info";
+            confirmText?: string;
+            cancelText?: string;
         }): Promise<boolean> => {
             return new Promise((resolve) => {
                 setState({
@@ -147,6 +160,8 @@ export function useConfirmDialog() {
                     title: options.title,
                     message: options.message,
                     variant: options.variant || "danger",
+                    confirmText: options.confirmText,
+                    cancelText: options.cancelText,
                     onConfirm: () => resolve(true),
                 });
             });
@@ -167,6 +182,8 @@ export function useConfirmDialog() {
                 title={state.title}
                 message={state.message}
                 variant={state.variant}
+                confirmText={state.confirmText}
+                cancelText={state.cancelText}
             />
         ),
         [state, close]

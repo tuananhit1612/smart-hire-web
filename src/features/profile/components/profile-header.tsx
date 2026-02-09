@@ -8,6 +8,7 @@ import { Button } from "@/shared/components/ui/button";
 
 interface ProfileHeaderProps {
   profile: CandidateProfile;
+  onEdit?: () => void;
 }
 
 const socialIcons: Record<SocialLink["platform"], React.ElementType> = {
@@ -17,15 +18,15 @@ const socialIcons: Record<SocialLink["platform"], React.ElementType> = {
   Twitter: Twitter,
 };
 
-export function ProfileHeader({ profile }: ProfileHeaderProps) {
+export function ProfileHeader({ profile, onEdit }: ProfileHeaderProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="glass-card overflow-hidden"
+      className="bg-white/70 dark:bg-sky-950/30 backdrop-blur-xl border border-white/20 dark:border-sky-800/30 rounded-3xl shadow-xl shadow-blue-900/5 overflow-hidden"
     >
       {/* Holographic Cover */}
-      <div className="h-32 sm:h-40 md:h-48 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 relative">
+      <div className="h-32 sm:h-40 md:h-48 bg-gradient-to-r from-sky-500 via-sky-600 to-sky-700 relative">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml,...')] opacity-20" />
       </div>
 
@@ -42,7 +43,7 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
                 className="object-cover"
               />
             ) : (
-              <div className="w-full h-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white text-4xl font-bold">
+              <div className="w-full h-full bg-gradient-to-br from-sky-500 to-sky-700 flex items-center justify-center text-white text-4xl font-bold">
                 {profile.fullName.charAt(0)}
               </div>
             )}
@@ -51,16 +52,16 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
 
         {/* Name & Title */}
         <div className="mt-4">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-foreground">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-sky-900 dark:text-white">
             {profile.fullName}
           </h1>
-          <p className="text-lg sm:text-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent font-semibold mt-1">
+          <p className="text-lg sm:text-xl text-sky-700 dark:text-sky-400 font-semibold mt-1">
             {profile.title}
           </p>
         </div>
 
         {/* Contact Info */}
-        <div className="flex flex-wrap items-center gap-4 mt-4 text-muted-foreground text-sm">
+        <div className="flex flex-wrap items-center gap-4 mt-4 text-sky-800 dark:text-sky-300 text-sm">
           <span className="flex items-center gap-1.5">
             <Mail className="h-4 w-4" />
             <span className="truncate max-w-[200px]">{profile.email}</span>
@@ -89,7 +90,7 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-2 px-3 py-2 rounded-xl bg-muted/50 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
+                className="flex items-center gap-2 px-4 py-2 rounded-full bg-sky-50 dark:bg-sky-900/30 hover:bg-sky-100 dark:hover:bg-sky-800/50 text-sky-700 dark:text-sky-300 transition-colors"
               >
                 <Icon className="h-4 w-4" />
                 <span className="text-sm hidden xs:inline">{link.platform}</span>
@@ -100,9 +101,13 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
 
         {/* Edit Button */}
         <div className="absolute top-4 right-4 sm:right-6 md:right-8">
-          <Button variant="outline" size="sm" leftIcon={<Pencil className="h-4 w-4" />}>
-            Edit Profile
-          </Button>
+          <a 
+            href="/profile/edit"
+            className="inline-flex items-center justify-center h-9 px-5 text-xs font-semibold rounded-full bg-white text-sky-700 border border-sky-100 hover:bg-sky-50 hover:scale-105 transition-all shadow-lg"
+          >
+            <Pencil className="h-4 w-4 mr-2" />
+            Chỉnh sửa
+          </a>
         </div>
       </div>
     </motion.div>

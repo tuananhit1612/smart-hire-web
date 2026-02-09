@@ -14,42 +14,41 @@ const iconMap = {
     MoreHorizontal
 };
 
-// Unique colors for each position
 const positionColors: Record<JobPosition, { bg: string; border: string; icon: string; shadow: string; text: string }> = {
     developer: {
-        bg: "bg-blue-50 dark:bg-blue-950/50",
+        bg: "bg-blue-50",
         border: "border-blue-500",
-        icon: "from-blue-500 to-cyan-500",
+        icon: "from-blue-500 to-indigo-500",
         shadow: "shadow-blue-500/30",
-        text: "text-blue-600 dark:text-blue-400"
+        text: "text-blue-700"
     },
     designer: {
-        bg: "bg-pink-50 dark:bg-pink-950/50",
-        border: "border-pink-500",
-        icon: "from-pink-500 to-rose-500",
-        shadow: "shadow-pink-500/30",
-        text: "text-pink-600 dark:text-pink-400"
+        bg: "bg-indigo-50",
+        border: "border-indigo-500",
+        icon: "from-indigo-500 to-violet-500",
+        shadow: "shadow-indigo-500/30",
+        text: "text-indigo-700"
     },
     marketing: {
-        bg: "bg-orange-50 dark:bg-orange-950/50",
-        border: "border-orange-500",
-        icon: "from-orange-500 to-amber-500",
-        shadow: "shadow-orange-500/30",
-        text: "text-orange-600 dark:text-orange-400"
+        bg: "bg-sky-50",
+        border: "border-sky-500",
+        icon: "from-sky-500 to-cyan-500",
+        shadow: "shadow-sky-500/30",
+        text: "text-sky-700"
     },
     business: {
-        bg: "bg-emerald-50 dark:bg-emerald-950/50",
+        bg: "bg-emerald-50",
         border: "border-emerald-500",
-        icon: "from-emerald-500 to-teal-500",
+        icon: "from-emerald-500 to-green-500",
         shadow: "shadow-emerald-500/30",
-        text: "text-emerald-600 dark:text-emerald-400"
+        text: "text-emerald-700"
     },
     other: {
-        bg: "bg-violet-50 dark:bg-violet-950/50",
-        border: "border-violet-500",
-        icon: "from-violet-500 to-purple-500",
-        shadow: "shadow-violet-500/30",
-        text: "text-violet-600 dark:text-violet-400"
+        bg: "bg-slate-50",
+        border: "border-slate-400",
+        icon: "from-slate-500 to-gray-500",
+        shadow: "shadow-slate-500/30",
+        text: "text-slate-700"
     }
 };
 
@@ -67,10 +66,10 @@ export function PositionSelector({ selectedPosition, onSelect }: PositionSelecto
     return (
         <div className="space-y-4">
             <div className="text-center space-y-2">
-                <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+                <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">
                     Bạn đang tìm việc vị trí gì?
                 </h2>
-                <p className="text-gray-500 dark:text-gray-400 text-sm">
+                <p className="text-gray-500 text-sm">
                     Chọn vị trí để xem các mẫu CV phù hợp nhất
                 </p>
             </div>
@@ -96,7 +95,7 @@ export function PositionSelector({ selectedPosition, onSelect }: PositionSelecto
                                 "flex flex-col items-center gap-3 text-center",
                                 isSelected
                                     ? `${colors.border} ${colors.bg} shadow-lg ${colors.shadow}`
-                                    : "border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 hover:border-gray-300 dark:hover:border-zinc-600 hover:shadow-md"
+                                    : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-md"
                             )}
                         >
                             {/* Selected checkmark */}
@@ -119,7 +118,7 @@ export function PositionSelector({ selectedPosition, onSelect }: PositionSelecto
                                     "px-2 py-0.5 rounded-full text-xs font-semibold",
                                     isSelected
                                         ? `bg-gradient-to-r ${colors.icon} text-white`
-                                        : "bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-gray-400"
+                                        : "bg-gray-100 text-gray-600"
                                 )}>
                                     {templateCount} mẫu
                                 </span>
@@ -138,11 +137,11 @@ export function PositionSelector({ selectedPosition, onSelect }: PositionSelecto
                             <div className="space-y-1">
                                 <p className={cn(
                                     "font-bold text-sm md:text-base",
-                                    isSelected ? colors.text : "text-gray-900 dark:text-white"
+                                    isSelected ? colors.text : "text-gray-900"
                                 )}>
                                     {position.name}
                                 </p>
-                                <p className="text-xs hidden md:block text-gray-500 dark:text-gray-400 line-clamp-1">
+                                <p className="text-xs hidden md:block text-gray-500 line-clamp-1">
                                     {position.description}
                                 </p>
                             </div>

@@ -1,6 +1,12 @@
 // CV Feature Barrel Export
 export * from './types/types';
 export * from './types/template-types';
+export * from './types/cv-file-types';
+
+// CV File Management
+export * from './data/mock-cv-files';
+export * from './components/CVFileList';
+export * from './components/cv-files';
 export * from './components/CVBuilderLayout';
 export * from './components/CVSectionNav';
 export * from './components/CVBuilderForm';
