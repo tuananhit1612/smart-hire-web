@@ -32,6 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
+        suppressHydrationWarning
         className={`${beVietnamPro.variable} ${orbitron.variable} font-sans antialiased flex flex-col min-h-screen bg-slate-50 dark:bg-[#0B0F19]`}
       >
         <ParticleBackground />
