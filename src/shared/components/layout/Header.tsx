@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Layers } from "lucide-react";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { Button } from "@/shared/components/ui/button";
+import { NotificationBell } from "@/shared/components/layout/NotificationBell";
 
 export function Header() {
     const [isVisible, setIsVisible] = useState(true);
@@ -53,7 +54,8 @@ export function Header() {
                         </Link>
                     ))}
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3">
+                    <NotificationBell />
                     <Link href="/login" className="text-sm font-bold text-sky-700 hover:text-sky-500 transition-colors">
                         Đăng Nhập
                     </Link>
