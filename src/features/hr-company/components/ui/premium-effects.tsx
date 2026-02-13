@@ -67,112 +67,76 @@ export function AnimatedCounter({
     );
 }
 
-// Floating decoration elements
+// Floating decoration elements - CSS-only for performance
 export function FloatingElements() {
     return (
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-            {/* Gradient Orbs with animation */}
-            <motion.div
-                animate={{
-                    y: [0, -20, 0],
-                    scale: [1, 1.1, 1],
-                }}
-                transition={{
-                    duration: 6,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                }}
-                className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-sky-400/20 to-blue-500/10 rounded-full blur-3xl"
-            />
-            <motion.div
-                animate={{
-                    y: [0, 20, 0],
-                    scale: [1.1, 1, 1.1],
-                }}
-                transition={{
-                    duration: 8,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: 1,
-                }}
-                className="absolute top-1/2 right-0 w-96 h-96 bg-gradient-to-bl from-green-400/15 to-emerald-500/10 rounded-full blur-3xl"
-            />
-            <motion.div
-                animate={{
-                    x: [0, 15, 0],
-                    y: [0, -10, 0],
-                }}
-                transition={{
-                    duration: 10,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                }}
-                className="absolute bottom-20 left-1/3 w-64 h-64 bg-gradient-to-tr from-purple-400/10 to-pink-400/5 rounded-full blur-3xl"
-            />
+            {/* Static gradient orbs with CSS animations */}
+            <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-sky-400/20 to-blue-500/10 rounded-full blur-3xl animate-float-slow" />
+            <div className="absolute top-1/2 right-0 w-96 h-96 bg-gradient-to-bl from-green-400/15 to-emerald-500/10 rounded-full blur-3xl animate-float-slow-reverse" />
+            <div className="absolute bottom-20 left-1/3 w-64 h-64 bg-gradient-to-tr from-purple-400/10 to-pink-400/5 rounded-full blur-3xl animate-float-gentle" />
 
-            {/* Floating geometric shapes */}
-            <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                className="absolute top-32 right-20 w-16 h-16 border-2 border-sky-200/30 rounded-xl"
-            />
-            <motion.div
-                animate={{ rotate: -360 }}
-                transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-                className="absolute bottom-40 left-20 w-12 h-12 border-2 border-green-200/30 rounded-full"
-            />
-            <motion.div
-                animate={{
-                    y: [0, -15, 0],
-                    opacity: [0.3, 0.6, 0.3],
-                }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-1/3 left-1/4 w-3 h-3 bg-sky-400 rounded-full"
-            />
-            <motion.div
-                animate={{
-                    y: [0, 12, 0],
-                    opacity: [0.4, 0.7, 0.4],
-                }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                className="absolute top-2/3 right-1/4 w-2 h-2 bg-green-400 rounded-full"
-            />
+            {/* Simple geometric shapes with CSS rotation */}
+            <div className="absolute top-32 right-20 w-16 h-16 border-2 border-sky-200/30 rounded-xl animate-spin-slow" />
+            <div className="absolute bottom-40 left-20 w-12 h-12 border-2 border-green-200/30 rounded-full animate-spin-slower" />
+
+            {/* CSS for animations */}
+            <style jsx global>{`
+                @keyframes float-slow {
+                    0%, 100% { transform: translateY(0) scale(1); }
+                    50% { transform: translateY(-20px) scale(1.1); }
+                }
+                @keyframes float-slow-reverse {
+                    0%, 100% { transform: translateY(0) scale(1.1); }
+                    50% { transform: translateY(20px) scale(1); }
+                }
+                @keyframes float-gentle {
+                    0%, 100% { transform: translate(0, 0); }
+                    50% { transform: translate(15px, -10px); }
+                }
+                .animate-float-slow {
+                    animation: float-slow 6s ease-in-out infinite;
+                }
+                .animate-float-slow-reverse {
+                    animation: float-slow-reverse 8s ease-in-out infinite;
+                }
+                .animate-float-gentle {
+                    animation: float-gentle 10s ease-in-out infinite;
+                }
+                .animate-spin-slow {
+                    animation: spin 20s linear infinite;
+                }
+                .animate-spin-slower {
+                    animation: spin 25s linear infinite reverse;
+                }
+            `}</style>
         </div>
     );
 }
 
-// Bento Grid Item Component
+// Bento Grid Item Component - CSS-only hover for performance
 interface BentoItemProps {
     children: React.ReactNode;
     className?: string;
     delay?: number;
-    hoverScale?: number;
 }
 
 export function BentoItem({
     children,
     className = "",
     delay = 0,
-    hoverScale = 1.02,
 }: BentoItemProps) {
     return (
         <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{
-                duration: 0.6,
+                duration: 0.4,
                 delay,
-                ease: [0.22, 1, 0.36, 1],
+                ease: "easeOut",
             }}
-            whileHover={{
-                scale: hoverScale,
-                y: -4,
-                transition: { duration: 0.2 },
-            }}
-            className={`relative overflow-hidden rounded-3xl bg-white/70 backdrop-blur-xl border border-white/50 shadow-xl shadow-sky-900/5 hover:shadow-2xl hover:shadow-sky-900/10 transition-shadow ${className}`}
+            className={`relative overflow-hidden rounded-3xl bg-white/70 backdrop-blur-xl border border-white/50 shadow-xl hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.01] transition-all duration-200 ${className}`}
         >
-            {/* Shine effect on hover */}
-            <div className="absolute inset-0 bg-gradient-to-br from-white/50 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity pointer-events-none" />
             {children}
         </motion.div>
     );

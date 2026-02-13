@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, X, AlertTriangle, Info, Bell, XCircle } from "lucide-react";
+import { Check, X, AlertTriangle, Info, Bell, XCircle, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // Toast types
@@ -14,11 +14,15 @@ interface Toast {
     description?: string;
     type: ToastType;
     duration?: number;
+    action?: {
+        label: string;
+        onClick: () => void;
+    };
 }
 
 interface ToastContextType {
     toasts: Toast[];
-    addToast: (message: string, type?: ToastType, duration?: number, description?: string) => void;
+    addToast: (message: string, type?: ToastType, duration?: number, description?: string, action?: Toast["action"]) => void;
     removeToast: (id: string) => void;
 }
 
@@ -37,9 +41,9 @@ export function useToastHelpers() {
     const { addToast } = useToast();
 
     return {
-        success: (message: string, description?: string) => addToast(message, "success", 4000, description),
+        success: (message: string, description?: string, action?: Toast["action"]) => addToast(message, "success", 4000, description, action),
         error: (message: string, description?: string) => addToast(message, "error", 5000, description),
-        warning: (message: string, description?: string) => addToast(message, "warning", 4000, description),
+        warning: (message: string, description?: string, action?: Toast["action"]) => addToast(message, "warning", 5000, description, action),
         info: (message: string, description?: string) => addToast(message, "info", 4000, description),
     };
 }
@@ -125,6 +129,19 @@ function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: () => void }) 
                         {toast.description}
                     </p>
                 )}
+                {/* Undo / Action Button */}
+                {toast.action && (
+                    <button
+                        onClick={() => {
+                            toast.action!.onClick();
+                            onRemove();
+                        }}
+                        className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-full text-xs font-bold text-sky-700 border border-sky-200 hover:bg-sky-50 hover:border-sky-400 hover:scale-105 transition-all shadow-sm"
+                    >
+                        <RotateCcw className="w-3 h-3" />
+                        {toast.action.label}
+                    </button>
+                )}
             </div>
 
             {/* Close Button */}
@@ -142,9 +159,9 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     const [toasts, setToasts] = React.useState<Toast[]>([]);
 
     const addToast = React.useCallback(
-        (message: string, type: ToastType = "info", duration = 4000, description?: string) => {
+        (message: string, type: ToastType = "info", duration = 4000, description?: string, action?: Toast["action"]) => {
             const id = Math.random().toString(36).substr(2, 9);
-            setToasts((prev) => [...prev, { id, message, type, duration, description }]);
+            setToasts((prev) => [...prev, { id, message, type, duration, description, action }]);
         },
         []
     );
