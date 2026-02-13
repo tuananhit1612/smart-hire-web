@@ -40,9 +40,15 @@ export function JobDetail({ job }: JobDetailProps) {
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
   const { addToast } = useToast();
   const { hasApplied, getApplicationDate } = useApplicationStore();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
   
   const isJobClosed = job.status === "closed";
-  const hasUserApplied = hasApplied(job.id);
+  // Only check application status after mount to avoid hydration mismatch
+  const hasUserApplied = isMounted && hasApplied(job.id);
   const applicationDate = getApplicationDate(job.id);
 
   // Auto-open modal when returning from CV preview (check URL on mount)
