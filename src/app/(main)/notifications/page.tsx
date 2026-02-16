@@ -10,6 +10,7 @@ import {
     NotificationFilter,
 } from "@/features/notifications/components/notification-filters";
 import { mockNotifications, Notification } from "@/features/notifications/types/mock-notifications";
+import { RealtimeEventTrigger } from "@/features/notifications/components/realtime-event-trigger";
 
 export default function NotificationsPage() {
     const [notifications, setNotifications] = useState<Notification[]>(
@@ -93,6 +94,16 @@ export default function NotificationsPage() {
                         onFilterChange={setFilter}
                         unreadCount={unreadCount}
                     />
+                </motion.div>
+
+                {/* Realtime Event Trigger (Mock) */}
+                <motion.div
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.15 }}
+                    className="mb-6"
+                >
+                    <RealtimeEventTrigger />
                 </motion.div>
 
                 {/* Notification List */}
