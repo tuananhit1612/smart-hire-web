@@ -71,11 +71,11 @@ function CircularScore({ score, max, size = 120 }: { readonly score: number; rea
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.8 }}
-                    className="text-2xl font-black text-sky-900"
+                    className="text-3xl font-black text-sky-900"
                 >
                     {score}
                 </motion.span>
-                <span className="text-[10px] text-slate-400 -mt-0.5">/ {max}</span>
+                <span className="text-xs text-slate-400 -mt-0.5">/ {max}</span>
             </div>
         </div>
     );
@@ -96,8 +96,8 @@ function RubricBar({ rubric }: { readonly rubric: RubricScore }) {
     return (
         <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-                <span className={cn("text-xs font-semibold", colors.text)}>{rubric.label}</span>
-                <span className="text-xs font-bold text-slate-700">{rubric.score}/{rubric.maxScore}</span>
+                <span className={cn("text-sm font-semibold", colors.text)}>{rubric.label}</span>
+                <span className="text-sm font-bold text-slate-700">{rubric.score}/{rubric.maxScore}</span>
             </div>
             <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
                 <motion.div
@@ -107,7 +107,7 @@ function RubricBar({ rubric }: { readonly rubric: RubricScore }) {
                     className={cn("h-full rounded-full", colors.bar)}
                 />
             </div>
-            <p className="text-[11px] text-slate-500 leading-relaxed">{rubric.feedback}</p>
+            <p className="text-sm text-slate-500 leading-relaxed">{rubric.feedback}</p>
         </div>
     );
 }
@@ -159,12 +159,12 @@ function EvaluationCard({
                     {evaluation.overallScore}
                 </span>
                 <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-sky-900 truncate">{evaluation.question}</p>
-                    <div className="flex items-center gap-2 mt-0.5">
-                        <span className={cn("text-[10px] font-semibold px-1.5 py-0.5 rounded-full", cat?.color)}>
+                    <p className="text-base font-semibold text-sky-900 truncate">{evaluation.question}</p>
+                    <div className="flex items-center gap-2 mt-1">
+                        <span className={cn("text-xs font-semibold px-2 py-0.5 rounded-full", cat?.color)}>
                             {cat?.label}
                         </span>
-                        <span className="text-[10px] text-slate-400">
+                        <span className="text-xs text-slate-400">
                             {evaluation.rubricScores.map((r) => `${r.label}: ${r.score}`).join(" • ")}
                         </span>
                     </div>
@@ -189,7 +189,7 @@ function EvaluationCard({
                         <div className="px-4 pb-4 space-y-4 border-t border-slate-50 pt-3">
                             {/* User Answer */}
                             <div>
-                                <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Câu trả lời của bạn</p>
+                                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Câu trả lời của bạn</p>
                                 <div className="bg-sky-50/50 rounded-xl p-3 text-sm text-slate-700 leading-relaxed border border-sky-100/50">
                                     {evaluation.userAnswer}
                                 </div>
@@ -197,7 +197,7 @@ function EvaluationCard({
 
                             {/* Rubric Scores */}
                             <div>
-                                <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-3">Đánh giá theo tiêu chí</p>
+                                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Đánh giá theo tiêu chí</p>
                                 <div className="space-y-4">
                                     {evaluation.rubricScores.map((rubric) => (
                                         <RubricBar key={rubric.criterion} rubric={rubric} />
@@ -209,12 +209,12 @@ function EvaluationCard({
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 <div className="bg-emerald-50/50 rounded-xl p-3 border border-emerald-100/50">
                                     <div className="flex items-center gap-1.5 mb-2">
-                                        <Star className="w-3.5 h-3.5 text-emerald-500" />
-                                        <p className="text-[10px] font-bold text-emerald-700 uppercase">Điểm mạnh</p>
+                                        <Star className="w-4 h-4 text-emerald-500" />
+                                        <p className="text-xs font-bold text-emerald-700 uppercase">Điểm mạnh</p>
                                     </div>
                                     <ul className="space-y-1">
                                         {evaluation.strengths.map((s) => (
-                                            <li key={s} className="text-xs text-emerald-700 flex items-start gap-1.5">
+                                            <li key={s} className="text-sm text-emerald-700 flex items-start gap-1.5">
                                                 <span className="text-emerald-400 mt-1">•</span>
                                                 {s}
                                             </li>
@@ -223,12 +223,12 @@ function EvaluationCard({
                                 </div>
                                 <div className="bg-amber-50/50 rounded-xl p-3 border border-amber-100/50">
                                     <div className="flex items-center gap-1.5 mb-2">
-                                        <TrendingUp className="w-3.5 h-3.5 text-amber-500" />
-                                        <p className="text-[10px] font-bold text-amber-700 uppercase">Cần cải thiện</p>
+                                        <TrendingUp className="w-4 h-4 text-amber-500" />
+                                        <p className="text-xs font-bold text-amber-700 uppercase">Cần cải thiện</p>
                                     </div>
                                     <ul className="space-y-1">
                                         {evaluation.improvements.map((imp) => (
-                                            <li key={imp} className="text-xs text-amber-700 flex items-start gap-1.5">
+                                            <li key={imp} className="text-sm text-amber-700 flex items-start gap-1.5">
                                                 <span className="text-amber-400 mt-1">•</span>
                                                 {imp}
                                             </li>
@@ -260,7 +260,7 @@ export default function InterviewResultPage() {
 
     return (
         <section className="relative z-10 pt-24 pb-12 md:pt-28">
-            <div className="mx-auto max-w-2xl px-4 sm:px-6">
+            <div className="mx-auto max-w-4xl px-4 sm:px-6">
                 {/* Back Link */}
                 <Link
                     href="/interview/setup"
@@ -282,7 +282,7 @@ export default function InterviewResultPage() {
                         <div className="flex-1 text-center sm:text-left">
                             <div className="flex items-center justify-center sm:justify-start gap-2 mb-2">
                                 <Trophy className="w-5 h-5 text-amber-500" />
-                                <h1 className="text-lg font-bold text-sky-900">Kết quả phỏng vấn</h1>
+                                <h1 className="text-xl font-bold text-sky-900">Kết quả phỏng vấn</h1>
                                 <span
                                     className={cn(
                                         "px-2.5 py-1 rounded-lg text-xs font-black shadow-lg",
@@ -294,14 +294,14 @@ export default function InterviewResultPage() {
                                     {result.grade}
                                 </span>
                             </div>
-                            <p className="text-sm text-slate-500 leading-relaxed">{result.summary}</p>
+                            <p className="text-base text-slate-500 leading-relaxed">{result.summary}</p>
 
                             {/* Rubric Summary */}
                             <div className="flex items-center gap-4 mt-3">
                                 {rubricAverages.map((r) => (
                                     <div key={r.criterion} className="text-center">
-                                        <p className="text-lg font-bold text-sky-900">{r.avg}</p>
-                                        <p className="text-[10px] text-slate-400 capitalize">
+                                        <p className="text-xl font-bold text-sky-900">{r.avg}</p>
+                                        <p className="text-xs text-slate-400 capitalize">
                                             {r.criterion === "clarity" ? "Rõ ràng" : r.criterion === "relevance" ? "Liên quan" : "Cấu trúc"}
                                         </p>
                                     </div>
@@ -321,8 +321,8 @@ export default function InterviewResultPage() {
                     <div className="flex items-start gap-2.5">
                         <Sparkles className="w-4 h-4 text-violet-500 mt-0.5 shrink-0" />
                         <div>
-                            <p className="text-xs font-bold text-violet-800">Gợi ý từ AI</p>
-                            <p className="text-xs text-violet-600 mt-0.5 leading-relaxed">
+                            <p className="text-sm font-bold text-violet-800">Gợi ý từ AI</p>
+                            <p className="text-sm text-violet-600 mt-0.5 leading-relaxed">
                                 Hãy luyện tập sử dụng phương pháp STAR (Situation, Task, Action, Result) cho các câu hỏi behavioral. 
                                 Thêm số liệu cụ thể và metric sẽ giúp câu trả lời thuyết phục hơn.
                             </p>
@@ -333,7 +333,7 @@ export default function InterviewResultPage() {
                 {/* Per-Answer Evaluations */}
                 <div className="flex items-center gap-2 mb-4">
                     <BrainCircuit className="w-4 h-4 text-sky-600" />
-                    <h2 className="text-sm font-bold text-sky-900">
+                    <h2 className="text-base font-bold text-sky-900">
                         Chi tiết từng câu ({result.evaluations.length})
                     </h2>
                 </div>
