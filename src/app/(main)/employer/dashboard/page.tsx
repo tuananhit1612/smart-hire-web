@@ -20,6 +20,7 @@ import {
 import { cn } from "@/shared/utils/cn";
 import FunnelByStage from "@/features/employer/components/funnel-by-stage";
 import PassRateTable from "@/features/employer/components/pass-rate-table";
+import TopMissingSkills from "@/features/employer/components/top-missing-skills";
 
 // ─── Stat Card Data ──────────────────────────────────
 interface StatCard {
@@ -366,6 +367,16 @@ export default function HRDashboardPage() {
                     className="mt-4"
                 >
                     <PassRateTable />
+                </motion.div>
+
+                {/* Top Missing Skills */}
+                <motion.div
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                    className="mt-4"
+                >
+                    <TopMissingSkills />
                 </motion.div>
 
                 {/* More Charts Row */}

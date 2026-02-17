@@ -1,0 +1,177 @@
+"use client";
+
+import { motion } from "framer-motion";
+import {
+    AlertTriangle,
+    Puzzle,
+    Users,
+    TrendingUp,
+    BookOpen,
+    ExternalLink,
+} from "lucide-react";
+import { cn } from "@/shared/utils/cn";
+
+// ─── Types ───────────────────────────────────────────
+export interface MissingSkill {
+    readonly skill: string;
+    readonly category: "technical" | "soft" | "tool" | "certification";
+    readonly demandCount: number;     // how many job postings require this
+    readonly candidateGap: number;    // % of applicants lacking this skill
+    readonly trend: "rising" | "stable" | "declining";
+    readonly suggestedAction?: string;
+}
+
+// ─── Mock Data ───────────────────────────────────────
+const defaultSkills: MissingSkill[] = [
+    { skill: "TypeScript", category: "technical", demandCount: 18, candidateGap: 62, trend: "rising", suggestedAction: "Thêm vào yêu cầu tuyển dụng hoặc đào tạo nội bộ" },
+    { skill: "System Design", category: "technical", demandCount: 12, candidateGap: 78, trend: "rising", suggestedAction: "Tổ chức mock interview về system design" },
+    { skill: "CI/CD Pipeline", category: "tool", demandCount: 10, candidateGap: 55, trend: "stable", suggestedAction: "Workshop DevOps basics cho candidates" },
+    { skill: "AWS / Cloud", category: "tool", demandCount: 14, candidateGap: 68, trend: "rising", suggestedAction: "Cân nhắc đào tạo AWS certification" },
+    { skill: "Agile / Scrum", category: "soft", demandCount: 20, candidateGap: 35, trend: "stable" },
+    { skill: "Leadership", category: "soft", demandCount: 8, candidateGap: 72, trend: "rising", suggestedAction: "Mentoring program cho senior candidates" },
+    { skill: "Docker / K8s", category: "tool", demandCount: 11, candidateGap: 58, trend: "stable", suggestedAction: "Thêm Docker basics vào technical assessment" },
+    { skill: "GraphQL", category: "technical", demandCount: 6, candidateGap: 45, trend: "declining" },
+    { skill: "Data Analysis", category: "technical", demandCount: 9, candidateGap: 52, trend: "rising", suggestedAction: "Mở thêm vị trí data intern" },
+    { skill: "PMP / PRINCE2", category: "certification", demandCount: 4, candidateGap: 85, trend: "stable", suggestedAction: "Sponsor certification cho internal PM" },
+];
+
+// ─── Category Config ─────────────────────────────────
+const CATEGORY_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
+    technical: { label: "Kỹ thuật", color: "text-sky-700", bg: "bg-sky-100" },
+    soft: { label: "Soft skill", color: "text-violet-700", bg: "bg-violet-100" },
+    tool: { label: "Công cụ", color: "text-amber-700", bg: "bg-amber-100" },
+    certification: { label: "Chứng chỉ", color: "text-emerald-700", bg: "bg-emerald-100" },
+};
+
+// ─── Trend Config ────────────────────────────────────
+const TREND_CONFIG: Record<string, { label: string; color: string; icon: typeof TrendingUp }> = {
+    rising: { label: "Tăng", color: "text-rose-500", icon: TrendingUp },
+    stable: { label: "Ổn định", color: "text-slate-400", icon: BookOpen },
+    declining: { label: "Giảm", color: "text-emerald-500", icon: TrendingUp },
+};
+
+// ─── Gap Bar ─────────────────────────────────────────
+function GapBar({ gap, delay }: { readonly gap: number; readonly delay: number }) {
+    const getColor = () => {
+        if (gap >= 70) return "bg-rose-500";
+        if (gap >= 50) return "bg-amber-500";
+        return "bg-sky-500";
+    };
+
+    return (
+        <div className="flex items-center gap-2">
+            <div className="w-20 h-2 bg-slate-100 rounded-full overflow-hidden">
+                <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${gap}%` }}
+                    transition={{ duration: 0.6, delay, ease: "easeOut" }}
+                    className={cn("h-full rounded-full", getColor())}
+                />
+            </div>
+            <span className={cn(
+                "text-xs font-bold",
+                gap >= 70 ? "text-rose-600" : gap >= 50 ? "text-amber-600" : "text-sky-600"
+            )}>
+                {gap}%
+            </span>
+        </div>
+    );
+}
+
+// ─── Main Widget ─────────────────────────────────────
+export default function TopMissingSkills({
+    skills = defaultSkills,
+    title = "Top kỹ năng thiếu hụt",
+    maxDisplay = 8,
+}: {
+    readonly skills?: MissingSkill[];
+    readonly title?: string;
+    readonly maxDisplay?: number;
+}) {
+    // Sort by candidateGap descending
+    const sorted = [...skills].sort((a, b) => b.candidateGap - a.candidateGap).slice(0, maxDisplay);
+
+    return (
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            {/* Header */}
+            <div className="flex items-center justify-between p-5 pb-3">
+                <div className="flex items-center gap-2">
+                    <Puzzle className="w-5 h-5 text-rose-500" />
+                    <h3 className="text-sm font-bold text-sky-900">{title}</h3>
+                </div>
+                <span className="text-xs text-slate-400">{skills.length} skills tracked</span>
+            </div>
+
+            {/* Skills List */}
+            <div className="px-5 pb-4 space-y-2.5">
+                {sorted.map((skill, i) => {
+                    const cat = CATEGORY_CONFIG[skill.category];
+                    const trend = TREND_CONFIG[skill.trend];
+                    const TrendIcon = trend?.icon ?? TrendingUp;
+
+                    return (
+                        <motion.div
+                            key={skill.skill}
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.1 + i * 0.05 }}
+                            className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors group"
+                        >
+                            {/* Rank */}
+                            <span className="text-sm font-bold text-slate-300 w-5 shrink-0">{i + 1}</span>
+
+                            {/* Skill Info */}
+                            <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                    <p className="text-sm font-semibold text-sky-900">{skill.skill}</p>
+                                    <span className={cn("text-[10px] font-bold px-1.5 py-0.5 rounded-full", cat?.bg, cat?.color)}>
+                                        {cat?.label}
+                                    </span>
+                                </div>
+                                {skill.suggestedAction && (
+                                    <p className="text-[10px] text-slate-400 mt-0.5 truncate">{skill.suggestedAction}</p>
+                                )}
+                            </div>
+
+                            {/* Demand Count */}
+                            <div className="text-center shrink-0">
+                                <div className="flex items-center gap-0.5 text-xs text-slate-500">
+                                    <Users className="w-3 h-3" />
+                                    <span className="font-medium">{skill.demandCount}</span>
+                                </div>
+                                <p className="text-[9px] text-slate-300">jobs</p>
+                            </div>
+
+                            {/* Gap Bar */}
+                            <div className="shrink-0">
+                                <GapBar gap={skill.candidateGap} delay={0.15 + i * 0.06} />
+                            </div>
+
+                            {/* Trend */}
+                            <div className={cn("flex items-center gap-0.5 shrink-0", trend?.color)}>
+                                <TrendIcon className={cn("w-3 h-3", skill.trend === "declining" && "rotate-180")} />
+                                <span className="text-[10px] font-semibold">{trend?.label}</span>
+                            </div>
+                        </motion.div>
+                    );
+                })}
+            </div>
+
+            {/* Footer */}
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6 }}
+                className="px-5 py-3 bg-slate-50/50 border-t border-slate-100 flex items-center justify-between"
+            >
+                <div className="flex items-center gap-1.5 text-[10px] text-slate-400">
+                    <AlertTriangle className="w-3 h-3 text-amber-400" />
+                    {sorted.filter((s) => s.candidateGap >= 70).length} kỹ năng có gap &gt; 70%
+                </div>
+                <button className="text-[10px] text-sky-500 hover:text-sky-700 font-semibold flex items-center gap-0.5 transition-colors cursor-pointer">
+                    Xem báo cáo đầy đủ <ExternalLink className="w-3 h-3" />
+                </button>
+            </motion.div>
+        </div>
+    );
+}
