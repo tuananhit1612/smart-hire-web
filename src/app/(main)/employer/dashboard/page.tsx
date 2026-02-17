@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
 import FunnelByStage from "@/features/employer/components/funnel-by-stage";
+import PassRateTable from "@/features/employer/components/pass-rate-table";
 
 // ─── Stat Card Data ──────────────────────────────────
 interface StatCard {
@@ -356,6 +357,16 @@ export default function HRDashboardPage() {
                         </div>
                     </motion.div>
                 </div>
+
+                {/* Pass Rate Table */}
+                <motion.div
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.48 }}
+                    className="mt-4"
+                >
+                    <PassRateTable />
+                </motion.div>
 
                 {/* More Charts Row */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-4">
