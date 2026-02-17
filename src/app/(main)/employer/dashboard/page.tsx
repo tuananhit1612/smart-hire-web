@@ -18,6 +18,7 @@ import {
     Eye,
 } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
+import FunnelByStage from "@/features/employer/components/funnel-by-stage";
 
 // ─── Stat Card Data ──────────────────────────────────
 interface StatCard {
@@ -251,18 +252,13 @@ export default function HRDashboardPage() {
                         </div>
                     </motion.div>
 
-                    {/* Pipeline Funnel — placeholder */}
+                    {/* Pipeline Funnel — real component */}
                     <motion.div
                         initial={{ opacity: 0, y: 15 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.35 }}
                     >
-                        <ChartPlaceholder
-                            title="Phễu tuyển dụng"
-                            icon={PieChart}
-                            description="Funnel: Ứng tuyển → Sàng lọc → PV → Offer"
-                            height="h-[140px]"
-                        />
+                        <FunnelByStage />
                     </motion.div>
                 </div>
 
