@@ -21,9 +21,7 @@ import {
     Pencil,
 } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
-
-// ─── Number Formatter ────────────────────────────────
-const fmt = (n: number) => new Intl.NumberFormat("en-US").format(n);
+import { fmtNumber } from "@/shared/utils/format";
 
 // ─── Types ───────────────────────────────────────────
 type UserRole = "all" | "candidate" | "employer" | "admin";
@@ -125,7 +123,7 @@ export default function UserManagementPage() {
                         <h1 className="text-2xl font-bold text-sky-900">Quản lý người dùng</h1>
                     </div>
                     <p className="text-sm text-slate-500 mt-1">
-                        {fmt(mockUsers.length)} người dùng — Quản lý tài khoản, vai trò và trạng thái
+                        {fmtNumber(mockUsers.length)} người dùng — Quản lý tài khoản, vai trò và trạng thái
                     </p>
                 </motion.div>
 

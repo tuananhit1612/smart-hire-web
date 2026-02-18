@@ -8,7 +8,6 @@ import {
     User,
     Mail,
     Clock,
-    Star,
     MoreHorizontal,
     Eye,
     MessageSquare,
@@ -19,6 +18,9 @@ import {
     Briefcase,
 } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
+import { ScoreBadge } from "@/shared/components/ui/status-badge";
+import { AvatarInitials } from "@/shared/components/ui/avatar-initials";
+import { PageSection } from "@/shared/components/layout/page-section";
 
 // ─── Types ───────────────────────────────────────────
 type StageId = "applied" | "screening" | "interview" | "offer" | "hired" | "rejected";
@@ -83,20 +85,7 @@ const initialCandidates: Record<StageId, PipelineCandidate[]> = {
     ],
 };
 
-// ─── Score Badge ──────────────────────────────────────
-function ScoreBadge({ score }: { readonly score: number }) {
-    const color =
-        score >= 85 ? "bg-emerald-100 text-emerald-700" :
-        score >= 70 ? "bg-sky-100 text-sky-700" :
-        score >= 55 ? "bg-amber-100 text-amber-700" :
-        "bg-rose-100 text-rose-700";
 
-    return (
-        <span className={cn("text-[10px] font-bold px-1.5 py-0.5 rounded-full flex items-center gap-0.5", color)}>
-            <Star className="w-2.5 h-2.5" /> {score}
-        </span>
-    );
-}
 
 // ─── Candidate Card ──────────────────────────────────
 function CandidateCard({
@@ -124,9 +113,7 @@ function CandidateCard({
             {/* Header */}
             <div className="flex items-start justify-between mb-2">
                 <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-sky-100 to-violet-100 flex items-center justify-center text-[10px] font-bold text-sky-700 shrink-0">
-                        {candidate.avatar}
-                    </div>
+                    <AvatarInitials initials={candidate.avatar} size="sm" />
                     <div className="min-w-0">
                         <p className="text-sm font-semibold text-sky-900 truncate">{candidate.name}</p>
                         <p className="text-[10px] text-slate-400 truncate">{candidate.position}</p>
@@ -246,8 +233,7 @@ export default function PipelineBoardPage() {
     const totalCandidates = Object.values(boardData).reduce((s, arr) => s + arr.length, 0);
 
     return (
-        <section className="relative z-10 pt-24 pb-12 md:pt-28">
-            <div className="mx-auto max-w-[1400px] px-4 sm:px-6">
+        <PageSection maxWidth="max-w-[1400px]">
                 {/* Header */}
                 <motion.div
                     initial={{ opacity: 0, y: -15 }}
@@ -369,7 +355,6 @@ export default function PipelineBoardPage() {
                         Tổng: {Object.values(filteredBoard).reduce((s, arr) => s + arr.length, 0)} ứng viên
                     </span>
                 </motion.div>
-            </div>
-        </section>
+        </PageSection>
     );
 }
