@@ -9,6 +9,7 @@ import {
     BarChart3,
 } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
+import { fmtNumber } from "@/shared/utils/format";
 
 // ─── Types ───────────────────────────────────────────
 export interface PassRateRow {
@@ -80,8 +81,6 @@ function RateBar({ rate, delay }: { readonly rate: number; readonly delay: numbe
     );
 }
 
-// ─── Number Formatter ────────────────────────────────
-const fmt = (n: number) => new Intl.NumberFormat("en-US").format(n);
 
 // ─── Main Widget ─────────────────────────────────────
 export default function PassRateTable({
@@ -141,7 +140,7 @@ export default function PassRateTable({
                                 </td>
                                 {/* Total Applicants */}
                                 <td className="px-3 py-3 text-center">
-                                    <span className="text-sm font-medium text-slate-700">{fmt(row.totalApplicants)}</span>
+                                    <span className="text-sm font-medium text-slate-700">{fmtNumber(row.totalApplicants)}</span>
                                 </td>
                                 {/* Passed */}
                                 <td className="px-3 py-3 text-center">
@@ -177,7 +176,7 @@ export default function PassRateTable({
                 className="px-5 py-3 bg-slate-50/50 border-t border-slate-100 flex items-center justify-between"
             >
                 <span className="text-[10px] text-slate-400">
-                    {sorted.length} vị trí • {fmt(sorted.reduce((s, r) => s + r.totalApplicants, 0))} ứng viên tổng
+                    {sorted.length} vị trí • {fmtNumber(sorted.reduce((s, r) => s + r.totalApplicants, 0))} ứng viên tổng
                 </span>
                 <span className="text-[10px] text-slate-400">
                     Thời gian tuyển TB: {Math.round(sorted.reduce((s, r) => s + r.avgTimeToHire, 0) / sorted.length)} ngày

@@ -20,9 +20,7 @@ import {
     Server,
 } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
-
-// ─── Number Formatter ────────────────────────────────
-const fmt = (n: number) => new Intl.NumberFormat("en-US").format(n);
+import { fmtNumber } from "@/shared/utils/format";
 
 // ─── Stat Cards ──────────────────────────────────────
 interface AdminStat {
@@ -103,7 +101,7 @@ function GrowthBar({ values, labels }: { readonly values: number[]; readonly lab
             <div className="flex items-end gap-2 h-24">
                 {values.map((v, i) => (
                     <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                        <span className="text-[9px] text-slate-400 font-medium">{fmt(v)}</span>
+                        <span className="text-[9px] text-slate-400 font-medium">{fmtNumber(v)}</span>
                         <motion.div
                             initial={{ height: 0 }}
                             animate={{ height: `${(v / max) * 100}%` }}
@@ -252,7 +250,7 @@ export default function AdminDashboardPage() {
                         <div className="mt-3 flex items-center justify-between">
                             <span className="text-[10px] text-slate-400">Tổng mới tháng này</span>
                             <div className="flex items-center gap-1">
-                                <span className="text-sm font-bold text-sky-900">{fmt(3240)}</span>
+                                <span className="text-sm font-bold text-sky-900">{fmtNumber(3240)}</span>
                                 <span className="text-[10px] font-semibold text-emerald-600 flex items-center gap-0.5">
                                     <TrendingUp className="w-2.5 h-2.5" /> +19.1%
                                 </span>

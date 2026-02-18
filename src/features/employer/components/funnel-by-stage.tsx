@@ -12,9 +12,7 @@ import {
     TrendingDown,
 } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
-
-// Locale-safe number formatter to avoid SSR hydration mismatch
-const fmt = (n: number) => new Intl.NumberFormat("en-US").format(n);
+import { fmtNumber } from "@/shared/utils/format";
 
 // ─── Stage Data ──────────────────────────────────────
 export interface FunnelStage {
@@ -75,7 +73,7 @@ export default function FunnelByStage({
             <div className="flex items-center justify-between mb-5">
                 <h3 className="text-sm font-bold text-sky-900">{title}</h3>
                 <span className="text-xs text-slate-400">
-                    Tổng: {fmt(stages[0]?.count ?? 0)} → {fmt(stages[stages.length - 1]?.count ?? 0)}
+                    Tổng: {fmtNumber(stages[0]?.count ?? 0)} → {fmtNumber(stages[stages.length - 1]?.count ?? 0)}
                 </span>
             </div>
 
@@ -116,11 +114,11 @@ export default function FunnelByStage({
                                         <div className="flex items-center gap-2">
                                             {dropOff > 0 && (
                                                 <span className="text-[10px] text-slate-300">
-                                                    -{fmt(dropOff)}
+                                                    -{fmtNumber(dropOff)}
                                                 </span>
                                             )}
                                             <span className="text-sm font-bold text-sky-900">
-                                                {fmt(stage.count)}
+                                                {fmtNumber(stage.count)}
                                             </span>
                                         </div>
                                     </div>
