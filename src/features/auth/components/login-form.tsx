@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Github, ArrowRight, Wallet, Fingerprint, ShieldCheck } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -19,11 +20,15 @@ import {
     CardTitle,
 } from "@/shared/components/ui/card";
 import { loginSchema, type LoginSchema } from "../schemas/login-schema";
+import { useAuth } from "../hooks/use-auth";
+import type { UserRole } from "../types/auth-types";
 
 export function LoginForm() {
-    const [role, setRole] = useState("candidate");
+    const [role, setRole] = useState<string>("candidate");
     const [isLoading, setIsLoading] = useState(false);
     const toastHelpers = useToastHelpers();
+    const router = useRouter();
+    const { login } = useAuth();
 
     const {
         register,
@@ -39,11 +44,21 @@ export function LoginForm() {
 
     const onSubmit = async (data: LoginSchema) => {
         setIsLoading(true);
-        // Simulate API call
         console.log("Login data:", { ...data, role });
-        await new Promise((resolve) => setTimeout(resolve, 1500));
+
+        // Đăng nhập qua auth context (mock)
+        await login(role as UserRole);
         setIsLoading(false);
+
         toastHelpers.success("Chào mừng trở lại!", "Bạn đã đăng nhập thành công.");
+
+        // Chuyển trang dựa trên vai trò
+        const redirectMap: Record<string, string> = {
+            candidate: "/jobs",
+            employer: "/employer/dashboard",
+            admin: "/admin/dashboard",
+        };
+        router.push(redirectMap[role] ?? "/jobs");
     };
 
     const containerVariants = {
@@ -124,7 +139,7 @@ export function LoginForm() {
                     isLoading={isLoading}
                     variant="primary"
                 >
-                    Sign In
+                    Đăng nhập
                 </Button>
 
                 <div className="relative w-full py-4">
