@@ -73,18 +73,18 @@ export function ForgotPasswordForm() {
                                 <KeyRound className="w-6 h-6" />
                             </div>
                             <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white font-inter">
-                                Reset password
+                                Đặt lại mật khẩu
                             </h1>
                             <p className="text-slate-500 dark:text-slate-400 text-sm max-w-xs mx-auto">
-                                Enter your email address and we'll send you a link to reset your password.
+                                Nhập địa chỉ email của bạn, chúng tôi sẽ gửi liên kết để đặt lại mật khẩu.
                             </p>
                         </div>
 
                         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                             <Input
-                                label="Email address"
+                                label="Địa chỉ email"
                                 type="email"
-                                placeholder="name@company.com"
+                                placeholder="ten@congty.com"
                                 error={errors.email?.message}
                                 {...register("email")}
                                 className="h-12 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 focus:border-blue-600 focus:ring-blue-600/10 rounded-lg"
@@ -96,7 +96,7 @@ export function ForgotPasswordForm() {
                                 isLoading={isLoading}
                                 variant="primary"
                             >
-                                Send reset link
+                                Gửi liên kết đặt lại
                             </Button>
 
                             <Link
@@ -104,7 +104,7 @@ export function ForgotPasswordForm() {
                                 className="flex items-center justify-center text-sm font-medium text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white transition-colors mt-6"
                             >
                                 <ArrowLeft className="mr-2 h-4 w-4" />
-                                Back to login
+                                Quay lại đăng nhập
                             </Link>
                         </form>
                     </motion.div>
@@ -121,10 +121,10 @@ export function ForgotPasswordForm() {
                         </div>
                         <div className="space-y-2">
                             <h3 className="text-xl font-bold text-slate-900 dark:text-white">
-                                Check your email
+                                Kiểm tra email của bạn
                             </h3>
                             <p className="text-slate-500 dark:text-slate-400 text-sm max-w-xs mx-auto">
-                                We sent a password reset link to <span className="font-semibold text-slate-900 dark:text-white">your email</span>
+                                Chúng tôi đã gửi liên kết đặt lại mật khẩu đến <span className="font-semibold text-slate-900 dark:text-white">email của bạn</span>
                             </p>
                         </div>
                         <div className="w-full space-y-3">
@@ -133,14 +133,14 @@ export function ForgotPasswordForm() {
                                 onClick={() => setIsSubmitted(false)}
                                 className="w-full h-11 border-slate-200"
                             >
-                                Try another email
+                                Thử email khác
                             </Button>
                             <Link
                                 href="/login"
                                 className="block w-full"
                             >
                                 <Button variant="ghost" className="w-full text-slate-500">
-                                    Skip to login
+                                    Bỏ qua, đi đến đăng nhập
                                 </Button>
                             </Link>
                         </div>

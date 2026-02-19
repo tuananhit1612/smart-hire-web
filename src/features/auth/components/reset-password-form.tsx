@@ -68,10 +68,10 @@ export function ResetPasswordForm() {
         >
             <div className="space-y-2 text-center">
                 <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white font-sans">
-                    Secure <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-pink-500">Reset</span>
+                    Đặt lại <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-pink-500">mật khẩu</span>
                 </h1>
                 <p className="text-slate-500 dark:text-slate-400 font-medium">
-                    Establish a new security key for your account.
+                    Tạo mật khẩu mới cho tài khoản của bạn.
                 </p>
             </div>
 
@@ -93,16 +93,16 @@ export function ResetPasswordForm() {
                                 <form onSubmit={handleSubmit(onSubmit)}>
                                     <CardHeader className="space-y-1 pb-2 text-center">
                                         <CardTitle className="text-xl font-orbitron uppercase tracking-widest text-indigo-600 dark:text-indigo-400">
-                                            New Credentials
+                                            Mật khẩu mới
                                         </CardTitle>
                                         <CardDescription className="text-slate-500 dark:text-slate-400">
-                                            Ensure your new key is strong and unique.
+                                            Hãy đảm bảo mật khẩu mới đủ mạnh và an toàn.
                                         </CardDescription>
                                     </CardHeader>
                                     <CardContent className="space-y-5 pt-4">
                                         <div className="space-y-2">
                                             <Input
-                                                label="New Security Key"
+                                                label="Mật khẩu mới"
                                                 type="password"
                                                 placeholder="••••••••"
                                                 error={errors.password?.message}
@@ -113,7 +113,7 @@ export function ResetPasswordForm() {
                                         </div>
                                         <div className="space-y-2">
                                             <Input
-                                                label="Confirm Security Key"
+                                                label="Xác nhận mật khẩu"
                                                 type="password"
                                                 placeholder="••••••••"
                                                 error={errors.confirmPassword?.message}
@@ -136,7 +136,7 @@ export function ResetPasswordForm() {
                                             isLoading={isLoading}
                                             variant="primary"
                                         >
-                                            <span className="mr-2">Update Credentials</span>
+                                            <span className="mr-2">Cập nhật mật khẩu</span>
                                             <RefreshCw className={`h-5 w-5 ${isLoading ? 'animate-spin' : ''}`} />
                                         </Button>
                                     </CardFooter>
@@ -156,10 +156,10 @@ export function ResetPasswordForm() {
                                 </div>
                                 <div className="space-y-2">
                                     <h3 className="text-2xl font-bold text-slate-900 dark:text-white font-orbitron">
-                                        Update Specific
+                                        Cập nhật thành công
                                     </h3>
                                     <p className="text-slate-500 dark:text-slate-400 max-w-xs mx-auto">
-                                        Your security key has been successfully updated. Redirecting to login sequence...
+                                        Mật khẩu của bạn đã được cập nhật thành công. Đang chuyển hướng đến trang đăng nhập...
                                     </p>
                                 </div>
                                 <div className="w-full h-1 bg-slate-100 dark:bg-white/10 rounded-full overflow-hidden mt-6">

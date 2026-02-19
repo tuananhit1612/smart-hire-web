@@ -36,7 +36,7 @@ export function AuthLayout({ children }: { children: React.ReactNode }) {
 
             {/* Footer Link / Copyright for Auth */}
             <div className="absolute bottom-6 text-center text-xs text-slate-400 font-medium">
-                &copy; 2030 SmartHire Inc. All rights reserved.
+                &copy; 2030 SmartHire. Bảo lưu mọi quyền.
             </div>
         </div>
     );

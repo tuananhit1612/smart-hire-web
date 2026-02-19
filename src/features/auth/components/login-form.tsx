@@ -43,7 +43,7 @@ export function LoginForm() {
         console.log("Login data:", { ...data, role });
         await new Promise((resolve) => setTimeout(resolve, 1500));
         setIsLoading(false);
-        toastHelpers.success("Welcome back!", "You have successfully logged in.");
+        toastHelpers.success("Chào mừng trở lại!", "Bạn đã đăng nhập thành công.");
     };
 
     const containerVariants = {
@@ -71,10 +71,10 @@ export function LoginForm() {
                     <Fingerprint className="w-8 h-8" />
                 </div>
                 <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white font-inter">
-                    Welcome back
+                    Chào mừng trở lại
                 </h1>
                 <p className="text-slate-500 dark:text-slate-400 text-sm">
-                    Enter your credentials to access your account.
+                    Nhập thông tin đăng nhập để truy cập tài khoản của bạn.
                 </p>
             </div>
 
@@ -82,8 +82,8 @@ export function LoginForm() {
                 activeTab={role}
                 onChange={setRole}
                 tabs={[
-                    { id: "candidate", label: "Candidate" },
-                    { id: "employer", label: "Employer" },
+                    { id: "candidate", label: "Ứng viên" },
+                    { id: "employer", label: "Nhà tuyển dụng" },
                 ]}
                 className="mb-6 w-full"
             />
@@ -91,9 +91,9 @@ export function LoginForm() {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div className="space-y-2">
                     <Input
-                        label="Work Email"
+                        label="Email công việc"
                         type="email"
-                        placeholder="name@company.com"
+                        placeholder="ten@congty.com"
                         error={errors.email?.message}
                         {...register("email")}
                         className="h-12 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 focus:border-blue-600 focus:ring-blue-600/10 rounded-lg transition-all"
@@ -101,12 +101,12 @@ export function LoginForm() {
                 </div>
                 <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                        <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-slate-700 dark:text-slate-300">Password</label>
+                        <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-slate-700 dark:text-slate-300">Mật khẩu</label>
                         <Link
                             href="/forgot-password"
                             className="text-xs font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400"
                         >
-                            Forgot password?
+                            Quên mật khẩu?
                         </Link>
                     </div>
                     <Input
@@ -133,7 +133,7 @@ export function LoginForm() {
                     </div>
                     <div className="relative flex justify-center text-xs uppercase font-medium">
                         <span className="bg-white dark:bg-[#0B0F19] px-2 text-slate-400">
-                            Or continue with
+                            Hoặc tiếp tục với
                         </span>
                     </div>
                 </div>
@@ -148,12 +148,12 @@ export function LoginForm() {
                 </Button>
 
                 <div className="text-center text-sm text-slate-500 mt-6">
-                    Don't have an account?{" "}
+                    Chưa có tài khoản?{" "}
                     <Link
                         href="/register"
                         className="font-semibold text-blue-600 hover:underline"
                     >
-                        Sign up
+                        Đăng ký
                     </Link>
                 </div>
             </form>

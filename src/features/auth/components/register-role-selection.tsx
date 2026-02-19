@@ -48,13 +48,13 @@ export function RegisterRoleSelection() {
                     className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white font-inter"
                     variants={itemVariants}
                 >
-                    Create an account
+                    Tạo tài khoản
                 </motion.h1>
                 <motion.p
                     className="text-slate-500 dark:text-slate-400 max-w-sm mx-auto text-base"
                     variants={itemVariants}
                 >
-                    Choose how you want to use SmartHire.
+                    Chọn cách bạn muốn sử dụng SmartHire.
                 </motion.p>
             </div>
 
@@ -65,16 +65,16 @@ export function RegisterRoleSelection() {
                 <RoleCard
                     role="candidate"
                     icon={User}
-                    title="I'm a Candidate"
-                    description="Find jobs & build your career"
+                    title="Tôi là Ứng viên"
+                    description="Tìm việc & phát triển sự nghiệp"
                     isSelected={selectedRole === "candidate"}
                     onSelect={() => setSelectedRole("candidate")}
                 />
                 <RoleCard
                     role="employer"
                     icon={Building2}
-                    title="I'm an Employer"
-                    description="Hire talent & post jobs"
+                    title="Tôi là Nhà tuyển dụng"
+                    description="Tuyển dụng nhân tài & đăng tin"
                     isSelected={selectedRole === "employer"}
                     onSelect={() => setSelectedRole("employer")}
                 />
@@ -88,7 +88,7 @@ export function RegisterRoleSelection() {
                     variant="primary"
                 >
                     <span className="flex items-center justify-center">
-                        Continue
+                        Tiếp tục
                         <ArrowRight className="ml-2 h-5 w-5" />
                     </span>
                 </Button>
@@ -98,12 +98,12 @@ export function RegisterRoleSelection() {
                 className="text-center text-sm text-slate-500 dark:text-slate-400"
                 variants={itemVariants}
             >
-                Already have an account?{" "}
+                Đã có tài khoản?{" "}
                 <Link
                     href="/login"
                     className="font-semibold text-blue-600 hover:underline hover:text-blue-700 transition-colors"
                 >
-                    Log in
+                    Đăng nhập
                 </Link>
             </motion.p>
         </motion.div>
