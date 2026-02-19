@@ -20,6 +20,8 @@ const orbitron = Orbitron({
   display: "swap",
 });
 
+import { AuthProvider } from "@/features/auth/context/auth-context";
+
 export const metadata: Metadata = {
   title: "SmartHire Ultra - AI Recruitment",
   description: "Next-generation hiring platform powered by Holographic AI.",
@@ -31,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="vi" suppressHydrationWarning>
       <body
         suppressHydrationWarning
         className={`${beVietnamPro.variable} ${orbitron.variable} font-sans antialiased flex flex-col min-h-screen bg-white`}
@@ -46,7 +48,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <ToastProvider>
-            {children}
+            <AuthProvider startLoggedOut>
+              {children}
+            </AuthProvider>
           </ToastProvider>
         </ThemeProvider>
       </body>
