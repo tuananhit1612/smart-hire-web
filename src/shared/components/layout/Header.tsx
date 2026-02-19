@@ -43,12 +43,12 @@ const roleNav: Record<UserRole, NavItem[]> = {
     candidate: [
         { label: "Việc làm", href: "/jobs", icon: Search },
         { label: "Đơn ứng tuyển", href: "/applications", icon: ClipboardList },
-        { label: "Hồ sơ CV", href: "/cv", icon: FileText },
+        { label: "Hồ sơ CV", href: "/cv-builder", icon: FileText },
         { label: "Hồ sơ cá nhân", href: "/profile", icon: User },
     ],
     employer: [
         { label: "Dashboard", href: "/employer/dashboard", icon: BarChart3 },
-        { label: "Tin tuyển dụng", href: "/employer/jobs", icon: Briefcase },
+        { label: "Tin tuyển dụng", href: "/hr/jobs", icon: Briefcase },
         { label: "Pipeline", href: "/employer/pipeline", icon: Users },
     ],
     admin: [
