@@ -12,13 +12,12 @@ interface RegisterRoleSelectionProps {
     onRoleSelect?: (role: UserRole) => void;
 }
 
-export function RegisterRoleSelection() {
+export function RegisterRoleSelection({ onRoleSelect }: RegisterRoleSelectionProps) {
     const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
 
     const handleContinue = () => {
-        if (selectedRole) {
-            console.log("Selected role:", selectedRole);
-            // In a real app, this would navigate to the next step or save to store
+        if (selectedRole && onRoleSelect) {
+            onRoleSelect(selectedRole);
         }
     };
 
