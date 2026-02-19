@@ -45,7 +45,7 @@ export default function NotificationsPage() {
     };
 
     return (
-        <section className="relative z-10 py-8 md:py-12">
+        <section className="relative z-10 pt-24 pb-8 md:pt-28 md:pb-12">
             <div className="mx-auto max-w-2xl px-4 sm:px-6">
                 {/* Header */}
                 <motion.div
