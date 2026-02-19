@@ -46,7 +46,7 @@ export default function NotificationsPage() {
 
     return (
         <section className="relative z-10 pt-24 pb-8 md:pt-28 md:pb-12">
-            <div className="mx-auto max-w-2xl px-4 sm:px-6">
+            <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
                 {/* Header */}
                 <motion.div
                     initial={{ opacity: 0, y: -10 }}
@@ -54,14 +54,14 @@ export default function NotificationsPage() {
                     className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8"
                 >
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-sky-50 flex items-center justify-center">
-                            <BellRing className="w-5 h-5 text-sky-600" />
+                        <div className="w-12 h-12 rounded-xl bg-sky-50 flex items-center justify-center">
+                            <BellRing className="w-6 h-6 text-sky-600" />
                         </div>
                         <div>
-                            <h1 className="text-xl font-bold text-sky-900">
+                            <h1 className="text-2xl font-bold text-sky-900">
                                 Thông báo
                             </h1>
-                            <p className="text-sm text-slate-500">
+                            <p className="text-base text-slate-500">
                                 {unreadCount > 0
                                     ? `Bạn có ${unreadCount} thông báo chưa đọc`
                                     : "Tất cả thông báo đã được đọc"}

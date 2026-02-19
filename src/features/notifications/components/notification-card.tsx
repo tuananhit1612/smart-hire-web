@@ -73,7 +73,7 @@ export function NotificationCard({ notification, onMarkRead, index }: Notificati
             transition={{ delay: index * 0.04, duration: 0.3 }}
             onClick={() => onMarkRead(notification.id)}
             className={cn(
-                "group relative z-10 flex items-start gap-4 p-4 rounded-2xl border cursor-pointer overflow-hidden",
+                "group relative z-10 flex items-start gap-5 p-6 rounded-2xl border cursor-pointer overflow-hidden",
                 "transition-all duration-200 hover:shadow-lg hover:shadow-sky-900/5 hover:scale-[1.01]",
                 notification.isRead
                     ? "bg-white border-slate-100"
@@ -82,15 +82,15 @@ export function NotificationCard({ notification, onMarkRead, index }: Notificati
         >
 
             {/* Icon */}
-            <div className={cn("shrink-0 w-10 h-10 rounded-xl flex items-center justify-center", config.bg)}>
-                <Icon className={cn("w-5 h-5", config.color)} />
+            <div className={cn("shrink-0 w-14 h-14 rounded-xl flex items-center justify-center", config.bg)}>
+                <Icon className={cn("w-7 h-7", config.color)} />
             </div>
 
             {/* Content */}
             <div className="flex-1 min-w-0">
                 <h3
                     className={cn(
-                        "text-sm leading-snug mb-0.5",
+                        "text-lg leading-snug mb-1.5",
                         notification.isRead
                             ? "font-medium text-slate-600"
                             : "font-semibold text-sky-900"
@@ -100,13 +100,13 @@ export function NotificationCard({ notification, onMarkRead, index }: Notificati
                 </h3>
                 <p
                     className={cn(
-                        "text-[13px] leading-relaxed line-clamp-2",
+                        "text-base leading-relaxed line-clamp-3",
                         notification.isRead ? "text-slate-400" : "text-slate-600"
                     )}
                 >
                     {notification.message}
                 </p>
-                <span className="block mt-1.5 text-xs text-slate-400">
+                <span className="block mt-2.5 text-sm text-slate-400">
                     {formatTimeAgo(notification.createdAt)}
                 </span>
             </div>
@@ -114,7 +114,7 @@ export function NotificationCard({ notification, onMarkRead, index }: Notificati
             {/* Arrow */}
             <ChevronRight
                 className={cn(
-                    "shrink-0 w-4 h-4 mt-1 transition-transform duration-200",
+                    "shrink-0 w-5 h-5 mt-1.5 transition-transform duration-200",
                     "text-slate-300 group-hover:text-sky-500 group-hover:translate-x-0.5",
                 )}
             />
