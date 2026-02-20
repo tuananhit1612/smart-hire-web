@@ -48,7 +48,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <ToastProvider>
-            <AuthProvider startLoggedOut>
+            <AuthProvider>
               {children}
             </AuthProvider>
           </ToastProvider>

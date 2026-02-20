@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Github, ArrowRight, Wallet, Fingerprint, ShieldCheck } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -28,6 +28,7 @@ export function LoginForm() {
     const [isLoading, setIsLoading] = useState(false);
     const toastHelpers = useToastHelpers();
     const router = useRouter();
+    const searchParams = useSearchParams();
     const { login } = useAuth();
 
     const {
@@ -52,13 +53,18 @@ export function LoginForm() {
 
         toastHelpers.success("Chào mừng trở lại!", "Bạn đã đăng nhập thành công.");
 
-        // Chuyển trang dựa trên vai trò
-        const redirectMap: Record<string, string> = {
-            candidate: "/jobs",
-            employer: "/employer/dashboard",
-            admin: "/admin/dashboard",
-        };
-        router.push(redirectMap[role] ?? "/jobs");
+        // Redirect: callbackUrl hoặc dashboard theo vai trò
+        const callbackUrl = searchParams.get("callbackUrl");
+        if (callbackUrl) {
+            router.push(callbackUrl);
+        } else {
+            const redirectMap: Record<string, string> = {
+                candidate: "/jobs",
+                employer: "/employer/dashboard",
+                admin: "/admin/dashboard",
+            };
+            router.push(redirectMap[role] ?? "/jobs");
+        }
     };
 
     const containerVariants = {

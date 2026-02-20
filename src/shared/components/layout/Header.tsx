@@ -80,7 +80,7 @@ export function Header() {
     const [showUserMenu, setShowUserMenu] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
     const { scrollY } = useScroll();
-    const { user, isAuthenticated, logout } = useAuth();
+    const { user, isAuthenticated, isLoading, logout } = useAuth();
     const router = useRouter();
 
     useMotionValueEvent(scrollY, "change", (latest) => {
@@ -141,21 +141,36 @@ export function Header() {
 
                 {/* Nav Links */}
                 <div className="hidden md:flex items-center gap-6 text-sm font-medium text-sky-700">
-                    {navItems.map((item) => (
-                        <Link
-                            key={item.label}
-                            href={item.href}
-                            className="flex items-center gap-1.5 hover:text-sky-500 transition-colors"
-                        >
-                            {item.icon && <item.icon className="w-4 h-4" />}
-                            {item.label}
-                        </Link>
-                    ))}
+                    {isLoading ? (
+                        /* Nav loading skeleton */
+                        <div className="flex items-center gap-6 animate-pulse">
+                            <div className="h-4 w-16 bg-sky-100 rounded" />
+                            <div className="h-4 w-20 bg-sky-100 rounded" />
+                            <div className="h-4 w-14 bg-sky-100 rounded" />
+                        </div>
+                    ) : (
+                        navItems.map((item) => (
+                            <Link
+                                key={item.label}
+                                href={item.href}
+                                className="flex items-center gap-1.5 hover:text-sky-500 transition-colors"
+                            >
+                                {item.icon && <item.icon className="w-4 h-4" />}
+                                {item.label}
+                            </Link>
+                        ))
+                    )}
                 </div>
 
                 {/* Right Side */}
                 <div className="flex items-center gap-3">
-                    {isAuthenticated && user ? (
+                    {isLoading ? (
+                        /* Loading skeleton */
+                        <div className="flex items-center gap-3 animate-pulse">
+                            <div className="h-5 w-20 bg-sky-100 rounded-full" />
+                            <div className="h-9 w-9 bg-sky-100 rounded-full" />
+                        </div>
+                    ) : isAuthenticated && user ? (
                         <>
                             <NotificationBell />
 
@@ -228,7 +243,6 @@ export function Header() {
                         </>
                     ) : (
                         <>
-                            <NotificationBell />
                             <Link href="/login" className="text-sm font-bold text-sky-700 hover:text-sky-500 transition-colors">
                                 Đăng Nhập
                             </Link>

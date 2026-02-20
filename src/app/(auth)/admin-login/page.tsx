@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Shield, Lock, Mail, Fingerprint } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -16,6 +16,7 @@ import { useAuth } from "@/features/auth/hooks/use-auth";
 export default function AdminLoginPage() {
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
+    const searchParams = useSearchParams();
     const toast = useToastHelpers();
     const { login } = useAuth();
 
@@ -37,7 +38,9 @@ export default function AdminLoginPage() {
         await login("admin");
         setIsLoading(false);
         toast.success("Xin chào, Admin!", "Đăng nhập quản trị thành công.");
-        router.push("/admin/dashboard");
+
+        const callbackUrl = searchParams.get("callbackUrl");
+        router.push(callbackUrl || "/admin/dashboard");
     };
 
     const containerVariants = {
