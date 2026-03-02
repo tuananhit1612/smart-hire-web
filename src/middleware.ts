@@ -38,7 +38,7 @@ const ROLE_ROUTES: Record<string, string> = {
 // Auth pages — if already logged in, redirect to dashboard
 const AUTH_PAGES = ["/login", "/register", "/forgot-password", "/reset-password"];
 
-function getSessionFromCookie(request: NextRequest): { role: string } | null {
+function getSessionFromCookie(request: NextRequest): { role: string; isFirstLogin?: boolean } | null {
     const cookie = request.cookies.get(COOKIE_NAME);
     if (!cookie?.value) return null;
 
@@ -70,6 +70,11 @@ export function middleware(request: NextRequest) {
     // ─── 1. Auth pages: redirect away if already logged in ───
     if (AUTH_PAGES.some((p) => pathname.startsWith(p))) {
         if (isLoggedIn) {
+            // Check if onboarding needed first
+            if (session!.isFirstLogin) {
+                const onboardingRoute = session!.role === "employer" ? "/employer/onboarding" : "/dashboard/onboarding";
+                return NextResponse.redirect(new URL(onboardingRoute, request.url));
+            }
             const dashboard = getDashboardForRole(session!.role);
             return NextResponse.redirect(new URL(dashboard, request.url));
         }
@@ -86,7 +91,25 @@ export function middleware(request: NextRequest) {
         return NextResponse.next();
     }
 
-    // ─── 3. Role-specific routes ─────────────────────────────
+    // ─── 3. Enforce Onboarding for First Time Login ──────────
+    if (isLoggedIn && session!.isFirstLogin) {
+        const isOnEmployerOnboarding = pathname.startsWith("/employer/onboarding");
+        const isOnCandidateOnboarding = pathname.startsWith("/dashboard/onboarding");
+
+        if (session!.role === "employer") {
+            if (!isOnEmployerOnboarding) {
+                return NextResponse.redirect(new URL("/employer/onboarding", request.url));
+            }
+        } else if (session!.role === "candidate") {
+            if (!isOnCandidateOnboarding) {
+                return NextResponse.redirect(new URL("/dashboard/onboarding", request.url));
+            }
+        }
+        // If they are on their correct onboarding page, let them through
+        return NextResponse.next();
+    }
+
+    // ─── 4. Role-specific routes ─────────────────────────────
     for (const [routePrefix, requiredRole] of Object.entries(ROLE_ROUTES)) {
         if (pathname.startsWith(routePrefix)) {
             if (!isLoggedIn) {

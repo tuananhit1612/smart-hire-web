@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { motion } from "framer-motion";
-import { Briefcase, Calendar, Pencil } from "lucide-react";
+import { Briefcase, Pencil } from "lucide-react";
 import { Experience } from "../types/profile";
 import { Button } from "@/shared/components/ui/button";
 import { ProfileEditExperience } from "./profile-edit-experience";
@@ -17,49 +17,50 @@ export function ProfileExperience({ experiences, onSave }: ProfileExperienceProp
 
   return (
     <>
-      <div className="glass-card p-4 sm:p-6 md:p-8 relative group">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-primary/10">
-              <Briefcase className="h-5 w-5 text-primary" />
+      <div className="bg-white dark:bg-[#1C252E] rounded-[24px] p-6 sm:p-8 shadow-[0_8px_32px_rgba(145,158,171,0.08)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.24)] border border-[rgba(145,158,171,0.12)] dark:border-white/[0.04] transition-all duration-300 hover:shadow-[0_12px_40px_rgba(34,197,94,0.12)] group relative">
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-[#22C55E]/10 flex items-center justify-center text-[#22C55E] group-hover:scale-110 transition-transform">
+              <Briefcase className="w-6 h-6" />
             </div>
-            <h2 className="text-xl font-semibold text-foreground">Kinh nghiệm</h2>
+            <h2 className="text-xl font-extrabold text-[#1C252E] dark:text-white">Kinh nghiệm</h2>
           </div>
           {onSave && (
             <Button
               variant="outline"
               size="sm"
               onClick={() => setIsEditing(true)}
-              className="opacity-0 group-hover:opacity-100 transition-opacity"
+              className="opacity-0 group-hover:opacity-100 transition-opacity h-9 px-4 rounded-xl border-[rgba(145,158,171,0.32)] dark:border-white/20 text-[#637381] dark:text-[#919EAB] hover:text-[#1C252E] dark:hover:text-white hover:bg-[#F4F6F8] dark:hover:bg-white/5 shadow-sm"
             >
-              <Pencil className="h-4 w-4" />
+              <Pencil className="h-4 w-4 mr-2" />
+              Sửa
             </Button>
           )}
         </div>
 
-        <div className="space-y-8 pl-2">
+        <div className="space-y-8">
           {experiences.map((exp, index) => (
-            <div key={exp.id} className="relative pl-6 sm:pl-8 border-l border-primary/20 last:border-0 pb-1">
-              <span className="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-primary glow-primary" />
-              
+            <div key={exp.id} className="relative pl-6 sm:pl-8 border-l-2 border-[rgba(145,158,171,0.2)] dark:border-white/10 last:border-transparent pb-2 mt-2">
+              <span className="absolute -left-[6px] top-1.5 h-3 w-3 rounded-full bg-[#22C55E] border-2 border-white dark:border-[#1C252E] shadow-[0_0_10px_rgba(34,197,94,0.4)]" />
+
               <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1 * index }}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.05 * index }}
                 className="space-y-2"
               >
-                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                  <h3 className="text-lg font-medium text-foreground">{exp.role}</h3>
-                  <span className="hidden sm:inline text-muted-foreground">•</span>
-                  <span className="text-primary font-medium">{exp.company}</span>
-                </div>
-                
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Calendar className="h-3.5 w-3.5" />
-                  <span>{exp.startDate} - {exp.endDate || "Present"}</span>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-4 mb-2">
+                  <div>
+                    <h3 className="text-lg font-bold text-[#1C252E] dark:text-white">{exp.role}</h3>
+                    <p className="text-[15px] font-bold text-[#22C55E] mt-0.5">{exp.company}</p>
+                  </div>
+                  <div className="text-[13px] font-semibold tracking-wide text-[#919EAB] dark:text-[#637381] shrink-0 mt-1 sm:mt-0 uppercase">
+                    {exp.startDate} — {exp.endDate || "Hiện tại"}
+                  </div>
                 </div>
 
-                <p className="text-sm text-muted-foreground leading-relaxed pt-1">
+                <p className="text-[15px] text-[#637381] dark:text-[#919EAB] leading-relaxed pt-1 whitespace-pre-line group-hover:text-[#1C252E] dark:group-hover:text-[#DFE3E8] transition-colors duration-300">
                   {exp.description}
                 </p>
               </motion.div>
@@ -79,3 +80,4 @@ export function ProfileExperience({ experiences, onSave }: ProfileExperienceProp
     </>
   );
 }
+

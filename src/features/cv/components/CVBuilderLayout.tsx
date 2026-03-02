@@ -32,17 +32,12 @@ export function CVBuilderLayout({
 }: CVBuilderLayoutProps) {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
     return (
-        <div className="relative min-h-screen bg-white">
-            <ParticleBackground />
-
-            {/* Global Header */}
-            <Header />
-
-            {/* Main Layout Content - Add padding top to account for Global Header */}
-            <div className="pt-24 lg:pt-28">
+        <div className="relative h-full">
+            {/* Main Layout Content */}
+            <div className="pt-2">
                 {/* Header Bar */}
-                <header id="cv-builder-header" className="sticky top-0 z-30 border-b border-gray-100 bg-white/80 backdrop-blur-xl">
-                    <div className="max-w-[1800px] mx-auto px-4 md:px-6 py-3 md:py-4 flex items-center justify-between gap-4">
+                <header id="cv-builder-header" className="border border-gray-100 bg-white/80 backdrop-blur-xl rounded-2xl mb-4 shadow-sm">
+                    <div className="px-4 md:px-6 py-3 md:py-4 flex items-center justify-between gap-4">
                         {/* Mobile Menu Button */}
                         <button
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}

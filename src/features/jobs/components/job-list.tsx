@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { Button } from "@/shared/components/ui/button";
 import { Job } from "../types/job";
 import { mockJobs } from "../types/mock-jobs";
 import { JobCard } from "./job-card";
@@ -27,7 +25,6 @@ export function JobList() {
     setSelectedTags([]);
   };
 
-  // Toggle save/unsave job
   const toggleSaveJob = (jobId: string) => {
     setSavedJobIds((prev) => {
       const newSet = new Set(prev);
@@ -40,7 +37,6 @@ export function JobList() {
     });
   };
 
-  // Filter and sort logic - saved jobs first
   const filteredAndSortedJobs = useMemo(() => {
     const filtered = mockJobs.filter((job) => {
       const matchSearch =
@@ -67,21 +63,17 @@ export function JobList() {
       return matchSearch && matchLocation && matchTags;
     });
 
-    // Sort: saved jobs first, then by posted date
     return filtered.sort((a, b) => {
       const aIsSaved = savedJobIds.has(a.id);
       const bIsSaved = savedJobIds.has(b.id);
-
       if (aIsSaved && !bIsSaved) return -1;
       if (!aIsSaved && bIsSaved) return 1;
-
-      // If both saved or both not saved, sort by posted date (newest first)
       return new Date(b.postedAt).getTime() - new Date(a.postedAt).getTime();
     });
   }, [searchQuery, locationQuery, selectedTags, savedJobIds]);
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 md:px-6 pb-20">
+    <div className="w-full">
       <JobFilter
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
@@ -94,11 +86,11 @@ export function JobList() {
 
       {/* Results Count */}
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">
+        <h2 className="text-lg font-bold text-[#1C252E] dark:text-white">
           {filteredAndSortedJobs.length} công việc phù hợp
         </h2>
         {savedJobIds.size > 0 && (
-          <p className="text-sm text-red-500 font-medium">
+          <p className="text-[13px] text-[#FF5630] font-semibold">
             ❤️ {savedJobIds.size} việc làm đã lưu
           </p>
         )}
@@ -106,46 +98,36 @@ export function JobList() {
 
       {/* Grid */}
       {filteredAndSortedJobs.length > 0 ? (
-        <motion.div
-          layout
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
-          <AnimatePresence>
-            {filteredAndSortedJobs.map((job) => (
-              <JobCard
-                key={job.id}
-                job={job}
-                isSaved={savedJobIds.has(job.id)}
-                onApply={(id) => console.log("Apply", id)}
-                onSave={toggleSaveJob}
-              />
-            ))}
-          </AnimatePresence>
-        </motion.div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredAndSortedJobs.map((job, i) => (
+            <JobCard
+              key={job.id}
+              job={job}
+              index={i}
+              isSaved={savedJobIds.has(job.id)}
+              onApply={(id) => console.log("Apply", id)}
+              onSave={toggleSaveJob}
+            />
+          ))}
+        </div>
       ) : (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="flex flex-col items-center justify-center py-20 text-center"
-        >
-          <div className="w-24 h-24 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4">
-            <Search className="w-10 h-10 text-slate-400" />
+        <div className="flex flex-col items-center justify-center py-20 text-center animate-in fade-in duration-300">
+          <div className="w-20 h-20 bg-[rgba(145,158,171,0.04)] dark:bg-[rgba(145,158,171,0.08)] rounded-2xl flex items-center justify-center mb-4">
+            <Search className="w-9 h-9 text-[#919EAB]" />
           </div>
-          <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">
+          <h3 className="text-xl font-bold text-[#1C252E] dark:text-white mb-2">
             Không tìm thấy công việc nào
           </h3>
-          <p className="text-slate-500 dark:text-slate-400 max-w-md">
-            Thử thay đổi từ khóa tìm kiếm hoặc xóa bớt bộ lọc để xem nhiều kết
-            quả hơn.
+          <p className="text-[14px] text-[#637381] dark:text-[#919EAB] max-w-md">
+            Thử thay đổi từ khóa tìm kiếm hoặc xóa bớt bộ lọc để xem nhiều kết quả hơn.
           </p>
-          <Button
-            variant="ghost"
+          <button
             onClick={resetFilters}
-            className="mt-4 text-sky-500 hover:text-sky-600 hover:bg-sky-50 dark:hover:bg-sky-900/20"
+            className="mt-4 text-[14px] font-semibold text-[#22C55E] hover:text-[#22C55E]/80 transition-colors"
           >
             Xóa tất cả bộ lọc
-          </Button>
-        </motion.div>
+          </button>
+        </div>
       )}
     </div>
   );

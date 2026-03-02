@@ -31,7 +31,7 @@ export function UploadCVPage() {
     const canProceed = successfulFiles.length > 0 && !isUploading;
 
     return (
-        <div className="min-h-screen relative pt-8 pb-16">
+        <div className="w-full relative pt-6 pb-12">
             {/* Background Elements */}
             <div className="aurora-blob aurora-blob-1" />
             <div className="aurora-blob aurora-blob-2" />
