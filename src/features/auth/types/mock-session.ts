@@ -8,8 +8,19 @@
 
 import type { SessionUser } from "./auth-types";
 
-/** Mock candidate user */
-export const mockCandidate: SessionUser = {
+/** Mock candidate user (First time login / Need onboarding) */
+export const mockCandidateNew: SessionUser = {
+    id: "u1-new",
+    name: "Nguyễn Văn Sinh Viên",
+    email: "sv.nguyenvan@gmail.com",
+    avatar: "NVS",
+    role: "candidate",
+    joinedDate: new Date().toISOString().split('T')[0],
+    isFirstLogin: true,
+};
+
+/** Mock candidate user (Returning / Has profile) */
+export const mockCandidateReturning: SessionUser = {
     id: "u1",
     name: "Nguyễn Văn An",
     email: "nguyenvanan@gmail.com",
@@ -18,10 +29,22 @@ export const mockCandidate: SessionUser = {
     phone: "0901-xxx-xxx",
     location: "TP.HCM",
     joinedDate: "2025-08-12",
+    isFirstLogin: false,
 };
 
-/** Mock employer user */
-export const mockEmployer: SessionUser = {
+/** Mock employer user (First time login / Need to setup company) */
+export const mockEmployerNew: SessionUser = {
+    id: "u2-new",
+    name: "Trần Thị HR Mới",
+    email: "hr.moi@startup.vn",
+    avatar: "TTM",
+    role: "employer",
+    joinedDate: new Date().toISOString().split('T')[0],
+    isFirstLogin: true,
+};
+
+/** Mock employer user (Returning / Configured company) */
+export const mockEmployerReturning: SessionUser = {
     id: "u2",
     name: "Trần Thị Bảo",
     email: "tranthibao@techcorp.vn",
@@ -31,6 +54,7 @@ export const mockEmployer: SessionUser = {
     phone: "0912-xxx-xxx",
     location: "Hà Nội",
     joinedDate: "2025-06-20",
+    isFirstLogin: false,
 };
 
 /** Mock admin user */
@@ -43,14 +67,17 @@ export const mockAdmin: SessionUser = {
     phone: "0903-xxx-xxx",
     location: "TP.HCM",
     joinedDate: "2025-01-01",
+    isFirstLogin: false,
 };
 
-/** All mock users indexed by role for quick lookup */
+/** All mock users indexed by their MockUserKey for quick lookup */
 export const mockUsers = {
-    candidate: mockCandidate,
-    employer: mockEmployer,
-    admin: mockAdmin,
+    "candidate-new": mockCandidateNew,
+    "candidate-returning": mockCandidateReturning,
+    "employer-new": mockEmployerNew,
+    "employer-returning": mockEmployerReturning,
+    "admin": mockAdmin,
 } as const;
 
 /** Default mock session — change this to test different roles */
-export const DEFAULT_MOCK_USER: SessionUser = mockCandidate;
+export const DEFAULT_MOCK_USER: SessionUser = mockCandidateReturning;

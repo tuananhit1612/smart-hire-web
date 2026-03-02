@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import { Job } from "../types/job";
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
@@ -45,7 +44,7 @@ export function JobDetail({ job }: JobDetailProps) {
   useEffect(() => {
     setIsMounted(true);
   }, []);
-  
+
   const isJobClosed = job.status === "closed";
   // Only check application status after mount to avoid hydration mismatch
   const hasUserApplied = isMounted && hasApplied(job.id);
@@ -106,11 +105,11 @@ export function JobDetail({ job }: JobDetailProps) {
       case "Senior":
       case "Lead":
       case "Manager":
-        return "bg-purple-100 text-purple-700 dark:bg-purple-500/20 dark:text-purple-300 border-purple-200";
+        return "bg-[#FFAB00]/10 text-[#FFAB00] border-[#FFAB00]/20";
       case "Middle":
-        return "bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-300 border-blue-200";
+        return "bg-[#22C55E]/10 text-[#22C55E] border-[#22C55E]/20";
       default:
-        return "bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-300 border-green-200";
+        return "bg-[#3B82F6]/10 text-[#3B82F6] border-[#3B82F6]/20";
     }
   };
 
@@ -131,7 +130,7 @@ export function JobDetail({ job }: JobDetailProps) {
   const mapsUrl = getGoogleMapsUrl();
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950/50 pt-20">
+    <div className="min-h-screen pt-20">
       {/* Company Cover Image */}
       {job.companyInfo?.coverImageUrl && (
         <div className="relative h-48 md:h-56 w-full overflow-hidden">
@@ -140,7 +139,7 @@ export function JobDetail({ job }: JobDetailProps) {
             alt={`${job.company} office`}
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-50 dark:from-slate-950/50 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-[#141A21] via-transparent to-transparent" />
         </div>
       )}
 
@@ -148,7 +147,7 @@ export function JobDetail({ job }: JobDetailProps) {
       <div className="max-w-7xl mx-auto px-4 md:px-6 pt-4 pb-4">
         <Link
           href="/jobs"
-          className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-sky-600 transition-colors"
+          className="inline-flex items-center gap-2 text-sm text-[#919EAB] hover:text-[#22C55E] transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           Quay lại danh sách việc làm
@@ -160,14 +159,12 @@ export function JobDetail({ job }: JobDetailProps) {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Header Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-white dark:bg-slate-900/50 backdrop-blur-md border border-slate-200 dark:border-slate-700/50 rounded-3xl p-6 md:p-8"
+            <div
+              className="animate-fade-in-up bg-white dark:bg-[#1C252E] border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] rounded-2xl p-6 md:p-8 hover:border-[rgba(145,158,171,0.32)] transition-all"
             >
               <div className="flex flex-col md:flex-row gap-6">
                 {/* Logo */}
-                <div className="w-20 h-20 rounded-2xl bg-white dark:bg-slate-800 p-2 shadow-lg border border-slate-100 dark:border-slate-700 flex items-center justify-center shrink-0">
+                <div className="w-20 h-20 rounded-2xl bg-white dark:bg-[#1C252E] p-2 shadow-lg border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] flex items-center justify-center shrink-0">
                   <img
                     src={job.companyInfo?.logoUrl || job.logoUrl}
                     alt={job.company}
@@ -177,13 +174,13 @@ export function JobDetail({ job }: JobDetailProps) {
 
                 {/* Info */}
                 <div className="flex-1">
-                  <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-2">
+                  <h1 className="text-2xl md:text-3xl font-bold text-[#1C252E] dark:text-white mb-2">
                     {job.title}
                   </h1>
-                  <p className="text-lg font-medium text-slate-600 dark:text-slate-300 mb-4">
+                  <p className="text-lg font-medium text-[#637381] dark:text-[#C4CDD5] mb-4">
                     {job.company}
                     {job.companyInfo?.industry && (
-                      <span className="text-slate-400 font-normal"> • {job.companyInfo.industry}</span>
+                      <span className="text-[#919EAB] font-normal"> • {job.companyInfo.industry}</span>
                     )}
                   </p>
 
@@ -199,14 +196,14 @@ export function JobDetail({ job }: JobDetailProps) {
                     </Badge>
                     <Badge
                       variant="secondary"
-                      className="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm flex items-center gap-1.5 px-3 py-1 rounded-lg"
+                      className="bg-[rgba(145,158,171,0.04)] dark:bg-[rgba(145,158,171,0.08)] text-[#637381] dark:text-[#C4CDD5] text-sm flex items-center gap-1.5 px-3 py-1 rounded-lg"
                     >
                       <Briefcase className="w-3.5 h-3.5" />
                       {job.type}
                     </Badge>
                     <Badge
                       variant="secondary"
-                      className="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm flex items-center gap-1.5 px-3 py-1 rounded-lg"
+                      className="bg-[rgba(145,158,171,0.04)] dark:bg-[rgba(145,158,171,0.08)] text-[#637381] dark:text-[#C4CDD5] text-sm flex items-center gap-1.5 px-3 py-1 rounded-lg"
                     >
                       <Clock className="w-3.5 h-3.5" />
                       {getRelativeTime(job.postedAt)}
@@ -214,7 +211,7 @@ export function JobDetail({ job }: JobDetailProps) {
                   </div>
 
                   {/* Salary */}
-                  <div className="flex items-center gap-2 text-xl font-bold text-green-600 dark:text-green-400">
+                  <div className="flex items-center gap-2 text-xl font-bold text-[#22C55E]">
                     <DollarSign className="w-5 h-5" />
                     {job.salary}
                   </div>
@@ -224,7 +221,7 @@ export function JobDetail({ job }: JobDetailProps) {
               {/* Actions (Mobile) */}
               <div className="flex gap-3 mt-6 lg:hidden">
                 {isJobClosed ? (
-                  <div className="flex-1 flex items-center justify-center gap-2 h-12 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500">
+                  <div className="flex-1 flex items-center justify-center gap-2 h-12 rounded-xl bg-[rgba(145,158,171,0.04)] dark:bg-[rgba(145,158,171,0.08)] text-[#919EAB]">
                     <XCircle className="w-5 h-5" />
                     <span className="font-medium">Tin đã đóng</span>
                   </div>
@@ -236,7 +233,7 @@ export function JobDetail({ job }: JobDetailProps) {
                 ) : (
                   <Button
                     onClick={() => setIsApplyModalOpen(true)}
-                    className="flex-1 bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-700 hover:to-sky-600 text-white shadow-lg shadow-blue-500/25 rounded-full font-semibold h-12"
+                    className="flex-1 bg-[#1C252E] dark:bg-white text-white dark:text-[#1C252E] hover:bg-[#1C252E]/90 dark:hover:bg-white/90 rounded-full font-semibold h-12"
                   >
                     Ứng tuyển ngay
                   </Button>
@@ -244,44 +241,42 @@ export function JobDetail({ job }: JobDetailProps) {
                 <Button
                   variant="outline"
                   size="icon"
-                  className="h-12 w-12 rounded-full border-slate-200 dark:border-slate-700"
+                  className="h-12 w-12 rounded-xl border-[rgba(145,158,171,0.12)] dark:border-white/[0.08]"
                 >
                   <Heart className="w-5 h-5" />
                 </Button>
                 <Button
                   variant="outline"
                   size="icon"
-                  className="h-12 w-12 rounded-full border-slate-200 dark:border-slate-700"
+                  className="h-12 w-12 rounded-xl border-[rgba(145,158,171,0.12)] dark:border-white/[0.08]"
                 >
                   <Share2 className="w-5 h-5" />
                 </Button>
               </div>
-            </motion.div>
+            </div>
 
             {/* Location Card with Map Link */}
             {job.locationInfo && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.05 }}
-                className="bg-white dark:bg-slate-900/50 backdrop-blur-md border border-slate-200 dark:border-slate-700/50 rounded-3xl p-6 md:p-8"
+              <div
+                style={{ animationDelay: '50ms' }}
+                className="animate-fade-in-up bg-white dark:bg-[#1C252E] border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] rounded-2xl p-6 md:p-8"
               >
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-sky-100 dark:bg-sky-900/30 rounded-full flex items-center justify-center">
-                    <MapPin className="w-5 h-5 text-sky-600 dark:text-sky-400" />
+                  <div className="w-10 h-10 bg-[#22C55E]/10 rounded-xl flex items-center justify-center">
+                    <MapPin className="w-5 h-5 text-[#22C55E]" />
                   </div>
-                  <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+                  <h2 className="text-xl font-bold text-[#1C252E] dark:text-white">
                     Địa điểm làm việc
                   </h2>
                 </div>
-                
+
                 <div className="space-y-2">
-                  <p className="text-lg font-medium text-slate-700 dark:text-slate-200">
+                  <p className="text-lg font-medium text-[#1C252E] dark:text-[#C4CDD5]">
                     {job.locationInfo.city}
                     {job.locationInfo.district && `, ${job.locationInfo.district}`}
                   </p>
                   {job.locationInfo.address && (
-                    <p className="text-slate-500 dark:text-slate-400">
+                    <p className="text-[#637381] dark:text-[#919EAB]">
                       {job.locationInfo.address}
                     </p>
                   )}
@@ -292,134 +287,122 @@ export function JobDetail({ job }: JobDetailProps) {
                     href={mapsUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-sky-50 dark:bg-sky-900/20 text-sky-600 dark:text-sky-400 rounded-full text-sm font-medium hover:bg-sky-100 dark:hover:bg-sky-900/30 transition-colors"
+                    className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-[#22C55E]/10 text-[#22C55E] rounded-xl text-sm font-medium hover:bg-[#22C55E]/20 transition-colors"
                   >
                     <Navigation className="w-4 h-4" />
                     Xem trên Google Maps
                     <ExternalLink className="w-3.5 h-3.5" />
                   </a>
                 )}
-              </motion.div>
+              </div>
             )}
 
             {/* Description */}
             {job.fullDescription && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="bg-white dark:bg-slate-900/50 backdrop-blur-md border border-slate-200 dark:border-slate-700/50 rounded-3xl p-6 md:p-8"
+              <div
+                style={{ animationDelay: '100ms' }}
+                className="animate-fade-in-up bg-white dark:bg-[#1C252E] border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] rounded-2xl p-6 md:p-8"
               >
-                <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
+                <h2 className="text-xl font-bold text-[#1C252E] dark:text-white mb-4">
                   Mô tả công việc
                 </h2>
-                <div className="prose prose-slate dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 whitespace-pre-line leading-relaxed">
+                <div className="prose dark:prose-invert max-w-none text-[#637381] dark:text-[#C4CDD5] whitespace-pre-line leading-relaxed">
                   {job.fullDescription}
                 </div>
-              </motion.div>
+              </div>
             )}
 
             {/* Skills */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15 }}
-              className="bg-white dark:bg-slate-900/50 backdrop-blur-md border border-slate-200 dark:border-slate-700/50 rounded-3xl p-6 md:p-8"
+            <div
+              style={{ animationDelay: '150ms' }}
+              className="animate-fade-in-up bg-white dark:bg-[#1C252E] border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] rounded-2xl p-6 md:p-8"
             >
-              <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
+              <h2 className="text-xl font-bold text-[#1C252E] dark:text-white mb-4">
                 Kỹ năng yêu cầu
               </h2>
               <div className="flex flex-wrap gap-2">
                 {job.skills.map((skill) => (
                   <Badge
                     key={skill}
-                    className="bg-sky-100 text-sky-700 dark:bg-sky-500/20 dark:text-sky-300 border-sky-200 dark:border-sky-800 px-4 py-1.5 text-sm font-medium rounded-full"
+                    className="bg-[#22C55E]/10 text-[#22C55E] border-[#22C55E]/20 px-4 py-1.5 text-sm font-medium rounded-full"
                   >
                     {skill}
                   </Badge>
                 ))}
               </div>
-            </motion.div>
+            </div>
 
             {/* Requirements */}
             {job.requirements && job.requirements.length > 0 && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="bg-white dark:bg-slate-900/50 backdrop-blur-md border border-slate-200 dark:border-slate-700/50 rounded-3xl p-6 md:p-8"
+              <div
+                style={{ animationDelay: '200ms' }}
+                className="animate-fade-in-up bg-white dark:bg-[#1C252E] border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] rounded-2xl p-6 md:p-8"
               >
-                <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
+                <h2 className="text-xl font-bold text-[#1C252E] dark:text-white mb-4">
                   Yêu cầu ứng viên
                 </h2>
                 <ul className="space-y-3">
                   {job.requirements.map((req, index) => (
                     <li key={index} className="flex items-start gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-sky-500 shrink-0 mt-0.5" />
-                      <span className="text-slate-600 dark:text-slate-300">
+                      <CheckCircle2 className="w-5 h-5 text-[#22C55E] shrink-0 mt-0.5" />
+                      <span className="text-[#637381] dark:text-[#C4CDD5]">
                         {req}
                       </span>
                     </li>
                   ))}
                 </ul>
-              </motion.div>
+              </div>
             )}
 
             {/* Responsibilities */}
             {job.responsibilities && job.responsibilities.length > 0 && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.25 }}
-                className="bg-white dark:bg-slate-900/50 backdrop-blur-md border border-slate-200 dark:border-slate-700/50 rounded-3xl p-6 md:p-8"
+              <div
+                style={{ animationDelay: '250ms' }}
+                className="animate-fade-in-up bg-white dark:bg-[#1C252E] border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] rounded-2xl p-6 md:p-8"
               >
-                <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
+                <h2 className="text-xl font-bold text-[#1C252E] dark:text-white mb-4">
                   Trách nhiệm công việc
                 </h2>
                 <ul className="space-y-3">
                   {job.responsibilities.map((resp, index) => (
                     <li key={index} className="flex items-start gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-purple-500 shrink-0 mt-0.5" />
-                      <span className="text-slate-600 dark:text-slate-300">
+                      <CheckCircle2 className="w-5 h-5 text-[#FFAB00] shrink-0 mt-0.5" />
+                      <span className="text-[#637381] dark:text-[#C4CDD5]">
                         {resp}
                       </span>
                     </li>
                   ))}
                 </ul>
-              </motion.div>
+              </div>
             )}
 
             {/* Benefits */}
             {job.benefits && job.benefits.length > 0 && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-800/50 rounded-3xl p-6 md:p-8"
+              <div
+                style={{ animationDelay: '300ms' }}
+                className="animate-fade-in-up bg-[#22C55E]/5 dark:bg-[#22C55E]/10 border border-[#22C55E]/20 dark:border-[#22C55E]/15 rounded-2xl p-6 md:p-8"
               >
-                <h2 className="text-xl font-bold text-green-800 dark:text-green-300 mb-4">
+                <h2 className="text-xl font-bold text-[#22C55E] mb-4">
                   Phúc lợi
                 </h2>
                 <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {job.benefits.map((benefit, index) => (
                     <li key={index} className="flex items-start gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400 shrink-0 mt-0.5" />
-                      <span className="text-green-700 dark:text-green-300">
+                      <CheckCircle2 className="w-5 h-5 text-[#22C55E] shrink-0 mt-0.5" />
+                      <span className="text-[#1C252E] dark:text-[#C4CDD5]">
                         {benefit}
                       </span>
                     </li>
                   ))}
                 </ul>
-              </motion.div>
+              </div>
             )}
 
             {/* Company Section */}
             {job.companyInfo && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.35 }}
-                className="bg-white dark:bg-slate-900/50 backdrop-blur-md border border-slate-200 dark:border-slate-700/50 rounded-3xl p-6 md:p-8 overflow-hidden"
+              <div
+                style={{ animationDelay: '350ms' }}
+                className="animate-fade-in-up bg-white dark:bg-[#1C252E] border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] rounded-2xl p-6 md:p-8 overflow-hidden"
               >
                 {/* Company Header with Cover */}
                 {job.companyInfo.coverImageUrl && (
@@ -429,12 +412,12 @@ export function JobDetail({ job }: JobDetailProps) {
                       alt={`${job.company} office`}
                       className="w-full h-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-slate-900 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-[#1C252E] to-transparent" />
                   </div>
                 )}
 
                 <div className="flex items-start gap-4 mb-4">
-                  <div className="w-16 h-16 rounded-xl bg-white dark:bg-slate-800 p-2 shadow-sm border border-slate-100 dark:border-slate-700 flex items-center justify-center shrink-0">
+                  <div className="w-16 h-16 rounded-xl bg-white dark:bg-[#1C252E] p-2 shadow-sm border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] flex items-center justify-center shrink-0">
                     <img
                       src={job.companyInfo.logoUrl}
                       alt={job.company}
@@ -442,11 +425,11 @@ export function JobDetail({ job }: JobDetailProps) {
                     />
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+                    <h2 className="text-xl font-bold text-[#1C252E] dark:text-white">
                       {job.companyInfo.name}
                     </h2>
                     {job.companyInfo.industry && (
-                      <p className="text-slate-500 dark:text-slate-400 text-sm">
+                      <p className="text-[#919EAB] text-sm">
                         {job.companyInfo.industry}
                       </p>
                     )}
@@ -454,7 +437,7 @@ export function JobDetail({ job }: JobDetailProps) {
                 </div>
 
                 {job.companyInfo.description && (
-                  <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
+                  <p className="text-[#637381] dark:text-[#C4CDD5] leading-relaxed mb-6">
                     {job.companyInfo.description}
                   </p>
                 )}
@@ -463,14 +446,14 @@ export function JobDetail({ job }: JobDetailProps) {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {job.companyInfo.size && (
                     <div className="flex items-center gap-2 text-sm">
-                      <Users className="w-4 h-4 text-slate-400" />
-                      <span className="text-slate-600 dark:text-slate-300">{job.companyInfo.size}</span>
+                      <Users className="w-4 h-4 text-[#919EAB]" />
+                      <span className="text-[#637381] dark:text-[#C4CDD5]">{job.companyInfo.size}</span>
                     </div>
                   )}
                   {job.companyInfo.founded && (
                     <div className="flex items-center gap-2 text-sm">
-                      <CalendarDays className="w-4 h-4 text-slate-400" />
-                      <span className="text-slate-600 dark:text-slate-300">Thành lập {job.companyInfo.founded}</span>
+                      <CalendarDays className="w-4 h-4 text-[#919EAB]" />
+                      <span className="text-[#637381] dark:text-[#C4CDD5]">Thành lập {job.companyInfo.founded}</span>
                     </div>
                   )}
                   {job.companyInfo.website && (
@@ -478,7 +461,7 @@ export function JobDetail({ job }: JobDetailProps) {
                       href={job.companyInfo.website}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-sm text-sky-600 dark:text-sky-400 hover:underline"
+                      className="flex items-center gap-2 text-sm text-[#22C55E] hover:underline"
                     >
                       <Globe className="w-4 h-4" />
                       Website
@@ -486,70 +469,66 @@ export function JobDetail({ job }: JobDetailProps) {
                     </a>
                   )}
                 </div>
-              </motion.div>
+              </div>
             )}
 
             {/* Contact Info Section */}
             {job.contactInfo && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                className="bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20 border border-sky-200 dark:border-sky-800/50 rounded-3xl p-6 md:p-8"
+              <div
+                style={{ animationDelay: '400ms' }}
+                className="animate-fade-in-up bg-[#22C55E]/5 dark:bg-[#22C55E]/10 border border-[#22C55E]/20 dark:border-[#22C55E]/15 rounded-2xl p-6 md:p-8"
               >
-                <h2 className="text-xl font-bold text-sky-800 dark:text-sky-300 mb-4">
+                <h2 className="text-xl font-bold text-[#22C55E] mb-4">
                   Thông tin liên hệ
                 </h2>
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-sky-100 dark:bg-sky-900/30 rounded-full flex items-center justify-center">
-                      <User className="w-5 h-5 text-sky-600 dark:text-sky-400" />
+                    <div className="w-10 h-10 bg-[#22C55E]/10 rounded-xl flex items-center justify-center">
+                      <User className="w-5 h-5 text-[#22C55E]" />
                     </div>
                     <div>
-                      <p className="font-semibold text-slate-900 dark:text-white">
+                      <p className="font-semibold text-[#1C252E] dark:text-white">
                         {job.contactInfo.name}
                       </p>
                       {job.contactInfo.title && (
-                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                        <p className="text-sm text-[#919EAB]">
                           {job.contactInfo.title}
                         </p>
                       )}
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Mail className="w-5 h-5 text-sky-600 dark:text-sky-400" />
+                    <Mail className="w-5 h-5 text-[#22C55E]" />
                     <a
                       href={`mailto:${job.contactInfo.email}`}
-                      className="text-slate-600 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
+                      className="text-[#637381] dark:text-[#C4CDD5] hover:text-[#22C55E] transition-colors"
                     >
                       {job.contactInfo.email}
                     </a>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Phone className="w-5 h-5 text-sky-600 dark:text-sky-400" />
+                    <Phone className="w-5 h-5 text-[#22C55E]" />
                     <a
                       href={`tel:${job.contactInfo.phone}`}
-                      className="text-slate-600 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
+                      className="text-[#637381] dark:text-[#C4CDD5] hover:text-[#22C55E] transition-colors"
                     >
                       {job.contactInfo.phone}
                     </a>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             )}
           </div>
 
           {/* Sidebar */}
           <div className="lg:col-span-1">
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-              className="sticky top-28 bg-white dark:bg-slate-900/50 backdrop-blur-md border border-slate-200 dark:border-slate-700/50 rounded-3xl p-6 space-y-6"
+            <div
+              style={{ animationDelay: '200ms' }}
+              className="animate-fade-in-up sticky top-28 bg-white dark:bg-[#1C252E] border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] rounded-2xl p-6 space-y-6"
             >
               {/* Apply Button */}
               {isJobClosed ? (
-                <div className="w-full flex items-center justify-center gap-2 h-12 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500">
+                <div className="w-full flex items-center justify-center gap-2 h-12 rounded-xl bg-[rgba(145,158,171,0.04)] dark:bg-[rgba(145,158,171,0.08)] text-[#919EAB]">
                   <XCircle className="w-5 h-5" />
                   <span className="font-semibold">Tin đã đóng</span>
                 </div>
@@ -561,7 +540,7 @@ export function JobDetail({ job }: JobDetailProps) {
               ) : (
                 <Button
                   onClick={() => setIsApplyModalOpen(true)}
-                  className="w-full bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-700 hover:to-sky-600 text-white shadow-lg shadow-blue-500/25 rounded-full font-semibold h-12 text-base"
+                  className="w-full bg-[#1C252E] dark:bg-white text-white dark:text-[#1C252E] hover:bg-[#1C252E]/90 dark:hover:bg-white/90 rounded-xl font-semibold h-12 text-base"
                 >
                   Ứng tuyển ngay
                 </Button>
@@ -570,73 +549,73 @@ export function JobDetail({ job }: JobDetailProps) {
               <div className="flex gap-3">
                 <Button
                   variant="outline"
-                  className="flex-1 rounded-full h-10 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
+                  className="flex-1 rounded-xl h-10 border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] text-[#637381] dark:text-[#C4CDD5]"
                 >
                   <Heart className="w-4 h-4 mr-2" />
                   Lưu
                 </Button>
                 <Button
                   variant="outline"
-                  className="flex-1 rounded-full h-10 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
+                  className="flex-1 rounded-xl h-10 border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] text-[#637381] dark:text-[#C4CDD5]"
                 >
                   <Share2 className="w-4 h-4 mr-2" />
                   Chia sẻ
                 </Button>
               </div>
 
-              <hr className="border-slate-200 dark:border-slate-700" />
+              <hr className="border-[rgba(145,158,171,0.12)] dark:border-white/[0.06]" />
 
               {/* Job Overview */}
               <div className="space-y-4">
-                <h3 className="font-bold text-slate-900 dark:text-white">
+                <h3 className="font-bold text-[#1C252E] dark:text-white">
                   Tổng quan
                 </h3>
 
                 <div className="space-y-3 text-sm">
                   <div className="flex items-center gap-3">
-                    <Briefcase className="w-4 h-4 text-slate-400" />
-                    <span className="text-slate-500">Loại hình:</span>
-                    <span className="font-medium text-slate-700 dark:text-slate-200 ml-auto">
+                    <Briefcase className="w-4 h-4 text-[#919EAB]" />
+                    <span className="text-[#919EAB]">Loại hình:</span>
+                    <span className="font-medium text-[#1C252E] dark:text-[#C4CDD5] ml-auto">
                       {job.type}
                     </span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <MapPin className="w-4 h-4 text-slate-400" />
-                    <span className="text-slate-500">Địa điểm:</span>
-                    <span className="font-medium text-slate-700 dark:text-slate-200 ml-auto">
+                    <MapPin className="w-4 h-4 text-[#919EAB]" />
+                    <span className="text-[#919EAB]">Địa điểm:</span>
+                    <span className="font-medium text-[#1C252E] dark:text-[#C4CDD5] ml-auto">
                       {job.location}
                     </span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <DollarSign className="w-4 h-4 text-slate-400" />
-                    <span className="text-slate-500">Mức lương:</span>
-                    <span className="font-medium text-green-600 dark:text-green-400 ml-auto">
+                    <DollarSign className="w-4 h-4 text-[#919EAB]" />
+                    <span className="text-[#919EAB]">Mức lương:</span>
+                    <span className="font-medium text-[#22C55E] ml-auto">
                       {job.salary}
                     </span>
                   </div>
                   {job.workingHours && (
                     <div className="flex items-center gap-3">
-                      <Clock className="w-4 h-4 text-slate-400" />
-                      <span className="text-slate-500">Giờ làm:</span>
-                      <span className="font-medium text-slate-700 dark:text-slate-200 ml-auto text-right text-xs">
+                      <Clock className="w-4 h-4 text-[#919EAB]" />
+                      <span className="text-[#919EAB]">Giờ làm:</span>
+                      <span className="font-medium text-[#1C252E] dark:text-[#C4CDD5] ml-auto text-right text-xs">
                         {job.workingHours}
                       </span>
                     </div>
                   )}
                   {job.teamSize && (
                     <div className="flex items-center gap-3">
-                      <Users className="w-4 h-4 text-slate-400" />
-                      <span className="text-slate-500">Team:</span>
-                      <span className="font-medium text-slate-700 dark:text-slate-200 ml-auto">
+                      <Users className="w-4 h-4 text-[#919EAB]" />
+                      <span className="text-[#919EAB]">Team:</span>
+                      <span className="font-medium text-[#1C252E] dark:text-[#C4CDD5] ml-auto">
                         {job.teamSize}
                       </span>
                     </div>
                   )}
                   {job.deadline && (
                     <div className="flex items-center gap-3">
-                      <Calendar className="w-4 h-4 text-slate-400" />
-                      <span className="text-slate-500">Hạn nộp:</span>
-                      <span className="font-medium text-orange-600 dark:text-orange-400 ml-auto text-right text-xs">
+                      <Calendar className="w-4 h-4 text-[#919EAB]" />
+                      <span className="text-[#919EAB]">Hạn nộp:</span>
+                      <span className="font-medium text-[#FFAB00] ml-auto text-right text-xs">
                         {formatDeadline(job.deadline)}
                       </span>
                     </div>
@@ -652,14 +631,14 @@ export function JobDetail({ job }: JobDetailProps) {
                     href={mapsUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 w-full py-3 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-2xl text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                    className="flex items-center justify-center gap-2 w-full py-3 bg-[rgba(145,158,171,0.04)] dark:bg-[rgba(145,158,171,0.08)] text-[#637381] dark:text-[#C4CDD5] rounded-xl text-sm font-medium hover:bg-[rgba(145,158,171,0.12)] transition-colors"
                   >
                     <Navigation className="w-4 h-4" />
                     Xem vị trí trên Google Maps
                   </a>
                 </>
               )}
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>

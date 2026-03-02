@@ -69,7 +69,7 @@ export function CompanyProfileViewPremium() {
     };
 
     return (
-        <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-sky-50/50 via-white to-green-50/30">
+        <div className="relative w-full overflow-hidden bg-gradient-to-br from-sky-50/50 via-white to-green-50/30">
             {/* Floating Background Elements */}
             <FloatingElements />
 
@@ -78,7 +78,7 @@ export function CompanyProfileViewPremium() {
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"
-                className="relative z-10 container mx-auto px-4 pt-24 pb-16 max-w-6xl"
+                className="relative z-10 container mx-auto px-4 pt-6 pb-16 max-w-6xl"
             >
                 {/* Page Title with Animated Gradient */}
                 <motion.div

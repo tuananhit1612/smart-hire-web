@@ -17,7 +17,7 @@ import {
     useState,
     type ReactNode,
 } from "react";
-import type { SessionUser, UserRole, AuthStatus } from "../types/auth-types";
+import type { SessionUser, UserRole, AuthStatus, MockUserKey } from "../types/auth-types";
 import { DEFAULT_MOCK_USER, mockUsers } from "../types/mock-session";
 
 // ─── Storage Keys ────────────────────────────────────
@@ -50,11 +50,13 @@ export interface AuthContextValue {
     /** Convenience: status === "loading" */
     isLoading: boolean;
     /** Login with a mock role (simulates API call) */
-    login: (role?: UserRole) => Promise<void>;
+    login: (roleKey?: MockUserKey) => Promise<void>;
     /** Logout and clear session */
     logout: () => void;
     /** Switch to a different mock user role */
-    switchRole: (role: UserRole) => void;
+    switchRole: (roleKey: MockUserKey) => void;
+    /** Mark the user as having completed onboarding */
+    completeOnboarding: () => void;
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null);
@@ -84,7 +86,7 @@ export function AuthProvider({
                     setUser(parsed);
                     setStatus("authenticated");
                     // Sync cookie in case it was cleared
-                    setCookie(COOKIE_NAME, JSON.stringify({ role: parsed.role }));
+                    setCookie(COOKIE_NAME, JSON.stringify({ role: parsed.role, isFirstLogin: parsed.isFirstLogin }));
                     return;
                 }
             }
@@ -95,20 +97,14 @@ export function AuthProvider({
         }
 
         // No valid session found
-        if (initialUser) {
-            setUser(initialUser);
-            setStatus("authenticated");
-            persistSession(initialUser);
-        } else {
-            setUser(null);
-            setStatus("unauthenticated");
-        }
+        setUser(null);
+        setStatus("unauthenticated");
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     // ─── Persist helpers ─────────────────────────────
     function persistSession(sessionUser: SessionUser) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(sessionUser));
-        setCookie(COOKIE_NAME, JSON.stringify({ role: sessionUser.role }));
+        setCookie(COOKIE_NAME, JSON.stringify({ role: sessionUser.role, isFirstLogin: sessionUser.isFirstLogin }));
     }
 
     function clearSession() {
@@ -117,11 +113,11 @@ export function AuthProvider({
     }
 
     // ─── Actions ─────────────────────────────────────
-    const login = useCallback(async (role?: UserRole) => {
+    const login = useCallback(async (roleKey?: MockUserKey) => {
         setStatus("loading");
         // Simulate API call delay
         await new Promise((r) => setTimeout(r, 800));
-        const mockUser = role ? mockUsers[role] : DEFAULT_MOCK_USER;
+        const mockUser = roleKey ? mockUsers[roleKey] : DEFAULT_MOCK_USER;
         setUser(mockUser);
         setStatus("authenticated");
         persistSession(mockUser);
@@ -133,11 +129,20 @@ export function AuthProvider({
         clearSession();
     }, []);
 
-    const switchRole = useCallback((role: UserRole) => {
-        const mockUser = mockUsers[role];
+    const switchRole = useCallback((roleKey: MockUserKey) => {
+        const mockUser = mockUsers[roleKey];
         setUser(mockUser);
         setStatus("authenticated");
         persistSession(mockUser);
+    }, []);
+
+    const completeOnboarding = useCallback(() => {
+        setUser((currentUser) => {
+            if (!currentUser) return null;
+            const updatedUser = { ...currentUser, isFirstLogin: false };
+            persistSession(updatedUser);
+            return updatedUser;
+        });
     }, []);
 
     const value = useMemo<AuthContextValue>(
@@ -149,8 +154,9 @@ export function AuthProvider({
             login,
             logout,
             switchRole,
+            completeOnboarding,
         }),
-        [user, status, login, logout, switchRole]
+        [user, status, login, logout, switchRole, completeOnboarding]
     );
 
     return (

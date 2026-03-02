@@ -1,4 +1,5 @@
 export type UserRole = "candidate" | "employer" | "admin";
+export type MockUserKey = "candidate-new" | "candidate-returning" | "employer-new" | "employer-returning" | "admin";
 
 export interface RegisterFlowState {
     step: "role-selection" | "form";
@@ -17,6 +18,7 @@ export interface SessionUser {
     phone?: string;
     location?: string;
     joinedDate: string;
+    isFirstLogin?: boolean;
 }
 
 export type AuthStatus = "authenticated" | "unauthenticated" | "loading";

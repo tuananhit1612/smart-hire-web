@@ -59,14 +59,48 @@ export interface SocialLink {
   url: string;
 }
 
+export interface JobPreference {
+  jobTitles: string[];
+  preferredLocations: string[];
+  preferredIndustry: string;
+  employmentType: string;
+  preferredExperienceLevel: string;
+  companySize: string;
+  workPreference: "Remote" | "Onsite" | "Hybrid" | "";
+  willingToRelocate: boolean;
+  availabilityDate: string;
+  salary: string;
+}
+
+export interface EqualOpportunity {
+  pronouns: string;
+  disability: string;
+  veteranStatus: string;
+  ethnicity: string;
+  sexualOrientation: string;
+}
+
+export interface AIQuestion {
+  id: string;
+  question: string;
+  answer: string;
+}
+
 export interface CandidateProfile {
   id: string;
   fullName: string;
+  lastName?: string;
   headline?: string;
   title: string;
   email: string;
   phone?: string;
   location: string;
+  country?: string;
+  state?: string;
+  city?: string;
+  gender?: string;
+  linkedIn?: string;
+  website?: string;
   avatarUrl?: string;
   about: string;
   summary?: string;
@@ -79,4 +113,7 @@ export interface CandidateProfile {
   projects: Project[];
   languages: Language[];
   socialLinks: SocialLink[];
+  jobPreference?: JobPreference;
+  equalOpportunity?: EqualOpportunity;
+  aiQuestions?: AIQuestion[];
 }

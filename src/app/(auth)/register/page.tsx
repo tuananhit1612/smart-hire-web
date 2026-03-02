@@ -21,7 +21,7 @@ export default function RegisterPage() {
     };
 
     return (
-        <AuthLayout>
+        <AuthLayout heading="Quản lý công việc" subheading="Tạo tài khoản để bắt đầu hành trình cùng SmartHire">
             <AnimatePresence mode="wait">
                 {step === "role" ? (
                     <motion.div

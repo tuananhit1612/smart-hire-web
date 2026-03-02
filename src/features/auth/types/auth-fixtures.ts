@@ -8,7 +8,7 @@
  */
 
 import type { SessionUser, UserRole } from "./auth-types";
-import { mockCandidate, mockEmployer, mockAdmin } from "./mock-session";
+import { mockCandidateReturning, mockCandidateNew, mockEmployerReturning, mockEmployerNew, mockAdmin } from "./mock-session";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  RESPONSE TYPES
@@ -60,7 +60,7 @@ export const loginSuccess: Record<UserRole, AuthSuccess<LoginSuccessData>> = {
     candidate: {
         ok: true,
         data: {
-            user: mockCandidate,
+            user: mockCandidateReturning,
             token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.mock_candidate_token",
             refreshToken: "rt_candidate_mock_refresh_token_abc123",
             expiresIn: 3600,
@@ -70,7 +70,7 @@ export const loginSuccess: Record<UserRole, AuthSuccess<LoginSuccessData>> = {
     employer: {
         ok: true,
         data: {
-            user: mockEmployer,
+            user: mockEmployerReturning,
             token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.mock_employer_token",
             refreshToken: "rt_employer_mock_refresh_token_def456",
             expiresIn: 3600,
@@ -153,7 +153,7 @@ export const registerSuccess: Record<"candidate" | "employer", AuthSuccess<Regis
     candidate: {
         ok: true,
         data: {
-            user: mockCandidate,
+            user: mockCandidateNew,
             token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.mock_register_candidate",
             requiresVerification: true,
         },
@@ -162,7 +162,7 @@ export const registerSuccess: Record<"candidate" | "employer", AuthSuccess<Regis
     employer: {
         ok: true,
         data: {
-            user: mockEmployer,
+            user: mockEmployerNew,
             token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.mock_register_employer",
             requiresVerification: true,
         },
@@ -339,10 +339,10 @@ export function getLoginErrorScenarios() {
         message: error.message,
         testEmail: key === "invalidCredentials" ? "wrong@test.com"
             : key === "accountLocked" ? "user@locked.com"
-            : key === "accountBanned" ? "user@banned.com"
-            : key === "accountPending" ? "employer@pending.com"
-            : key === "tooManyAttempts" ? "user@locked.com"
-            : "any@test.com",
+                : key === "accountBanned" ? "user@banned.com"
+                    : key === "accountPending" ? "employer@pending.com"
+                        : key === "tooManyAttempts" ? "user@locked.com"
+                            : "any@test.com",
     }));
 }
 

@@ -2,15 +2,15 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  X, 
-  FileText, 
-  Check, 
-  Upload, 
-  Sparkles, 
-  Eye, 
-  CheckCircle2, 
-  XCircle, 
+import {
+  X,
+  FileText,
+  Check,
+  Upload,
+  Sparkles,
+  Eye,
+  CheckCircle2,
+  XCircle,
   AlertTriangle,
   Briefcase,
   PartyPopper,
@@ -38,7 +38,7 @@ export function ApplyModal({ job, isOpen, onClose, onSuccess }: ApplyModalProps)
   const [coverLetter, setCoverLetter] = useState("");
   const [modalState, setModalState] = useState<ModalState>("form");
   const hasInitializedRef = useRef(false);
-  
+
   const { applyToJob, hasApplied } = useApplicationStore();
 
   // Check for selected CV from URL params (returning from preview page)
@@ -46,7 +46,7 @@ export function ApplyModal({ job, isOpen, onClose, onSuccess }: ApplyModalProps)
   useEffect(() => {
     if (isOpen && !hasInitializedRef.current) {
       hasInitializedRef.current = true;
-      
+
       // Read selectedCV from URL params
       if (typeof window !== "undefined") {
         const urlParams = new URLSearchParams(window.location.search);
@@ -57,7 +57,7 @@ export function ApplyModal({ job, isOpen, onClose, onSuccess }: ApplyModalProps)
           window.history.replaceState({}, "", `/jobs/${job.id}?openApply=true`);
         }
       }
-      
+
       // Check job status and application status
       if (job.status === "closed") {
         setModalState("job-closed");
@@ -135,7 +135,7 @@ export function ApplyModal({ job, isOpen, onClose, onSuccess }: ApplyModalProps)
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="fixed inset-4 md:inset-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-full md:max-w-2xl md:max-h-[90vh] bg-white dark:bg-slate-900 rounded-3xl shadow-2xl z-50 overflow-hidden flex flex-col"
+            className="fixed inset-4 md:inset-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-full md:max-w-2xl md:max-h-[90vh] bg-white dark:bg-[#1C252E] rounded-2xl shadow-2xl z-50 overflow-hidden flex flex-col border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08]"
           >
             {/* Render based on state */}
             {modalState === "success" && (
@@ -181,7 +181,7 @@ function SuccessView({ job, onClose }: { job: Job; onClose: () => void }) {
       >
         {/* Background glow */}
         <motion.div
-          animate={{ 
+          animate={{
             scale: [1, 1.2, 1],
             opacity: [0.5, 0.8, 0.5]
           }}
@@ -198,30 +198,30 @@ function SuccessView({ job, onClose }: { job: Job; onClose: () => void }) {
             <CheckCircle2 className="w-12 h-12 text-white" />
           </motion.div>
         </div>
-        
+
         {/* Confetti particles */}
         {[...Array(12)].map((_, i) => (
           <motion.div
             key={i}
-            initial={{ 
-              scale: 0, 
-              x: 0, 
+            initial={{
+              scale: 0,
+              x: 0,
               y: 0,
               rotate: 0
             }}
-            animate={{ 
+            animate={{
               scale: [0, 1, 1, 0],
               x: Math.cos(i * 30 * Math.PI / 180) * 100,
               y: Math.sin(i * 30 * Math.PI / 180) * 100,
               rotate: Math.random() * 360
             }}
-            transition={{ 
-              duration: 1.5, 
+            transition={{
+              duration: 1.5,
               delay: 0.4 + i * 0.05,
               ease: "easeOut"
             }}
             className="absolute top-1/2 left-1/2 w-3 h-3 rounded-sm"
-            style={{ 
+            style={{
               backgroundColor: ["#10B981", "#3B82F6", "#8B5CF6", "#F59E0B", "#EC4899"][i % 5],
               marginTop: -6,
               marginLeft: -6
@@ -246,7 +246,7 @@ function SuccessView({ job, onClose }: { job: Job; onClose: () => void }) {
         <p className="text-slate-500 dark:text-slate-400 mb-2">
           Hồ sơ của bạn đã được gửi đến
         </p>
-        <p className="text-lg font-semibold text-sky-600 dark:text-sky-400 mb-6">
+        <p className="text-lg font-semibold text-[#22C55E] mb-6">
           {job.company}
         </p>
       </motion.div>
@@ -283,17 +283,17 @@ function SuccessView({ job, onClose }: { job: Job; onClose: () => void }) {
         className="flex flex-col sm:flex-row gap-3 w-full max-w-sm"
       >
         <Link href="/applications" className="flex-1">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             className="w-full rounded-full"
           >
             <Briefcase className="w-4 h-4 mr-2" />
             Xem đơn ứng tuyển
           </Button>
         </Link>
-        <Button 
+        <Button
           onClick={onClose}
-          className="flex-1 bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-700 hover:to-sky-600 text-white rounded-full"
+          className="flex-1 bg-[#1C252E] dark:bg-white text-white dark:text-[#1C252E] hover:bg-[#1C252E]/90 dark:hover:bg-white/90 rounded-xl"
         >
           Tiếp tục tìm việc
           <ArrowRight className="w-4 h-4 ml-2" />
@@ -307,7 +307,7 @@ function SuccessView({ job, onClose }: { job: Job; onClose: () => void }) {
 function AlreadyAppliedView({ job, onClose }: { job: Job; onClose: () => void }) {
   const { getApplicationDate } = useApplicationStore();
   const appliedDate = getApplicationDate(job.id);
-  
+
   return (
     <div className="flex flex-col items-center justify-center p-8 min-h-[400px] text-center">
       {/* Icon */}
@@ -374,17 +374,17 @@ function AlreadyAppliedView({ job, onClose }: { job: Job; onClose: () => void })
         className="flex flex-col sm:flex-row gap-3 w-full max-w-sm"
       >
         <Link href="/applications" className="flex-1">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             className="w-full rounded-full"
           >
             <Briefcase className="w-4 h-4 mr-2" />
             Xem trạng thái
           </Button>
         </Link>
-        <Button 
+        <Button
           onClick={onClose}
-          className="flex-1 bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-700 hover:to-sky-600 text-white rounded-full"
+          className="flex-1 bg-[#1C252E] dark:bg-white text-white dark:text-[#1C252E] hover:bg-[#1C252E]/90 dark:hover:bg-white/90 rounded-xl"
         >
           Tìm việc khác
           <ArrowRight className="w-4 h-4 ml-2" />
@@ -473,16 +473,16 @@ function JobClosedView({ job, onClose }: { job: Job; onClose: () => void }) {
         transition={{ delay: 0.5 }}
         className="flex flex-col sm:flex-row gap-3 w-full max-w-sm"
       >
-        <Button 
-          variant="outline" 
+        <Button
+          variant="outline"
           onClick={onClose}
           className="flex-1 rounded-full"
         >
           Đóng
         </Button>
         <Link href="/jobs" className="flex-1">
-          <Button 
-            className="w-full bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-700 hover:to-sky-600 text-white rounded-full"
+          <Button
+            className="w-full bg-[#1C252E] dark:bg-white text-white dark:text-[#1C252E] hover:bg-[#1C252E]/90 dark:hover:bg-white/90 rounded-xl"
           >
             Tìm việc khác
             <ArrowRight className="w-4 h-4 ml-2" />
@@ -522,16 +522,16 @@ function FormView({
   return (
     <>
       {/* Header */}
-      <div className="flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-700">
+      <div className="flex items-center justify-between p-6 border-b border-[rgba(145,158,171,0.12)] dark:border-white/[0.06]">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-sky-500 rounded-full flex items-center justify-center">
-            <Sparkles className="w-5 h-5 text-white" />
+          <div className="w-10 h-10 bg-[#22C55E]/10 rounded-xl flex items-center justify-center">
+            <Sparkles className="w-5 h-5 text-[#22C55E]" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+            <h2 className="text-xl font-bold text-[#1C252E] dark:text-white">
               Ứng tuyển
             </h2>
-            <p className="text-sm text-slate-500 dark:text-slate-400">
+            <p className="text-sm text-[#919EAB]">
               {job.title} - {job.company}
             </p>
           </div>
@@ -539,9 +539,9 @@ function FormView({
         <button
           onClick={onClose}
           disabled={isSubmitting}
-          className="w-10 h-10 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center transition-colors disabled:opacity-50"
+          className="w-10 h-10 rounded-full hover:bg-[rgba(145,158,171,0.08)] flex items-center justify-center transition-colors disabled:opacity-50"
         >
-          <X className="w-5 h-5 text-slate-500" />
+          <X className="w-5 h-5 text-[#919EAB]" />
         </button>
       </div>
 
@@ -549,10 +549,10 @@ function FormView({
       <div className="flex-1 overflow-y-auto p-6 space-y-6">
         {/* CV Selection */}
         <div>
-          <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+          <label className="block text-sm font-semibold text-[#1C252E] dark:text-[#C4CDD5] mb-2">
             Chọn CV để ứng tuyển
           </label>
-          <p className="text-xs text-slate-400 mb-3">
+          <p className="text-xs text-[#919EAB] mb-3">
             Click vào CV để chọn, hoặc click "Xem CV" để xem chi tiết và chỉnh sửa
           </p>
           <div className="space-y-3">
@@ -581,18 +581,18 @@ function FormView({
                 Đã chọn: <strong>{mockCVVersions.find((cv) => cv.id === selectedCV)?.name}</strong>
               </p>
             </div>
-            
-            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+
+            <label className="block text-sm font-semibold text-[#1C252E] dark:text-[#C4CDD5] mb-2">
               <strong>Bước 2:</strong> Viết thư xin việc (Tùy chọn)
             </label>
             <textarea
               value={coverLetter}
               onChange={(e) => onCoverLetterChange(e.target.value)}
               placeholder="Viết thư xin việc để giới thiệu bản thân và thể hiện sự quan tâm đến vị trí này..."
-              className="w-full h-40 px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent resize-none"
+              className="w-full h-40 px-4 py-3 rounded-xl border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] bg-white dark:bg-[#1C252E] text-[#1C252E] dark:text-white placeholder:text-[#919EAB] focus:border-[#22C55E] focus:ring-2 focus:ring-[#22C55E]/20 outline-none resize-none"
               disabled={isSubmitting}
             />
-            <p className="text-xs text-slate-400 mt-2">
+            <p className="text-xs text-[#919EAB] mt-2">
               💡 Tip: Một thư xin việc tốt sẽ tăng cơ hội được nhà tuyển dụng chú ý!
             </p>
           </motion.div>
@@ -600,9 +600,9 @@ function FormView({
       </div>
 
       {/* Footer */}
-      <div className="p-6 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
+      <div className="p-6 border-t border-[rgba(145,158,171,0.12)] dark:border-white/[0.06] bg-[rgba(145,158,171,0.02)] dark:bg-[rgba(145,158,171,0.04)]">
         <div className="flex items-center justify-between">
-          <div className="text-sm text-slate-500 dark:text-slate-400">
+          <div className="text-sm text-[#919EAB]">
             {selectedCV ? (
               <span className="text-green-600 dark:text-green-400 font-medium">
                 ✓ Sẵn sàng ứng tuyển
@@ -625,7 +625,7 @@ function FormView({
             <Button
               onClick={onSubmit}
               disabled={!selectedCV || isSubmitting}
-              className="bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-700 hover:to-sky-600 text-white shadow-lg shadow-blue-500/25 rounded-full px-8 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-[#1C252E] dark:bg-white text-white dark:text-[#1C252E] hover:bg-[#1C252E]/90 dark:hover:bg-white/90 rounded-xl px-8 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? (
                 <>
@@ -665,14 +665,13 @@ function CVCard({ cv, isSelected, onSelect, onView, formatDate }: CVCardProps) {
       onClick={onSelect}
       whileHover={{ scale: 1.01 }}
       whileTap={{ scale: 0.99 }}
-      className={`relative flex items-start gap-4 p-4 rounded-2xl border-2 cursor-pointer transition-all ${
-        isSelected
-          ? "border-green-500 bg-green-50 dark:bg-green-900/20"
-          : "border-slate-200 dark:border-slate-700 hover:border-sky-400 dark:hover:border-sky-500 hover:bg-sky-50 dark:hover:bg-sky-900/10 bg-white dark:bg-slate-800"
-      }`}
+      className={`relative flex items-start gap-4 p-4 rounded-2xl border-2 cursor-pointer transition-all ${isSelected
+        ? "border-[#22C55E] bg-[#22C55E]/5 dark:bg-[#22C55E]/10"
+        : "border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] hover:border-[#22C55E]/50 hover:bg-[#22C55E]/5 bg-white dark:bg-[#1C252E]"
+        }`}
     >
       {/* Thumbnail */}
-      <div className="w-16 h-22 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-700 shrink-0">
+      <div className="w-16 h-22 rounded-lg overflow-hidden bg-[rgba(145,158,171,0.04)] dark:bg-[rgba(145,158,171,0.08)] shrink-0">
         {cv.thumbnail ? (
           <img
             src={cv.thumbnail}
@@ -681,7 +680,7 @@ function CVCard({ cv, isSelected, onSelect, onView, formatDate }: CVCardProps) {
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <FileText className="w-6 h-6 text-slate-400" />
+            <FileText className="w-6 h-6 text-[#919EAB]" />
           </div>
         )}
       </div>
@@ -689,11 +688,11 @@ function CVCard({ cv, isSelected, onSelect, onView, formatDate }: CVCardProps) {
       {/* Info */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
-          <h4 className="font-semibold text-slate-900 dark:text-white">
+          <h4 className="font-semibold text-[#1C252E] dark:text-white">
             {cv.name}
           </h4>
           {cv.isDefault && (
-            <span className="px-2 py-0.5 text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 rounded-full">
+            <span className="px-2 py-0.5 text-xs font-medium bg-[#FFAB00]/10 text-[#FFAB00] rounded-full">
               Mặc định
             </span>
           )}
@@ -704,25 +703,25 @@ function CVCard({ cv, isSelected, onSelect, onView, formatDate }: CVCardProps) {
             </span>
           )}
         </div>
-        <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+        <p className="text-sm text-[#919EAB] mt-0.5">
           Template: {cv.templateName}
         </p>
-        <p className="text-xs text-slate-400 mt-1">
+        <p className="text-xs text-[#919EAB] mt-1">
           Cập nhật: {formatDate(cv.updatedAt)}
         </p>
-        
+
         {/* Skills preview */}
         <div className="flex flex-wrap gap-1 mt-2">
           {cv.data.skills.slice(0, 4).map((skill) => (
             <span
               key={skill.id}
-              className="text-xs px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400"
+              className="text-xs px-2 py-0.5 rounded-full bg-[rgba(145,158,171,0.04)] dark:bg-[rgba(145,158,171,0.08)] text-[#637381] dark:text-[#919EAB]"
             >
               {skill.name}
             </span>
           ))}
           {cv.data.skills.length > 4 && (
-            <span className="text-xs text-slate-400">+{cv.data.skills.length - 4}</span>
+            <span className="text-xs text-[#919EAB]">+{cv.data.skills.length - 4}</span>
           )}
         </div>
       </div>
@@ -733,7 +732,7 @@ function CVCard({ cv, isSelected, onSelect, onView, formatDate }: CVCardProps) {
           e.stopPropagation();
           onView();
         }}
-        className="flex items-center gap-2 shrink-0 text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 px-3 py-2 rounded-xl hover:bg-sky-50 dark:hover:bg-sky-900/30 transition-colors"
+        className="flex items-center gap-2 shrink-0 text-[#22C55E] hover:text-[#22C55E]/80 px-3 py-2 rounded-xl hover:bg-[#22C55E]/5 transition-colors"
       >
         <span className="text-xs hidden sm:block">Xem CV</span>
         <Eye className="w-5 h-5" />

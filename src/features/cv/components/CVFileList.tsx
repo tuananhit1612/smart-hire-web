@@ -171,10 +171,10 @@ export function CVFileList() {
     ];
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="w-full">
             {/* Header section */}
-            <div className="bg-gradient-to-b from-sky-50 to-white pb-8">
-                <div className="max-w-5xl mx-auto px-4 pt-8">
+            <div className="pb-6 border-b border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] mb-6">
+                <div className="max-w-5xl mx-auto px-4 pt-4">
                     {/* Title */}
                     <motion.div
                         initial={{ opacity: 0, y: -20 }}
@@ -185,10 +185,10 @@ export function CVFileList() {
                             <Sparkles className="w-4 h-4" />
                             Quản lý CV của bạn
                         </div>
-                        <h1 className="text-3xl md:text-4xl font-bold text-sky-900 mb-2">
+                        <h1 className="text-3xl md:text-4xl font-bold text-[#1C252E] dark:text-white mb-2">
                             Thư viện CV
                         </h1>
-                        <p className="text-sky-700/70 max-w-lg mx-auto">
+                        <p className="text-[#637381] dark:text-[#919EAB] max-w-lg mx-auto">
                             Quản lý tất cả CV đã tải lên, theo dõi phiên bản và ứng tuyển
                             dễ dàng
                         </p>
@@ -280,7 +280,7 @@ export function CVFileList() {
             </div>
 
             {/* Main content */}
-            <div className="max-w-5xl mx-auto px-4 pb-48">
+            <div className="max-w-5xl mx-auto px-4 pb-12">
                 {/* Filter tabs & Sort */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                     {/* Filter tabs */}

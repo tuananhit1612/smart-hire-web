@@ -1,30 +1,37 @@
 import type { Metadata } from "next";
-import { Be_Vietnam_Pro, Orbitron } from "next/font/google";
+import { Be_Vietnam_Pro, Space_Grotesk, Fira_Code } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { ToastProvider } from "@/shared/components/ui/toast";
 
 import { ParticleBackground } from "@/shared/components/effects/ParticleBackground";
-import { FloatingBackButton } from "@/shared/components/navigation/FloatingBackButton";
 
 const beVietnamPro = Be_Vietnam_Pro({
   subsets: ["latin", "vietnamese"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-be-vietnam",
   display: "swap",
 });
 
-const orbitron = Orbitron({
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
-  variable: "--font-orbitron",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-space-grotesk",
+  display: "swap",
+});
+
+const firaCode = Fira_Code({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-fira-code",
   display: "swap",
 });
 
 import { AuthProvider } from "@/features/auth/context/auth-context";
 
 export const metadata: Metadata = {
-  title: "SmartHire Ultra - AI Recruitment",
-  description: "Next-generation hiring platform powered by Holographic AI.",
+  title: "SmartHire - AI Recruitment Platform",
+  description: "Next-generation hiring platform powered by AI. Connect with top talent and find your dream job.",
 };
 
 export default function RootLayout({
@@ -34,16 +41,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="vi" suppressHydrationWarning>
+
       <body
         suppressHydrationWarning
-        className={`${beVietnamPro.variable} ${orbitron.variable} font-sans antialiased flex flex-col min-h-screen bg-white`}
+        className={`${beVietnamPro.variable} ${spaceGrotesk.variable} ${firaCode.variable} font-body antialiased flex flex-col min-h-screen bg-background text-foreground overflow-x-hidden`}
       >
         <ParticleBackground />
-        <FloatingBackButton />
+
         <ThemeProvider
           attribute="class"
-          defaultTheme="light"
-          forcedTheme="light"
+          defaultTheme="dark"
           enableSystem={false}
           disableTransitionOnChange
         >
