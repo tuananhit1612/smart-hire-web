@@ -36,26 +36,26 @@ export function CVBuilderLayout({
             {/* Main Layout Content */}
             <div className="pt-2">
                 {/* Header Bar */}
-                <header id="cv-builder-header" className="border border-gray-100 bg-white/80 backdrop-blur-xl rounded-2xl mb-4 shadow-sm">
+                <header id="cv-builder-header" className="border border-gray-100 dark:border-white/10 bg-white/80 dark:bg-[#1C252E]/80 backdrop-blur-xl rounded-2xl mb-4 shadow-sm">
                     <div className="px-4 md:px-6 py-3 md:py-4 flex items-center justify-between gap-4">
                         {/* Mobile Menu Button */}
                         <button
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                            className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                            className="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors"
                         >
                             {isMobileMenuOpen ? (
-                                <X className="w-5 h-5 text-gray-700" />
+                                <X className="w-5 h-5 text-gray-700 dark:text-gray-300" />
                             ) : (
-                                <Menu className="w-5 h-5 text-gray-700" />
+                                <Menu className="w-5 h-5 text-gray-700 dark:text-gray-300" />
                             )}
                         </button>
 
                         {/* Title */}
                         <div className="flex-1 min-w-0">
-                            <h1 className="text-lg md:text-2xl font-bold tracking-tight text-sky-900 truncate">
+                            <h1 className="text-lg md:text-2xl font-bold tracking-tight text-sky-900 dark:text-white truncate">
                                 CV Builder
                             </h1>
-                            <p className="text-xs md:text-sm text-sky-700 invisible sm:visible block">
+                            <p className="text-xs md:text-sm text-sky-700 dark:text-sky-300 invisible sm:visible block">
                                 Tạo CV chuyên nghiệp theo chuẩn ATS
                             </p>
                         </div>
@@ -165,7 +165,7 @@ export function CVBuilderLayout({
                             className="hidden lg:block w-[280px] flex-shrink-0"
                         >
                             <div className="sticky top-28">
-                                <div id="cv-section-nav" className="bg-white/80 backdrop-blur-xl border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-3xl p-4">
+                                <div id="cv-section-nav" className="bg-white/80 dark:bg-[#1C252E]/80 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-3xl p-4">
                                     {sidebar}
                                 </div>
                             </div>
@@ -178,7 +178,7 @@ export function CVBuilderLayout({
                             transition={{ duration: 0.5, delay: 0.1 }}
                             className="flex-1 min-w-0"
                         >
-                            <div id="cv-builder-form" className="bg-white/80 backdrop-blur-xl border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl md:rounded-3xl p-4 md:p-8">
+                            <div id="cv-builder-form" className="bg-white/80 dark:bg-[#1C252E]/80 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl md:rounded-3xl p-4 md:p-8">
                                 {form}
                             </div>
                         </motion.main>
@@ -192,7 +192,7 @@ export function CVBuilderLayout({
                                 className="w-[420px] flex-shrink-0 hidden xl:block"
                             >
                                 <div className="sticky top-28">
-                                    <div id="cv-preview-panel" className="bg-white/80 backdrop-blur-2xl border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-3xl overflow-hidden flex flex-col h-[800px]">
+                                    <div id="cv-preview-panel" className="bg-white/80 dark:bg-[#1C252E]/80 backdrop-blur-2xl border border-white/60 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-3xl overflow-hidden flex flex-col h-[800px]">
                                         {/* Toolbar */}
                                         <div className="p-4 border-b border-gray-100 flex items-center justify-between bg-white/50 backdrop-blur-md z-10">
                                             <div className="flex items-center gap-3">
