@@ -38,24 +38,22 @@ function StepIndicator({ current }: { readonly current: 1 | 2 | 3 }) {
                                 ? "bg-emerald-500 text-white"
                                 : current === step.num
                                     ? "bg-sky-600 text-white shadow-lg shadow-sky-500/30"
-                                    : "bg-slate-100 text-slate-400"
-                        )}
-                    >
+                                    : "bg-[rgba(145,158,171,0.12)] dark:bg-white/[0.06] text-[#919EAB]"
+                        )}>
                         {current > step.num ? <Check className="w-4 h-4" /> : step.num}
                     </div>
                     <span
                         className={cn(
                             "text-xs font-medium hidden sm:block",
-                            current >= step.num ? "text-sky-900" : "text-slate-400"
-                        )}
-                    >
+                            current >= step.num ? "text-[#1C252E] dark:text-white" : "text-[#919EAB]"
+                        )}>
                         {step.label}
                     </span>
                     {i < steps.length - 1 && (
                         <div
                             className={cn(
                                 "w-8 h-0.5 rounded-full mx-1",
-                                current > step.num ? "bg-emerald-400" : "bg-slate-200"
+                                current > step.num ? "bg-emerald-400" : "bg-[rgba(145,158,171,0.2)] dark:bg-white/[0.1]"
                             )}
                         />
                     )}
@@ -83,22 +81,20 @@ function CVCard({
             className={cn(
                 "w-full text-left p-4 rounded-2xl border-2 transition-all duration-200 cursor-pointer",
                 selected
-                    ? "border-sky-500 bg-sky-50/80 shadow-lg shadow-sky-500/10"
-                    : "border-slate-100 bg-white hover:border-sky-200 hover:shadow-md"
-            )}
-        >
+                    ? "border-sky-500 bg-sky-50/80 dark:bg-sky-900/20 shadow-lg shadow-sky-500/10"
+                    : "border-[rgba(145,158,171,0.2)] dark:border-white/[0.08] bg-white dark:bg-[#1C252E] hover:border-sky-200 dark:hover:border-sky-700/50 hover:shadow-md"
+            )}>
             <div className="flex items-center gap-3">
                 <div
                     className={cn(
                         "w-10 h-10 rounded-xl flex items-center justify-center shrink-0",
-                        selected ? "bg-sky-500 text-white" : "bg-slate-100 text-slate-500"
-                    )}
-                >
+                        selected ? "bg-sky-500 text-white" : "bg-[rgba(145,158,171,0.1)] dark:bg-white/[0.06] text-[#919EAB]"
+                    )}>
                     <FileText className="w-5 h-5" />
                 </div>
                 <div className="flex-1 min-w-0">
-                    <h4 className="text-sm font-semibold text-sky-900 truncate">{cv.name}</h4>
-                    <p className="text-xs text-slate-400 mt-0.5">
+                    <h4 className="text-sm font-semibold text-[#1C252E] dark:text-white truncate">{cv.name}</h4>
+                    <p className="text-xs text-[#919EAB] mt-0.5">
                         {cv.templateName} • {cv.data.personalInfo.fullName}
                     </p>
                 </div>
@@ -134,19 +130,18 @@ function JobCard({
             className={cn(
                 "w-full text-left p-4 rounded-2xl border-2 transition-all duration-200 cursor-pointer",
                 selected
-                    ? "border-sky-500 bg-sky-50/80 shadow-lg shadow-sky-500/10"
-                    : "border-slate-100 bg-white hover:border-sky-200 hover:shadow-md"
-            )}
-        >
+                    ? "border-sky-500 bg-sky-50/80 dark:bg-sky-900/20 shadow-lg shadow-sky-500/10"
+                    : "border-[rgba(145,158,171,0.2)] dark:border-white/[0.08] bg-white dark:bg-[#1C252E] hover:border-sky-200 dark:hover:border-sky-700/50 hover:shadow-md"
+            )}>
             <div className="flex items-center gap-3">
                 <img
                     src={job.logoUrl}
                     alt={job.company}
-                    className="w-10 h-10 rounded-xl object-cover shrink-0 bg-slate-100"
+                    className="w-10 h-10 rounded-xl object-cover shrink-0 bg-[rgba(145,158,171,0.1)] dark:bg-white/[0.06]"
                 />
                 <div className="flex-1 min-w-0">
-                    <h4 className="text-sm font-semibold text-sky-900 truncate">{job.title}</h4>
-                    <p className="text-xs text-slate-400 mt-0.5">
+                    <h4 className="text-sm font-semibold text-[#1C252E] dark:text-white truncate">{job.title}</h4>
+                    <p className="text-xs text-[#919EAB] mt-0.5">
                         {job.company} • {job.location} • {job.level}
                     </p>
                 </div>
@@ -165,13 +160,13 @@ function JobCard({
                 {job.skills.slice(0, 4).map((skill) => (
                     <span
                         key={skill}
-                        className="px-2 py-0.5 text-[10px] font-medium bg-sky-50 text-sky-700 rounded-full"
+                        className="px-2 py-0.5 text-[10px] font-medium bg-sky-50 dark:bg-sky-900/20 text-sky-700 dark:text-sky-400 rounded-full"
                     >
                         {skill}
                     </span>
                 ))}
                 {job.skills.length > 4 && (
-                    <span className="px-2 py-0.5 text-[10px] font-medium bg-slate-50 text-slate-500 rounded-full">
+                    <span className="px-2 py-0.5 text-[10px] font-medium bg-[rgba(145,158,171,0.08)] dark:bg-white/[0.05] text-[#919EAB] rounded-full">
                         +{job.skills.length - 4}
                     </span>
                 )}
@@ -190,42 +185,42 @@ function ConfirmationStep({
 }) {
     return (
         <div className="space-y-4">
-            <div className="bg-gradient-to-br from-sky-50 to-blue-50 rounded-2xl p-5 border border-sky-100">
+            <div className="bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20 rounded-2xl p-5 border border-sky-100 dark:border-sky-800/30">
                 <p className="text-xs font-semibold text-sky-500 uppercase tracking-wider mb-3">
                     Tóm tắt phỏng vấn
                 </p>
                 <div className="space-y-3">
                     <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-lg bg-white flex items-center justify-center shadow-sm">
+                        <div className="w-9 h-9 rounded-lg bg-white dark:bg-white/[0.06] flex items-center justify-center shadow-sm">
                             <FileText className="w-4 h-4 text-sky-600" />
                         </div>
                         <div>
-                            <p className="text-xs text-slate-400">CV đã chọn</p>
-                            <p className="text-sm font-semibold text-sky-900">{cv.name}</p>
+                            <p className="text-xs text-[#919EAB]">CV đã chọn</p>
+                            <p className="text-sm font-semibold text-[#1C252E] dark:text-white">{cv.name}</p>
                         </div>
                     </div>
-                    <div className="h-px bg-sky-100" />
+                    <div className="h-px bg-sky-100 dark:bg-sky-800/30" />
                     <div className="flex items-center gap-3">
                         <img
                             src={job.logoUrl}
                             alt={job.company}
-                            className="w-9 h-9 rounded-lg object-cover bg-white shadow-sm"
+                            className="w-9 h-9 rounded-lg object-cover bg-white dark:bg-white/[0.06] shadow-sm"
                         />
                         <div>
-                            <p className="text-xs text-slate-400">Vị trí ứng tuyển</p>
-                            <p className="text-sm font-semibold text-sky-900">{job.title}</p>
-                            <p className="text-xs text-slate-500">{job.company}</p>
+                            <p className="text-xs text-[#919EAB]">Vị trí ứng tuyển</p>
+                            <p className="text-sm font-semibold text-[#1C252E] dark:text-white">{job.title}</p>
+                            <p className="text-xs text-[#637381] dark:text-[#919EAB]">{job.company}</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div className="bg-amber-50 border border-amber-100 rounded-2xl p-4">
+            <div className="bg-amber-50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-800/30 rounded-2xl p-4">
                 <div className="flex items-start gap-2.5">
                     <Sparkles className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
                     <div>
-                        <p className="text-xs font-semibold text-amber-800">AI sẽ tạo câu hỏi phỏng vấn</p>
-                        <p className="text-xs text-amber-600 mt-0.5">
+                        <p className="text-xs font-semibold text-amber-800 dark:text-amber-400">AI sẽ tạo câu hỏi phỏng vấn</p>
+                        <p className="text-xs text-amber-600 dark:text-amber-500 mt-0.5">
                             Dựa trên CV và yêu cầu công việc, AI sẽ đặt các câu hỏi phù hợp với vị trí {job.level} tại {job.company}.
                         </p>
                     </div>
@@ -291,10 +286,10 @@ export default function InterviewSetupPage() {
                     <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-sky-500 to-blue-600 flex items-center justify-center mx-auto mb-3 shadow-lg shadow-sky-500/20">
                         <BrainCircuit className="w-6 h-6 text-white" />
                     </div>
-                    <h1 className="text-xl font-bold text-sky-900">
+                    <h1 className="text-xl font-bold text-[#1C252E] dark:text-white">
                         Phỏng vấn thử với AI
                     </h1>
-                    <p className="text-sm text-slate-500 mt-1">
+                    <p className="text-sm text-[#637381] dark:text-[#919EAB] mt-1">
                         Chọn CV và vị trí để bắt đầu buổi phỏng vấn mô phỏng
                     </p>
                 </motion.div>
@@ -314,7 +309,7 @@ export default function InterviewSetupPage() {
                         >
                             <div className="flex items-center gap-2 mb-4">
                                 <FileText className="w-4 h-4 text-sky-600" />
-                                <h2 className="text-sm font-bold text-sky-900">Chọn CV của bạn</h2>
+                                <h2 className="text-sm font-bold text-[#1C252E] dark:text-white">Chọn CV của bạn</h2>
                             </div>
                             <div className="space-y-3">
                                 {mockCVVersions.map((cv) => (
@@ -339,7 +334,7 @@ export default function InterviewSetupPage() {
                         >
                             <div className="flex items-center gap-2 mb-4">
                                 <Briefcase className="w-4 h-4 text-sky-600" />
-                                <h2 className="text-sm font-bold text-sky-900">Chọn vị trí phỏng vấn</h2>
+                                <h2 className="text-sm font-bold text-[#1C252E] dark:text-white">Chọn vị trí phỏng vấn</h2>
                             </div>
 
                             {/* Search */}
@@ -382,7 +377,7 @@ export default function InterviewSetupPage() {
                         >
                             <div className="flex items-center gap-2 mb-4">
                                 <Sparkles className="w-4 h-4 text-sky-600" />
-                                <h2 className="text-sm font-bold text-sky-900">Xác nhận & bắt đầu</h2>
+                                <h2 className="text-sm font-bold text-[#1C252E] dark:text-white">Xác nhận & bắt đầu</h2>
                             </div>
                             <ConfirmationStep cv={selectedCV} job={selectedJob} />
                         </motion.div>
@@ -400,7 +395,7 @@ export default function InterviewSetupPage() {
                         <Button
                             variant="ghost"
                             onClick={handleBack}
-                            className="text-sm text-slate-500 hover:text-sky-700 rounded-full cursor-pointer"
+                            className="text-sm text-[#637381] dark:text-[#919EAB] hover:text-sky-700 rounded-full cursor-pointer"
                         >
                             ← Quay lại
                         </Button>

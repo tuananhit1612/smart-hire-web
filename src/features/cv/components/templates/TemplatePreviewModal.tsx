@@ -51,9 +51,9 @@ export function TemplatePreviewModal({ template, isOpen, onClose, onSelect }: Te
                         transition={{ type: "spring", duration: 0.5 }}
                         className="fixed inset-4 md:inset-10 z-50 flex items-center justify-center"
                     >
-                        <div className="relative w-full max-w-5xl h-full max-h-[90vh] bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col">
+                        <div className="relative w-full max-w-5xl h-full max-h-[90vh] bg-white dark:bg-[#1C252E] rounded-3xl shadow-2xl dark:shadow-black/50 overflow-hidden flex flex-col border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08]">
                             {/* Header */}
-                            <div className="flex items-center justify-between p-4 md:p-6 border-b border-gray-200">
+                            <div className="flex items-center justify-between p-4 md:p-6 border-b border-[rgba(145,158,171,0.12)] dark:border-white/[0.08]">
                                 <div className="flex items-center gap-4">
                                     <div
                                         className="w-10 h-10 rounded-xl flex items-center justify-center"
@@ -65,10 +65,10 @@ export function TemplatePreviewModal({ template, isOpen, onClose, onSelect }: Te
                                         />
                                     </div>
                                     <div>
-                                        <h2 className="text-lg md:text-xl font-bold text-gray-900">
+                                        <h2 className="text-lg md:text-xl font-bold text-[#1C252E] dark:text-white">
                                             {template.name}
                                         </h2>
-                                        <p className="text-sm text-gray-500">
+                                        <p className="text-sm text-[#637381] dark:text-[#919EAB]">
                                             {template.description}
                                         </p>
                                     </div>
@@ -76,14 +76,14 @@ export function TemplatePreviewModal({ template, isOpen, onClose, onSelect }: Te
 
                                 <button
                                     onClick={onClose}
-                                    className="p-2 rounded-xl hover:bg-gray-100 transition-colors"
+                                    className="p-2 rounded-xl hover:bg-[rgba(145,158,171,0.08)] dark:hover:bg-white/[0.06] transition-colors"
                                 >
-                                    <X className="w-5 h-5 text-gray-500" />
+                                    <X className="w-5 h-5 text-[#919EAB]" />
                                 </button>
                             </div>
 
                             {/* Preview content */}
-                            <div className="flex-1 overflow-auto p-4 md:p-8 bg-gray-100">
+                            <div className="flex-1 overflow-auto p-4 md:p-8 bg-[#F4F6F8] dark:bg-[#161C24]">
                                 <div className="max-w-3xl mx-auto">
                                     {/* CV Preview - A4 ratio with dynamic component */}
                                     <div className="bg-white rounded-xl shadow-xl overflow-hidden min-h-[800px] origin-top">
@@ -99,12 +99,12 @@ export function TemplatePreviewModal({ template, isOpen, onClose, onSelect }: Te
                             </div>
 
                             {/* Footer */}
-                            <div className="flex items-center justify-between p-4 md:p-6 border-t border-gray-200 bg-white">
+                            <div className="flex items-center justify-between p-4 md:p-6 border-t border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] bg-white dark:bg-[#1C252E]">
                                 <div className="flex flex-wrap gap-2">
                                     {template.features.map((feature) => (
                                         <span
                                             key={feature}
-                                            className="px-3 py-1 rounded-full bg-gray-100 text-xs font-medium text-gray-600"
+                                            className="px-3 py-1 rounded-full bg-[rgba(145,158,171,0.1)] dark:bg-white/[0.06] text-xs font-medium text-[#637381] dark:text-[#919EAB]"
                                         >
                                             {feature}
                                         </span>

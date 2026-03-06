@@ -11,9 +11,9 @@ interface NotificationFiltersProps {
 }
 
 const FILTERS: { key: NotificationFilter; label: string }[] = [
-    { key: "all", label: "Tất cả" },
+    { key: "all",    label: "Tất cả" },
     { key: "unread", label: "Chưa đọc" },
-    { key: "read", label: "Đã đọc" },
+    { key: "read",   label: "Đã đọc" },
 ];
 
 export function NotificationFilters({ activeFilter, onFilterChange, unreadCount }: NotificationFiltersProps) {
@@ -27,7 +27,7 @@ export function NotificationFilters({ activeFilter, onFilterChange, unreadCount 
                         "relative px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 cursor-pointer",
                         activeFilter === f.key
                             ? "bg-sky-600 text-white shadow-md shadow-sky-600/25"
-                            : "bg-white text-slate-600 border border-slate-200 hover:border-sky-300 hover:text-sky-700"
+                            : "bg-white dark:bg-[#1C252E] text-[#637381] dark:text-[#919EAB] border border-[rgba(145,158,171,0.2)] dark:border-white/[0.08] hover:border-sky-300 dark:hover:border-sky-600 hover:text-sky-700 dark:hover:text-sky-400"
                     )}
                 >
                     {f.label}

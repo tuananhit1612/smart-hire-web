@@ -15,7 +15,7 @@ export function AnimatedCounter({
     value,
     suffix = "",
     prefix = "",
-    duration = 2,
+    duration = 0.6,
     className = "",
 }: AnimatedCounterProps) {
     const [count, setCount] = React.useState(0);
@@ -135,7 +135,7 @@ export function BentoItem({
                 delay,
                 ease: "easeOut",
             }}
-            className={`relative overflow-hidden rounded-3xl bg-white/70 backdrop-blur-xl border border-white/50 shadow-xl hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.01] transition-all duration-200 ${className}`}
+            className={`relative overflow-hidden rounded-3xl bg-white/70 dark:bg-[#1C252E] backdrop-blur-xl border border-white/50 dark:border-white/[0.08] shadow-xl hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.01] transition-all duration-200 ${className}`}
         >
             {children}
         </motion.div>

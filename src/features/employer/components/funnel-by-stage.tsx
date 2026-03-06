@@ -26,11 +26,11 @@ export interface FunnelStage {
 }
 
 export const defaultFunnelStages: FunnelStage[] = [
-    { id: "applied", label: "Ứng tuyển", count: 1284, icon: Users, color: "text-sky-600", bg: "bg-sky-50", barColor: "bg-sky-500" },
-    { id: "screened", label: "Sàng lọc", count: 642, icon: FileSearch, color: "text-violet-600", bg: "bg-violet-50", barColor: "bg-violet-500" },
-    { id: "interview", label: "Phỏng vấn", count: 198, icon: Video, color: "text-amber-600", bg: "bg-amber-50", barColor: "bg-amber-500" },
-    { id: "offer", label: "Offer", count: 45, icon: Gift, color: "text-emerald-600", bg: "bg-emerald-50", barColor: "bg-emerald-500" },
-    { id: "hired", label: "Tuyển dụng", count: 32, icon: UserCheck, color: "text-rose-600", bg: "bg-rose-50", barColor: "bg-rose-500" },
+    { id: "applied", label: "Ứng tuyển", count: 1284, icon: Users, color: "text-sky-600", bg: "bg-sky-50 dark:bg-sky-900/20", barColor: "bg-sky-500" },
+    { id: "screened", label: "Sàng lọc", count: 642, icon: FileSearch, color: "text-violet-600", bg: "bg-violet-50 dark:bg-violet-900/20", barColor: "bg-violet-500" },
+    { id: "interview", label: "Phỏng vấn", count: 198, icon: Video, color: "text-amber-600", bg: "bg-amber-50 dark:bg-amber-900/20", barColor: "bg-amber-500" },
+    { id: "offer", label: "Offer", count: 45, icon: Gift, color: "text-emerald-600", bg: "bg-emerald-50 dark:bg-emerald-900/20", barColor: "bg-emerald-500" },
+    { id: "hired", label: "Tuyển dụng", count: 32, icon: UserCheck, color: "text-rose-600", bg: "bg-rose-50 dark:bg-rose-900/20", barColor: "bg-rose-500" },
 ];
 
 // ─── Conversion Arrow ────────────────────────────────
@@ -45,10 +45,10 @@ function ConversionArrow({ from, to, delay }: { readonly from: number; readonly 
             transition={{ delay }}
             className="flex flex-col items-center gap-0.5 py-1"
         >
-            <ArrowDown className="w-4 h-4 text-slate-300" />
+            <ArrowDown className="w-4 h-4 text-[#C4CDD5] dark:text-[#637381]" />
             <div className={cn(
                 "flex items-center gap-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full",
-                isGood ? "bg-emerald-50 text-emerald-600" : "bg-amber-50 text-amber-600"
+                isGood ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400" : "bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400"
             )}>
                 {isGood ? <TrendingUp className="w-2.5 h-2.5" /> : <TrendingDown className="w-2.5 h-2.5" />}
                 {rate}%
@@ -68,11 +68,11 @@ export default function FunnelByStage({
     const maxCount = Math.max(...stages.map((s) => s.count));
 
     return (
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+        <div className="bg-white dark:bg-[#1C252E] rounded-2xl border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] shadow-sm p-5">
             {/* Header */}
             <div className="flex items-center justify-between mb-5">
-                <h3 className="text-sm font-bold text-sky-900">{title}</h3>
-                <span className="text-xs text-slate-400">
+                <h3 className="text-sm font-bold text-[#1C252E] dark:text-white">{title}</h3>
+                <span className="text-xs text-[#919EAB]">
                     Tổng: {fmtNumber(stages[0]?.count ?? 0)} → {fmtNumber(stages[stages.length - 1]?.count ?? 0)}
                 </span>
             </div>
@@ -110,19 +110,19 @@ export default function FunnelByStage({
                                 {/* Bar + Info */}
                                 <div className="flex-1 min-w-0">
                                     <div className="flex items-center justify-between mb-1">
-                                        <span className="text-xs font-semibold text-slate-700">{stage.label}</span>
+                                        <span className="text-xs font-semibold text-[#1C252E] dark:text-white">{stage.label}</span>
                                         <div className="flex items-center gap-2">
                                             {dropOff > 0 && (
-                                                <span className="text-[10px] text-slate-300">
+                                                <span className="text-[10px] text-[#C4CDD5] dark:text-[#637381]">
                                                     -{fmtNumber(dropOff)}
                                                 </span>
                                             )}
-                                            <span className="text-sm font-bold text-sky-900">
+                                            <span className="text-sm font-bold text-[#1C252E] dark:text-white">
                                                 {fmtNumber(stage.count)}
                                             </span>
                                         </div>
                                     </div>
-                                    <div className="h-3 bg-slate-100 rounded-full overflow-hidden">
+                                    <div className="h-3 bg-[rgba(145,158,171,0.12)] dark:bg-white/[0.06] rounded-full overflow-hidden">
                                         <motion.div
                                             initial={{ width: 0 }}
                                             animate={{ width: `${barWidth}%` }}
@@ -142,26 +142,25 @@ export default function FunnelByStage({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.8 }}
-                className="mt-5 pt-4 border-t border-slate-100"
-            >
+                className="mt-5 pt-4 border-t border-[rgba(145,158,171,0.12)] dark:border-white/[0.08]">
                 <div className="grid grid-cols-3 gap-3 text-center">
                     <div>
-                        <p className="text-lg font-bold text-sky-900">
+                        <p className="text-lg font-bold text-[#1C252E] dark:text-white">
                             {stages.length > 0 ? Math.round((stages[stages.length - 1].count / stages[0].count) * 100) : 0}%
                         </p>
-                        <p className="text-[10px] text-slate-400">Tỉ lệ tuyển</p>
+                        <p className="text-[10px] text-[#919EAB]">Tỉ lệ tuyển</p>
                     </div>
                     <div>
-                        <p className="text-lg font-bold text-sky-900">
+                        <p className="text-lg font-bold text-[#1C252E] dark:text-white">
                             {stages.length > 1 ? Math.round((stages[1].count / stages[0].count) * 100) : 0}%
                         </p>
-                        <p className="text-[10px] text-slate-400">Qua sàng lọc</p>
+                        <p className="text-[10px] text-[#919EAB]">Qua sàng lọc</p>
                     </div>
                     <div>
-                        <p className="text-lg font-bold text-sky-900">
+                        <p className="text-lg font-bold text-[#1C252E] dark:text-white">
                             {stages.length > 3 ? Math.round((stages[stages.length - 1].count / stages[stages.length - 2].count) * 100) : 0}%
                         </p>
-                        <p className="text-[10px] text-slate-400">Accept offer</p>
+                        <p className="text-[10px] text-[#919EAB]">Accept offer</p>
                     </div>
                 </div>
             </motion.div>

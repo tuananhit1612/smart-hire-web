@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
+import { motion } from "framer-motion";
 import {
     MapPin,
     Globe,
@@ -40,28 +40,6 @@ export function CompanyHeaderPremium({ company, onUpdate, editable = true }: Com
         name: company.name,
         tagline: company.tagline || "",
     });
-
-    // 3D tilt effect
-    const x = useMotionValue(0);
-    const y = useMotionValue(0);
-    const rotateX = useTransform(y, [-100, 100], [3, -3]);
-    const rotateY = useTransform(x, [-100, 100], [-3, 3]);
-    // Faster return with higher stiffness and damping
-    const springRotateX = useSpring(rotateX, { stiffness: 300, damping: 20, restDelta: 0.001 });
-    const springRotateY = useSpring(rotateY, { stiffness: 300, damping: 20, restDelta: 0.001 });
-
-    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        x.set(e.clientX - centerX);
-        y.set(e.clientY - centerY);
-    };
-
-    const handleMouseLeave = () => {
-        x.set(0);
-        y.set(0);
-    };
 
     const handleQuickSave = () => {
         onUpdate?.({
@@ -116,19 +94,10 @@ export function CompanyHeaderPremium({ company, onUpdate, editable = true }: Com
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                style={{
-                    perspective: 1000,
-                }}
-                onMouseMove={handleMouseMove}
-                onMouseLeave={handleMouseLeave}
                 className="relative"
             >
-                <motion.div
-                    style={{
-                        rotateX: springRotateX,
-                        rotateY: springRotateY,
-                    }}
-                    className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-white/90 via-white/80 to-sky-50/90 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-sky-900/10"
+                <div
+                    className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-white/90 via-white/80 to-sky-50/90 dark:from-[#1C252E] dark:via-[#1C252E] dark:to-[#1C252E] backdrop-blur-2xl border border-white/60 dark:border-white/[0.08] shadow-2xl shadow-sky-900/10"
                 >
                     {/* Animated gradient border */}
                     <div className="absolute inset-0 rounded-[2rem] p-[1px] bg-gradient-to-r from-sky-400/30 via-green-400/30 to-sky-400/30 animate-pulse" />
@@ -136,10 +105,7 @@ export function CompanyHeaderPremium({ company, onUpdate, editable = true }: Com
                     {/* Cover Image with Parallax */}
                     <div className="h-56 sm:h-64 relative overflow-hidden">
                         {company.coverUrl ? (
-                            <motion.img
-                                initial={{ scale: 1.1 }}
-                                animate={{ scale: 1 }}
-                                transition={{ duration: 1.5 }}
+                            <img
                                 src={company.coverUrl}
                                 alt="Company Cover"
                                 className="w-full h-full object-cover"
@@ -434,7 +400,7 @@ export function CompanyHeaderPremium({ company, onUpdate, editable = true }: Com
                             </motion.div>
                         </div>
                     </div>
-                </motion.div>
+                </div>
             </motion.div>
 
             {/* Cover Upload Modal */}

@@ -69,9 +69,7 @@ export function CompanyProfileViewPremium() {
     };
 
     return (
-        <div className="relative w-full overflow-hidden bg-gradient-to-br from-sky-50/50 via-white to-green-50/30">
-            {/* Floating Background Elements */}
-            <FloatingElements />
+        <div className="relative w-full bg-gradient-to-br from-sky-50/50 via-white to-green-50/30 dark:from-[#141A21] dark:via-[#141A21] dark:to-[#141A21] -m-6 px-6 pb-16">
 
             {/* Content */}
             <motion.div
@@ -90,13 +88,13 @@ export function CompanyProfileViewPremium() {
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
-                        className="inline-flex items-center gap-2 px-4 py-1.5 bg-sky-100 rounded-full text-sky-700 text-sm font-medium mb-4"
+                        className="inline-flex items-center gap-2 px-4 py-1.5 bg-sky-100 dark:bg-sky-900/30 rounded-full text-sky-700 dark:text-sky-400 text-sm font-medium mb-4"
                     >
                         <Zap className="w-4 h-4" />
                         Hồ sơ công ty được xác minh
                     </motion.div>
                     <h1 className="text-4xl sm:text-5xl font-bold">
-                        <span className="text-sky-900">Hồ sơ </span>
+                        <span className="text-[#1C252E] dark:text-white">Hồ sơ </span>
                         <span className="relative">
                             <span className="bg-gradient-to-r from-sky-600 via-blue-600 to-sky-600 bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient">
                                 Công ty
@@ -117,7 +115,7 @@ export function CompanyProfileViewPremium() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.3 }}
-                        className="text-sky-600 mt-3 text-lg"
+                        className="text-sky-600 dark:text-[#C4CDD5] mt-3 text-lg"
                     >
                         Thu hút nhân tài với thương hiệu nhà tuyển dụng độc đáo
                     </motion.p>
@@ -140,7 +138,7 @@ export function CompanyProfileViewPremium() {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.6 + index * 0.1 }}
                             whileHover={{ scale: 1.03, y: -5 }}
-                            className="group relative p-5 bg-white/80 backdrop-blur-xl rounded-2xl border border-white/50 shadow-lg hover:shadow-xl transition-all overflow-hidden"
+                            className="group relative p-5 bg-white/80 dark:bg-[#1C252E] backdrop-blur-xl rounded-2xl border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] shadow-lg hover:shadow-xl transition-all overflow-hidden"
                         >
                             {/* Background gradient on hover */}
                             <div
@@ -153,8 +151,8 @@ export function CompanyProfileViewPremium() {
                                     {highlight.icon}
                                 </div>
                                 <div>
-                                    <h3 className="font-semibold text-sky-900">{highlight.title}</h3>
-                                    <p className="text-sm text-sky-600">{highlight.description}</p>
+                                    <h3 className="font-semibold text-[#1C252E] dark:text-white">{highlight.title}</h3>
+                                    <p className="text-sm text-[#637381] dark:text-[#919EAB]">{highlight.description}</p>
                                 </div>
                             </div>
                         </motion.div>
@@ -208,7 +206,7 @@ export function CompanyProfileViewPremium() {
                     {/* Quick Actions Card */}
                     <BentoItem className="lg:col-span-4" delay={0.6}>
                         <div className="p-6 h-full flex flex-col">
-                            <h3 className="text-lg font-bold text-sky-900 mb-4 flex items-center gap-2">
+                            <h3 className="text-lg font-bold text-[#1C252E] dark:text-white mb-4 flex items-center gap-2">
                                 <Target className="w-5 h-5 text-sky-500" />
                                 Hành động nhanh
                             </h3>
@@ -301,12 +299,12 @@ function QuickActionButton({
         <motion.button
             whileHover={{ scale: 1.02, x: 5 }}
             whileTap={{ scale: 0.98 }}
-            className="w-full p-4 bg-sky-50 hover:bg-sky-100 rounded-xl text-left transition-all group border border-sky-100 hover:border-sky-200"
+            className="w-full p-4 bg-sky-50 dark:bg-white/[0.04] hover:bg-sky-100 dark:hover:bg-white/[0.06] rounded-xl text-left transition-all group border border-sky-100 dark:border-white/[0.08] hover:border-sky-200 dark:hover:border-white/[0.12]"
         >
             <div className="flex items-center justify-between">
                 <div>
-                    <h4 className="font-semibold text-sky-900">{label}</h4>
-                    <p className="text-sm text-sky-600">{description}</p>
+                    <h4 className="font-semibold text-[#1C252E] dark:text-white">{label}</h4>
+                    <p className="text-sm text-[#637381] dark:text-[#919EAB]">{description}</p>
                 </div>
                 <div
                     className={`w-8 h-8 rounded-lg bg-gradient-to-br ${gradient} flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity`}

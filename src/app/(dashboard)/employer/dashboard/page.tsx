@@ -116,9 +116,9 @@ const topJobs: TopJob[] = [
 ];
 
 const STATUS_BADGE: Record<string, { label: string; color: string }> = {
-    hot: { label: "Hot", color: "bg-rose-100 text-rose-700" },
-    active: { label: "Active", color: "bg-emerald-100 text-emerald-700" },
-    closing: { label: "Closing", color: "bg-amber-100 text-amber-700" },
+    hot: { label: "Hot", color: "bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400" },
+    active: { label: "Active", color: "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400" },
+    closing: { label: "Closing", color: "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400" },
 };
 
 // ─── Chart Placeholder ──────────────────────────────
@@ -138,16 +138,16 @@ function ChartPlaceholder({
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                     <Icon className="w-5 h-5 text-primary" />
-                    <h3 className="text-sm font-bold text-slate-900">{title}</h3>
+                    <h3 className="text-sm font-bold text-[#1C252E] dark:text-white">{title}</h3>
                 </div>
-                <button className="text-xs text-slate-400 hover:text-primary transition-colors cursor-pointer">
+                <button className="text-xs text-[#919EAB] hover:text-primary transition-colors cursor-pointer">
                     Xem chi tiết →
                 </button>
             </div>
-            <div className={cn("rounded-xl bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col items-center justify-center gap-2 border border-dashed border-slate-200", height)}>
-                <Icon className="w-10 h-10 text-slate-300" />
-                <p className="text-sm text-slate-400 font-medium">{description}</p>
-                <p className="text-[10px] text-slate-300">Tích hợp biểu đồ khi có API</p>
+            <div className={cn("rounded-xl bg-gradient-to-br from-[rgba(145,158,171,0.04)] to-[rgba(145,158,171,0.08)] dark:from-white/[0.03] dark:to-white/[0.06] flex flex-col items-center justify-center gap-2 border border-dashed border-[rgba(145,158,171,0.2)] dark:border-white/[0.08]", height)}>
+                <Icon className="w-10 h-10 text-[#C4CDD5] dark:text-[#637381]" />
+                <p className="text-sm text-[#919EAB] font-medium">{description}</p>
+                <p className="text-[10px] text-[#C4CDD5] dark:text-[#637381]">Tích hợp biểu đồ khi có API</p>
             </div>
         </div>
     );
@@ -182,8 +182,8 @@ export default function HRDashboardPage() {
                     animate={{ opacity: 1, y: 0 }}
                     className="mb-8"
                 >
-                    <h1 className="text-2xl font-bold text-slate-900">HR Dashboard</h1>
-                    <p className="text-sm text-slate-500 mt-1">Tổng quan tuyển dụng — Tháng 2, 2026</p>
+                    <h1 className="text-2xl font-bold text-[#1C252E] dark:text-white">HR Dashboard</h1>
+                    <p className="text-sm text-[#637381] dark:text-[#919EAB] mt-1">Tổng quan tuyển dụng — Tháng 2, 2026</p>
                 </motion.div>
 
                 {/* Stat Cards */}
@@ -204,14 +204,14 @@ export default function HRDashboardPage() {
                                     </div>
                                     <div className={cn(
                                         "flex items-center gap-0.5 text-xs font-semibold px-2 py-0.5 rounded-full",
-                                        card.trend === "up" ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
+                                        card.trend === "up" ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400" : "bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400"
                                     )}>
                                         {card.trend === "up" ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
                                         {card.change}
                                     </div>
                                 </div>
-                                <h3 className="text-2xl font-black text-slate-900">{card.value}</h3>
-                                <p className="text-xs text-slate-400 mt-0.5">{card.label}</p>
+                                <h3 className="text-2xl font-black text-[#1C252E] dark:text-white">{card.value}</h3>
+                                <p className="text-xs text-[#919EAB] mt-0.5">{card.label}</p>
                             </motion.div>
                         );
                     })}
@@ -229,9 +229,9 @@ export default function HRDashboardPage() {
                         <div className="flex items-center justify-between mb-4">
                             <div className="flex items-center gap-2">
                                 <BarChart3 className="w-5 h-5 text-primary" />
-                                <h3 className="text-sm font-bold text-slate-900">Ứng viên theo tuần</h3>
+                                <h3 className="text-sm font-bold text-[#1C252E] dark:text-white">Ứng viên theo tuần</h3>
                             </div>
-                            <span className="text-xs text-slate-400">8 tuần gần nhất</span>
+                            <span className="text-xs text-[#919EAB]">8 tuần gần nhất</span>
                         </div>
                         <div className="flex items-end justify-between px-2">
                             <MiniBar
@@ -239,8 +239,8 @@ export default function HRDashboardPage() {
                                 colors={["bg-sky-300", "bg-sky-400", "bg-sky-500", "bg-sky-400"]}
                             />
                             <div className="text-right ml-4">
-                                <p className="text-2xl font-black text-slate-900">85</p>
-                                <p className="text-[10px] text-slate-400">tuần này</p>
+                                <p className="text-2xl font-black text-[#1C252E] dark:text-white">85</p>
+                                <p className="text-[10px] text-[#919EAB]">tuần này</p>
                                 <div className="flex items-center gap-0.5 text-xs text-emerald-600 font-semibold mt-1">
                                     <TrendingUp className="w-3 h-3" />
                                     +26.8%
@@ -249,7 +249,7 @@ export default function HRDashboardPage() {
                         </div>
                         <div className="flex justify-between mt-3 px-1">
                             {["T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8"].map((l) => (
-                                <span key={l} className="text-[10px] text-slate-300 w-3 text-center">{l}</span>
+                                <span key={l} className="text-[10px] text-[#C4CDD5] dark:text-[#637381] w-3 text-center">{l}</span>
                             ))}
                         </div>
                     </motion.div>
@@ -276,9 +276,9 @@ export default function HRDashboardPage() {
                         <div className="flex items-center justify-between mb-4">
                             <div className="flex items-center gap-2">
                                 <Star className="w-5 h-5 text-amber-500" />
-                                <h3 className="text-sm font-bold text-slate-900">Top tin tuyển dụng</h3>
+                                <h3 className="text-sm font-bold text-[#1C252E] dark:text-white">Top tin tuyển dụng</h3>
                             </div>
-                            <button className="text-xs text-slate-400 hover:text-primary transition-colors cursor-pointer">
+                            <button className="text-xs text-[#919EAB] hover:text-primary transition-colors cursor-pointer">
                                 Xem tất cả →
                             </button>
                         </div>
@@ -291,18 +291,18 @@ export default function HRDashboardPage() {
                                         initial={{ opacity: 0, x: -10 }}
                                         animate={{ opacity: 1, x: 0 }}
                                         transition={{ delay: 0.4 + i * 0.06 }}
-                                        className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors group cursor-pointer"
+                                        className="flex items-center gap-3 p-3 rounded-xl hover:bg-[rgba(145,158,171,0.06)] dark:hover:bg-white/[0.04] transition-colors group cursor-pointer"
                                     >
-                                        <span className="text-sm font-bold text-slate-300 w-5">{i + 1}</span>
+                                        <span className="text-sm font-bold text-[#C4CDD5] dark:text-[#637381] w-5">{i + 1}</span>
                                         <div className="flex-1 min-w-0">
-                                            <p className="text-sm font-semibold text-slate-900 truncate group-hover:text-primary transition-colors">
+                                            <p className="text-sm font-semibold text-[#1C252E] dark:text-white truncate group-hover:text-primary transition-colors">
                                                 {job.title}
                                             </p>
                                             <div className="flex items-center gap-3 mt-0.5">
-                                                <span className="text-xs text-slate-400 flex items-center gap-1">
+                                                <span className="text-xs text-[#919EAB] flex items-center gap-1">
                                                     <Users className="w-3 h-3" /> {job.applicants}
                                                 </span>
-                                                <span className="text-xs text-slate-400 flex items-center gap-1">
+                                                <span className="text-xs text-[#919EAB] flex items-center gap-1">
                                                     <Eye className="w-3 h-3" /> {job.views}
                                                 </span>
                                             </div>
@@ -310,7 +310,7 @@ export default function HRDashboardPage() {
                                         <span className={cn("text-[10px] font-bold px-2 py-0.5 rounded-full", badge?.color)}>
                                             {badge?.label}
                                         </span>
-                                        <ArrowUpRight className="w-4 h-4 text-slate-300 group-hover:text-sky-500 transition-colors" />
+                                        <ArrowUpRight className="w-4 h-4 text-[#C4CDD5] dark:text-[#637381] group-hover:text-sky-500 transition-colors" />
                                     </motion.div>
                                 );
                             })}
@@ -326,7 +326,7 @@ export default function HRDashboardPage() {
                     >
                         <div className="flex items-center gap-2 mb-4">
                             <Activity className="w-5 h-5 text-primary" />
-                            <h3 className="text-sm font-bold text-slate-900">Hoạt động gần đây</h3>
+                            <h3 className="text-sm font-bold text-[#1C252E] dark:text-white">Hoạt động gần đây</h3>
                         </div>
                         <div className="space-y-3 max-h-[340px] overflow-y-auto pr-1">
                             {recentActivities.map((act, i) => {
@@ -342,13 +342,13 @@ export default function HRDashboardPage() {
                                         <div className="mt-1.5 relative">
                                             <div className={cn("w-2.5 h-2.5 rounded-full", colors?.dot)} />
                                             {i < recentActivities.length - 1 && (
-                                                <div className="absolute top-3 left-1 w-px h-6 bg-slate-100" />
+                                                <div className="absolute top-3 left-1 w-px h-6 bg-[rgba(145,158,171,0.15)] dark:bg-white/[0.06]" />
                                             )}
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <p className="text-xs font-semibold text-slate-900">{act.action}</p>
-                                            <p className="text-xs text-slate-500 truncate">{act.subject}</p>
-                                            <p className="text-[10px] text-slate-300 mt-0.5 flex items-center gap-1">
+                                            <p className="text-xs font-semibold text-[#1C252E] dark:text-white">{act.action}</p>
+                                            <p className="text-xs text-[#637381] dark:text-[#919EAB] truncate">{act.subject}</p>
+                                            <p className="text-[10px] text-[#C4CDD5] dark:text-[#637381] mt-0.5 flex items-center gap-1">
                                                 <Clock className="w-2.5 h-2.5" /> {act.time}
                                             </p>
                                         </div>

@@ -45,8 +45,8 @@ export function SortDropdown({ value, onChange }: SortDropdownProps) {
                 onClick={() => setIsOpen(!isOpen)}
                 className={cn(
                     "flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300",
-                    "bg-white border border-gray-200",
-                    "hover:border-sky-300 hover:shadow-md",
+                    "bg-white dark:bg-[#1C252E] border border-[rgba(145,158,171,0.2)] dark:border-white/[0.08]",
+                    "hover:border-sky-300 dark:hover:border-sky-600 hover:shadow-md",
                     isOpen && "border-sky-500 ring-4 ring-sky-500/10 shadow-lg"
                 )}
             >
@@ -56,12 +56,12 @@ export function SortDropdown({ value, onChange }: SortDropdownProps) {
                 >
                     <CurrentIcon className={cn("w-4 h-4", currentOption.color)} />
                 </motion.div>
-                <span className="text-gray-700">{currentOption.label}</span>
+                <span className="text-[#637381] dark:text-[#919EAB]">{currentOption.label}</span>
                 <motion.div
                     animate={{ rotate: isOpen ? 180 : 0 }}
                     transition={{ duration: 0.2 }}
                 >
-                    <ChevronDown className="w-4 h-4 text-gray-400" />
+                    <ChevronDown className="w-4 h-4 text-[#919EAB]" />
                 </motion.div>
             </motion.button>
 
@@ -73,7 +73,7 @@ export function SortDropdown({ value, onChange }: SortDropdownProps) {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -10, scale: 0.95 }}
                         transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                        className="absolute right-0 top-full mt-2 w-52 py-2 bg-white rounded-xl border border-gray-200 shadow-2xl z-50 overflow-hidden"
+                        className="absolute right-0 top-full mt-2 w-52 py-2 bg-white dark:bg-[#1C252E] rounded-xl border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] shadow-2xl dark:shadow-black/40 z-50 overflow-hidden"
                     >
                         {/* Decorative gradient line */}
                         <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-sky-500 via-blue-500 to-emerald-500" />
@@ -96,8 +96,8 @@ export function SortDropdown({ value, onChange }: SortDropdownProps) {
                                     className={cn(
                                         "w-full flex items-center gap-3 px-4 py-3 text-sm transition-all duration-200",
                                         isSelected
-                                            ? "bg-gradient-to-r from-sky-50 to-emerald-50"
-                                            : "hover:bg-gray-50"
+                                            ? "bg-gradient-to-r from-sky-50 dark:from-sky-900/20 to-emerald-50 dark:to-emerald-900/20"
+                                            : "hover:bg-[rgba(145,158,171,0.06)] dark:hover:bg-white/[0.04]"
                                     )}
                                 >
                                     <motion.div
@@ -109,8 +109,8 @@ export function SortDropdown({ value, onChange }: SortDropdownProps) {
                                     <span className={cn(
                                         "flex-1 text-left",
                                         isSelected
-                                            ? "font-semibold text-sky-600"
-                                            : "text-gray-700"
+                                            ? "font-semibold text-sky-600 dark:text-sky-400"
+                                            : "text-[#637381] dark:text-[#919EAB]"
                                     )}>
                                         {option.label}
                                     </span>

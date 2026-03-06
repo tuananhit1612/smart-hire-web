@@ -311,6 +311,20 @@ h1, h2, h3, h4, h5, h6 {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* Clean Card - SmartHire Dashboard Card */
+.clean-card {
+  background-color: #ffffff;
+  border: 1px solid rgba(145, 158, 171, 0.12);
+  border-radius: 1rem;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.04);
+}
+
+.dark .clean-card {
+  background-color: #1C252E;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
+}
+
 /* ============================================
    BUTTONS - Design System Style
    ============================================ */

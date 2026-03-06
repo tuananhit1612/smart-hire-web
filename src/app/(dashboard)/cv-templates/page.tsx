@@ -36,7 +36,7 @@ export default function CVTemplatesPage() {
     };
 
     return (
-        <div className="w-full relative overflow-hidden bg-white">
+        <div className="w-full relative overflow-hidden bg-white dark:bg-[#141A21]">
             {/* Animated Background - Particle Theme */}
             <ParticleBackground />
 
@@ -53,22 +53,22 @@ export default function CVTemplatesPage() {
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 0.1 }}
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-sky-50 border border-sky-100 mb-4"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-sky-50 dark:bg-sky-900/30 border border-sky-100 dark:border-sky-800/50 mb-4"
                     >
-                        <Sparkles className="w-4 h-4 text-sky-500" />
-                        <span className="text-sm font-medium text-sky-600">
+                        <Sparkles className="w-4 h-4 text-sky-500 dark:text-sky-400" />
+                        <span className="text-sm font-medium text-sky-600 dark:text-sky-300">
                             Thư viện mẫu CV
                         </span>
                     </motion.div>
 
                     {/* Title */}
-                    <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-gray-900 mb-3">
+                    <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-[#1C252E] dark:text-white mb-3">
                         Chọn mẫu CV
                         <span className="bg-gradient-to-r from-sky-500 via-blue-500 to-emerald-500 bg-clip-text text-transparent">
                             {" "}phù hợp với bạn
                         </span>
                     </h1>
-                    <p className="text-gray-500 text-base md:text-lg max-w-2xl mx-auto">
+                    <p className="text-[#637381] dark:text-[#919EAB] text-base md:text-lg max-w-2xl mx-auto">
                         Khám phá bộ sưu tập mẫu CV chuyên nghiệp, được thiết kế tối ưu cho từng ngành nghề
                     </p>
                 </motion.div>

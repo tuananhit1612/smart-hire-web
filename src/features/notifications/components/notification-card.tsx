@@ -15,28 +15,28 @@ import { Notification, NotificationType } from "../types/mock-notifications";
 const ICON_CONFIG: Record<NotificationType, { icon: typeof Bell; color: string; bg: string }> = {
     [NotificationType.APPLICATION_STATUS]: {
         icon: Briefcase,
-        color: "text-sky-600",
-        bg: "bg-sky-50",
+        color: "text-sky-600 dark:text-sky-400",
+        bg: "bg-sky-50 dark:bg-sky-900/30",
     },
     [NotificationType.INTERVIEW_INVITE]: {
         icon: Calendar,
-        color: "text-emerald-600",
-        bg: "bg-emerald-50",
+        color: "text-emerald-600 dark:text-emerald-400",
+        bg: "bg-emerald-50 dark:bg-emerald-900/30",
     },
     [NotificationType.AI_ANALYSIS]: {
         icon: BrainCircuit,
-        color: "text-violet-600",
-        bg: "bg-violet-50",
+        color: "text-violet-600 dark:text-violet-400",
+        bg: "bg-violet-50 dark:bg-violet-900/30",
     },
     [NotificationType.JOB_MATCH]: {
         icon: Sparkles,
-        color: "text-amber-600",
-        bg: "bg-amber-50",
+        color: "text-amber-600 dark:text-amber-400",
+        bg: "bg-amber-50 dark:bg-amber-900/30",
     },
     [NotificationType.SYSTEM]: {
         icon: Bell,
-        color: "text-slate-600",
-        bg: "bg-slate-100",
+        color: "text-[#637381] dark:text-[#919EAB]",
+        bg: "bg-[rgba(145,158,171,0.08)] dark:bg-white/[0.06]",
     },
 };
 
@@ -76,10 +76,14 @@ export function NotificationCard({ notification, onMarkRead, index }: Notificati
                 "group relative z-10 flex items-start gap-5 p-6 rounded-2xl border cursor-pointer overflow-hidden",
                 "transition-all duration-200 hover:shadow-lg hover:shadow-sky-900/5 hover:scale-[1.01]",
                 notification.isRead
-                    ? "bg-white border-slate-100"
-                    : "bg-white border-sky-200 shadow-md shadow-sky-500/10 border-l-4 border-l-sky-500"
+                    ? "bg-white dark:bg-[#1C252E] border-[rgba(145,158,171,0.12)] dark:border-white/[0.08]"
+                    : "bg-white dark:bg-[#1C252E] border-sky-200 dark:border-sky-700/50 shadow-md shadow-sky-500/10 dark:shadow-sky-900/20 border-l-4 border-l-sky-500 dark:border-l-sky-500"
             )}
         >
+            {/* Unread glow strip */}
+            {!notification.isRead && (
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-sky-500 rounded-l-2xl" />
+            )}
 
             {/* Icon */}
             <div className={cn("shrink-0 w-14 h-14 rounded-xl flex items-center justify-center", config.bg)}>
@@ -92,8 +96,8 @@ export function NotificationCard({ notification, onMarkRead, index }: Notificati
                     className={cn(
                         "text-lg leading-snug mb-1.5",
                         notification.isRead
-                            ? "font-medium text-slate-600"
-                            : "font-semibold text-sky-900"
+                            ? "font-medium text-[#637381] dark:text-[#919EAB]"
+                            : "font-semibold text-[#1C252E] dark:text-white"
                     )}
                 >
                     {notification.title}
@@ -101,12 +105,14 @@ export function NotificationCard({ notification, onMarkRead, index }: Notificati
                 <p
                     className={cn(
                         "text-base leading-relaxed line-clamp-3",
-                        notification.isRead ? "text-slate-400" : "text-slate-600"
+                        notification.isRead
+                            ? "text-[#919EAB] dark:text-[#637381]"
+                            : "text-[#637381] dark:text-[#C4CDD5]"
                     )}
                 >
                     {notification.message}
                 </p>
-                <span className="block mt-2.5 text-sm text-slate-400">
+                <span className="block mt-2.5 text-sm text-[#919EAB] dark:text-[#637381]">
                     {formatTimeAgo(notification.createdAt)}
                 </span>
             </div>
@@ -115,7 +121,7 @@ export function NotificationCard({ notification, onMarkRead, index }: Notificati
             <ChevronRight
                 className={cn(
                     "shrink-0 w-5 h-5 mt-1.5 transition-transform duration-200",
-                    "text-slate-300 group-hover:text-sky-500 group-hover:translate-x-0.5",
+                    "text-[#C4CDD5] dark:text-[#637381] group-hover:text-sky-500 dark:group-hover:text-sky-400 group-hover:translate-x-0.5",
                 )}
             />
         </motion.div>
