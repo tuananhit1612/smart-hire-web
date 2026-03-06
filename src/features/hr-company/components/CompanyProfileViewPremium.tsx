@@ -115,7 +115,7 @@ export function CompanyProfileViewPremium() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.3 }}
-                        className="text-sky-600 dark:text-[#C4CDD5] mt-3 text-lg"
+                        className="text-[#637381] dark:text-[#C4CDD5] mt-3 text-lg"
                     >
                         Thu hút nhân tài với thương hiệu nhà tuyển dụng độc đáo
                     </motion.p>
@@ -238,7 +238,7 @@ export function CompanyProfileViewPremium() {
                     transition={{ delay: 0.8 }}
                     className="mt-10"
                 >
-                    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-sky-600 via-blue-600 to-sky-600 p-8 text-white shadow-2xl">
+                    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#22C55E] via-[#10B981] to-[#16A34A] p-8 text-white shadow-2xl">
                         {/* Animated background pattern */}
                         <div className="absolute inset-0 opacity-10">
                             <svg width="100%" height="100%">
@@ -261,7 +261,7 @@ export function CompanyProfileViewPremium() {
                             <motion.button
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.98 }}
-                                className="px-8 py-3 bg-white text-sky-600 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all flex items-center gap-2"
+                                className="px-8 py-3 bg-white text-[#16A34A] rounded-full font-semibold shadow-lg hover:shadow-xl transition-all flex items-center gap-2"
                             >
                                 Đăng tin ngay
                                 <ChevronRight className="w-5 h-5" />

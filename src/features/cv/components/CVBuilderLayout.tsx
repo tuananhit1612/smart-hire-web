@@ -194,21 +194,21 @@ export function CVBuilderLayout({
                                 <div className="sticky top-28">
                                     <div id="cv-preview-panel" className="bg-white/80 dark:bg-[#1C252E]/80 backdrop-blur-2xl border border-white/60 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-3xl overflow-hidden flex flex-col h-[800px]">
                                         {/* Toolbar */}
-                                        <div className="p-4 border-b border-gray-100 flex items-center justify-between bg-white/50 backdrop-blur-md z-10">
+                                        <div className="p-4 border-b border-gray-100 dark:border-white/10 flex items-center justify-between bg-white/50 dark:bg-[#1C252E]/50 backdrop-blur-md z-10">
                                             <div className="flex items-center gap-3">
                                                 <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-tr from-green-400 to-emerald-500 shadow-lg shadow-green-500/20 text-white">
                                                     <Eye className="w-4 h-4" />
                                                 </div>
                                                 <div>
-                                                    <h3 className="text-sm font-bold text-gray-800">Bản xem trước</h3>
-                                                    <p className="text-[10px] text-gray-500 font-medium tracking-wide uppercase">Live Preview</p>
+                                                    <h3 className="text-sm font-bold text-gray-800 dark:text-white">Bản xem trước</h3>
+                                                    <p className="text-[10px] text-gray-500 dark:text-gray-400 font-medium tracking-wide uppercase">Live Preview</p>
                                                 </div>
                                             </div>
 
                                             <Button
                                                 variant="outline"
                                                 size="sm"
-                                                className="bg-white hover:bg-green-50 text-green-700 border-green-200 hover:border-green-300 shadow-sm transition-all hover:scale-105 active:scale-95 gap-2"
+                                                className="bg-white dark:bg-white/10 hover:bg-green-50 dark:hover:bg-green-500/20 text-green-700 dark:text-green-400 border-green-200 dark:border-green-500/30 hover:border-green-300 dark:hover:border-green-400/50 shadow-sm transition-all hover:scale-105 active:scale-95 gap-2"
                                                 onClick={async () => {
                                                     const btn = document.getElementById('btn-export-pdf');
                                                     if (btn) {
@@ -233,7 +233,7 @@ export function CVBuilderLayout({
                                         </div>
 
                                         {/* Canvas Area */}
-                                        <div className="flex-1 overflow-hidden bg-slate-50 relative group">
+                                        <div className="flex-1 overflow-hidden bg-slate-50 dark:bg-[#141A21] relative group">
                                             {/* decorative grid pattern */}
                                             <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
 

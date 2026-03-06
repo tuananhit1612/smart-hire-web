@@ -76,19 +76,19 @@ export function CoverUploadModal({ currentCover, onUpload, onClose }: CoverUploa
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0.9, opacity: 0 }}
                     onClick={(e) => e.stopPropagation()}
-                    className="w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-white rounded-3xl shadow-2xl"
+                    className="w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-white dark:bg-[#1C252E] rounded-3xl shadow-2xl"
                 >
                     {/* Header */}
-                    <div className="sticky top-0 z-10 flex items-center justify-between p-6 bg-white border-b border-sky-100">
-                        <h2 className="text-xl font-bold text-sky-900 flex items-center gap-2">
+                    <div className="sticky top-0 z-10 flex items-center justify-between p-6 bg-white dark:bg-[#1C252E] border-b border-sky-100 dark:border-white/[0.08]">
+                        <h2 className="text-xl font-bold text-sky-900 dark:text-white flex items-center gap-2">
                             <Image className="w-5 h-5 text-sky-500" />
                             Đổi ảnh bìa
                         </h2>
                         <button
                             onClick={onClose}
-                            className="p-2 hover:bg-sky-50 rounded-full transition-colors"
+                            className="p-2 hover:bg-sky-50 dark:hover:bg-white/[0.06] rounded-full transition-colors"
                         >
-                            <X className="w-5 h-5 text-sky-600" />
+                            <X className="w-5 h-5 text-sky-600 dark:text-[#C4CDD5]" />
                         </button>
                     </div>
 
@@ -102,7 +102,7 @@ export function CoverUploadModal({ currentCover, onUpload, onClose }: CoverUploa
                                     className="w-full h-full object-cover"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-                                <div className="absolute bottom-3 left-3 px-3 py-1 bg-white/90 rounded-full text-sm font-medium text-sky-700">
+                                <div className="absolute bottom-3 left-3 px-3 py-1 bg-white/90 dark:bg-[#1C252E]/90 rounded-full text-sm font-medium text-sky-700 dark:text-[#C4CDD5]">
                                     Xem trước
                                 </div>
                             </div>
@@ -118,19 +118,19 @@ export function CoverUploadModal({ currentCover, onUpload, onClose }: CoverUploa
                             onDragLeave={() => setIsDragging(false)}
                             onClick={() => inputRef.current?.click()}
                             className={`relative p-8 border-2 border-dashed rounded-2xl cursor-pointer transition-all ${isDragging
-                                    ? "border-sky-500 bg-sky-50"
-                                    : "border-sky-200 hover:border-sky-400 hover:bg-sky-50/50"
+                                    ? "border-sky-500 bg-sky-50 dark:bg-sky-900/20"
+                                    : "border-sky-200 dark:border-white/[0.08] hover:border-sky-400 dark:hover:border-white/[0.16] hover:bg-sky-50/50 dark:hover:bg-white/[0.02]"
                                 }`}
                         >
                             <div className="flex flex-col items-center gap-3 text-center">
-                                <div className="w-14 h-14 rounded-full bg-sky-100 flex items-center justify-center">
-                                    <Upload className="w-6 h-6 text-sky-600" />
+                                <div className="w-14 h-14 rounded-full bg-sky-100 dark:bg-sky-900/30 flex items-center justify-center">
+                                    <Upload className="w-6 h-6 text-sky-600 dark:text-sky-400" />
                                 </div>
                                 <div>
-                                    <p className="font-medium text-sky-900">
+                                    <p className="font-medium text-sky-900 dark:text-white">
                                         Kéo thả ảnh vào đây hoặc nhấn để chọn
                                     </p>
-                                    <p className="text-sm text-sky-500 mt-1">
+                                    <p className="text-sm text-sky-500 dark:text-[#919EAB] mt-1">
                                         PNG, JPG tối đa 5MB. Kích thước đề xuất: 1200x400px
                                     </p>
                                 </div>
@@ -149,7 +149,7 @@ export function CoverUploadModal({ currentCover, onUpload, onClose }: CoverUploa
 
                         {/* Sample Images */}
                         <div>
-                            <h3 className="text-sm font-medium text-sky-700 mb-3">
+                            <h3 className="text-sm font-medium text-sky-700 dark:text-[#C4CDD5] mb-3">
                                 Hoặc chọn từ thư viện
                             </h3>
                             <div className="grid grid-cols-3 gap-3">
@@ -180,7 +180,7 @@ export function CoverUploadModal({ currentCover, onUpload, onClose }: CoverUploa
                         </div>
 
                         {/* Buttons */}
-                        <div className="flex gap-3 pt-4 border-t border-sky-100">
+                        <div className="flex gap-3 pt-4 border-t border-sky-100 dark:border-white/[0.08]">
                             <Button
                                 onClick={handleSave}
                                 disabled={!preview && !selectedSample}
@@ -192,7 +192,7 @@ export function CoverUploadModal({ currentCover, onUpload, onClose }: CoverUploa
                             <Button
                                 onClick={onClose}
                                 variant="outline"
-                                className="flex-1 rounded-full py-3 border-sky-200"
+                                className="flex-1 rounded-full py-3 border-sky-200 dark:border-white/[0.08] dark:text-[#C4CDD5] dark:hover:bg-white/[0.04]"
                             >
                                 <X className="w-4 h-4 mr-2" />
                                 Hủy bỏ

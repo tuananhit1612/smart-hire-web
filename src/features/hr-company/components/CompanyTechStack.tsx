@@ -73,11 +73,11 @@ export function CompanyTechStack({ techStack, onUpdate, editable = true }: Compa
                         <Code2 className="w-6 h-6 text-white" />
                     </motion.div>
                     <div>
-                        <h2 className="text-xl font-bold text-sky-900 flex items-center gap-2">
+                        <h2 className="text-xl font-bold text-sky-900 dark:text-white flex items-center gap-2">
                             Tech Stack
                             <Zap className="w-5 h-5 text-yellow-500" />
                         </h2>
-                        <p className="text-sm text-sky-600">Công nghệ chúng tôi sử dụng</p>
+                        <p className="text-sm text-sky-600 dark:text-[#919EAB]">Công nghệ chúng tôi sử dụng</p>
                     </div>
                 </div>
                 {editable && !isAdding && (
@@ -102,7 +102,7 @@ export function CompanyTechStack({ techStack, onUpdate, editable = true }: Compa
                         exit={{ opacity: 0, height: 0, y: -20 }}
                         className="overflow-hidden"
                     >
-                        <div className="p-6 bg-gradient-to-br from-purple-50 via-white to-indigo-50 rounded-2xl border-2 border-dashed border-purple-300">
+                        <div className="p-6 bg-gradient-to-br from-purple-50 via-white to-indigo-50 dark:from-purple-900/10 dark:via-[#1C252E] dark:to-indigo-900/10 rounded-2xl border-2 border-dashed border-purple-300 dark:border-purple-700">
                             <div className="space-y-4">
                                 {/* Input row */}
                                 <div className="flex gap-3">
@@ -113,7 +113,7 @@ export function CompanyTechStack({ techStack, onUpdate, editable = true }: Compa
                                             value={newTech}
                                             onChange={(e) => setNewTech(e.target.value)}
                                             placeholder="Nhập tên công nghệ..."
-                                            className="relative w-full bg-white rounded-xl px-4 py-3 border-2 border-slate-200 focus:border-purple-500 focus:outline-none transition-colors"
+                                            className="relative w-full bg-white dark:bg-[#1C252E] rounded-xl px-4 py-3 border-2 border-slate-200 dark:border-white/[0.08] focus:border-purple-500 focus:outline-none text-slate-800 dark:text-white transition-colors"
                                             onKeyDown={(e) => e.key === "Enter" && handleAdd(newTech)}
                                         />
                                     </div>
@@ -131,7 +131,7 @@ export function CompanyTechStack({ techStack, onUpdate, editable = true }: Compa
                                         whileHover={{ scale: 1.02 }}
                                         whileTap={{ scale: 0.98 }}
                                         onClick={() => setIsAdding(false)}
-                                        className="px-6 py-3 bg-white text-slate-600 rounded-xl font-semibold border-2 border-slate-200"
+                                        className="px-6 py-3 bg-white dark:bg-white/[0.04] text-slate-600 dark:text-[#C4CDD5] rounded-xl font-semibold border-2 border-slate-200 dark:border-white/[0.08]"
                                     >
                                         Hủy
                                     </motion.button>
@@ -140,7 +140,7 @@ export function CompanyTechStack({ techStack, onUpdate, editable = true }: Compa
                                 {/* Suggestions */}
                                 {availableSuggestions.length > 0 && (
                                     <div>
-                                        <p className="text-sm font-medium text-purple-700 mb-3 flex items-center gap-1">
+                                        <p className="text-sm font-medium text-purple-700 dark:text-purple-400 mb-3 flex items-center gap-1">
                                             <Sparkles className="w-4 h-4" />
                                             Gợi ý phổ biến:
                                         </p>
@@ -221,12 +221,12 @@ export function CompanyTechStack({ techStack, onUpdate, editable = true }: Compa
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="text-center py-12 rounded-2xl bg-gradient-to-br from-slate-50 to-white border-2 border-dashed border-slate-200"
+                    className="text-center py-12 rounded-2xl bg-gradient-to-br from-slate-50 to-white dark:from-white/[0.02] dark:to-[#1C252E] border-2 border-dashed border-slate-200 dark:border-white/[0.08]"
                 >
-                    <Code2 className="w-16 h-16 mx-auto mb-3 text-slate-300" />
-                    <p className="text-slate-500 font-medium">Chưa có công nghệ nào được thêm</p>
+                    <Code2 className="w-16 h-16 mx-auto mb-3 text-slate-300 dark:text-[#637381]" />
+                    <p className="text-slate-500 dark:text-[#919EAB] font-medium">Chưa có công nghệ nào được thêm</p>
                     {editable && (
-                        <p className="text-sm text-slate-400 mt-1">Nhấn "Thêm" để bắt đầu</p>
+                        <p className="text-sm text-slate-400 dark:text-[#637381] mt-1">Nhấn "Thêm" để bắt đầu</p>
                     )}
                 </motion.div>
             )}

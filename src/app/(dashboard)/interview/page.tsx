@@ -37,11 +37,11 @@ export default function InterviewPage() {
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
                     <Link
                         href="/interview/setup"
-                        className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold transition-all hover:scale-105 active:scale-95 shadow-lg shadow-sky-500/20"
+                        className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-sky-600 hover:bg-sky-700 text-white text-base font-semibold transition-all hover:scale-105 active:scale-95 shadow-lg shadow-sky-500/20"
                     >
-                        <BrainCircuit className="w-4 h-4" />
+                        <BrainCircuit className="w-5 h-5" />
                         Bắt đầu phỏng vấn thử
-                        <ArrowRight className="w-4 h-4" />
+                        <ArrowRight className="w-5 h-5" />
                     </Link>
                 </div>
             </motion.div>

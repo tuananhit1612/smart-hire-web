@@ -97,10 +97,10 @@ export function LogoUpload({
             {/* Background */}
             <div
                 className={`absolute inset-0 transition-all duration-300 ${isDragging
-                    ? "bg-sky-100 border-2 border-dashed border-sky-500"
+                    ? "bg-sky-100 dark:bg-sky-900/30 border-2 border-dashed border-sky-500"
                     : displayImage
-                        ? "bg-white"
-                        : "bg-gradient-to-br from-sky-50 to-white border-2 border-dashed border-sky-200"
+                        ? "bg-white dark:bg-[#1C252E]"
+                        : "bg-gradient-to-br from-sky-50 to-white dark:from-sky-900/10 dark:to-[#1C252E] border-2 border-dashed border-sky-200 dark:border-white/[0.08]"
                     }`}
             />
 
@@ -112,7 +112,7 @@ export function LogoUpload({
                     className="absolute inset-0 w-full h-full object-cover"
                 />
             ) : (
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-sky-400">
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-sky-400 dark:text-sky-500">
                     <Upload className={iconSizes[size]} />
                     {size === "lg" && (
                         <span className="text-xs mt-1 font-medium">Upload Logo</span>
@@ -157,7 +157,7 @@ export function LogoUpload({
                 >
                     <div className="bg-white rounded-xl px-3 py-2 shadow-lg flex items-center gap-2">
                         <Check className="w-4 h-4 text-green-500" />
-                        <span className="text-sm font-medium text-sky-700">Thả để upload</span>
+                        <span className="text-sm font-medium text-sky-700 dark:text-sky-400">Thả để upload</span>
                     </div>
                 </motion.div>
             )}

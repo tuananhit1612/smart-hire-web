@@ -386,7 +386,7 @@ function CVBuilderContent() {
                 }
                 headerToolbar={headerToolbar}
                 preview={
-                    <div className="relative bg-slate-100/50 h-full flex flex-col overflow-hidden select-none">
+                    <div className="relative bg-slate-100/50 dark:bg-[#141A21] h-full flex flex-col overflow-hidden select-none">
                         {/* Interactive Preview Canvas */}
                         <div
                             ref={previewRef}
@@ -404,7 +404,7 @@ function CVBuilderContent() {
                                     transition: isPanning ? 'none' : 'transform 0.1s ease-out',
                                     willChange: 'transform' // Hardware acceleration hint
                                 }}
-                                className="shadow-2xl bg-white pointer-events-none"
+                                className="shadow-2xl bg-white pointer-events-none dark:shadow-black/40"
                             >
                                 <div className="w-[210mm] min-h-[297mm]">
                                     <TemplateComponent data={displayData} />
@@ -423,9 +423,9 @@ function CVBuilderContent() {
 
             {/* Full Screen Preview Modal */}
             {isPreviewMode && (
-                <div className="fixed inset-0 z-50 bg-white/95 backdrop-blur-xl flex flex-col animate-in fade-in duration-200">
-                    <div className="flex items-center justify-between px-6 py-4 bg-white/50 border-b border-gray-100 text-gray-900">
-                        <h2 className="text-lg font-bold flex items-center gap-2 text-sky-900">
+                <div className="fixed inset-0 z-50 bg-white/95 dark:bg-[#141A21]/95 backdrop-blur-xl flex flex-col animate-in fade-in duration-200">
+                    <div className="flex items-center justify-between px-6 py-4 bg-white/50 dark:bg-[#1C252E]/50 border-b border-gray-100 dark:border-white/10 text-gray-900 dark:text-white">
+                        <h2 className="text-lg font-bold flex items-center gap-2 text-sky-900 dark:text-white">
                             <FileText className="w-5 h-5 text-sky-600" />
                             Xem trước CV
                         </h2>
@@ -446,17 +446,17 @@ function CVBuilderContent() {
                             </button>
                             <button
                                 onClick={() => setIsPreviewMode(false)}
-                                className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-500 hover:text-red-500"
+                                className="p-2 hover:bg-gray-100 dark:hover:bg-white/10 rounded-full transition-colors text-gray-500 dark:text-gray-400 hover:text-red-500"
                             >
                                 <X className="w-6 h-6" />
                             </button>
                         </div>
                     </div>
-                    <div className="flex-1 overflow-auto p-8 md:p-12 flex justify-center bg-slate-50 relative">
+                    <div className="flex-1 overflow-auto p-8 md:p-12 flex justify-center bg-slate-50 dark:bg-[#141A21] relative">
                         {/* Grid Background */}
                         <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
 
-                        <div className="relative shadow-2xl shadow-slate-200 bg-white">
+                        <div className="relative shadow-2xl shadow-slate-200 dark:shadow-black/40 bg-white">
                             <div id="cv-modal-content" className="w-[210mm] min-h-[297mm]">
                                 <TemplateComponent data={displayData} />
                             </div>
@@ -471,10 +471,10 @@ function CVBuilderContent() {
 export default function CVBuilderPage() {
     return (
         <React.Suspense fallback={
-            <div className="flex items-center justify-center h-screen bg-slate-50">
+            <div className="flex items-center justify-center h-screen bg-slate-50 dark:bg-[#141A21]">
                 <div className="flex flex-col items-center gap-3">
                     <div className="w-8 h-8 border-4 border-sky-500 border-t-transparent rounded-full animate-spin"></div>
-                    <p className="text-slate-500 font-medium text-sm">Đang tải trình tạo CV...</p>
+                    <p className="text-slate-500 dark:text-gray-400 font-medium text-sm">Đang tải trình tạo CV...</p>
                 </div>
             </div>
         }>

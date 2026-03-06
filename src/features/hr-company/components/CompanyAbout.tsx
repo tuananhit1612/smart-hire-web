@@ -46,8 +46,8 @@ export function CompanyAbout({
                         <FileText className="w-6 h-6 text-white" />
                     </motion.div>
                     <div>
-                        <h2 className="text-xl font-bold text-sky-900">Giới thiệu công ty</h2>
-                        <p className="text-sm text-sky-600">Câu chuyện và giá trị cốt lõi</p>
+                        <h2 className="text-xl font-bold text-sky-900 dark:text-white">Giới thiệu công ty</h2>
+                        <p className="text-sm text-sky-600 dark:text-[#919EAB]">Câu chuyện và giá trị cốt lõi</p>
                     </div>
                 </div>
                 {editable && !isEditing && (
@@ -55,7 +55,7 @@ export function CompanyAbout({
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => setIsEditing(true)}
-                        className="flex items-center gap-2 px-4 py-2 text-sky-600 hover:text-sky-700 hover:bg-sky-50 rounded-full font-medium transition-all"
+                        className="flex items-center gap-2 px-4 py-2 text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 hover:bg-sky-50 dark:hover:bg-white/[0.04] rounded-full font-medium transition-all"
                     >
                         <Pencil className="w-4 h-4" />
                         Chỉnh sửa
@@ -74,7 +74,7 @@ export function CompanyAbout({
                     >
                         {/* About textarea with gradient border */}
                         <div className="space-y-2">
-                            <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                            <label className="text-sm font-semibold text-slate-700 dark:text-[#C4CDD5] flex items-center gap-2">
                                 <Quote className="w-4 h-4 text-sky-500" />
                                 Giới thiệu
                             </label>
@@ -84,7 +84,7 @@ export function CompanyAbout({
                                     value={editData.about}
                                     onChange={(e) => setEditData({ ...editData, about: e.target.value })}
                                     rows={5}
-                                    className="relative w-full bg-white rounded-xl px-5 py-4 border-2 border-slate-200 focus:border-sky-500 focus:outline-none text-slate-800 resize-none"
+                                    className="relative w-full bg-white dark:bg-[#1C252E] rounded-xl px-5 py-4 border-2 border-slate-200 dark:border-white/[0.08] focus:border-sky-500 focus:outline-none text-slate-800 dark:text-white resize-none"
                                     placeholder="Mô tả về công ty của bạn..."
                                 />
                             </div>
@@ -93,7 +93,7 @@ export function CompanyAbout({
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                             {/* Mission */}
                             <div className="space-y-2">
-                                <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                                <label className="text-sm font-semibold text-slate-700 dark:text-[#C4CDD5] flex items-center gap-2">
                                     <Target className="w-4 h-4 text-purple-500" />
                                     Sứ mệnh
                                 </label>
@@ -103,7 +103,7 @@ export function CompanyAbout({
                                         value={editData.mission}
                                         onChange={(e) => setEditData({ ...editData, mission: e.target.value })}
                                         rows={3}
-                                        className="relative w-full bg-white rounded-xl px-5 py-4 border-2 border-slate-200 focus:border-purple-500 focus:outline-none text-slate-800 resize-none"
+                                        className="relative w-full bg-white dark:bg-[#1C252E] rounded-xl px-5 py-4 border-2 border-slate-200 dark:border-white/[0.08] focus:border-purple-500 focus:outline-none text-slate-800 dark:text-white resize-none"
                                         placeholder="Sứ mệnh của công ty..."
                                     />
                                 </div>
@@ -111,7 +111,7 @@ export function CompanyAbout({
 
                             {/* Vision */}
                             <div className="space-y-2">
-                                <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                                <label className="text-sm font-semibold text-slate-700 dark:text-[#C4CDD5] flex items-center gap-2">
                                     <Eye className="w-4 h-4 text-green-500" />
                                     Tầm nhìn
                                 </label>
@@ -121,7 +121,7 @@ export function CompanyAbout({
                                         value={editData.vision}
                                         onChange={(e) => setEditData({ ...editData, vision: e.target.value })}
                                         rows={3}
-                                        className="relative w-full bg-white rounded-xl px-5 py-4 border-2 border-slate-200 focus:border-green-500 focus:outline-none text-slate-800 resize-none"
+                                        className="relative w-full bg-white dark:bg-[#1C252E] rounded-xl px-5 py-4 border-2 border-slate-200 dark:border-white/[0.08] focus:border-green-500 focus:outline-none text-slate-800 dark:text-white resize-none"
                                         placeholder="Tầm nhìn của công ty..."
                                     />
                                 </div>
@@ -142,7 +142,7 @@ export function CompanyAbout({
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                                 onClick={handleCancel}
-                                className="flex items-center gap-2 px-6 py-3 bg-white text-slate-600 rounded-full font-semibold border-2 border-slate-200 hover:border-slate-300 transition-all"
+                                className="flex items-center gap-2 px-6 py-3 bg-white dark:bg-white/[0.04] text-slate-600 dark:text-[#C4CDD5] rounded-full font-semibold border-2 border-slate-200 dark:border-white/[0.08] hover:border-slate-300 dark:hover:border-white/[0.16] transition-all"
                             >
                                 <X className="w-4 h-4" />
                                 Hủy
@@ -159,8 +159,8 @@ export function CompanyAbout({
                     >
                         {/* About content with decorative quote */}
                         <div className="relative">
-                            <Quote className="absolute -left-2 -top-2 w-8 h-8 text-sky-200" />
-                            <p className="text-slate-700 leading-relaxed whitespace-pre-line pl-6 text-lg">
+                            <Quote className="absolute -left-2 -top-2 w-8 h-8 text-sky-200 dark:text-sky-800" />
+                            <p className="text-slate-700 dark:text-[#C4CDD5] leading-relaxed whitespace-pre-line pl-6 text-lg">
                                 {about}
                             </p>
                         </div>
@@ -174,7 +174,7 @@ export function CompanyAbout({
                                         animate={{ opacity: 1, x: 0 }}
                                         transition={{ delay: 0.1 }}
                                         whileHover={{ y: -4, scale: 1.02 }}
-                                        className="relative overflow-hidden p-5 rounded-2xl bg-gradient-to-br from-purple-50 via-white to-indigo-50 border border-purple-100 shadow-lg shadow-purple-500/5 group"
+                                        className="relative overflow-hidden p-5 rounded-2xl bg-gradient-to-br from-purple-50 via-white to-indigo-50 dark:from-purple-900/20 dark:via-[#1C252E] dark:to-indigo-900/10 border border-purple-100 dark:border-purple-800/30 shadow-lg shadow-purple-500/5 group"
                                     >
                                         {/* Decorative gradient */}
                                         <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-purple-400/20 to-indigo-400/10 rounded-full blur-xl" />
@@ -184,9 +184,9 @@ export function CompanyAbout({
                                                 <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center">
                                                     <Target className="w-4 h-4 text-white" />
                                                 </div>
-                                                <h3 className="font-bold text-purple-900">Sứ mệnh</h3>
+                                                <h3 className="font-bold text-purple-900 dark:text-purple-300">Sứ mệnh</h3>
                                             </div>
-                                            <p className="text-purple-700 leading-relaxed">{mission}</p>
+                                            <p className="text-purple-700 dark:text-purple-300/80 leading-relaxed">{mission}</p>
                                         </div>
                                     </motion.div>
                                 )}
@@ -196,7 +196,7 @@ export function CompanyAbout({
                                         animate={{ opacity: 1, x: 0 }}
                                         transition={{ delay: 0.2 }}
                                         whileHover={{ y: -4, scale: 1.02 }}
-                                        className="relative overflow-hidden p-5 rounded-2xl bg-gradient-to-br from-green-50 via-white to-emerald-50 border border-green-100 shadow-lg shadow-green-500/5 group"
+                                        className="relative overflow-hidden p-5 rounded-2xl bg-gradient-to-br from-green-50 via-white to-emerald-50 dark:from-green-900/20 dark:via-[#1C252E] dark:to-emerald-900/10 border border-green-100 dark:border-green-800/30 shadow-lg shadow-green-500/5 group"
                                     >
                                         {/* Decorative gradient */}
                                         <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-green-400/20 to-emerald-400/10 rounded-full blur-xl" />
@@ -206,9 +206,9 @@ export function CompanyAbout({
                                                 <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
                                                     <Eye className="w-4 h-4 text-white" />
                                                 </div>
-                                                <h3 className="font-bold text-green-900">Tầm nhìn</h3>
+                                                <h3 className="font-bold text-green-900 dark:text-green-300">Tầm nhìn</h3>
                                             </div>
-                                            <p className="text-green-700 leading-relaxed">{vision}</p>
+                                            <p className="text-green-700 dark:text-green-300/80 leading-relaxed">{vision}</p>
                                         </div>
                                     </motion.div>
                                 )}
