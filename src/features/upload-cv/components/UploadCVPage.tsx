@@ -48,18 +48,18 @@ export function UploadCVPage() {
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         transition={{ type: 'spring', stiffness: 200, delay: 0.2 }}
-                        className="inline-flex items-center justify-center p-4 rounded-full bg-gradient-to-br from-sky-500 to-blue-600 shadow-lg shadow-sky-500/30 mb-6"
+                        className="inline-flex items-center justify-center p-4 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 shadow-lg shadow-green-500/30 mb-6"
                     >
                         <DocumentTextIcon className="w-10 h-10 text-white" />
                     </motion.div>
 
-                    <h1 className="text-4xl md:text-5xl font-bold text-sky-900 dark:text-white mb-4">
+                    <h1 className="text-4xl md:text-5xl font-bold text-[#1C252E] dark:text-white mb-4">
                         Tải lên{' '}
-                        <span className="bg-gradient-to-r from-sky-500 via-blue-500 to-indigo-500 bg-clip-text text-transparent">
+                        <span className="text-[#22c55e]">
                             CV của bạn
                         </span>
                     </h1>
-                    <p className="text-lg text-sky-600/80 dark:text-sky-300/80 max-w-2xl mx-auto">
+                    <p className="text-lg text-[#637381] dark:text-[#919EAB] max-w-2xl mx-auto">
                         Hệ thống AI sẽ tự động phân tích và đánh giá CV của bạn để tìm kiếm công việc phù hợp nhất
                     </p>
                 </motion.div>
@@ -70,12 +70,12 @@ export function UploadCVPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.1 }}
                     className="
-            bg-white/70 dark:bg-sky-950/30
+            bg-white dark:bg-[#1C252E]
             backdrop-blur-xl
-            border border-white/40 dark:border-sky-800/30
+            border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08]
             rounded-3xl
             p-6 md:p-8
-            shadow-xl shadow-sky-500/5
+            shadow-xl shadow-green-500/5
           "
                 >
                     {/* Drop Zone */}
@@ -132,16 +132,16 @@ export function UploadCVPage() {
                     transition={{ duration: 0.5, delay: 0.5 }}
                     className="
             mt-10
-            bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20
-            border border-sky-200/50 dark:border-sky-800/30
+            bg-[rgba(145,158,171,0.04)] dark:bg-[rgba(145,158,171,0.08)]
+            border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08]
             rounded-2xl p-6
           "
                 >
-                    <h3 className="text-lg font-semibold text-sky-900 dark:text-sky-100 mb-4 flex items-center gap-2">
-                        <SparklesIcon className="w-5 h-5 text-sky-500" />
+                    <h3 className="text-lg font-bold text-[#1C252E] dark:text-white mb-4 flex items-center gap-2">
+                        <SparklesIcon className="w-5 h-5 text-[#22c55e]" />
                         Mẹo để CV được đánh giá tốt hơn
                     </h3>
-                    <ul className="grid md:grid-cols-2 gap-3 text-sm text-sky-700 dark:text-sky-300">
+                    <ul className="grid md:grid-cols-2 gap-3 text-sm text-[#637381] dark:text-[#C4CDD5]">
                         {[
                             'Sử dụng định dạng PDF để giữ nguyên layout',
                             'Đảm bảo thông tin liên hệ rõ ràng và dễ tìm',
@@ -155,7 +155,7 @@ export function UploadCVPage() {
                                 transition={{ delay: 0.6 + index * 0.1 }}
                                 className="flex items-start gap-2"
                             >
-                                <span className="flex-shrink-0 w-5 h-5 rounded-full bg-sky-500 text-white text-xs flex items-center justify-center">
+                                <span className="flex-shrink-0 w-5 h-5 rounded-full bg-[rgba(145,158,171,0.08)] text-[#22c55e] border border-[rgba(145,158,171,0.2)] text-xs font-bold flex items-center justify-center">
                                     {index + 1}
                                 </span>
                                 {tip}

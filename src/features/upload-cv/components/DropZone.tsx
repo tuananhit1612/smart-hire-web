@@ -55,8 +55,8 @@ export function DropZone({
           rounded-3xl border-2 border-dashed
           transition-all duration-300 ease-out
           ${isDragging
-                        ? 'border-sky-500 bg-sky-500/10 scale-[1.02] shadow-xl shadow-sky-500/20'
-                        : 'border-sky-200 dark:border-sky-800 bg-white/60 dark:bg-sky-950/30 hover:border-sky-400 hover:bg-sky-50/80 dark:hover:bg-sky-900/40'
+                        ? 'border-green-500 bg-green-500/10 scale-[1.02] shadow-xl shadow-green-500/20'
+                        : 'border-slate-200 dark:border-white/10 bg-white/60 dark:bg-[#1C252E] hover:border-green-400 hover:bg-slate-50/80 dark:hover:bg-white/[0.04]'
                     }
           ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
           backdrop-blur-xl
@@ -65,7 +65,7 @@ export function DropZone({
                 {/* Animated gradient background when dragging */}
                 {isDragging && (
                     <motion.div
-                        className="absolute inset-0 bg-gradient-to-br from-sky-400/20 via-blue-500/20 to-indigo-500/20"
+                        className="absolute inset-0 bg-gradient-to-br from-green-400/20 via-emerald-500/20 to-emerald-500/20"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -80,27 +80,27 @@ export function DropZone({
                         className={`
               p-6 rounded-full
               ${isDragging
-                                ? 'bg-gradient-to-br from-sky-500 to-blue-600 shadow-lg shadow-sky-500/40'
-                                : 'bg-gradient-to-br from-sky-100 to-blue-100 dark:from-sky-900 dark:to-blue-900'
+                                ? 'bg-gradient-to-br from-green-500 to-emerald-600 shadow-lg shadow-green-500/40'
+                                : 'bg-slate-100 dark:bg-slate-800/50'
                             }
             `}
                     >
                         <CloudArrowUpIcon
-                            className={`w-12 h-12 ${isDragging ? 'text-white' : 'text-sky-600 dark:text-sky-400'}`}
+                            className={`w-12 h-12 ${isDragging ? 'text-white' : 'text-green-600 dark:text-green-400'}`}
                         />
                     </motion.div>
 
                     {/* Text Content */}
                     <div className="text-center space-y-2">
                         <motion.h3
-                            className="text-xl font-semibold text-sky-900 dark:text-sky-100"
+                            className="text-xl font-semibold text-[#1C252E] dark:text-white"
                             animate={isDragging ? { scale: 1.05 } : { scale: 1 }}
                         >
                             {isDragging ? 'Thả file vào đây!' : 'Kéo thả CV của bạn vào đây'}
                         </motion.h3>
-                        <p className="text-sky-600/80 dark:text-sky-300/80">
+                        <p className="text-[#637381] dark:text-[#919EAB]">
                             hoặc{' '}
-                            <span className="text-sky-600 dark:text-sky-400 font-medium underline underline-offset-2">
+                            <span className="text-green-600 dark:text-green-400 font-medium underline underline-offset-2">
                                 nhấn để chọn file
                             </span>
                         </p>
@@ -112,14 +112,14 @@ export function DropZone({
                             <DocumentIcon className="w-4 h-4 text-red-500" />
                             <span className="text-sm font-medium text-red-600 dark:text-red-400">PDF</span>
                         </div>
-                        <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800">
-                            <DocumentIcon className="w-4 h-4 text-blue-500" />
-                            <span className="text-sm font-medium text-blue-600 dark:text-blue-400">DOCX</span>
+                        <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800">
+                            <DocumentIcon className="w-4 h-4 text-emerald-500" />
+                            <span className="text-sm font-medium text-emerald-600 dark:text-emerald-400">DOCX</span>
                         </div>
                     </div>
 
                     {/* Size Limit Info */}
-                    <p className="text-sm text-sky-500/70 dark:text-sky-400/70">
+                    <p className="text-sm text-slate-400 dark:text-slate-500">
                         Tối đa 10MB • Tối đa 5 file
                     </p>
                 </div>
