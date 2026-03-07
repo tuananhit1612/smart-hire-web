@@ -58,7 +58,7 @@ interface DragState {
 
 // ─── Stage Config ────────────────────────────────────
 const stages: PipelineStage[] = [
-    { id: "applied",   label: "Ứng tuyển", color: "text-sky-700 dark:text-sky-400",      bg: "bg-sky-50 dark:bg-sky-900/20",      headerBg: "bg-sky-100 dark:bg-sky-900/30",      dot: "bg-sky-400" },
+    { id: "applied",   label: "Ứng tuyển", color: "text-[#22c55e] dark:text-[#22c55e]",      bg: "bg-[#22c55e]/10 dark:bg-[#22c55e]/20",      headerBg: "bg-[#22c55e]/15 dark:bg-[#22c55e]/20",      dot: "bg-[#22c55e]" },
     { id: "screening", label: "Sàng lọc",  color: "text-violet-700 dark:text-violet-400", bg: "bg-violet-50 dark:bg-violet-900/20", headerBg: "bg-violet-100 dark:bg-violet-900/30", dot: "bg-violet-400" },
     { id: "interview", label: "Phỏng vấn", color: "text-amber-700 dark:text-amber-400",  bg: "bg-amber-50 dark:bg-amber-900/20",  headerBg: "bg-amber-100 dark:bg-amber-900/30",  dot: "bg-amber-400" },
     { id: "offer",     label: "Đề nghị",   color: "text-emerald-700 dark:text-emerald-400", bg: "bg-emerald-50 dark:bg-emerald-900/20", headerBg: "bg-emerald-100 dark:bg-emerald-900/30", dot: "bg-emerald-400" },
@@ -143,7 +143,7 @@ function DragGhost({ dragState }: { dragState: DragState }) {
                 rotate: "2deg",
                 opacity: 0.95,
             }}
-            className="bg-white dark:bg-[#1C252E] rounded-xl border-2 border-sky-400 dark:border-sky-500 p-3 shadow-2xl shadow-sky-500/20 dark:shadow-sky-900/40"
+            className="bg-white dark:bg-[#1C252E] rounded-xl border-2 border-[#22c55e]/30 dark:border-[#22c55e]/30 p-3 shadow-2xl shadow-green-500/20 dark:shadow-[#22c55e]/20"
         >
             <CardContent candidate={dragState.candidate} />
         </div>,
@@ -197,14 +197,14 @@ function CandidateCard({
         >
             {/* Placeholder when dragging */}
             {isDragging ? (
-                <div className="rounded-xl border-2 border-dashed border-sky-300 dark:border-sky-700 bg-sky-50/50 dark:bg-sky-900/10 h-[120px] flex items-center justify-center">
-                    <GripVertical className="w-5 h-5 text-sky-300 dark:text-sky-700" />
+                <div className="rounded-xl border-2 border-dashed border-[#22c55e]/30 dark:border-[#22c55e]/30 bg-[#22c55e]/10 dark:bg-[#22c55e]/20 h-[120px] flex items-center justify-center">
+                    <GripVertical className="w-5 h-5 text-[#22c55e] dark:text-[#22c55e]" />
                 </div>
             ) : (
                 <div
                     ref={cardRef}
                     onMouseDown={handleMouseDown}
-                    className="bg-white dark:bg-[#1C252E] rounded-xl border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] p-3 shadow-sm hover:shadow-md hover:border-sky-200 dark:hover:border-sky-800 transition-all cursor-grab active:cursor-grabbing group select-none"
+                    className="bg-white dark:bg-[#1C252E] rounded-xl border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] p-3 shadow-sm hover:shadow-md hover:border-[#22c55e]/30 dark:hover:border-[#22c55e]/30 transition-all cursor-grab active:cursor-grabbing group select-none"
                 >
                     <div className="flex items-start justify-between mb-2">
                         <div className="flex items-center gap-2">
@@ -385,7 +385,7 @@ export default function PipelineBoardPage() {
                 <div className="flex items-center justify-between flex-wrap gap-4">
                     <div>
                         <div className="flex items-center gap-2">
-                            <Kanban className="w-6 h-6 text-sky-600" />
+                            <Kanban className="w-6 h-6 text-[#22c55e]" />
                             <h1 className="text-2xl font-bold text-[#1C252E] dark:text-white">Pipeline tuyển dụng</h1>
                         </div>
                         <p className="text-sm text-[#637381] dark:text-[#919EAB] mt-1">
@@ -400,7 +400,7 @@ export default function PipelineBoardPage() {
                                 placeholder="Tìm ứng viên..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                className="pl-9 pr-4 py-2 text-sm bg-white dark:bg-[#1C252E] border border-[rgba(145,158,171,0.2)] dark:border-white/[0.08] rounded-xl text-[#1C252E] dark:text-white placeholder:text-[#919EAB] focus:outline-none focus:ring-2 focus:ring-sky-200 focus:border-sky-400 transition-all w-48"
+                                className="pl-9 pr-4 py-2 text-sm bg-white dark:bg-[#1C252E] border border-[rgba(145,158,171,0.2)] dark:border-white/[0.08] rounded-xl text-[#1C252E] dark:text-white placeholder:text-[#919EAB] focus:outline-none focus:ring-2 focus:ring-[#22c55e]/30 focus:border-[#22c55e]/30 transition-all w-48"
                             />
                         </div>
                         <div className="relative">
@@ -408,7 +408,7 @@ export default function PipelineBoardPage() {
                             <select
                                 value={positionFilter}
                                 onChange={(e) => setPositionFilter(e.target.value)}
-                                className="appearance-none pl-8 pr-8 py-2 text-sm bg-white dark:bg-[#1C252E] border border-[rgba(145,158,171,0.2)] dark:border-white/[0.08] rounded-xl text-[#1C252E] dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-200 focus:border-sky-400 cursor-pointer"
+                                className="appearance-none pl-8 pr-8 py-2 text-sm bg-white dark:bg-[#1C252E] border border-[rgba(145,158,171,0.2)] dark:border-white/[0.08] rounded-xl text-[#1C252E] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#22c55e]/30 focus:border-[#22c55e]/30 cursor-pointer"
                             >
                                 <option value="all">Tất cả vị trí</option>
                                 {allPositions.map((p) => (
@@ -458,7 +458,7 @@ export default function PipelineBoardPage() {
                                     "rounded-b-xl min-h-[400px] p-2 space-y-2 border border-t-0 transition-all duration-150",
                                     stage.bg,
                                     isDropTarget
-                                        ? "border-sky-400 dark:border-sky-500 ring-2 ring-inset ring-sky-400/40 dark:ring-sky-500/30"
+                                        ? "border-[#22c55e]/30 dark:border-[#22c55e]/30 ring-2 ring-inset ring-[#22c55e]/50 dark:ring-[#22c55e]/50"
                                         : "border-[rgba(145,158,171,0.12)] dark:border-white/[0.08]"
                                 )}
                             >
@@ -486,9 +486,9 @@ export default function PipelineBoardPage() {
                                     <motion.div
                                         initial={{ opacity: 0, height: 0 }}
                                         animate={{ opacity: 1, height: "auto" }}
-                                        className="rounded-xl border-2 border-dashed border-sky-400 dark:border-sky-500 bg-sky-50/80 dark:bg-sky-900/20 p-4 flex items-center justify-center"
+                                        className="rounded-xl border-2 border-dashed border-[#22c55e]/30 dark:border-[#22c55e]/30 bg-[#22c55e]/10 dark:bg-[#22c55e]/20 p-4 flex items-center justify-center"
                                     >
-                                        <p className="text-xs font-semibold text-sky-500 dark:text-sky-400">Thả vào đây</p>
+                                        <p className="text-xs font-semibold text-[#22c55e] dark:text-[#22c55e]">Thả vào đây</p>
                                     </motion.div>
                                 )}
                             </div>
@@ -522,3 +522,4 @@ export default function PipelineBoardPage() {
         </PageSection>
     );
 }
+

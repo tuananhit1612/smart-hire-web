@@ -140,7 +140,7 @@ export function CVBuilderForm({
                             className={`w-2 h-2 rounded-full transition-all duration-200 ${index === currentIndex
                                 ? "w-6 bg-green-500 shadow-lg shadow-green-500/30"
                                 : index < currentIndex
-                                    ? "bg-sky-400"
+                                    ? "bg-green-400"
                                     : "bg-gray-200"
                                 }`}
                         />

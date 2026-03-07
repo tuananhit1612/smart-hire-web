@@ -16,7 +16,7 @@ interface SkillsSectionProps {
 
 const SKILL_LEVELS: { value: Skill["level"]; label: string; color: string; bgColor: string }[] = [
     { value: "beginner", label: "Cơ bản", color: "bg-gray-400", bgColor: "bg-gray-100" },
-    { value: "intermediate", label: "Trung bình", color: "bg-sky-500", bgColor: "bg-sky-50" },
+    { value: "intermediate", label: "Trung bình", color: "bg-green-500", bgColor: "bg-green-50" },
     { value: "advanced", label: "Nâng cao", color: "bg-green-500", bgColor: "bg-green-50" },
     { value: "expert", label: "Chuyên gia", color: "bg-teal-500", bgColor: "bg-teal-50" },
 ];
@@ -71,8 +71,8 @@ function LevelDropdown({
                 className={cn(
                     "flex items-center gap-2 h-9 px-3 rounded-xl border border-gray-200 dark:border-zinc-700",
                     "bg-white text-sm font-medium",
-                    "hover:border-sky-400",
-                    "focus:outline-none focus:ring-2 focus:ring-sky-500",
+                    "hover:border-green-400",
+                    "focus:outline-none focus:ring-2 focus:ring-green-500",
                     "transition-all duration-200 flex-1"
                 )}
             >
@@ -115,7 +115,7 @@ function LevelDropdown({
                                     {level.label}
                                 </span>
                                 {value === level.value && (
-                                    <Check className="w-4 h-4 text-sky-500" />
+                                    <Check className="w-4 h-4 text-green-500" />
                                 )}
                             </button>
                         ))}
@@ -245,8 +245,8 @@ export function SkillsSection({ data, onChange }: SkillsSectionProps) {
             >
                 {/* Section Header */}
                 <div>
-                    <h2 className="text-xl md:text-2xl font-bold tracking-tight text-sky-900 flex items-center gap-2 md:gap-3">
-                        <div className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-gradient-to-r from-sky-500 to-green-500 text-white flex-shrink-0 shadow-lg shadow-sky-500/20">
+                    <h2 className="text-xl md:text-2xl font-bold tracking-tight text-green-900 flex items-center gap-2 md:gap-3">
+                        <div className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-gradient-to-r from-green-500 to-green-500 text-white flex-shrink-0 shadow-lg shadow-green-500/20">
                             <Zap className="w-4 h-4 md:w-5 md:h-5" />
                         </div>
                         <span>Kỹ năng</span>
@@ -262,7 +262,7 @@ export function SkillsSection({ data, onChange }: SkillsSectionProps) {
                     <SkillColumn
                         title="Kỹ năng chuyên môn"
                         icon={Code}
-                        iconColor="bg-sky-500"
+                        iconColor="bg-green-500"
                         skills={technicalSkills}
                         inputValue={newTechnicalSkill}
                         onInputChange={setNewTechnicalSkill}
@@ -450,7 +450,7 @@ function SkillColumn({
                                     key={skill}
                                     type="button"
                                     onClick={() => onSelectSuggestion(skill)}
-                                    className="w-full px-3 py-2 text-left text-sm hover:bg-sky-50 text-gray-700"
+                                    className="w-full px-3 py-2 text-left text-sm hover:bg-green-50 text-gray-700"
                                 >
                                     {skill}
                                 </button>

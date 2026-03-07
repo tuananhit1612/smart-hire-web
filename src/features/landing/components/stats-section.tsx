@@ -123,8 +123,8 @@ export function StatsSection() {
                         label="Kết nối thành công"
                         description="Hơn 1 triệu lượt tương hợp hoàn hảo giữa ứng viên tài năng và doanh nghiệp."
                         icon={Users}
-                        colorClass="text-sky-500"
-                        bgHoverClass="bg-sky-600"
+                        colorClass="text-[#22c55e]"
+                        bgHoverClass="bg-[#22c55e]"
                         textHoverClass="group-hover:text-white"
                         className="md:col-span-2"
                         delay={0.1}
@@ -161,8 +161,8 @@ export function StatsSection() {
                         label="Cập nhật hàng ngày"
                         description="Hàng chục ngàn hồ sơ ứng viên mới được hệ thống AI xử lý và phân loại tự động mỗi ngày."
                         icon={UserCircle}
-                        colorClass="text-indigo-500"
-                        bgHoverClass="bg-indigo-600"
+                        colorClass="text-[#22c55e]"
+                        bgHoverClass="bg-[#22c55e]"
                         textHoverClass="group-hover:text-white"
                         className="md:col-span-2"
                         delay={0.4}
@@ -172,3 +172,4 @@ export function StatsSection() {
         </section>
     );
 }
+

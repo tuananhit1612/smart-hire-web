@@ -27,9 +27,9 @@ interface ChatMessage {
 
 // ─── Category Badge ──────────────────────────────────
 const CATEGORY_LABELS: Record<InterviewQuestion["category"], { label: string; color: string }> = {
-    introduction: { label: "Giới thiệu", color: "bg-green- dark:bg-green-/30 text-green- dark:text-green-" },
+    introduction: { label: "Giới thiệu", color: "bg-[#22c55e]/10 dark:bg-[#22c55e]/20 text-[#22c55e]" },
     technical: { label: "Kỹ thuật", color: "bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400" },
-    behavioral: { label: "Hành vi", color: "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400" },
+    behavioral: { label: "Hành vi", color: "bg-[#FFAB00]/10 dark:bg-[#FFAB00]/20 text-[#FFAB00]" },
     situational: { label: "Tình huống", color: "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400" },
     closing: { label: "Kết thúc", color: "bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400" },
 };
@@ -43,7 +43,7 @@ function TypingIndicator() {
             exit={{ opacity: 0, y: -10 }}
             className="flex items-end gap-2.5 max-w-[85%]"
         >
-            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-green- to-emerald-600 flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#22c55e] to-[#10b981] flex items-center justify-center shrink-0 shadow-sm">
                 <BrainCircuit className="w-5 h-5 text-white" />
             </div>
             <div className="bg-white dark:bg-[#1C252E] border border-slate-100 dark:border-white/[0.08] rounded-2xl rounded-bl-md px-5 py-4 shadow-sm">
@@ -51,17 +51,17 @@ function TypingIndicator() {
                     <motion.span
                         animate={{ opacity: [0.3, 1, 0.3] }}
                         transition={{ duration: 1.2, repeat: Infinity, delay: 0 }}
-                        className="w-2.5 h-2.5 rounded-full bg-green-"
+                        className="w-2.5 h-2.5 rounded-full bg-[#22c55e]"
                     />
                     <motion.span
                         animate={{ opacity: [0.3, 1, 0.3] }}
                         transition={{ duration: 1.2, repeat: Infinity, delay: 0.2 }}
-                        className="w-2.5 h-2.5 rounded-full bg-green-"
+                        className="w-2.5 h-2.5 rounded-full bg-[#22c55e]"
                     />
                     <motion.span
                         animate={{ opacity: [0.3, 1, 0.3] }}
                         transition={{ duration: 1.2, repeat: Infinity, delay: 0.4 }}
-                        className="w-2.5 h-2.5 rounded-full bg-green-"
+                        className="w-2.5 h-2.5 rounded-full bg-[#22c55e]"
                     />
                 </div>
             </div>
@@ -82,7 +82,7 @@ function ChatBubble({ message }: { readonly message: ChatMessage }) {
         >
             {/* Avatar */}
             {isAI && (
-                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-green- to-emerald-600 flex items-center justify-center shrink-0 shadow-sm">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#22c55e] to-[#10b981] flex items-center justify-center shrink-0 shadow-sm">
                     <BrainCircuit className="w-5 h-5 text-white" />
                 </div>
             )}
@@ -105,8 +105,8 @@ function ChatBubble({ message }: { readonly message: ChatMessage }) {
                     className={cn(
                         "px-5 py-4 text-lg leading-relaxed",
                         isAI
-                            ? "bg-white dark:bg-[#1C252E] border border-slate-100 dark:border-white/[0.08] rounded-2xl rounded-bl-md shadow-sm text-slate-700 dark:text-[#C4CDD5]"
-                            : "bg-green- text-white rounded-2xl rounded-br-md shadow-lg shadow-green-/20"
+                            ? "bg-white dark:bg-[#1C252E] border border-[rgba(145,158,171,0.12)] rounded-2xl rounded-bl-md shadow-sm text-[#1C252E] dark:text-white"
+                            : "bg-[#22c55e] text-white rounded-2xl rounded-br-md shadow-lg shadow-[#22c55e]500/20"
                     )}
                 >
                     {message.content}
@@ -239,13 +239,13 @@ export default function InterviewSessionPage() {
                         <div className="flex items-center gap-3">
                             <Link
                                 href="/interview/setup"
-                                className="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/[0.06] hover:bg-slate-200 dark:hover:bg-white/[0.1] flex items-center justify-center transition-colors"
+                                className="w-10 h-10 rounded-full bg-[#rgba(145,158,171,0.04)] dark:bg-white/[0.06] hover:bg-[rgba(145,158,171,0.08)] dark:hover:bg-white/[0.1] flex items-center justify-center transition-colors"
                             >
-                                <ArrowLeft className="w-5 h-5 text-slate-600 dark:text-[#C4CDD5]" />
+                                <ArrowLeft className="w-5 h-5 text-[#637381] dark:text-[#C4CDD5]" />
                             </Link>
                             <div>
-                                <h1 className="text-xl font-bold text-green- dark:text-white flex items-center gap-2">
-                                    <BrainCircuit className="w-6 h-6 text-green- dark:text-green-" />
+                                <h1 className="text-xl font-bold text-[#1C252E] dark:text-white flex items-center gap-2">
+                                    <BrainCircuit className="w-6 h-6 text-[#22c55e]" />
                                     AI Interview
                                 </h1>
                                 <p className="text-sm text-slate-400 dark:text-[#637381]">
@@ -269,7 +269,7 @@ export default function InterviewSessionPage() {
                     {/* Progress Bar */}
                     <div className="h-1.5 bg-slate-100 dark:bg-white/[0.06] rounded-full -mt-0.5 mb-0.5 overflow-hidden">
                         <motion.div
-                            className="h-full bg-gradient-to-r from-green- to-emerald-500 rounded-full"
+                            className="h-full bg-gradient-to-r from-[#22c55e] to-[#10b981] rounded-full"
                             initial={{ width: 0 }}
                             animate={{ width: `${progress}%` }}
                             transition={{ duration: 0.5, ease: "easeOut" }}
@@ -377,10 +377,10 @@ export default function InterviewSessionPage() {
                                     disabled={isTyping}
                                     rows={1}
                                     className={cn(
-                                        "w-full resize-none rounded-2xl border border-slate-200 dark:border-white/[0.08] bg-slate-50 dark:bg-[#1C252E] px-5 py-3.5 pr-14",
-                                        "text-lg text-slate-700 dark:text-white placeholder:text-slate-400 dark:placeholder:text-[#637381]",
-                                        "focus:outline-none focus:ring-2 focus:ring-green-/30 focus:border-green-",
-                                        "transition-all max-h-32",
+                                        "w-full resize-none rounded-2xl border border-[rgba(145,158,171,0.2)] dark:border-white/[0.08] bg-white dark:bg-[#1C252E] px-5 py-3.5 pr-14",
+                                        "text-lg text-[#1C252E] dark:text-white placeholder:text-[#919EAB] dark:placeholder:text-[#637381]",
+                                        "focus:outline-none focus:ring-2 focus:ring-[#22c55e]/30 focus:border-[#22c55e]",
+                                        "transition-all max-h-32 shadow-sm",
                                         "disabled:opacity-50"
                                     )}
                                     style={{ minHeight: "52px" }}
@@ -398,8 +398,8 @@ export default function InterviewSessionPage() {
                                     className={cn(
                                         "absolute right-2.5 bottom-2 w-10 h-10 rounded-full flex items-center justify-center transition-all cursor-pointer",
                                         input.trim() && !isTyping
-                                            ? "bg-green- text-white shadow-md shadow-green-/20 hover:bg-green- hover:scale-105"
-                                            : "bg-slate-200 dark:bg-white/[0.06] text-slate-400 dark:text-[#637381] cursor-not-allowed"
+                                            ? "bg-[#22c55e] text-white shadow-md shadow-[#22c55e]500/20 hover:bg-[#16a34a] hover:scale-105"
+                                            : "bg-[rgba(145,158,171,0.12)] dark:bg-white/[0.06] text-[#637381] dark:text-[#919EAB] cursor-not-allowed"
                                     )}
                                 >
                                     <Send className="w-5 h-5" />

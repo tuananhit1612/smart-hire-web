@@ -16,25 +16,25 @@ const iconMap = {
 
 const positionColors: Record<JobPosition, { bg: string; border: string; icon: string; shadow: string; text: string }> = {
     developer: {
-        bg: "bg-blue-50",
-        border: "border-blue-500",
-        icon: "from-blue-500 to-indigo-500",
-        shadow: "shadow-blue-500/30",
-        text: "text-blue-700"
+        bg: "bg-emerald-50",
+        border: "border-emerald-500",
+        icon: "from-emerald-500 to-emerald-500",
+        shadow: "shadow-emerald-500/30",
+        text: "text-emerald-700"
     },
     designer: {
-        bg: "bg-indigo-50",
-        border: "border-indigo-500",
-        icon: "from-indigo-500 to-violet-500",
-        shadow: "shadow-indigo-500/30",
-        text: "text-indigo-700"
+        bg: "bg-emerald-50",
+        border: "border-emerald-500",
+        icon: "from-emerald-500 to-violet-500",
+        shadow: "shadow-emerald-500/30",
+        text: "text-emerald-700"
     },
     marketing: {
-        bg: "bg-sky-50",
-        border: "border-sky-500",
-        icon: "from-sky-500 to-cyan-500",
-        shadow: "shadow-sky-500/30",
-        text: "text-sky-700"
+        bg: "bg-green-50",
+        border: "border-green-500",
+        icon: "from-green-500 to-[#10b981]",
+        shadow: "shadow-green-500/30",
+        text: "text-green-700"
     },
     business: {
         bg: "bg-emerald-50",
@@ -152,3 +152,4 @@ export function PositionSelector({ selectedPosition, onSelect }: PositionSelecto
         </div>
     );
 }
+

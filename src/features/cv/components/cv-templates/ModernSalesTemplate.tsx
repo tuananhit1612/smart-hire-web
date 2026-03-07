@@ -39,12 +39,12 @@ export function ModernSalesTemplate({ data }: TemplateProps) {
                 {/* Name Block in Sidebar */}
                 <div className="text-center">
                     <h1 className="text-2xl font-bold uppercase mb-1">{personalInfo.fullName}</h1>
-                    <p className="text-blue-100 uppercase tracking-widest text-xs font-semibold">{personalInfo.title}</p>
+                    <p className="text-emerald-100 uppercase tracking-widest text-xs font-semibold">{personalInfo.title}</p>
                 </div>
 
                 {/* Contact */}
                 <section>
-                    <h3 className="text-lg font-bold uppercase border-b border-blue-400 pb-2 mb-4 flex items-center gap-2">
+                    <h3 className="text-lg font-bold uppercase border-b border-emerald-400 pb-2 mb-4 flex items-center gap-2">
                         Thông tin liên hệ
                     </h3>
                     <div className="space-y-3 text-sm">
@@ -87,10 +87,10 @@ export function ModernSalesTemplate({ data }: TemplateProps) {
                 {/* Summary inside Sidebar? No, normally main. Image 3 has Summary in Sidebar (Muc tieu nghe nghiep). */}
                 {summary && (
                     <section>
-                        <h3 className="text-lg font-bold uppercase border-b border-blue-400 pb-2 mb-4">
+                        <h3 className="text-lg font-bold uppercase border-b border-emerald-400 pb-2 mb-4">
                             Mục tiêu nghề nghiệp
                         </h3>
-                        <p className="text-sm text-blue-50 leading-relaxed">
+                        <p className="text-sm text-emerald-50 leading-relaxed">
                             {summary}
                         </p>
                     </section>
@@ -99,7 +99,7 @@ export function ModernSalesTemplate({ data }: TemplateProps) {
                 {/* Skills */}
                 {skills.length > 0 && (
                     <section>
-                        <h3 className="text-lg font-bold uppercase border-b border-blue-400 pb-2 mb-4">
+                        <h3 className="text-lg font-bold uppercase border-b border-emerald-400 pb-2 mb-4">
                             Kỹ năng
                         </h3>
                         <div className="space-y-3">
@@ -112,7 +112,7 @@ export function ModernSalesTemplate({ data }: TemplateProps) {
                                         {[1, 2, 3, 4, 5].map((star) => (
                                             <div
                                                 key={star}
-                                                className={`h-2.5 w-6 rounded-sm ${star * 20 <= getSkillLevel(skill.level) ? 'bg-white' : 'bg-blue-800/30'}`}
+                                                className={`h-2.5 w-6 rounded-sm ${star * 20 <= getSkillLevel(skill.level) ? 'bg-white' : 'bg-emerald-800/30'}`}
                                             />
                                         ))}
                                     </div>

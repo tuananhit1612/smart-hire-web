@@ -60,7 +60,7 @@ const mockUsers: MockUser[] = [
 
 // ─── Role Config ─────────────────────────────────────
 const ROLE_CONFIG: Record<string, { label: string; icon: typeof Users; color: string; bg: string }> = {
-    candidate: { label: "Ứng viên", icon: User, color: "text-sky-700", bg: "bg-sky-100" },
+    candidate: { label: "Ứng viên", icon: User, color: "text-[#22c55e]", bg: "bg-[#22c55e]/15" },
     employer: { label: "Nhà tuyển dụng", icon: Building2, color: "text-violet-700", bg: "bg-violet-100" },
     admin: { label: "Admin", icon: Shield, color: "text-rose-700", bg: "bg-rose-100" },
 };
@@ -119,8 +119,8 @@ export default function UserManagementPage() {
                     className="mb-6"
                 >
                     <div className="flex items-center gap-2">
-                        <Users className="w-6 h-6 text-sky-600" />
-                        <h1 className="text-2xl font-bold text-sky-900">Quản lý người dùng</h1>
+                        <Users className="w-6 h-6 text-[#22c55e]" />
+                        <h1 className="text-2xl font-bold text-[#1C252E]">Quản lý người dùng</h1>
                     </div>
                     <p className="text-sm text-slate-500 mt-1">
                         {fmtNumber(mockUsers.length)} người dùng — Quản lý tài khoản, vai trò và trạng thái
@@ -143,14 +143,14 @@ export default function UserManagementPage() {
                                 className={cn(
                                     "px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer",
                                     activeRole === tab.key
-                                        ? "bg-white text-sky-900 shadow-sm"
+                                        ? "bg-white text-[#1C252E] shadow-sm"
                                         : "text-slate-500 hover:text-slate-700"
                                 )}
                             >
                                 {tab.label}
                                 <span className={cn(
                                     "ml-1.5 text-[10px] px-1.5 py-0.5 rounded-full",
-                                    activeRole === tab.key ? "bg-sky-100 text-sky-700" : "bg-slate-200 text-slate-400"
+                                    activeRole === tab.key ? "bg-[#22c55e]/15 text-[#22c55e]" : "bg-slate-200 text-slate-400"
                                 )}>
                                     {roleCounts[tab.key]}
                                 </span>
@@ -166,7 +166,7 @@ export default function UserManagementPage() {
                             placeholder="Tìm theo tên, email, công ty..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full pl-9 pr-4 py-2 text-sm bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-200 focus:border-sky-400 transition-all"
+                            className="w-full pl-9 pr-4 py-2 text-sm bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#22c55e]/30 focus:border-[#22c55e]/30 transition-all"
                         />
                     </div>
                 </motion.div>
@@ -206,7 +206,7 @@ export default function UserManagementPage() {
                                                 animate={{ opacity: 1, x: 0 }}
                                                 exit={{ opacity: 0, x: 10 }}
                                                 transition={{ delay: i * 0.03 }}
-                                                className="border-b border-slate-50 hover:bg-sky-50/30 transition-colors group"
+                                                className="border-b border-slate-50 hover:bg-[#22c55e]/10 transition-colors group"
                                             >
                                                 {/* User Info */}
                                                 <td className="px-5 py-3">
@@ -215,12 +215,12 @@ export default function UserManagementPage() {
                                                             "w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold shrink-0",
                                                             user.role === "admin" ? "bg-rose-100 text-rose-700" :
                                                             user.role === "employer" ? "bg-violet-100 text-violet-700" :
-                                                            "bg-sky-100 text-sky-700"
+                                                            "bg-[#22c55e]/15 text-[#22c55e]"
                                                         )}>
                                                             {user.avatar}
                                                         </div>
                                                         <div className="min-w-0">
-                                                            <p className="text-sm font-semibold text-sky-900 group-hover:text-sky-600 transition-colors truncate">
+                                                            <p className="text-sm font-semibold text-[#1C252E] group-hover:text-[#22c55e] transition-colors truncate">
                                                                 {user.name}
                                                             </p>
                                                             <p className="text-[11px] text-slate-400 flex items-center gap-1 truncate">
@@ -286,10 +286,10 @@ export default function UserManagementPage() {
                                                                 exit={{ opacity: 0, scale: 0.95 }}
                                                                 className="absolute right-3 top-10 z-50 bg-white rounded-xl shadow-lg border border-slate-100 py-1.5 w-40"
                                                             >
-                                                                <button className="w-full flex items-center gap-2 px-3 py-2 text-xs text-slate-700 hover:bg-sky-50 hover:text-sky-700 transition-colors cursor-pointer">
+                                                                <button className="w-full flex items-center gap-2 px-3 py-2 text-xs text-slate-700 hover:bg-[#22c55e]/10 hover:text-[#22c55e] transition-colors cursor-pointer">
                                                                     <Eye className="w-3.5 h-3.5" /> Xem chi tiết
                                                                 </button>
-                                                                <button className="w-full flex items-center gap-2 px-3 py-2 text-xs text-slate-700 hover:bg-sky-50 hover:text-sky-700 transition-colors cursor-pointer">
+                                                                <button className="w-full flex items-center gap-2 px-3 py-2 text-xs text-slate-700 hover:bg-[#22c55e]/10 hover:text-[#22c55e] transition-colors cursor-pointer">
                                                                     <Pencil className="w-3.5 h-3.5" /> Chỉnh sửa
                                                                 </button>
                                                                 {user.status !== "banned" ? (
@@ -347,3 +347,4 @@ export default function UserManagementPage() {
         </section>
     );
 }
+

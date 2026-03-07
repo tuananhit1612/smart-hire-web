@@ -16,10 +16,10 @@ const quickTags = [
     { label: "ATS-friendly", icon: Zap, color: "from-emerald-500 to-teal-500", shadow: "shadow-emerald-500/30" },
     { label: "Minimal", icon: Minimize2, color: "from-slate-500 to-zinc-600", shadow: "shadow-slate-500/30" },
     { label: "Creative", icon: Palette, color: "from-pink-500 to-rose-500", shadow: "shadow-pink-500/30" },
-    { label: "Tech", icon: Code, color: "from-sky-500 to-blue-500", shadow: "shadow-sky-500/30" },
+    { label: "Tech", icon: Code, color: "from-green-500 to-emerald-500", shadow: "shadow-green-500/30" },
     { label: "Business", icon: Briefcase, color: "from-amber-500 to-orange-500", shadow: "shadow-amber-500/30" },
-    { label: "Marketing", icon: TrendingUp, color: "from-purple-500 to-violet-500", shadow: "shadow-purple-500/30" },
-    { label: "Clean layout", icon: LayoutGrid, color: "from-indigo-500 to-blue-500", shadow: "shadow-indigo-500/30" }
+    { label: "Marketing", icon: TrendingUp, color: "from-amber-500 to-violet-500", shadow: "shadow-amber-500/30" },
+    { label: "Clean layout", icon: LayoutGrid, color: "from-emerald-500 to-emerald-500", shadow: "shadow-emerald-500/30" }
 ];
 
 export function SearchBar({ value, onChange, placeholder = "Tìm kiếm trong hàng triệu mẫu..." }: SearchBarProps) {
@@ -46,7 +46,7 @@ export function SearchBar({ value, onChange, placeholder = "Tìm kiếm trong h�
                 {/* Animated glow effect - Sky/Green */}
                 <motion.div
                     className={cn(
-                        "absolute -inset-1 rounded-2xl bg-gradient-to-r from-sky-500 via-emerald-400 to-lime-500 blur-md transition-opacity duration-500",
+                        "absolute -inset-1 rounded-2xl bg-gradient-to-r from-green-500 via-emerald-400 to-lime-500 blur-md transition-opacity duration-500",
                         isFocused ? "opacity-60" : "opacity-0"
                     )}
                     animate={isFocused ? {
@@ -59,7 +59,7 @@ export function SearchBar({ value, onChange, placeholder = "Tìm kiếm trong h�
                 <div className="relative bg-white dark:bg-[#1C252E] rounded-2xl shadow-xl shadow-gray-200/50 dark:shadow-black/30">
                     <Search className={cn(
                         "absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 transition-all duration-300",
-                        isFocused ? "text-sky-500 scale-110" : "text-[#919EAB]"
+                        isFocused ? "text-green-500 scale-110" : "text-[#919EAB]"
                     )} />
 
                     <input

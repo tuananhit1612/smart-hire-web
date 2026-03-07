@@ -15,8 +15,8 @@ import { Notification, NotificationType } from "../types/mock-notifications";
 const ICON_CONFIG: Record<NotificationType, { icon: typeof Bell; color: string; bg: string }> = {
     [NotificationType.APPLICATION_STATUS]: {
         icon: Briefcase,
-        color: "text-sky-600 dark:text-sky-400",
-        bg: "bg-sky-50 dark:bg-sky-900/30",
+        color: "text-[#22c55e] dark:text-[#22c55e]",
+        bg: "bg-[#22c55e]/10 dark:bg-[#22c55e]/20",
     },
     [NotificationType.INTERVIEW_INVITE]: {
         icon: Calendar,
@@ -74,15 +74,15 @@ export function NotificationCard({ notification, onMarkRead, index }: Notificati
             onClick={() => onMarkRead(notification.id)}
             className={cn(
                 "group relative z-10 flex items-start gap-5 p-6 rounded-2xl border cursor-pointer overflow-hidden",
-                "transition-all duration-200 hover:shadow-lg hover:shadow-sky-900/5 hover:scale-[1.01]",
+                "transition-all duration-200 hover:shadow-lg hover:shadow-[#22c55e]/5 hover:scale-[1.01]",
                 notification.isRead
                     ? "bg-white dark:bg-[#1C252E] border-[rgba(145,158,171,0.12)] dark:border-white/[0.08]"
-                    : "bg-white dark:bg-[#1C252E] border-sky-200 dark:border-sky-700/50 shadow-md shadow-sky-500/10 dark:shadow-sky-900/20 border-l-4 border-l-sky-500 dark:border-l-sky-500"
+                    : "bg-white dark:bg-[#1C252E] border-[#22c55e]/30 dark:border-[#22c55e]/30 shadow-md shadow-[#22c55e]/20 dark:shadow-[#22c55e]/20 border-l-4 border-l-[#22c55e] dark:border-l-[#22c55e]"
             )}
         >
             {/* Unread glow strip */}
             {!notification.isRead && (
-                <div className="absolute left-0 top-0 bottom-0 w-1 bg-sky-500 rounded-l-2xl" />
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#22c55e] rounded-l-2xl" />
             )}
 
             {/* Icon */}
@@ -121,9 +121,10 @@ export function NotificationCard({ notification, onMarkRead, index }: Notificati
             <ChevronRight
                 className={cn(
                     "shrink-0 w-5 h-5 mt-1.5 transition-transform duration-200",
-                    "text-[#C4CDD5] dark:text-[#637381] group-hover:text-sky-500 dark:group-hover:text-sky-400 group-hover:translate-x-0.5",
+                    "text-[#C4CDD5] dark:text-[#637381] group-hover:text-[#22c55e] dark:group-hover:text-[#22c55e] group-hover:translate-x-0.5",
                 )}
             />
         </motion.div>
     );
 }
+

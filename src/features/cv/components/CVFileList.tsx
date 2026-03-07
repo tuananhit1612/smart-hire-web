@@ -177,7 +177,7 @@ export function CVFileList() {
                         animate={{ opacity: 1, y: 0 }}
                         className="text-center mb-8"
                     >
-                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-sky-100/80 dark:bg-sky-900/30 text-sky-700 dark:text-sky-300 text-sm font-medium mb-4">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-100/80 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-sm font-medium mb-4">
                             <Sparkles className="w-4 h-4" />
                             Quản lý CV của bạn
                         </div>
@@ -202,7 +202,7 @@ export function CVFileList() {
                                 label: "Tổng CV",
                                 value: statusCounts.all,
                                 icon: FileText,
-                                color: "from-sky-500 to-sky-600",
+                                color: "from-green-500 to-green-600",
                             },
                             {
                                 label: "Đang dùng",
@@ -258,7 +258,7 @@ export function CVFileList() {
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder="Tìm kiếm CV..."
-                                className="w-full pl-12 pr-4 py-3.5 rounded-full border-2 border-[rgba(145,158,171,0.2)] dark:border-white/[0.08] bg-white dark:bg-[#1C252E] text-[#1C252E] dark:text-white placeholder:text-[#919EAB] focus:border-sky-500 dark:focus:border-sky-400 focus:ring-4 focus:ring-sky-500/10 outline-none font-medium transition-all"
+                                className="w-full pl-12 pr-4 py-3.5 rounded-full border-2 border-[rgba(145,158,171,0.2)] dark:border-white/[0.08] bg-white dark:bg-[#1C252E] text-[#1C252E] dark:text-white placeholder:text-[#919EAB] focus:border-green-500 dark:focus:border-green-400 focus:ring-4 focus:ring-green-500/10 outline-none font-medium transition-all"
                             />
                         </div>
 
@@ -267,7 +267,7 @@ export function CVFileList() {
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                             onClick={() => setUploadModalOpen(true)}
-                            className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-gradient-to-r from-sky-600 to-green-500 text-white font-semibold shadow-lg shadow-sky-500/25 hover:shadow-xl transition-all"
+                            className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-gradient-to-r from-green-600 to-green-500 text-white font-semibold shadow-lg shadow-green-500/25 hover:shadow-xl transition-all"
                         >
                             <Upload className="w-5 h-5" />
                             <span>Tải CV lên</span>
@@ -290,7 +290,7 @@ export function CVFileList() {
                                 onClick={() => setActiveFilter(tab.id)}
                                 className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
                                     activeFilter === tab.id
-                                        ? "bg-sky-600 text-white shadow-lg shadow-sky-500/25"
+                                        ? "bg-green-600 text-white shadow-lg shadow-green-500/25"
                                         : "bg-white dark:bg-[#1C252E] text-[#637381] dark:text-[#919EAB] border border-[rgba(145,158,171,0.2)] dark:border-white/[0.08] hover:bg-[rgba(145,158,171,0.06)] dark:hover:bg-white/[0.04]"
                                 }`}
                             >
@@ -337,7 +337,7 @@ export function CVFileList() {
                                             }}
                                             className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
                                                 sortBy === option.id
-                                                    ? "bg-sky-50 dark:bg-sky-900/20 text-sky-700 dark:text-sky-300 font-medium"
+                                                    ? "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 font-medium"
                                                     : "text-[#637381] dark:text-[#919EAB] hover:bg-[rgba(145,158,171,0.06)] dark:hover:bg-white/[0.04]"
                                             }`}
                                         >
@@ -395,7 +395,7 @@ export function CVFileList() {
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
                                     onClick={() => setUploadModalOpen(true)}
-                                    className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-sky-600 to-green-500 text-white font-semibold shadow-lg shadow-sky-500/25"
+                                    className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-green-600 to-green-500 text-white font-semibold shadow-lg shadow-green-500/25"
                                 >
                                     <Plus className="w-5 h-5" />
                                     Tải CV lên

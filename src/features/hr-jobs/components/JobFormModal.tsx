@@ -62,20 +62,20 @@ function FormField({
 }) {
     return (
         <div className="space-y-1.5">
-            <label className="block text-sm font-semibold text-sky-800">
+            <label className="block text-sm font-semibold text-[#1C252E]">
                 {label}
                 {required && <span className="text-red-500 ml-1">*</span>}
             </label>
             <div className="relative">
                 {Icon && (
-                    <Icon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-sky-400" />
+                    <Icon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#22c55e]" />
                 )}
                 <input
                     type={type}
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
                     placeholder={placeholder}
-                    className={`w-full ${Icon ? "pl-12" : "pl-4"} pr-4 py-3.5 bg-white border-2 border-sky-100 rounded-2xl focus:border-sky-400 focus:ring-4 focus:ring-sky-100 focus:outline-none transition-all text-sky-900 placeholder:text-sky-300 text-base`}
+                    className={`w-full ${Icon ? "pl-12" : "pl-4"} pr-4 py-3.5 bg-white border-2 border-[rgba(145,158,171,0.12)] rounded-2xl focus:border-[#22c55e]/30 focus:ring-4 focus:ring-[#22c55e]/30 focus:outline-none transition-all text-[#1C252E] placeholder:text-[#22c55e] text-base`}
                 />
             </div>
         </div>
@@ -102,7 +102,7 @@ function FormTextarea({
 }) {
     return (
         <div className="space-y-1.5">
-            <label className="block text-sm font-semibold text-sky-800">
+            <label className="block text-sm font-semibold text-[#1C252E]">
                 {label}
                 {required && <span className="text-red-500 ml-1">*</span>}
             </label>
@@ -111,7 +111,7 @@ function FormTextarea({
                 onChange={(e) => onChange(e.target.value)}
                 placeholder={placeholder}
                 rows={rows}
-                className="w-full px-4 py-3.5 bg-white border-2 border-sky-100 rounded-2xl focus:border-sky-400 focus:ring-4 focus:ring-sky-100 focus:outline-none transition-all text-sky-900 placeholder:text-sky-300 resize-none text-base"
+                className="w-full px-4 py-3.5 bg-white border-2 border-[rgba(145,158,171,0.12)] rounded-2xl focus:border-[#22c55e]/30 focus:ring-4 focus:ring-[#22c55e]/30 focus:outline-none transition-all text-[#1C252E] placeholder:text-[#22c55e] resize-none text-base"
             />
         </div>
     );
@@ -151,7 +151,7 @@ function SkillTagInput({
 
     return (
         <div className="space-y-2">
-            <label className="block text-sm font-semibold text-sky-800">{label}</label>
+            <label className="block text-sm font-semibold text-[#1C252E]">{label}</label>
 
             {/* Skills */}
             <div className="flex flex-wrap gap-2 min-h-[36px]">
@@ -185,11 +185,11 @@ function SkillTagInput({
                         }
                     }}
                     placeholder="Nhập kỹ năng..."
-                    className="flex-1 px-4 py-2.5 bg-white border-2 border-dashed border-sky-200 rounded-xl focus:border-sky-400 focus:border-solid focus:outline-none transition-all text-sm"
+                    className="flex-1 px-4 py-2.5 bg-white border-2 border-dashed border-[#22c55e]/30 rounded-xl focus:border-[#22c55e]/30 focus:border-solid focus:outline-none transition-all text-sm"
                 />
                 <button
                     onClick={() => input.trim() && handleAdd(input.trim())}
-                    className="px-4 py-2.5 bg-sky-100 text-sky-700 rounded-xl hover:bg-sky-200 transition-colors font-medium text-sm"
+                    className="px-4 py-2.5 bg-[#22c55e]/15 text-[#22c55e] rounded-xl hover:bg-[rgba(145,158,171,0.04)] transition-colors font-medium text-sm"
                 >
                     <Plus className="w-4 h-4" />
                 </button>
@@ -202,7 +202,7 @@ function SkillTagInput({
                         <button
                             key={s}
                             onClick={() => handleAdd(s)}
-                            className="px-2.5 py-1 bg-sky-50 text-sky-600 rounded-lg text-xs hover:bg-sky-100 transition-colors"
+                            className="px-2.5 py-1 bg-[#22c55e]/10 text-[#22c55e] rounded-lg text-xs hover:bg-[#22c55e]/15 transition-colors"
                         >
                             + {s}
                         </button>
@@ -226,7 +226,7 @@ function LivePreview({ formData, company }: { formData: Omit<Job, 'id' | 'create
     return (
         <div className="h-full flex flex-col min-h-0">
             {/* Preview Header */}
-            <div className="bg-gradient-to-r from-sky-500 to-blue-600 text-white p-4 rounded-t-2xl">
+            <div className="bg-gradient-to-r from-[#22c55e] to-[#10b981] text-white p-4 rounded-t-2xl">
                 <div className="flex items-center gap-2 text-white/80 text-xs mb-2">
                     <Eye className="w-3.5 h-3.5" />
                     Xem trước tin tuyển dụng
@@ -241,14 +241,14 @@ function LivePreview({ formData, company }: { formData: Omit<Job, 'id' | 'create
             </div>
 
             {/* Preview Content */}
-            <div className="flex-1 bg-white rounded-b-2xl border-2 border-t-0 border-sky-100 p-4 space-y-4 overflow-y-auto">
+            <div className="flex-1 bg-white rounded-b-2xl border-2 border-t-0 border-[rgba(145,158,171,0.12)] p-4 space-y-4 overflow-y-auto">
                 {/* Info pills */}
                 <div className="flex flex-wrap gap-2">
                     <span className="px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-xs font-medium flex items-center gap-1">
                         <DollarSign className="w-3 h-3" />
                         {formatSalary(formData.salaryMin, formData.salaryMax)}
                     </span>
-                    <span className="px-3 py-1.5 bg-sky-100 text-sky-700 rounded-full text-xs font-medium flex items-center gap-1">
+                    <span className="px-3 py-1.5 bg-[#22c55e]/15 text-[#22c55e] rounded-full text-xs font-medium flex items-center gap-1">
                         <MapPin className="w-3 h-3" />
                         {formData.location || "Địa điểm..."}
                     </span>
@@ -261,7 +261,7 @@ function LivePreview({ formData, company }: { formData: Omit<Job, 'id' | 'create
                 {/* Skills preview */}
                 {formData.mustHaveSkills.length > 0 && (
                     <div>
-                        <h4 className="text-xs font-semibold text-sky-800 mb-2 flex items-center gap-1">
+                        <h4 className="text-xs font-semibold text-[#1C252E] mb-2 flex items-center gap-1">
                             <Star className="w-3 h-3 text-orange-500" />
                             Kỹ năng bắt buộc
                         </h4>
@@ -280,15 +280,15 @@ function LivePreview({ formData, company }: { formData: Omit<Job, 'id' | 'create
 
                 {formData.niceToHaveSkills.length > 0 && (
                     <div>
-                        <h4 className="text-xs font-semibold text-sky-800 mb-2 flex items-center gap-1">
-                            <Sparkles className="w-3 h-3 text-blue-500" />
+                        <h4 className="text-xs font-semibold text-[#1C252E] mb-2 flex items-center gap-1">
+                            <Sparkles className="w-3 h-3 text-[#22c55e]" />
                             Kỹ năng ưu tiên
                         </h4>
                         <div className="flex flex-wrap gap-1.5">
                             {formData.niceToHaveSkills.map((skill) => (
                                 <span
                                     key={skill.id}
-                                    className="px-2 py-1 bg-gradient-to-r from-sky-500 to-blue-500 text-white rounded-full text-xs font-medium"
+                                    className="px-2 py-1 bg-gradient-to-r from-[#22c55e] to-[#10b981] text-white rounded-full text-xs font-medium"
                                 >
                                     {skill.name}
                                 </span>
@@ -300,11 +300,11 @@ function LivePreview({ formData, company }: { formData: Omit<Job, 'id' | 'create
                 {/* Description */}
                 {formData.description && (
                     <div>
-                        <h4 className="text-xs font-semibold text-sky-800 mb-1.5 flex items-center gap-1">
-                            <Briefcase className="w-3 h-3 text-sky-500" />
+                        <h4 className="text-xs font-semibold text-[#1C252E] mb-1.5 flex items-center gap-1">
+                            <Briefcase className="w-3 h-3 text-[#22c55e]" />
                             Mô tả công việc
                         </h4>
-                        <p className="text-xs text-sky-600 whitespace-pre-line bg-sky-50 rounded-xl p-3 line-clamp-4">
+                        <p className="text-xs text-[#22c55e] whitespace-pre-line bg-[#22c55e]/10 rounded-xl p-3 line-clamp-4">
                             {formData.description}
                         </p>
                     </div>
@@ -313,11 +313,11 @@ function LivePreview({ formData, company }: { formData: Omit<Job, 'id' | 'create
                 {/* Requirements */}
                 {formData.requirements && (
                     <div>
-                        <h4 className="text-xs font-semibold text-sky-800 mb-1.5 flex items-center gap-1">
+                        <h4 className="text-xs font-semibold text-[#1C252E] mb-1.5 flex items-center gap-1">
                             <CheckCircle2 className="w-3 h-3 text-green-500" />
                             Yêu cầu ứng viên
                         </h4>
-                        <p className="text-xs text-sky-600 whitespace-pre-line bg-green-50 rounded-xl p-3 line-clamp-4">
+                        <p className="text-xs text-[#22c55e] whitespace-pre-line bg-green-50 rounded-xl p-3 line-clamp-4">
                             {formData.requirements}
                         </p>
                     </div>
@@ -326,11 +326,11 @@ function LivePreview({ formData, company }: { formData: Omit<Job, 'id' | 'create
                 {/* Benefits */}
                 {formData.benefits && (
                     <div>
-                        <h4 className="text-xs font-semibold text-sky-800 mb-1.5 flex items-center gap-1">
+                        <h4 className="text-xs font-semibold text-[#1C252E] mb-1.5 flex items-center gap-1">
                             <Heart className="w-3 h-3 text-pink-500" />
                             Quyền lợi
                         </h4>
-                        <p className="text-xs text-sky-600 whitespace-pre-line bg-pink-50 rounded-xl p-3 line-clamp-4">
+                        <p className="text-xs text-[#22c55e] whitespace-pre-line bg-pink-50 rounded-xl p-3 line-clamp-4">
                             {formData.benefits}
                         </p>
                     </div>
@@ -415,26 +415,26 @@ export function JobFormModal() {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}
                 onClick={(e) => e.stopPropagation()}
-                className="w-full max-w-6xl h-[90vh] bg-gradient-to-br from-sky-50 to-white rounded-3xl shadow-2xl overflow-hidden flex"
+                className="w-full max-w-6xl h-[90vh] bg-gradient-to-br from-[rgba(145,158,171,0.04)] to-white rounded-3xl shadow-2xl overflow-hidden flex"
             >
                 {/* Left: Form Input */}
                 <div className="flex-1 flex flex-col min-w-0">
                     {/* Header */}
-                    <div className="flex items-center justify-between p-5 border-b border-sky-100 bg-white/80">
+                    <div className="flex items-center justify-between p-5 border-b border-[rgba(145,158,171,0.12)] bg-white/80">
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center shadow-lg">
+                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#22c55e] to-[#10b981] flex items-center justify-center shadow-lg">
                                 <Briefcase className="w-5 h-5 text-white" />
                             </div>
                             <div>
-                                <h2 className="text-lg font-bold text-sky-900">
+                                <h2 className="text-lg font-bold text-[#1C252E]">
                                     {isEditing ? "Chỉnh sửa tin" : "Tạo tin tuyển dụng"}
                                 </h2>
-                                <p className="text-sm text-sky-500">{company?.name}</p>
+                                <p className="text-sm text-[#22c55e]">{company?.name}</p>
                             </div>
                         </div>
                         <button
                             onClick={handleClose}
-                            className="p-2 hover:bg-sky-100 rounded-xl transition-colors text-sky-500"
+                            className="p-2 hover:bg-[#22c55e]/15 rounded-xl transition-colors text-[#22c55e]"
                         >
                             <X className="w-5 h-5" />
                         </button>
@@ -553,16 +553,16 @@ export function JobFormModal() {
                                     updateField("niceToHaveSkills", formData.niceToHaveSkills.filter((s) => s.id !== id))
                                 }
                                 suggestedSkills={suggestedSkills}
-                                colorClass="bg-gradient-to-r from-sky-500 to-blue-500"
+                                colorClass="bg-gradient-to-r from-[#22c55e] to-[#10b981]"
                             />
                         </div>
                     </div>
 
                     {/* Footer */}
-                    <div className="p-5 border-t border-sky-100 bg-white/80 flex justify-end gap-3">
+                    <div className="p-5 border-t border-[rgba(145,158,171,0.12)] bg-white/80 flex justify-end gap-3">
                         <button
                             onClick={handleClose}
-                            className="px-6 py-2.5 text-sky-600 font-medium hover:bg-sky-50 rounded-xl transition-colors"
+                            className="px-6 py-2.5 text-[#22c55e] font-medium hover:bg-[#22c55e]/10 rounded-xl transition-colors"
                         >
                             Hủy
                         </button>
@@ -579,10 +579,11 @@ export function JobFormModal() {
                 </div>
 
                 {/* Right: Live Preview */}
-                <div className="w-[380px] bg-slate-50 border-l border-sky-100 p-5 hidden lg:flex flex-col overflow-hidden flex-shrink-0">
+                <div className="w-[380px] bg-slate-50 border-l border-[rgba(145,158,171,0.12)] p-5 hidden lg:flex flex-col overflow-hidden flex-shrink-0">
                     <LivePreview formData={formData} company={company} />
                 </div>
             </motion.div>
         </motion.div>
     );
 }
+

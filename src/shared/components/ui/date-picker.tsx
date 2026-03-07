@@ -96,9 +96,9 @@ export function DatePicker({
                     "bg-transparent text-sm",
                     disabled
                         ? "opacity-50 cursor-not-allowed bg-gray-100 dark:bg-zinc-800"
-                        : "hover:border-indigo-300 dark:hover:border-indigo-700 cursor-pointer",
+                        : "hover:border-[#22c55e]/30 dark:hover:border-[#22c55e]/30 cursor-pointer",
                     isOpen
-                        ? "border-indigo-500 ring-2 ring-indigo-500/20"
+                        ? "border-[#22c55e]/30 ring-2 ring-[#22c55e]/50"
                         : "border-gray-200 dark:border-zinc-800",
                     value ? "text-gray-900 dark:text-white" : "text-gray-400"
                 )}
@@ -154,7 +154,7 @@ export function DatePicker({
                                         "px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200",
                                         isDisabled && "opacity-40 cursor-not-allowed",
                                         isSelected
-                                            ? "bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-md"
+                                            ? "bg-gradient-to-r from-[#22c55e] to-purple-500 text-white shadow-md"
                                             : "hover:bg-gray-100 dark:hover:bg-white/10 text-gray-700 dark:text-gray-300"
                                     )}
                                 >
@@ -173,7 +173,7 @@ export function DatePicker({
                                 setViewYear(now.getFullYear());
                                 handleMonthSelect(now.getMonth());
                             }}
-                            className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline"
+                            className="text-xs text-[#22c55e] dark:text-[#22c55e] hover:underline"
                         >
                             Hiện tại
                         </button>
@@ -195,3 +195,4 @@ export function DatePicker({
         </div>
     );
 }
+

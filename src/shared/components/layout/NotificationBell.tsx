@@ -17,7 +17,7 @@ export function NotificationBell() {
             href="/notifications"
             className={cn(
                 "relative z-50 flex items-center justify-center w-10 h-10 rounded-full",
-                "text-sky-700 hover:bg-sky-100 hover:text-sky-600",
+                "text-[#22c55e] hover:bg-[#22c55e]/15 hover:text-[#22c55e]",
                 "transition-all duration-200 hover:scale-110 cursor-pointer"
             )}
             aria-label={`Thông báo${unreadCount > 0 ? ` (${unreadCount} chưa đọc)` : ""}`}
@@ -40,3 +40,4 @@ export function NotificationBell() {
         </Link>
     );
 }
+

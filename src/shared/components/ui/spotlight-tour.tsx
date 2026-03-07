@@ -434,9 +434,9 @@ function TooltipContent({
                                 className={cn(
                                     "h-2 rounded-full transition-all",
                                     index === currentStep
-                                        ? "w-5 bg-sky-500"
+                                        ? "w-5 bg-[#22c55e]"
                                         : index < currentStep
-                                            ? "w-2 bg-sky-300"
+                                            ? "w-2 bg-[rgba(145,158,171,0.04)]"
                                             : "w-2 bg-gray-300"
                                 )}
                             />
@@ -458,7 +458,7 @@ function TooltipContent({
                             size="sm"
                             onClick={onNext}
                             rightIcon={!isLastStep ? <ChevronRight className="w-4 h-4" /> : undefined}
-                            className="bg-sky-600 hover:bg-sky-700 text-white border-none shadow-lg shadow-sky-500/20"
+                            className="bg-[#22c55e] hover:bg-[#22c55e] text-white border-none shadow-lg shadow-green-500/20"
                         >
                             {isLastStep ? "Bắt đầu ngay!" : "Tiếp theo"}
                         </Button>
@@ -468,3 +468,4 @@ function TooltipContent({
         </>
     );
 }
+

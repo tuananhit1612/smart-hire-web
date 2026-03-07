@@ -62,7 +62,7 @@ export function ProfileEditSkillsForm({
                 className={`px-3 py-1.5 text-xs rounded-md transition-all ${
                   newSkillLevel === level
                     ? level === "Expert"
-                      ? "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white shadow-md"
+                      ? "bg-gradient-to-r from-[#22c55e] via-purple-500 to-pink-500 text-white shadow-md"
                       : "bg-primary text-white shadow-sm"
                     : "hover:bg-muted text-muted-foreground hover:text-foreground"
                 }`}
@@ -126,3 +126,4 @@ export function ProfileEditSkillsForm({
     </div>
   );
 }
+

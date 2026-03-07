@@ -75,7 +75,7 @@ export function JobPreviewPanel() {
         open: { label: "Đang tuyển", color: "bg-emerald-50 text-emerald-700 border-emerald-200", dot: "bg-emerald-500" },
         closed: { label: "Đã đóng", color: "bg-gray-100 text-gray-600 border-gray-200", dot: "bg-gray-400" },
         paused: { label: "Tạm dừng", color: "bg-amber-50 text-amber-700 border-amber-200", dot: "bg-amber-500" },
-        draft: { label: "Bản nháp", color: "bg-blue-50 text-blue-700 border-blue-200", dot: "bg-blue-500" },
+        draft: { label: "Bản nháp", color: "bg-[#22c55e]/10 text-[#22c55e] border-[#22c55e]/30", dot: "bg-[#22c55e]" },
     };
     const status = statusMap[job.status] || statusMap.draft;
 
@@ -161,7 +161,7 @@ export function JobPreviewPanel() {
                         <div className="px-6 py-4 border-b border-gray-100">
                             <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Địa điểm</div>
                             <div className="text-sm font-bold text-gray-900 flex items-center gap-1.5">
-                                <MapPin className="w-3.5 h-3.5 text-sky-500" />
+                                <MapPin className="w-3.5 h-3.5 text-[#22c55e]" />
                                 {job.remote === "remote" ? "Remote" : job.location}
                             </div>
                         </div>
@@ -192,7 +192,7 @@ export function JobPreviewPanel() {
                                 <span className="text-xs text-gray-400">ứng viên</span>
                             </div>
                             <div className="flex items-center gap-1.5">
-                                <Eye className="w-3.5 h-3.5 text-sky-500" />
+                                <Eye className="w-3.5 h-3.5 text-[#22c55e]" />
                                 <span className="text-sm font-bold text-gray-900">{job.viewCount}</span>
                                 <span className="text-xs text-gray-400">lượt xem</span>
                             </div>
@@ -235,7 +235,7 @@ export function JobPreviewPanel() {
                             {job.niceToHaveSkills.length > 0 && (
                                 <div>
                                     <div className="flex items-center gap-1.5 mb-2">
-                                        <Sparkles className="w-3.5 h-3.5 text-sky-500" />
+                                        <Sparkles className="w-3.5 h-3.5 text-[#22c55e]" />
                                         <span className="text-xs font-semibold text-gray-700">Ưu tiên</span>
                                     </div>
                                     <div className="flex flex-wrap gap-1.5">
@@ -314,7 +314,7 @@ export function JobPreviewPanel() {
                                     {company.industry} · {company.size} nhân viên
                                 </div>
                             </div>
-                            <button className="text-xs text-sky-600 hover:text-sky-700 font-semibold flex items-center gap-0.5 transition-colors">
+                            <button className="text-xs text-[#22c55e] hover:text-[#22c55e] font-semibold flex items-center gap-0.5 transition-colors">
                                 Xem
                                 <ChevronRight className="w-3.5 h-3.5" />
                             </button>
@@ -338,7 +338,7 @@ export function JobPreviewPanel() {
                         <button className="p-3 border border-gray-200 rounded-xl text-gray-400 hover:text-red-500 hover:border-red-200 transition-all">
                             <Bookmark className="w-4 h-4" />
                         </button>
-                        <button className="p-3 border border-gray-200 rounded-xl text-gray-400 hover:text-sky-500 hover:border-sky-200 transition-all">
+                        <button className="p-3 border border-gray-200 rounded-xl text-gray-400 hover:text-[#22c55e] hover:border-[#22c55e]/30 transition-all">
                             <Share2 className="w-4 h-4" />
                         </button>
                     </div>
@@ -350,3 +350,4 @@ export function JobPreviewPanel() {
         </motion.div>
     );
 }
+

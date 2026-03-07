@@ -42,13 +42,13 @@ export function ProfileEditForm() {
     <div className="min-h-screen bg-background pb-20 pt-24 sm:pt-28">
       <div className="container mx-auto max-w-5xl px-4 py-8">
         {/* Integrated Header Card */}
-        <div className="bg-white/70 dark:bg-sky-950/30 backdrop-blur-xl border border-white/20 dark:border-sky-800/30 rounded-3xl shadow-xl shadow-blue-900/5 p-6 mb-8">
+        <div className="bg-white/70 dark:bg-[#22c55e] backdrop-blur-xl border border-white/20 dark:border-[#22c55e]/30 rounded-3xl shadow-xl shadow-[#22c55e]/20 p-6 mb-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Button variant="ghost" size="icon" onClick={() => router.push("/profile")}>
                 <ArrowLeft className="h-5 w-5" />
               </Button>
-              <h1 className="text-2xl font-bold text-sky-900 dark:text-white">Chỉnh sửa hồ sơ</h1>
+              <h1 className="text-2xl font-bold text-[#1C252E] dark:text-white">Chỉnh sửa hồ sơ</h1>
             </div>
             <Button onClick={handleSave} disabled={isSaving}>
               {isSaving ? "Đang lưu..." : "Lưu thay đổi"}
@@ -67,8 +67,8 @@ export function ProfileEditForm() {
                 className={cn(
                   "w-full text-left px-5 py-3 rounded-full text-sm font-medium transition-all hover:scale-105",
                   activeTab === tab.id
-                    ? "bg-sky-700 text-white shadow-lg shadow-sky-700/20"
-                    : "hover:bg-sky-50 text-sky-900 dark:text-gray-300 dark:hover:bg-zinc-800"
+                    ? "bg-[#22c55e] text-white shadow-lg shadow-[#22c55e]/20"
+                    : "hover:bg-[#22c55e]/10 text-[#1C252E] dark:text-gray-300 dark:hover:bg-zinc-800"
                 )}
               >
                 {tab.label}
@@ -78,7 +78,7 @@ export function ProfileEditForm() {
 
           {/* Content Area */}
           <div className="lg:col-span-9">
-            <div className="bg-white/70 dark:bg-sky-950/30 backdrop-blur-xl border border-white/20 dark:border-sky-800/30 rounded-3xl shadow-xl shadow-blue-900/5 p-6 md:p-8 min-h-[500px]">
+            <div className="bg-white/70 dark:bg-[#22c55e] backdrop-blur-xl border border-white/20 dark:border-[#22c55e]/30 rounded-3xl shadow-xl shadow-[#22c55e]/20 p-6 md:p-8 min-h-[500px]">
               {activeTab === "general" && (
                 <ProfileEditInfoForm
                   profile={profile}
@@ -128,3 +128,4 @@ export function ProfileEditForm() {
     </div>
   );
 }
+

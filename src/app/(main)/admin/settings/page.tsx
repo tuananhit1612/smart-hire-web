@@ -47,8 +47,8 @@ const settingSections: SettingSection[] = [
         title: "Cài đặt chung",
         description: "Cấu hình cơ bản cho hệ thống",
         icon: Globe,
-        color: "text-sky-600",
-        bg: "bg-sky-50",
+        color: "text-[#22c55e]",
+        bg: "bg-[#22c55e]/10",
         settings: [
             { id: "maintenance_mode", label: "Chế độ bảo trì", description: "Tạm dừng truy cập công khai, chỉ admin có thể truy cập", icon: AlertTriangle, defaultValue: false },
             { id: "new_registration", label: "Cho phép đăng ký mới", description: "Người dùng mới có thể tạo tài khoản trên hệ thống", icon: Lock, defaultValue: true },
@@ -129,7 +129,7 @@ function ToggleSwitch({
             onClick={() => onChange(!checked)}
             className={cn(
                 "relative w-11 h-6 rounded-full transition-colors duration-200 cursor-pointer shrink-0",
-                checked ? "bg-sky-500" : "bg-slate-200"
+                checked ? "bg-[#22c55e]" : "bg-slate-200"
             )}
         >
             <motion.span
@@ -192,8 +192,8 @@ export default function SystemSettingsPage() {
                     <div className="flex items-center justify-between">
                         <div>
                             <div className="flex items-center gap-2">
-                                <Settings className="w-6 h-6 text-sky-600" />
-                                <h1 className="text-2xl font-bold text-sky-900">Cài đặt hệ thống</h1>
+                                <Settings className="w-6 h-6 text-[#22c55e]" />
+                                <h1 className="text-2xl font-bold text-[#1C252E]">Cài đặt hệ thống</h1>
                             </div>
                             <p className="text-sm text-slate-500 mt-1">
                                 {enabledCount}/{totalSettings} tính năng đang bật — Quản lý cấu hình hệ thống
@@ -213,7 +213,7 @@ export default function SystemSettingsPage() {
                                     "flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer",
                                     saved
                                         ? "bg-emerald-500 text-white"
-                                        : "bg-sky-600 text-white hover:bg-sky-700"
+                                        : "bg-[#22c55e] text-white hover:bg-[#22c55e]"
                                 )}
                             >
                                 {saved ? (
@@ -244,7 +244,7 @@ export default function SystemSettingsPage() {
                                         <SectionIcon className={cn("w-4.5 h-4.5", section.color)} />
                                     </div>
                                     <div>
-                                        <h2 className="text-sm font-bold text-sky-900">{section.title}</h2>
+                                        <h2 className="text-sm font-bold text-[#1C252E]">{section.title}</h2>
                                         <p className="text-[11px] text-slate-400">{section.description}</p>
                                     </div>
                                     <span className="ml-auto text-[10px] text-slate-300 font-medium">
@@ -264,9 +264,9 @@ export default function SystemSettingsPage() {
                                                 transition={{ delay: 0.15 + si * 0.08 + i * 0.04 }}
                                                 className="px-5 py-3.5 flex items-center gap-3 hover:bg-slate-50/50 transition-colors"
                                             >
-                                                <Icon className={cn("w-4 h-4 shrink-0", toggles[setting.id] ? "text-sky-500" : "text-slate-300")} />
+                                                <Icon className={cn("w-4 h-4 shrink-0", toggles[setting.id] ? "text-[#22c55e]" : "text-slate-300")} />
                                                 <div className="flex-1 min-w-0">
-                                                    <p className="text-sm font-semibold text-sky-900">{setting.label}</p>
+                                                    <p className="text-sm font-semibold text-[#1C252E]">{setting.label}</p>
                                                     <p className="text-[11px] text-slate-400 mt-0.5">{setting.description}</p>
                                                 </div>
                                                 <ToggleSwitch
@@ -309,3 +309,4 @@ function CheckCircle({ className }: { readonly className?: string }) {
         </svg>
     );
 }
+

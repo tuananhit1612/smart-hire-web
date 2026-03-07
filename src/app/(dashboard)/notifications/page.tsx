@@ -54,8 +54,8 @@ export default function NotificationsPage() {
                     className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8"
                 >
                     <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-xl bg-sky-50 dark:bg-sky-900/30 flex items-center justify-center">
-                            <BellRing className="w-6 h-6 text-sky-600 dark:text-sky-400" />
+                        <div className="w-12 h-12 rounded-xl bg-[#22c55e]/10 dark:bg-[#22c55e]/20 flex items-center justify-center">
+                            <BellRing className="w-6 h-6 text-[#22c55e] dark:text-[#22c55e]" />
                         </div>
                         <div>
                             <h1 className="text-2xl font-bold text-[#1C252E] dark:text-white">
@@ -74,7 +74,7 @@ export default function NotificationsPage() {
                             variant="ghost"
                             size="sm"
                             onClick={handleMarkAllRead}
-                            className="h-9 text-sm text-sky-600 hover:text-sky-700 hover:bg-sky-50 dark:hover:bg-sky-900/20 rounded-full gap-1.5 cursor-pointer"
+                            className="h-9 text-sm text-[#22c55e] hover:text-[#22c55e] hover:bg-[#22c55e]/10 dark:hover:bg-[#22c55e]/20 rounded-full gap-1.5 cursor-pointer"
                         >
                             <CheckCheck className="w-4 h-4" />
                             Đánh dấu tất cả đã đọc
@@ -144,3 +144,4 @@ export default function NotificationsPage() {
         </section>
     );
 }
+

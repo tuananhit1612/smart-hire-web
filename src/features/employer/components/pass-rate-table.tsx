@@ -62,7 +62,7 @@ function TrendBadge({ current, previous }: { readonly current: number; readonly 
 function RateBar({ rate, delay }: { readonly rate: number; readonly delay: number }) {
     const getColor = () => {
         if (rate >= 15) return "bg-emerald-500";
-        if (rate >= 10) return "bg-sky-500";
+        if (rate >= 10) return "bg-[#22c55e]";
         return "bg-amber-500";
     };
 
@@ -101,7 +101,7 @@ export default function PassRateTable({
             {/* Header */}
             <div className="flex items-center justify-between p-5 pb-3">
                 <div className="flex items-center gap-2">
-                    <BarChart3 className="w-5 h-5 text-sky-600" />
+                    <BarChart3 className="w-5 h-5 text-[#22c55e]" />
                     <h3 className="text-sm font-bold text-[#1C252E] dark:text-white">{title}</h3>
                 </div>
                 <div className="flex items-center gap-2">
@@ -131,10 +131,10 @@ export default function PassRateTable({
                                 initial={{ opacity: 0, x: -10 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: 0.1 + i * 0.05 }}
-                                className="border-b border-[rgba(145,158,171,0.06)] dark:border-white/[0.04] hover:bg-sky-50/30 dark:hover:bg-white/[0.03] transition-colors group cursor-pointer">
+                                className="border-b border-[rgba(145,158,171,0.06)] dark:border-white/[0.04] hover:bg-[#22c55e]/10 dark:hover:bg-white/[0.03] transition-colors group cursor-pointer">
                                 {/* Position + Department */}
                                 <td className="px-5 py-3">
-                                    <p className="text-sm font-semibold text-[#1C252E] dark:text-white group-hover:text-sky-600 transition-colors">{row.position}</p>
+                                    <p className="text-sm font-semibold text-[#1C252E] dark:text-white group-hover:text-[#22c55e] transition-colors">{row.position}</p>
                                     <p className="text-[10px] text-[#919EAB]">{row.department}</p>
                                 </td>
                                 {/* Total Applicants */}
@@ -159,7 +159,7 @@ export default function PassRateTable({
                                 </td>
                                 {/* Arrow */}
                                 <td className="px-3 py-3">
-                                    <ChevronRight className="w-4 h-4 text-[#C4CDD5] dark:text-[#637381] group-hover:text-sky-500 transition-colors" />
+                                    <ChevronRight className="w-4 h-4 text-[#C4CDD5] dark:text-[#637381] group-hover:text-[#22c55e] transition-colors" />
                                 </td>
                             </motion.tr>
                         ))}
@@ -183,3 +183,4 @@ export default function PassRateTable({
         </div>
     );
 }
+

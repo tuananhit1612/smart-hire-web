@@ -459,9 +459,9 @@ function JobClosedView({ job, onClose }: { job: Job; onClose: () => void }) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="w-full max-w-sm bg-sky-50 dark:bg-sky-900/20 rounded-2xl p-4 mb-6 border border-sky-200 dark:border-sky-800"
+        className="w-full max-w-sm bg-[#22c55e]/10 dark:bg-[#22c55e]/20 rounded-2xl p-4 mb-6 border border-[#22c55e]/30 dark:border-[#22c55e]/30"
       >
-        <p className="text-sm text-sky-700 dark:text-sky-400">
+        <p className="text-sm text-[#22c55e] dark:text-[#22c55e]">
           💡 <strong>Tip:</strong> Hãy lưu công ty này vào danh sách theo dõi để nhận thông báo khi có vị trí mới!
         </p>
       </motion.div>
@@ -740,3 +740,4 @@ function CVCard({ cv, isSelected, onSelect, onView, formatDate }: CVCardProps) {
     </motion.div>
   );
 }
+

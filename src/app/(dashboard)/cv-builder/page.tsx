@@ -271,7 +271,7 @@ function CVBuilderContent() {
             {/* Toggle Button (Always Visible) */}
             <button
                 onClick={() => setIsToolbarOpen(!isToolbarOpen)}
-                className={`flex items-center justify-center p-2 border border-sky-100 bg-white hover:bg-sky-50 text-sky-600 transition-all z-20 h-10 w-10 focus:outline-none focus:ring-0 ${isToolbarOpen ? 'rounded-l-full border-r-0' : 'rounded-full shadow-md hover:shadow-lg'}`}
+                className={`flex items-center justify-center p-2 border border-green-100 bg-white hover:bg-green-50 text-green-600 transition-all z-20 h-10 w-10 focus:outline-none focus:ring-0 ${isToolbarOpen ? 'rounded-l-full border-r-0' : 'rounded-full shadow-md hover:shadow-lg'}`}
                 title={isToolbarOpen ? "Thu gọn" : "Mở rộng công cụ"}
             >
                 {isToolbarOpen ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
@@ -285,13 +285,13 @@ function CVBuilderContent() {
                         animate={{ width: "auto", opacity: 1 }}
                         exit={{ width: 0, opacity: 0 }}
                         transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="flex items-center gap-1 bg-white border border-l-0 border-sky-100 p-1 pl-1 rounded-r-full shadow-sm overflow-hidden whitespace-nowrap origin-left h-10"
+                        className="flex items-center gap-1 bg-white border border-l-0 border-green-100 p-1 pl-1 rounded-r-full shadow-sm overflow-hidden whitespace-nowrap origin-left h-10"
                     >
                         {/* Zoom Controls */}
                         <div className="flex items-center px-1">
                             <button
                                 onClick={handleZoomOut}
-                                className="h-8 w-8 flex items-center justify-center hover:bg-slate-100 rounded-md text-slate-600 hover:text-sky-600 transition-all"
+                                className="h-8 w-8 flex items-center justify-center hover:bg-slate-100 rounded-md text-slate-600 hover:text-green-600 transition-all"
                                 title="Thu nhỏ (Ctrl + Scroll Down)"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8" /><line x1="21" x2="16.65" y1="21" y2="16.65" /><line x1="8" x2="14" y1="11" y2="11" /></svg>
@@ -301,7 +301,7 @@ function CVBuilderContent() {
                             </div>
                             <button
                                 onClick={handleZoomIn}
-                                className="h-8 w-8 flex items-center justify-center hover:bg-slate-100 rounded-md text-slate-600 hover:text-sky-600 transition-all"
+                                className="h-8 w-8 flex items-center justify-center hover:bg-slate-100 rounded-md text-slate-600 hover:text-green-600 transition-all"
                                 title="Phóng to (Ctrl + Scroll Up)"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8" /><line x1="21" x2="16.65" y1="21" y2="16.65" /><line x1="11" x2="11" y1="8" y2="14" /><line x1="8" x2="14" y1="11" y2="11" /></svg>
@@ -314,8 +314,8 @@ function CVBuilderContent() {
                         <button
                             onClick={() => setIsPanMode(!isPanMode)}
                             className={`h-8 flex items-center gap-2 px-3 rounded-md text-sm font-medium transition-all !ring-0 !outline-none !border-transparent border-0 ring-0 outline-none shadow-none hover:shadow-none focus:ring-0 focus:outline-none focus:border-transparent ${isPanMode
-                                ? 'bg-sky-100 text-sky-700 shadow-inner'
-                                : 'text-slate-600 hover:bg-sky-50 hover:text-sky-600 active:bg-sky-100 active:text-sky-700 active:shadow-inner'
+                                ? 'bg-green-100 text-green-700 shadow-inner'
+                                : 'text-slate-600 hover:bg-green-50 hover:text-green-600 active:bg-green-100 active:text-green-700 active:shadow-inner'
                                 }`}
                             title={isPanMode ? "Tắt chế độ kéo" : "Bật chế độ kéo (Giữ Ctrl)"}
                         >
@@ -328,7 +328,7 @@ function CVBuilderContent() {
                         {/* Special Actions (Mock & History) */}
                         <div className="flex items-center gap-1">
                             <button
-                                className="h-8 flex items-center gap-2 px-3 rounded-md text-sm font-medium transition-all !ring-0 !outline-none !border-transparent border-0 ring-0 outline-none shadow-none hover:shadow-none focus:ring-0 focus:outline-none focus:border-transparent text-slate-600 hover:text-sky-600 hover:bg-sky-50 active:bg-sky-100 active:text-sky-700 active:shadow-inner disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="h-8 flex items-center gap-2 px-3 rounded-md text-sm font-medium transition-all !ring-0 !outline-none !border-transparent border-0 ring-0 outline-none shadow-none hover:shadow-none focus:ring-0 focus:outline-none focus:border-transparent text-slate-600 hover:text-green-600 hover:bg-green-50 active:bg-green-100 active:text-green-700 active:shadow-inner disabled:opacity-50 disabled:cursor-not-allowed"
                                 disabled={!!searchParams.get('template') || isAutoFilling}
                                 title={searchParams.get('template') ? "Đã có mẫu CV được chọn" : "Tạo dữ liệu mẫu với AI"}
                                 onClick={() => {
@@ -425,8 +425,8 @@ function CVBuilderContent() {
             {isPreviewMode && (
                 <div className="fixed inset-0 z-50 bg-white/95 dark:bg-[#141A21]/95 backdrop-blur-xl flex flex-col animate-in fade-in duration-200">
                     <div className="flex items-center justify-between px-6 py-4 bg-white/50 dark:bg-[#1C252E]/50 border-b border-gray-100 dark:border-white/10 text-gray-900 dark:text-white">
-                        <h2 className="text-lg font-bold flex items-center gap-2 text-sky-900 dark:text-white">
-                            <FileText className="w-5 h-5 text-sky-600" />
+                        <h2 className="text-lg font-bold flex items-center gap-2 text-green-900 dark:text-white">
+                            <FileText className="w-5 h-5 text-green-600" />
                             Xem trước CV
                         </h2>
                         <div className="flex gap-3">
@@ -473,7 +473,7 @@ export default function CVBuilderPage() {
         <React.Suspense fallback={
             <div className="flex items-center justify-center h-screen bg-slate-50 dark:bg-[#141A21]">
                 <div className="flex flex-col items-center gap-3">
-                    <div className="w-8 h-8 border-4 border-sky-500 border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
                     <p className="text-slate-500 dark:text-gray-400 font-medium text-sm">Đang tải trình tạo CV...</p>
                 </div>
             </div>

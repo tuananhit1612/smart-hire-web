@@ -26,7 +26,7 @@ export interface FunnelStage {
 }
 
 export const defaultFunnelStages: FunnelStage[] = [
-    { id: "applied", label: "Ứng tuyển", count: 1284, icon: Users, color: "text-sky-600", bg: "bg-sky-50 dark:bg-sky-900/20", barColor: "bg-sky-500" },
+    { id: "applied", label: "Ứng tuyển", count: 1284, icon: Users, color: "text-[#22c55e]", bg: "bg-[#22c55e]/10 dark:bg-[#22c55e]/20", barColor: "bg-[#22c55e]" },
     { id: "screened", label: "Sàng lọc", count: 642, icon: FileSearch, color: "text-violet-600", bg: "bg-violet-50 dark:bg-violet-900/20", barColor: "bg-violet-500" },
     { id: "interview", label: "Phỏng vấn", count: 198, icon: Video, color: "text-amber-600", bg: "bg-amber-50 dark:bg-amber-900/20", barColor: "bg-amber-500" },
     { id: "offer", label: "Offer", count: 45, icon: Gift, color: "text-emerald-600", bg: "bg-emerald-50 dark:bg-emerald-900/20", barColor: "bg-emerald-500" },
@@ -167,3 +167,4 @@ export default function FunnelByStage({
         </div>
     );
 }
+

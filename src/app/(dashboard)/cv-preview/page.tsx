@@ -129,8 +129,8 @@ export default function CVPreviewPage() {
 
     const colors: Record<string, string> = {
       beginner: "bg-gray-100 text-gray-600",
-      intermediate: "bg-blue-100 text-blue-600",
-      advanced: "bg-purple-100 text-purple-600",
+      intermediate: "bg-emerald-100 text-emerald-600",
+      advanced: "bg-amber-100 text-amber-600",
       expert: "bg-green-100 text-green-600",
     };
     const labels: Record<string, string> = {
@@ -150,9 +150,9 @@ export default function CVPreviewPage() {
         <div className="flex items-center justify-between mb-6">
           <button
             onClick={() => router.back()}
-            className="flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors group"
+            className="flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-green-600 dark:hover:text-green-400 transition-colors group"
           >
-            <div className="w-10 h-10 rounded-full bg-white dark:bg-slate-800 shadow-md flex items-center justify-center group-hover:bg-sky-50 dark:group-hover:bg-sky-900/30 transition-colors">
+            <div className="w-10 h-10 rounded-full bg-white dark:bg-slate-800 shadow-md flex items-center justify-center group-hover:bg-green-50 dark:group-hover:bg-green-900/30 transition-colors">
               <ArrowLeft className="w-5 h-5" />
             </div>
             <span className="font-medium">Quay lại</span>
@@ -171,7 +171,7 @@ export default function CVPreviewPage() {
             {params.returnTo === "apply" && (
               <Button
                 onClick={handleSelectCV}
-                className="bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-700 hover:to-sky-600 text-white rounded-full px-6 shadow-lg"
+                className="bg-gradient-to-r from-emerald-600 to-green-500 hover:from-emerald-700 hover:to-green-600 text-white rounded-full px-6 shadow-lg"
               >
                 <Check className="w-4 h-4 mr-2" />
                 Chọn CV này để ứng tuyển
@@ -197,7 +197,7 @@ export default function CVPreviewPage() {
           </div>
 
           {/* Header Section */}
-          <div className="bg-gradient-to-r from-blue-600 via-sky-500 to-cyan-500 p-8 text-white">
+          <div className="bg-gradient-to-r from-emerald-600 via-green-500 to-teal-500 p-8 text-white">
             <div className="flex items-start gap-6">
               {cv.data.personalInfo.avatarUrl ? (
                 <img
@@ -313,15 +313,15 @@ export default function CVPreviewPage() {
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      className="relative pl-6 border-l-2 border-sky-500"
+                      className="relative pl-6 border-l-2 border-green-500"
                     >
-                      <div className="absolute -left-2 top-0 w-4 h-4 rounded-full bg-sky-500" />
+                      <div className="absolute -left-2 top-0 w-4 h-4 rounded-full bg-green-500" />
                       <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
                         <div>
                           <h4 className="text-lg font-bold text-slate-900 dark:text-white">
                             {exp.position}
                           </h4>
-                          <p className="text-sky-600 dark:text-sky-400 font-medium">
+                          <p className="text-green-600 dark:text-green-400 font-medium">
                             {exp.company}
                           </p>
                         </div>
@@ -356,15 +356,15 @@ export default function CVPreviewPage() {
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      className="relative pl-6 border-l-2 border-purple-500"
+                      className="relative pl-6 border-l-2 border-amber-500"
                     >
-                      <div className="absolute -left-2 top-0 w-4 h-4 rounded-full bg-purple-500" />
+                      <div className="absolute -left-2 top-0 w-4 h-4 rounded-full bg-amber-500" />
                       <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
                         <div>
                           <h4 className="text-lg font-bold text-slate-900 dark:text-white">
                             {edu.school}
                           </h4>
-                          <p className="text-purple-600 dark:text-purple-400 font-medium">
+                          <p className="text-amber-600 dark:text-amber-400 font-medium">
                             {edu.degree} - {edu.field}
                           </p>
                         </div>
@@ -466,7 +466,7 @@ export default function CVPreviewPage() {
                             href={project.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-sky-500 hover:text-sky-600"
+                            className="text-green-500 hover:text-green-600"
                           >
                             <ExternalLink className="w-4 h-4" />
                           </a>
@@ -484,7 +484,7 @@ export default function CVPreviewPage() {
                         {project.technologies.map((tech) => (
                           <span
                             key={tech}
-                            className="text-xs px-2 py-1 rounded-full bg-sky-100 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400"
+                            className="text-xs px-2 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400"
                           >
                             {tech}
                           </span>
@@ -627,7 +627,7 @@ function EditableTextarea({ value, isEditing, editValue, onStart, onCancel, onSa
         <textarea
           value={editValue}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full h-32 p-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 resize-none"
+          className="w-full h-32 p-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
           autoFocus
         />
         <div className="flex gap-2">

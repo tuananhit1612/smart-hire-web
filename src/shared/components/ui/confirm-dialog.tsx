@@ -46,7 +46,7 @@ export function ConfirmDialog({
     const iconColors = {
         danger: "text-red-500 bg-red-100 dark:bg-red-900/30",
         warning: "text-amber-500 bg-amber-100 dark:bg-amber-900/30",
-        info: "text-blue-500 bg-blue-100 dark:bg-blue-900/30",
+        info: "text-[#22c55e] bg-[#22c55e]/15 dark:bg-[#22c55e]/20",
     };
 
     const confirmVariant = variant === "danger" ? "danger" : "primary";
@@ -73,7 +73,7 @@ export function ConfirmDialog({
                     >
                         <div className="relative w-full max-w-sm bg-white/90 backdrop-blur-2xl rounded-[24px] shadow-2xl ring-1 ring-white/60 pointer-events-auto p-6 overflow-hidden">
                             {/* Decorative Top Gradient */}
-                            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-sky-400 via-sky-500 to-green-400 opacity-50"></div>
+                            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#22c55e] via-[#10b981] to-green-400 opacity-50"></div>
 
                             {/* Close button */}
                             <button
@@ -115,7 +115,7 @@ export function ConfirmDialog({
                                         onConfirm();
                                         onClose();
                                     }}
-                                    className="rounded-full font-bold shadow-lg shadow-sky-200 h-12"
+                                    className="rounded-full font-bold shadow-lg shadow-[#22c55e]/20 h-12"
                                 >
                                     {confirmText}
                                 </Button>
@@ -191,3 +191,4 @@ export function useConfirmDialog() {
 
     return { confirm, DialogComponent };
 }
+

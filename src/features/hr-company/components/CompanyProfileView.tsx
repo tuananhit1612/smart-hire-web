@@ -30,7 +30,7 @@ export function CompanyProfileView() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.5 }}
                     transition={{ duration: 1 }}
-                    className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-gradient-to-br from-sky-200/30 via-blue-200/20 to-transparent rounded-full blur-3xl"
+                    className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-gradient-to-br from-[rgba(145,158,171,0.04)] via-white to-transparent rounded-full blur-3xl"
                 />
                 <motion.div
                     initial={{ opacity: 0 }}
@@ -52,10 +52,10 @@ export function CompanyProfileView() {
                         <motion.h1
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="text-3xl sm:text-4xl font-bold text-sky-900"
+                            className="text-3xl sm:text-4xl font-bold text-[#1C252E]"
                         >
                             Hồ sơ{" "}
-                            <span className="bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
+                            <span className="bg-gradient-to-r from-[#22c55e] to-[#10b981] bg-clip-text text-transparent">
                                 Công ty
                             </span>
                         </motion.h1>
@@ -63,7 +63,7 @@ export function CompanyProfileView() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ delay: 0.2 }}
-                            className="text-sky-600 mt-2"
+                            className="text-[#22c55e] mt-2"
                         >
                             Quản lý thông tin và hình ảnh công ty của bạn
                         </motion.p>
@@ -108,3 +108,4 @@ export function CompanyProfileView() {
         </div>
     );
 }
+

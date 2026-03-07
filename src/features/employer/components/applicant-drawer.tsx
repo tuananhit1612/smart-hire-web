@@ -101,7 +101,7 @@ export function ApplicantDrawer({ applicant, isOpen, onClose }: ApplicantDrawerP
                                 className={cn(
                                     "px-4 py-3 text-sm font-medium border-b-2 transition-colors",
                                     activeTab === "overview" 
-                                        ? "border-sky-500 text-sky-700 dark:text-sky-400" 
+                                        ? "border-[#22c55e]/30 text-[#22c55e] dark:text-[#22c55e]" 
                                         : "border-transparent text-[#637381] dark:text-[#919EAB] hover:text-[#1C252E] dark:hover:text-white"
                                 )}
                             >
@@ -112,7 +112,7 @@ export function ApplicantDrawer({ applicant, isOpen, onClose }: ApplicantDrawerP
                                 className={cn(
                                     "px-4 py-3 text-sm font-medium border-b-2 transition-colors",
                                     activeTab === "notes" 
-                                        ? "border-sky-500 text-sky-700 dark:text-sky-400" 
+                                        ? "border-[#22c55e]/30 text-[#22c55e] dark:text-[#22c55e]" 
                                         : "border-transparent text-[#637381] dark:text-[#919EAB] hover:text-[#1C252E] dark:hover:text-white"
                                 )}
                             >
@@ -137,7 +137,7 @@ export function ApplicantDrawer({ applicant, isOpen, onClose }: ApplicantDrawerP
                                                     variant="ghost" 
                                                     size="sm" 
                                                     onClick={handleReAnalyze}
-                                                    className="h-8 text-xs text-[#637381] dark:text-[#919EAB] hover:text-sky-600 hover:bg-sky-50 dark:hover:bg-sky-900/20 rounded-full"
+                                                    className="h-8 text-xs text-[#637381] dark:text-[#919EAB] hover:text-[#22c55e] hover:bg-[#22c55e]/10 dark:hover:bg-[#22c55e]/20 rounded-full"
                                                 >
                                                     <RefreshCcw className="w-3.5 h-3.5 mr-1" />
                                                     Phân tích lại
@@ -221,8 +221,8 @@ export function ApplicantDrawer({ applicant, isOpen, onClose }: ApplicantDrawerP
                                                 </div>
                                             ))}
                                             <div className="relative">
-                                                <div className="absolute -left-[31px] top-1 w-2.5 h-2.5 rounded-full bg-sky-500 border-2 border-white dark:border-[#141A21] ring-2 ring-sky-100 dark:ring-sky-900/40" />
-                                                <p className="text-sm font-medium text-sky-700 dark:text-sky-400">Hiện tại: {applicant.status}</p>
+                                                <div className="absolute -left-[31px] top-1 w-2.5 h-2.5 rounded-full bg-[#22c55e] border-2 border-white dark:border-[#141A21] ring-2 ring-[#22c55e]/30 dark:ring-[#22c55e]/30" />
+                                                <p className="text-sm font-medium text-[#22c55e] dark:text-[#22c55e]">Hiện tại: {applicant.status}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -238,7 +238,7 @@ export function ApplicantDrawer({ applicant, isOpen, onClose }: ApplicantDrawerP
                                             className="w-full text-sm resize-none border-0 focus:ring-0 p-0 placeholder:text-[#919EAB] min-h-[80px] bg-transparent text-[#1C252E] dark:text-white"
                                         />
                                         <div className="flex justify-end mt-2 pt-2 border-t border-[rgba(145,158,171,0.12)] dark:border-white/[0.08]">
-                                            <Button size="sm" className="h-8 bg-sky-600 hover:bg-sky-700 text-white rounded-full">
+                                            <Button size="sm" className="h-8 bg-[#22c55e] hover:bg-[#22c55e] text-white rounded-full">
                                                 <Send className="w-3.5 h-3.5 mr-1" /> Lưu
                                             </Button>
                                         </div>
@@ -291,3 +291,4 @@ export function ApplicantDrawer({ applicant, isOpen, onClose }: ApplicantDrawerP
         </AnimatePresence>
     );
 }
+

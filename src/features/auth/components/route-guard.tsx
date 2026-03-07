@@ -40,7 +40,7 @@ function LoadingScreen() {
                 animate={{ opacity: 1, scale: 1 }}
                 className="flex flex-col items-center gap-3"
             >
-                <Loader2 className="w-8 h-8 text-sky-500 animate-spin" />
+                <Loader2 className="w-8 h-8 text-[#22c55e] animate-spin" />
                 <p className="text-sm text-slate-400 font-medium">Đang xác thực...</p>
             </motion.div>
         </div>
@@ -59,7 +59,7 @@ function UnauthorizedScreen() {
                 <div className="w-14 h-14 rounded-2xl bg-rose-50 flex items-center justify-center">
                     <ShieldAlert className="w-7 h-7 text-rose-500" />
                 </div>
-                <h2 className="text-lg font-bold text-sky-900">Không có quyền truy cập</h2>
+                <h2 className="text-lg font-bold text-[#1C252E]">Không có quyền truy cập</h2>
                 <p className="text-sm text-slate-500">
                     Bạn không có quyền truy cập trang này. Vui lòng liên hệ quản trị viên nếu cần hỗ trợ.
                 </p>
@@ -77,16 +77,16 @@ function UnauthenticatedScreen() {
                 animate={{ opacity: 1, y: 0 }}
                 className="flex flex-col items-center gap-3 text-center max-w-sm"
             >
-                <div className="w-14 h-14 rounded-2xl bg-sky-50 flex items-center justify-center">
-                    <LogIn className="w-7 h-7 text-sky-500" />
+                <div className="w-14 h-14 rounded-2xl bg-[#22c55e]/10 flex items-center justify-center">
+                    <LogIn className="w-7 h-7 text-[#22c55e]" />
                 </div>
-                <h2 className="text-lg font-bold text-sky-900">Vui lòng đăng nhập</h2>
+                <h2 className="text-lg font-bold text-[#1C252E]">Vui lòng đăng nhập</h2>
                 <p className="text-sm text-slate-500">
                     Bạn cần đăng nhập để truy cập trang này.
                 </p>
                 <a
                     href="/login"
-                    className="mt-2 px-5 py-2 text-sm font-semibold bg-sky-600 text-white rounded-xl hover:bg-sky-700 transition-colors"
+                    className="mt-2 px-5 py-2 text-sm font-semibold bg-[#22c55e] text-white rounded-xl hover:bg-[#22c55e] transition-colors"
                 >
                     Đăng nhập
                 </a>
@@ -174,3 +174,4 @@ export function EmployerOrAdminGuard({ children }: { readonly children: ReactNod
 export function AuthenticatedGuard({ children }: { readonly children: ReactNode }) {
     return <RouteGuard>{children}</RouteGuard>;
 }
+

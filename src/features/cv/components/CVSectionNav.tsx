@@ -66,7 +66,7 @@ export function CVSectionNav({
                         {isActive && (
                             <motion.div
                                 layoutId="activeSection"
-                                className="absolute inset-0 rounded-xl p-[1px] bg-gradient-to-r from-sky-400 via-green-400 to-teal-400"
+                                className="absolute inset-0 rounded-xl p-[1px] bg-gradient-to-r from-green-400 via-green-400 to-teal-400"
                                 transition={{ type: "spring", duration: 0.5 }}
                             >
                                 <div className="absolute inset-[1px] rounded-xl bg-white" />
@@ -80,7 +80,7 @@ export function CVSectionNav({
                                 className={cn(
                                     "flex items-center justify-center w-9 h-9 rounded-lg transition-colors",
                                     isActive
-                                        ? "bg-gradient-to-r from-sky-500 to-green-500 text-white shadow-md shadow-green-500/20"
+                                        ? "bg-gradient-to-r from-green-500 to-green-500 text-white shadow-md shadow-green-500/20"
                                         : isCompleted
                                             ? "bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400"
                                             : "bg-gray-100 dark:bg-white/[0.04] text-gray-400 group-hover:bg-white dark:group-hover:bg-white/[0.08] group-hover:text-green-500"
@@ -99,7 +99,7 @@ export function CVSectionNav({
                                     className={cn(
                                         "text-sm font-medium truncate transition-colors font-sans",
                                         isActive
-                                            ? "text-sky-900 dark:text-white"
+                                            ? "text-green-900 dark:text-white"
                                             : "text-gray-600 dark:text-gray-300 group-hover:text-green-700 dark:group-hover:text-green-400"
                                     )}
                                 >

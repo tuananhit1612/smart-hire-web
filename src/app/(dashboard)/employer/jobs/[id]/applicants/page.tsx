@@ -66,7 +66,7 @@ export default function EmployerApplicantsPage({ params }: { params: { id: strin
             <div className="container mx-auto px-4 max-w-7xl">
                 {/* Header */}
                 <div className="mb-8">
-                    <Link href="/employer/dashboard" className="inline-flex items-center text-sm text-slate-500 hover:text-sky-600 mb-4 transition-colors">
+                    <Link href="/employer/dashboard" className="inline-flex items-center text-sm text-slate-500 hover:text-[#22c55e] mb-4 transition-colors">
                         <ArrowLeft className="w-4 h-4 mr-1" />
                         Quay lại Dashboard
                     </Link>
@@ -77,7 +77,7 @@ export default function EmployerApplicantsPage({ params }: { params: { id: strin
                                 Danh sách ứng viên
                             </h1>
                             <p className="text-[#637381] dark:text-[#919EAB] text-lg flex items-center gap-2">
-                                <span className="font-medium text-sky-700 dark:text-sky-400">{jobTitle}</span>
+                                <span className="font-medium text-[#22c55e] dark:text-[#22c55e]">{jobTitle}</span>
                                 <span className="w-1 h-1 rounded-full bg-[rgba(145,158,171,0.3)]" />
                                 <span className="text-sm flex items-center gap-1">
                                     <Users className="w-4 h-4" /> {filteredApplicants.length} hồ sơ
@@ -89,11 +89,11 @@ export default function EmployerApplicantsPage({ params }: { params: { id: strin
                         <motion.div
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
-                            className="bg-gradient-to-r from-sky-500 to-blue-600 rounded-2xl p-0.5 shadow-lg shadow-blue-500/20"
+                            className="bg-gradient-to-r from-[#22c55e] to-[#10b981] rounded-2xl p-0.5 shadow-lg shadow-[#22c55e]/20"
                         >
                             <div className="bg-white/95 dark:bg-[#1C252E] backdrop-blur-sm rounded-[14px] px-4 py-3 flex items-center gap-4">
-                                <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center">
-                                    <Sparkles className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                                <div className="w-10 h-10 rounded-full bg-[#22c55e]/10 dark:bg-[#22c55e]/20 flex items-center justify-center">
+                                    <Sparkles className="w-5 h-5 text-[#22c55e] dark:text-[#22c55e]" />
                                 </div>
                                 <div>
                                     <p className="text-xs font-semibold text-[#919EAB] uppercase tracking-wider">Top Match</p>

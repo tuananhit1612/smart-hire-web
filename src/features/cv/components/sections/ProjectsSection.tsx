@@ -93,8 +93,8 @@ export function ProjectsSection({ data, onChange }: ProjectsSectionProps) {
                 {/* Section Header */}
                 <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                     <div>
-                        <h2 className="text-xl md:text-2xl font-bold tracking-tight text-sky-900 flex items-center gap-2 md:gap-3">
-                            <div className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-gradient-to-r from-sky-500 to-green-500 text-white flex-shrink-0 shadow-lg shadow-sky-500/20">
+                        <h2 className="text-xl md:text-2xl font-bold tracking-tight text-green-900 flex items-center gap-2 md:gap-3">
+                            <div className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-gradient-to-r from-green-500 to-green-500 text-white flex-shrink-0 shadow-lg shadow-green-500/20">
                                 <FolderKanban className="w-4 h-4 md:w-5 md:h-5" />
                             </div>
                             <span>Dự án</span>
@@ -123,7 +123,7 @@ export function ProjectsSection({ data, onChange }: ProjectsSectionProps) {
                             exit={{ opacity: 0, scale: 0.95 }}
                             className="border-2 border-dashed border-gray-200 dark:border-zinc-800 rounded-2xl p-8 text-center"
                         >
-                            <FolderKanban className="w-12 h-12 mx-auto text-sky-200 mb-3" />
+                            <FolderKanban className="w-12 h-12 mx-auto text-green-200 mb-3" />
                             <p className="text-gray-500 dark:text-gray-400 text-sm">
                                 Chưa có dự án nào
                             </p>
@@ -219,7 +219,7 @@ function ProjectCard({
             </button>
 
             {/* Item Number Badge */}
-            <div className="absolute -left-3 top-6 flex items-center justify-center w-6 h-6 rounded-full bg-gradient-to-r from-sky-500 to-green-500 text-white text-xs font-bold shadow-lg hidden md:flex">
+            <div className="absolute -left-3 top-6 flex items-center justify-center w-6 h-6 rounded-full bg-gradient-to-r from-green-500 to-green-500 text-white text-xs font-bold shadow-lg hidden md:flex">
                 {index + 1}
             </div>
 
@@ -227,7 +227,7 @@ function ProjectCard({
                 {/* Mobile Drag Handle & Number */}
                 <div className="flex items-center gap-2 md:hidden">
                     {dragHandle}
-                    <span className="text-xs font-semibold text-sky-600">
+                    <span className="text-xs font-semibold text-green-600">
                         #{index + 1}
                     </span>
                 </div>
@@ -250,7 +250,7 @@ function ProjectCard({
                         onChange={(e) => onUpdate(project.id, "description", e.target.value)}
                         placeholder="Mô tả ngắn gọn về dự án, mục tiêu và vai trò của bạn..."
                         rows={3}
-                        className="w-full rounded-xl border border-gray-200 dark:border-zinc-700 bg-transparent px-4 py-3 text-sm dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all duration-200 resize-none hover:border-sky-200 dark:hover:border-sky-500/50"
+                        className="w-full rounded-xl border border-gray-200 dark:border-zinc-700 bg-transparent px-4 py-3 text-sm dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 resize-none hover:border-green-200 dark:hover:border-green-500/50"
                     />
                 </div>
 
@@ -270,7 +270,7 @@ function ProjectCard({
                                     initial={{ opacity: 0, scale: 0.8 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.8 }}
-                                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium bg-sky-50 dark:bg-sky-900/20 border border-sky-100 dark:border-sky-500/20 text-sky-700 dark:text-sky-400"
+                                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-500/20 text-green-700 dark:text-green-400"
                                 >
                                     {tech}
                                     <button
@@ -300,13 +300,13 @@ function ProjectCard({
 
                         {/* Suggestions dropdown */}
                         {showSuggestions && filteredSuggestions.length > 0 && (
-                            <div className="absolute z-20 mt-1 w-full bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl shadow-lg shadow-sky-500/5 overflow-hidden">
+                            <div className="absolute z-20 mt-1 w-full bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl shadow-lg shadow-green-500/5 overflow-hidden">
                                 {filteredSuggestions.map((tech) => (
                                     <button
                                         key={tech}
                                         type="button"
                                         onClick={() => handleSelectSuggestion(tech)}
-                                        className="w-full px-4 py-2 text-left text-sm hover:bg-sky-50 dark:hover:bg-zinc-700 text-gray-700 dark:text-gray-300 transition-colors"
+                                        className="w-full px-4 py-2 text-left text-sm hover:bg-green-50 dark:hover:bg-zinc-700 text-gray-700 dark:text-gray-300 transition-colors"
                                     >
                                         {tech}
                                     </button>
