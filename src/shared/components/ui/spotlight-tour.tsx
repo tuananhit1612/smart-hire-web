@@ -207,75 +207,14 @@ export function SpotlightTour() {
         return { top, left };
     };
 
-    // Shared tooltip content
-    const TooltipContent = () => (
-        <>
-            {/* Mascot */}
-            <div className="flex justify-center mb-2">
-                <MascotGuide isWaving={currentTourStep.mascotMood === "wave"} />
-            </div>
-
-            {/* Card */}
-            <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
-                {/* Content */}
-                <div className="p-5">
-                    <motion.div
-                        key={currentStep}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                    >
-                        <h3 className="text-lg font-bold text-gray-900 mb-2">
-                            {currentTourStep.title}
-                        </h3>
-                        <p className="text-sm text-gray-600 leading-relaxed">
-                            {currentTourStep.description}
-                        </p>
-                    </motion.div>
-                </div>
-
-                {/* Footer */}
-                <div className="px-5 py-3 bg-gray-50 flex items-center justify-between border-t border-gray-200">
-                    {/* Progress dots */}
-                    <div className="flex items-center gap-1.5">
-                        {TOUR_STEPS.map((_, index) => (
-                            <div
-                                key={index}
-                                className={cn(
-                                    "h-2 rounded-full transition-all",
-                                    index === currentStep
-                                        ? "w-5 bg-sky-500"
-                                        : index < currentStep
-                                            ? "w-2 bg-sky-300"
-                                            : "w-2 bg-gray-300"
-                                )}
-                            />
-                        ))}
-                    </div>
-
-                    {/* Navigation */}
-                    <div className="flex items-center gap-2">
-                        {!isFirstStep && (
-                            <button
-                                onClick={handlePrev}
-                                className="p-2 rounded-lg hover:bg-gray-200 transition-colors"
-                            >
-                                <ChevronLeft className="w-4 h-4 text-gray-600" />
-                            </button>
-                        )}
-                        <Button
-                            variant="primary"
-                            size="sm"
-                            onClick={handleNext}
-                            rightIcon={!isLastStep ? <ChevronRight className="w-4 h-4" /> : undefined}
-                            className="bg-sky-600 hover:bg-sky-700 text-white border-none shadow-lg shadow-sky-500/20"
-                        >
-                            {isLastStep ? "Bắt đầu ngay!" : "Tiếp theo"}
-                        </Button>
-                    </div>
-                </div>
-            </div>
-        </>
-    );
+    const tooltipProps = {
+        currentTourStep,
+        currentStep,
+        isFirstStep,
+        isLastStep,
+        onPrev: handlePrev,
+        onNext: handleNext
+    };
 
     return (
         <AnimatePresence>
@@ -342,7 +281,7 @@ export function SpotlightTour() {
                                 className="w-80 pointer-events-auto"
                                 onClick={(e) => e.stopPropagation()}
                             >
-                                <TooltipContent />
+                                <TooltipContent {...tooltipProps} />
                             </motion.div>
                         </div>
                     ) : (
@@ -355,7 +294,7 @@ export function SpotlightTour() {
                             className="fixed z-[102] w-80"
                             onClick={(e) => e.stopPropagation()}
                         >
-                            <TooltipContent />
+                            <TooltipContent {...tooltipProps} />
                         </motion.div>
                     )}
                 </>
@@ -441,4 +380,91 @@ export function useSpotlightTour() {
         window.location.reload();
     };
     return { resetTour };
+}
+
+interface TooltipContentProps {
+    currentTourStep: TourStep;
+    currentStep: number;
+    isFirstStep: boolean;
+    isLastStep: boolean;
+    onPrev: () => void;
+    onNext: () => void;
+}
+
+function TooltipContent({
+    currentTourStep,
+    currentStep,
+    isFirstStep,
+    isLastStep,
+    onPrev,
+    onNext
+}: TooltipContentProps) {
+    return (
+        <>
+            {/* Mascot */}
+            <div className="flex justify-center mb-2">
+                <MascotGuide isWaving={currentTourStep.mascotMood === "wave"} />
+            </div>
+
+            {/* Card */}
+            <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
+                {/* Content */}
+                <div className="p-5">
+                    <motion.div
+                        key={currentStep}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                    >
+                        <h3 className="text-lg font-bold text-gray-900 mb-2">
+                            {currentTourStep.title}
+                        </h3>
+                        <p className="text-sm text-gray-600 leading-relaxed">
+                            {currentTourStep.description}
+                        </p>
+                    </motion.div>
+                </div>
+
+                {/* Footer */}
+                <div className="px-5 py-3 bg-gray-50 flex items-center justify-between border-t border-gray-200">
+                    {/* Progress dots */}
+                    <div className="flex items-center gap-1.5">
+                        {TOUR_STEPS.map((_, index) => (
+                            <div
+                                key={index}
+                                className={cn(
+                                    "h-2 rounded-full transition-all",
+                                    index === currentStep
+                                        ? "w-5 bg-sky-500"
+                                        : index < currentStep
+                                            ? "w-2 bg-sky-300"
+                                            : "w-2 bg-gray-300"
+                                )}
+                            />
+                        ))}
+                    </div>
+
+                    {/* Navigation */}
+                    <div className="flex items-center gap-2">
+                        {!isFirstStep && (
+                            <button
+                                onClick={onPrev}
+                                className="p-2 rounded-lg hover:bg-gray-200 transition-colors"
+                            >
+                                <ChevronLeft className="w-4 h-4 text-gray-600" />
+                            </button>
+                        )}
+                        <Button
+                            variant="primary"
+                            size="sm"
+                            onClick={onNext}
+                            rightIcon={!isLastStep ? <ChevronRight className="w-4 h-4" /> : undefined}
+                            className="bg-sky-600 hover:bg-sky-700 text-white border-none shadow-lg shadow-sky-500/20"
+                        >
+                            {isLastStep ? "Bắt đầu ngay!" : "Tiếp theo"}
+                        </Button>
+                    </div>
+                </div>
+            </div>
+        </>
+    );
 }
