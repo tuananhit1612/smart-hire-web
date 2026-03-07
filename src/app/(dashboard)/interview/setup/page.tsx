@@ -37,7 +37,7 @@ function StepIndicator({ current }: { readonly current: 1 | 2 | 3 }) {
                             current > step.num
                                 ? "bg-emerald-500 text-white"
                                 : current === step.num
-                                    ? "bg-sky-600 text-white shadow-lg shadow-sky-500/30"
+                                    ? "bg-green- text-white shadow-lg shadow-green-/30"
                                     : "bg-[rgba(145,158,171,0.12)] dark:bg-white/[0.06] text-[#919EAB]"
                         )}>
                         {current > step.num ? <Check className="w-5 h-5" /> : step.num}
@@ -81,14 +81,14 @@ function CVCard({
             className={cn(
                 "w-full text-left p-5 rounded-2xl border-2 transition-all duration-200 cursor-pointer",
                 selected
-                    ? "border-sky-500 bg-sky-50/80 dark:bg-sky-900/20 shadow-lg shadow-sky-500/10"
-                    : "border-[rgba(145,158,171,0.2)] dark:border-white/[0.08] bg-white dark:bg-[#1C252E] hover:border-sky-200 dark:hover:border-sky-700/50 hover:shadow-md"
+                    ? "border-green- bg-green-/80 dark:bg-green-/20 shadow-lg shadow-green-/10"
+                    : "border-[rgba(145,158,171,0.2)] dark:border-white/[0.08] bg-white dark:bg-[#1C252E] hover:border-green- dark:hover:border-green-/50 hover:shadow-md"
             )}>
             <div className="flex items-center gap-3">
                 <div
                     className={cn(
                         "w-12 h-12 rounded-xl flex items-center justify-center shrink-0",
-                        selected ? "bg-sky-500 text-white" : "bg-[rgba(145,158,171,0.1)] dark:bg-white/[0.06] text-[#919EAB]"
+                        selected ? "bg-green- text-white" : "bg-[rgba(145,158,171,0.1)] dark:bg-white/[0.06] text-[#919EAB]"
                     )}>
                     <FileText className="w-6 h-6" />
                 </div>
@@ -102,7 +102,7 @@ function CVCard({
                     <motion.div
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        className="w-6 h-6 rounded-full bg-sky-500 flex items-center justify-center shrink-0"
+                        className="w-6 h-6 rounded-full bg-green- flex items-center justify-center shrink-0"
                     >
                         <Check className="w-3.5 h-3.5 text-white" />
                     </motion.div>
@@ -130,8 +130,8 @@ function JobCard({
             className={cn(
                 "w-full text-left p-5 rounded-2xl border-2 transition-all duration-200 cursor-pointer",
                 selected
-                    ? "border-sky-500 bg-sky-50/80 dark:bg-sky-900/20 shadow-lg shadow-sky-500/10"
-                    : "border-[rgba(145,158,171,0.2)] dark:border-white/[0.08] bg-white dark:bg-[#1C252E] hover:border-sky-200 dark:hover:border-sky-700/50 hover:shadow-md"
+                    ? "border-green- bg-green-/80 dark:bg-green-/20 shadow-lg shadow-green-/10"
+                    : "border-[rgba(145,158,171,0.2)] dark:border-white/[0.08] bg-white dark:bg-[#1C252E] hover:border-green- dark:hover:border-green-/50 hover:shadow-md"
             )}>
             <div className="flex items-center gap-3">
                 <img
@@ -149,7 +149,7 @@ function JobCard({
                     <motion.div
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        className="w-6 h-6 rounded-full bg-sky-500 flex items-center justify-center shrink-0"
+                        className="w-6 h-6 rounded-full bg-green- flex items-center justify-center shrink-0"
                     >
                         <Check className="w-3.5 h-3.5 text-white" />
                     </motion.div>
@@ -160,7 +160,7 @@ function JobCard({
                 {job.skills.slice(0, 4).map((skill) => (
                     <span
                         key={skill}
-                        className="px-2.5 py-1 text-xs font-medium bg-sky-50 dark:bg-sky-900/20 text-sky-700 dark:text-sky-400 rounded-full"
+                        className="px-2.5 py-1 text-xs font-medium bg-green- dark:bg-green-/20 text-green- dark:text-green- rounded-full"
                     >
                         {skill}
                     </span>
@@ -185,21 +185,21 @@ function ConfirmationStep({
 }) {
     return (
         <div className="space-y-4">
-            <div className="bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20 rounded-2xl p-5 border border-sky-100 dark:border-sky-800/30">
-                <p className="text-sm font-semibold text-sky-500 uppercase tracking-wider mb-3">
+            <div className="bg-gradient-to-br from-green- to-emerald-50 dark:from-green-/20 dark:to-emerald-900/20 rounded-2xl p-5 border border-green- dark:border-green-/30">
+                <p className="text-sm font-semibold text-green- uppercase tracking-wider mb-3">
                     Tóm tắt phỏng vấn
                 </p>
                 <div className="space-y-3">
                     <div className="flex items-center gap-3">
                         <div className="w-11 h-11 rounded-lg bg-white dark:bg-white/[0.06] flex items-center justify-center shadow-sm">
-                            <FileText className="w-5 h-5 text-sky-600" />
+                            <FileText className="w-5 h-5 text-green-" />
                         </div>
                         <div>
                             <p className="text-sm text-[#919EAB]">CV đã chọn</p>
                             <p className="text-base font-semibold text-[#1C252E] dark:text-white">{cv.name}</p>
                         </div>
                     </div>
-                    <div className="h-px bg-sky-100 dark:bg-sky-800/30" />
+                    <div className="h-px bg-green- dark:bg-green-/30" />
                     <div className="flex items-center gap-3">
                         <img
                             src={job.logoUrl}
@@ -283,7 +283,7 @@ export default function InterviewSetupPage() {
                     animate={{ opacity: 1, y: 0 }}
                     className="text-center mb-6"
                 >
-                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-sky-500 to-blue-600 flex items-center justify-center mx-auto mb-3 shadow-lg shadow-sky-500/20">
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-green- to-emerald-600 flex items-center justify-center mx-auto mb-3 shadow-lg shadow-green-/20">
                         <BrainCircuit className="w-7 h-7 text-white" />
                     </div>
                     <h1 className="text-2xl font-bold text-[#1C252E] dark:text-white">
@@ -308,7 +308,7 @@ export default function InterviewSetupPage() {
                             transition={{ duration: 0.25 }}
                         >
                             <div className="flex items-center gap-2 mb-4">
-                                <FileText className="w-5 h-5 text-sky-600" />
+                                <FileText className="w-5 h-5 text-green-" />
                                 <h2 className="text-lg font-bold text-[#1C252E] dark:text-white">Chọn CV của bạn</h2>
                             </div>
                             <div className="space-y-3">
@@ -333,7 +333,7 @@ export default function InterviewSetupPage() {
                             transition={{ duration: 0.25 }}
                         >
                             <div className="flex items-center gap-2 mb-4">
-                                <Briefcase className="w-5 h-5 text-sky-600" />
+                                <Briefcase className="w-5 h-5 text-green-" />
                                 <h2 className="text-lg font-bold text-[#1C252E] dark:text-white">Chọn vị trí phỏng vấn</h2>
                             </div>
 
@@ -345,7 +345,7 @@ export default function InterviewSetupPage() {
                                     placeholder="Tìm theo tên, công ty, kỹ năng..."
                                     value={jobSearch}
                                     onChange={(e) => setJobSearch(e.target.value)}
-                                    className="w-full h-12 pl-11 pr-4 text-base bg-white dark:bg-[#1C252E] border border-slate-200 dark:border-white/[0.08] rounded-xl text-[#1C252E] dark:text-white placeholder:text-slate-400 dark:placeholder:text-[#637381] focus:outline-none focus:ring-2 focus:ring-sky-500/30 focus:border-sky-400 transition-all"
+                                    className="w-full h-12 pl-11 pr-4 text-base bg-white dark:bg-[#1C252E] border border-slate-200 dark:border-white/[0.08] rounded-xl text-[#1C252E] dark:text-white placeholder:text-slate-400 dark:placeholder:text-[#637381] focus:outline-none focus:ring-2 focus:ring-green-/30 focus:border-green- transition-all"
                                 />
                             </div>
 
@@ -376,7 +376,7 @@ export default function InterviewSetupPage() {
                             transition={{ duration: 0.25 }}
                         >
                             <div className="flex items-center gap-2 mb-4">
-                                <Sparkles className="w-5 h-5 text-sky-600" />
+                                <Sparkles className="w-5 h-5 text-green-" />
                                 <h2 className="text-lg font-bold text-[#1C252E] dark:text-white">Xác nhận & bắt đầu</h2>
                             </div>
                             <ConfirmationStep cv={selectedCV} job={selectedJob} />
@@ -395,7 +395,7 @@ export default function InterviewSetupPage() {
                         <Button
                             variant="ghost"
                             onClick={handleBack}
-                            className="text-base text-[#637381] dark:text-[#919EAB] hover:text-sky-700 rounded-full cursor-pointer"
+                            className="text-base text-[#637381] dark:text-[#919EAB] hover:text-green- rounded-full cursor-pointer"
                         >
                             ← Quay lại
                         </Button>
@@ -412,7 +412,7 @@ export default function InterviewSetupPage() {
                             }
                             className={cn(
                                 "rounded-full gap-2 text-base font-bold shadow-lg cursor-pointer px-6 py-2.5",
-                                "bg-sky-600 hover:bg-sky-700 text-white shadow-sky-500/20",
+                                "bg-green- hover:bg-green- text-white shadow-green-/20",
                                 "disabled:opacity-40 disabled:cursor-not-allowed"
                             )}
                         >
@@ -424,8 +424,8 @@ export default function InterviewSetupPage() {
                             onClick={handleStart}
                             className={cn(
                                 "rounded-full gap-2 text-base font-bold shadow-lg cursor-pointer px-6 py-2.5",
-                                "bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-700 hover:to-blue-700 text-white",
-                                "shadow-sky-500/25 hover:shadow-sky-500/40 hover:scale-105 transition-all"
+                                "bg-gradient-to-r from-green- to-emerald-600 hover:from-green- hover:to-emerald-700 text-white",
+                                "shadow-green-/25 hover:shadow-green-/40 hover:scale-105 transition-all"
                             )}
                         >
                             <BrainCircuit className="w-5 h-5" />

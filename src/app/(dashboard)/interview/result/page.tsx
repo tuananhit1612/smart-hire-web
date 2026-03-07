@@ -27,8 +27,8 @@ import {
 const GRADE_CONFIG: Record<string, { bg: string; text: string; glow: string }> = {
     "A+": { bg: "bg-emerald-500", text: "text-white", glow: "shadow-emerald-500/30" },
     A: { bg: "bg-emerald-500", text: "text-white", glow: "shadow-emerald-500/30" },
-    "B+": { bg: "bg-sky-500", text: "text-white", glow: "shadow-sky-500/30" },
-    B: { bg: "bg-sky-500", text: "text-white", glow: "shadow-sky-500/30" },
+    "B+": { bg: "bg-green-", text: "text-white", glow: "shadow-green-/30" },
+    B: { bg: "bg-green-", text: "text-white", glow: "shadow-green-/30" },
     "C+": { bg: "bg-amber-500", text: "text-white", glow: "shadow-amber-500/30" },
     C: { bg: "bg-amber-500", text: "text-white", glow: "shadow-amber-500/30" },
     D: { bg: "bg-rose-500", text: "text-white", glow: "shadow-rose-500/30" },
@@ -43,7 +43,7 @@ function CircularScore({ score, max, size = 120 }: { readonly score: number; rea
 
     const getColor = () => {
         if (percentage >= 80) return "stroke-emerald-500";
-        if (percentage >= 60) return "stroke-sky-500";
+        if (percentage >= 60) return "stroke-green-";
         if (percentage >= 40) return "stroke-amber-500";
         return "stroke-rose-500";
     };
@@ -71,7 +71,7 @@ function CircularScore({ score, max, size = 120 }: { readonly score: number; rea
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.8 }}
-                    className="text-3xl font-black text-sky-900 dark:text-white"
+                    className="text-3xl font-black text-green- dark:text-white"
                 >
                     {score}
                 </motion.span>
@@ -86,7 +86,7 @@ function RubricBar({ rubric }: { readonly rubric: RubricScore }) {
     const percentage = (rubric.score / rubric.maxScore) * 100;
 
     const colorMap: Record<string, { bar: string; bg: string; text: string }> = {
-        sky: { bar: "bg-sky-500", bg: "bg-sky-50", text: "text-sky-700" },
+        sky: { bar: "bg-green-", bg: "bg-green-", text: "text-green-" },
         violet: { bar: "bg-violet-500", bg: "bg-violet-50", text: "text-violet-700" },
         emerald: { bar: "bg-emerald-500", bg: "bg-emerald-50", text: "text-emerald-700" },
     };
@@ -114,7 +114,7 @@ function RubricBar({ rubric }: { readonly rubric: RubricScore }) {
 
 // ─── Answer Evaluation Card (Expandable) ─────────────
 const CATEGORY_LABELS: Record<string, { label: string; color: string }> = {
-    introduction: { label: "Giới thiệu", color: "bg-sky-100 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400" },
+    introduction: { label: "Giới thiệu", color: "bg-green- dark:bg-green-/30 text-green- dark:text-green-" },
     technical: { label: "Kỹ thuật", color: "bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400" },
     behavioral: { label: "Hành vi", color: "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400" },
     situational: { label: "Tình huống", color: "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400" },
@@ -133,7 +133,7 @@ function EvaluationCard({
 
     const getScoreColor = (score: number) => {
         if (score >= 80) return "text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 dark:text-emerald-400";
-        if (score >= 60) return "text-sky-600 bg-sky-50 dark:bg-sky-900/20 dark:text-sky-400";
+        if (score >= 60) return "text-green- bg-green- dark:bg-green-/20 dark:text-green-";
         if (score >= 40) return "text-amber-600 bg-amber-50 dark:bg-amber-900/20 dark:text-amber-400";
         return "text-rose-600 bg-rose-50 dark:bg-rose-900/20 dark:text-rose-400";
     };
@@ -159,7 +159,7 @@ function EvaluationCard({
                     {evaluation.overallScore}
                 </span>
                 <div className="flex-1 min-w-0">
-                    <p className="text-lg font-semibold text-sky-900 dark:text-white truncate">{evaluation.question}</p>
+                    <p className="text-lg font-semibold text-green- dark:text-white truncate">{evaluation.question}</p>
                     <div className="flex items-center gap-2 mt-1">
                         <span className={cn("text-sm font-semibold px-2.5 py-0.5 rounded-full", cat?.color)}>
                             {cat?.label}
@@ -190,7 +190,7 @@ function EvaluationCard({
                             {/* User Answer */}
                             <div>
                                 <p className="text-sm font-semibold text-slate-400 dark:text-[#637381] uppercase tracking-wider mb-1.5">Câu trả lời của bạn</p>
-                                <div className="bg-sky-50/50 dark:bg-sky-900/10 rounded-xl p-3 text-base text-slate-700 dark:text-[#C4CDD5] leading-relaxed border border-sky-100/50 dark:border-sky-800/30">
+                                <div className="bg-green-/50 dark:bg-green-/10 rounded-xl p-3 text-base text-slate-700 dark:text-[#C4CDD5] leading-relaxed border border-green-/50 dark:border-green-/30">
                                     {evaluation.userAnswer}
                                 </div>
                             </div>
@@ -264,7 +264,7 @@ export default function InterviewResultPage() {
                 {/* Back Link */}
                 <Link
                     href="/interview/setup"
-                    className="inline-flex items-center gap-2 text-base text-slate-400 dark:text-[#637381] hover:text-sky-600 dark:hover:text-sky-400 transition-colors mb-6"
+                    className="inline-flex items-center gap-2 text-base text-slate-400 dark:text-[#637381] hover:text-green- dark:hover:text-green- transition-colors mb-6"
                 >
                     <ArrowLeft className="w-4.5 h-4.5" />
                     Quay lại
@@ -282,7 +282,7 @@ export default function InterviewResultPage() {
                         <div className="flex-1 text-center sm:text-left">
                             <div className="flex items-center justify-center sm:justify-start gap-2 mb-2">
                                 <Trophy className="w-5 h-5 text-amber-500" />
-                                <h1 className="text-2xl font-bold text-sky-900 dark:text-white">Kết quả phỏng vấn</h1>
+                                <h1 className="text-2xl font-bold text-green- dark:text-white">Kết quả phỏng vấn</h1>
                                 <span
                                     className={cn(
                                         "px-2.5 py-1 rounded-lg text-xs font-black shadow-lg",
@@ -300,7 +300,7 @@ export default function InterviewResultPage() {
                             <div className="flex items-center gap-4 mt-3">
                                 {rubricAverages.map((r) => (
                                     <div key={r.criterion} className="text-center">
-                                        <p className="text-2xl font-bold text-sky-900 dark:text-white">{r.avg}</p>
+                                        <p className="text-2xl font-bold text-green- dark:text-white">{r.avg}</p>
                                         <p className="text-sm text-slate-400 dark:text-[#637381] capitalize">
                                             {r.criterion === "clarity" ? "Rõ ràng" : r.criterion === "relevance" ? "Liên quan" : "Cấu trúc"}
                                         </p>
@@ -332,8 +332,8 @@ export default function InterviewResultPage() {
 
                 {/* Per-Answer Evaluations */}
                 <div className="flex items-center gap-2 mb-4">
-                    <BrainCircuit className="w-4 h-4 text-sky-600" />
-                    <h2 className="text-lg font-bold text-sky-900 dark:text-white">
+                    <BrainCircuit className="w-4 h-4 text-green-" />
+                    <h2 className="text-lg font-bold text-green- dark:text-white">
                         Chi tiết từng câu ({result.evaluations.length})
                     </h2>
                 </div>

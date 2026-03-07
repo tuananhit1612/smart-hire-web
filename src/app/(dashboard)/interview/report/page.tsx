@@ -35,7 +35,7 @@ import {
 // ─── Verdict Config ──────────────────────────────────
 const VERDICT_CONFIG: Record<string, { bg: string; text: string; border: string; icon: typeof ShieldCheck }> = {
     "highly-recommended": { bg: "bg-emerald-50 dark:bg-emerald-900/20", text: "text-emerald-700 dark:text-emerald-400", border: "border-emerald-200 dark:border-emerald-800/30", icon: ShieldCheck },
-    recommended: { bg: "bg-sky-50 dark:bg-sky-900/20", text: "text-sky-700 dark:text-sky-400", border: "border-sky-200 dark:border-sky-800/30", icon: ShieldCheck },
+    recommended: { bg: "bg-green- dark:bg-green-/20", text: "text-green- dark:text-green-", border: "border-green- dark:border-green-/30", icon: ShieldCheck },
     conditional: { bg: "bg-amber-50 dark:bg-amber-900/20", text: "text-amber-700 dark:text-amber-400", border: "border-amber-200 dark:border-amber-800/30", icon: ShieldQuestion },
     "not-recommended": { bg: "bg-rose-50 dark:bg-rose-900/20", text: "text-rose-700 dark:text-rose-400", border: "border-rose-200 dark:border-rose-800/30", icon: ShieldAlert },
 };
@@ -68,7 +68,7 @@ function SkillBar({ skill, score, maxScore, delay }: { readonly skill: string; r
     const pct = (score / maxScore) * 100;
     const getColor = () => {
         if (pct >= 80) return "bg-emerald-500";
-        if (pct >= 60) return "bg-sky-500";
+        if (pct >= 60) return "bg-green-";
         if (pct >= 40) return "bg-amber-500";
         return "bg-rose-500";
     };
@@ -105,7 +105,7 @@ function StrengthCard({ strength, index }: { readonly strength: ReportStrength; 
                     <Icon className="w-4.5 h-4.5 text-emerald-600" />
                 </div>
                 <div className="flex-1 min-w-0">
-                    <h4 className="text-base font-bold text-sky-900 dark:text-white">{strength.title}</h4>
+                    <h4 className="text-base font-bold text-green- dark:text-white">{strength.title}</h4>
                     <p className="text-base text-slate-500 dark:text-[#C4CDD5] mt-1 leading-relaxed">{strength.description}</p>
                     <div className="mt-2 bg-emerald-50/50 dark:bg-emerald-900/10 rounded-lg px-3 py-2 border border-emerald-100/50 dark:border-emerald-800/30">
                         <p className="text-sm text-emerald-700 dark:text-emerald-400 italic">
@@ -135,15 +135,15 @@ function WeaknessCard({ weakness, index }: { readonly weakness: ReportWeakness; 
                 </div>
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                        <h4 className="text-base font-bold text-sky-900 dark:text-white">{weakness.title}</h4>
+                        <h4 className="text-base font-bold text-green- dark:text-white">{weakness.title}</h4>
                         <span className={cn("text-xs font-bold px-1.5 py-0.5 rounded-full", impact?.color)}>
                             {impact?.label}
                         </span>
                     </div>
                     <p className="text-base text-slate-500 dark:text-[#C4CDD5] mt-1 leading-relaxed">{weakness.description}</p>
-                    <div className="mt-2 bg-sky-50/50 dark:bg-sky-900/10 rounded-lg px-3 py-2 border border-sky-100/50 dark:border-sky-800/30 flex items-start gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5 text-sky-500 mt-0.5 shrink-0" />
-                        <p className="text-sm text-sky-700 dark:text-sky-400">{weakness.suggestion}</p>
+                    <div className="mt-2 bg-green-/50 dark:bg-green-/10 rounded-lg px-3 py-2 border border-green-/50 dark:border-green-/30 flex items-start gap-1.5">
+                        <Sparkles className="w-3.5 h-3.5 text-green- mt-0.5 shrink-0" />
+                        <p className="text-sm text-green- dark:text-green-">{weakness.suggestion}</p>
                     </div>
                 </div>
             </div>
@@ -237,7 +237,7 @@ export default function InterviewReportPage() {
                 {/* Back Link */}
                 <Link
                     href="/interview/result"
-                    className="inline-flex items-center gap-2 text-base text-slate-400 dark:text-[#637381] hover:text-sky-600 dark:hover:text-sky-400 transition-colors mb-6"
+                    className="inline-flex items-center gap-2 text-base text-slate-400 dark:text-[#637381] hover:text-green- dark:hover:text-green- transition-colors mb-6"
                 >
                     <ArrowLeft className="w-4.5 h-4.5" />
                     Quay lại kết quả
@@ -250,11 +250,11 @@ export default function InterviewReportPage() {
                     className="bg-white dark:bg-[#1C252E] rounded-2xl border border-slate-100 dark:border-white/[0.08] shadow-sm p-6 mb-6"
                 >
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                        <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-sky-500 to-blue-600 flex items-center justify-center shrink-0 shadow-lg shadow-sky-500/20">
+                        <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-green- to-emerald-600 flex items-center justify-center shrink-0 shadow-lg shadow-green-/20">
                             <FileText className="w-7 h-7 text-white" />
                         </div>
                         <div className="flex-1">
-                            <h1 className="text-2xl font-bold text-sky-900 dark:text-white">Báo cáo phỏng vấn</h1>
+                            <h1 className="text-2xl font-bold text-green- dark:text-white">Báo cáo phỏng vấn</h1>
                             <p className="text-base text-slate-500 dark:text-[#C4CDD5] mt-0.5">
                                 {report.candidateName} • {report.position} — {report.company}
                             </p>
@@ -297,8 +297,8 @@ export default function InterviewReportPage() {
                     className="bg-white dark:bg-[#1C252E] rounded-2xl border border-slate-100 dark:border-white/[0.08] shadow-sm p-5 mb-6"
                 >
                     <div className="flex items-center gap-2 mb-4">
-                        <Target className="w-5 h-5 text-sky-600" />
-                        <h2 className="text-lg font-bold text-sky-900 dark:text-white">Năng lực tổng quan</h2>
+                        <Target className="w-5 h-5 text-green-" />
+                        <h2 className="text-lg font-bold text-green- dark:text-white">Năng lực tổng quan</h2>
                     </div>
                     <div className="space-y-3">
                         {report.skillRadar.map((skill, i) => (
@@ -317,7 +317,7 @@ export default function InterviewReportPage() {
                 <div className="mb-6">
                     <div className="flex items-center gap-2 mb-4">
                         <Star className="w-5 h-5 text-emerald-500" />
-                        <h2 className="text-lg font-bold text-sky-900 dark:text-white">Điểm mạnh ({report.strengths.length})</h2>
+                        <h2 className="text-lg font-bold text-green- dark:text-white">Điểm mạnh ({report.strengths.length})</h2>
                     </div>
                     <div className="space-y-3">
                         {report.strengths.map((s, i) => (
@@ -330,7 +330,7 @@ export default function InterviewReportPage() {
                 <div className="mb-6">
                     <div className="flex items-center gap-2 mb-4">
                         <AlertTriangle className="w-5 h-5 text-amber-500" />
-                        <h2 className="text-lg font-bold text-sky-900 dark:text-white">Điểm cần cải thiện ({report.weaknesses.length})</h2>
+                        <h2 className="text-lg font-bold text-green- dark:text-white">Điểm cần cải thiện ({report.weaknesses.length})</h2>
                     </div>
                     <div className="space-y-3">
                         {report.weaknesses.map((w, i) => (
@@ -342,8 +342,8 @@ export default function InterviewReportPage() {
                 {/* Recommendations Section */}
                 <div className="mb-6">
                     <div className="flex items-center gap-2 mb-4">
-                        <TrendingUp className="w-5 h-5 text-sky-600" />
-                        <h2 className="text-lg font-bold text-sky-900 dark:text-white">Khuyến nghị ({report.recommendations.length})</h2>
+                        <TrendingUp className="w-5 h-5 text-green-" />
+                        <h2 className="text-lg font-bold text-green- dark:text-white">Khuyến nghị ({report.recommendations.length})</h2>
                     </div>
                     <div className="space-y-3">
                         {report.recommendations.map((r, i) => (
@@ -366,7 +366,7 @@ export default function InterviewReportPage() {
                         </Button>
                     </Link>
                     <Link href="/interview/result">
-                        <Button className="rounded-full text-base gap-1.5 bg-sky-600 hover:bg-sky-700 text-white cursor-pointer">
+                        <Button className="rounded-full text-base gap-1.5 bg-green- hover:bg-green- text-white cursor-pointer">
                             <FileText className="w-4 h-4" />
                             Xem chi tiết rubric
                         </Button>
