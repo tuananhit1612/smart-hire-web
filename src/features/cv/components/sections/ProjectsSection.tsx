@@ -124,7 +124,7 @@ export function ProjectsSection({ data, onChange }: ProjectsSectionProps) {
                             className="border-2 border-dashed border-gray-200 dark:border-zinc-800 rounded-2xl p-8 text-center"
                         >
                             <FolderKanban className="w-12 h-12 mx-auto text-sky-200 mb-3" />
-                            <p className="text-gray-500 text-sm">
+                            <p className="text-gray-500 dark:text-gray-400 text-sm">
                                 Chưa có dự án nào
                             </p>
                             <Button
@@ -204,7 +204,7 @@ function ProjectCard({
     };
 
     return (
-        <div className="relative bg-white border border-gray-200 rounded-2xl p-4 md:p-6 hover:shadow-lg transition-shadow group">
+        <div className="relative bg-white dark:bg-zinc-900/50 border border-gray-200 dark:border-zinc-800 rounded-2xl p-4 md:p-6 hover:shadow-lg transition-shadow group">
             {/* Drag Handle */}
             <div className="absolute left-2 top-1/2 -translate-y-1/2 hidden md:block">
                 {dragHandle}
@@ -242,7 +242,7 @@ function ProjectCard({
 
                 {/* Description */}
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Mô tả
                     </label>
                     <textarea
@@ -250,13 +250,13 @@ function ProjectCard({
                         onChange={(e) => onUpdate(project.id, "description", e.target.value)}
                         placeholder="Mô tả ngắn gọn về dự án, mục tiêu và vai trò của bạn..."
                         rows={3}
-                        className="w-full rounded-xl border border-gray-200 bg-transparent px-4 py-3 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all duration-200 resize-none hover:border-sky-200"
+                        className="w-full rounded-xl border border-gray-200 dark:border-zinc-700 bg-transparent px-4 py-3 text-sm dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all duration-200 resize-none hover:border-sky-200 dark:hover:border-sky-500/50"
                     />
                 </div>
 
                 {/* Technologies with Autocomplete */}
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Công nghệ sử dụng
                     </label>
 
@@ -270,7 +270,7 @@ function ProjectCard({
                                     initial={{ opacity: 0, scale: 0.8 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.8 }}
-                                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium bg-sky-50 border border-sky-100 text-sky-700"
+                                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium bg-sky-50 dark:bg-sky-900/20 border border-sky-100 dark:border-sky-500/20 text-sky-700 dark:text-sky-400"
                                 >
                                     {tech}
                                     <button
@@ -300,13 +300,13 @@ function ProjectCard({
 
                         {/* Suggestions dropdown */}
                         {showSuggestions && filteredSuggestions.length > 0 && (
-                            <div className="absolute z-20 mt-1 w-full bg-white border border-gray-200 rounded-xl shadow-lg shadow-sky-500/5 overflow-hidden">
+                            <div className="absolute z-20 mt-1 w-full bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl shadow-lg shadow-sky-500/5 overflow-hidden">
                                 {filteredSuggestions.map((tech) => (
                                     <button
                                         key={tech}
                                         type="button"
                                         onClick={() => handleSelectSuggestion(tech)}
-                                        className="w-full px-4 py-2 text-left text-sm hover:bg-sky-50 text-gray-700 transition-colors"
+                                        className="w-full px-4 py-2 text-left text-sm hover:bg-sky-50 dark:hover:bg-zinc-700 text-gray-700 dark:text-gray-300 transition-colors"
                                     >
                                         {tech}
                                     </button>

@@ -15,7 +15,7 @@ export function AnimatedCounter({
     value,
     suffix = "",
     prefix = "",
-    duration = 2,
+    duration = 0.6,
     className = "",
 }: AnimatedCounterProps) {
     const [count, setCount] = React.useState(0);
@@ -135,7 +135,7 @@ export function BentoItem({
                 delay,
                 ease: "easeOut",
             }}
-            className={`relative overflow-hidden rounded-3xl bg-white/70 backdrop-blur-xl border border-white/50 shadow-xl hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.01] transition-all duration-200 ${className}`}
+            className={`relative overflow-hidden rounded-3xl bg-white/70 dark:bg-[#1C252E] backdrop-blur-xl border border-white/50 dark:border-white/[0.08] shadow-xl hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.01] transition-all duration-200 ${className}`}
         >
             {children}
         </motion.div>
@@ -172,14 +172,14 @@ export function StatCard({ icon, value, label, suffix = "", gradient, delay = 0 
             className="relative group"
         >
             <div className={`absolute inset-0 ${gradient} rounded-2xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity`} />
-            <div className="relative p-5 bg-white/80 backdrop-blur-xl rounded-2xl border border-white/50 text-center">
+            <div className="relative p-5 bg-white/80 dark:bg-[#1C252E]/80 backdrop-blur-xl rounded-2xl border border-white/50 dark:border-white/[0.08] text-center">
                 <div className={`w-12 h-12 mx-auto mb-3 ${gradient} rounded-xl flex items-center justify-center text-white shadow-lg`}>
                     {icon}
                 </div>
-                <div className="text-2xl font-bold text-sky-900 font-orbitron">
+                <div className="text-2xl font-bold text-sky-900 dark:text-white font-orbitron">
                     <AnimatedCounter value={value} suffix={suffix} />
                 </div>
-                <div className="text-sm text-sky-600 mt-1">{label}</div>
+                <div className="text-sm text-sky-600 dark:text-[#C4CDD5] mt-1">{label}</div>
             </div>
         </motion.div>
     );

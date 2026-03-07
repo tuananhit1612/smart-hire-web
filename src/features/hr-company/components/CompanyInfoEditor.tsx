@@ -73,13 +73,13 @@ export function CompanyInfoEditor({ company, onUpdate, onClose }: CompanyInfoEdi
                 >
                     {/* Animated gradient border */}
                     <div className="absolute inset-0 bg-gradient-to-r from-sky-500 via-green-500 to-sky-500 rounded-[2rem] p-[2px] animate-gradient-x">
-                        <div className="absolute inset-[2px] bg-white rounded-[calc(2rem-2px)]" />
+                        <div className="absolute inset-[2px] bg-white dark:bg-[#1C252E] rounded-[calc(2rem-2px)]" />
                     </div>
 
                     {/* Content */}
-                    <div className="relative bg-white rounded-[2rem] overflow-hidden">
+                    <div className="relative bg-white dark:bg-[#1C252E] rounded-[2rem] overflow-hidden">
                         {/* Header with gradient */}
-                        <div className="relative px-8 pt-8 pb-6 bg-gradient-to-br from-sky-50 via-white to-green-50/30">
+                        <div className="relative px-8 pt-8 pb-6 bg-gradient-to-br from-sky-50 via-white to-green-50/30 dark:from-sky-900/10 dark:via-[#1C252E] dark:to-green-900/5">
                             {/* Decorative elements */}
                             <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-sky-400/10 to-green-400/10 rounded-full blur-2xl" />
                             <div className="absolute top-10 left-10 w-3 h-3 bg-sky-400 rounded-full animate-pulse" />
@@ -95,10 +95,10 @@ export function CompanyInfoEditor({ company, onUpdate, onClose }: CompanyInfoEdi
                                         <Pencil className="w-5 h-5 text-white" />
                                     </motion.div>
                                     <div>
-                                        <h2 className="text-xl font-bold text-sky-900">
+                                        <h2 className="text-xl font-bold text-sky-900 dark:text-white">
                                             Chỉnh sửa thông tin
                                         </h2>
-                                        <p className="text-sm text-sky-600">
+                                        <p className="text-sm text-sky-600 dark:text-[#919EAB]">
                                             Cập nhật hồ sơ công ty của bạn
                                         </p>
                                     </div>
@@ -107,9 +107,9 @@ export function CompanyInfoEditor({ company, onUpdate, onClose }: CompanyInfoEdi
                                     whileHover={{ scale: 1.1, rotate: 90 }}
                                     whileTap={{ scale: 0.9 }}
                                     onClick={onClose}
-                                    className="p-2 hover:bg-sky-100 rounded-full transition-colors"
+                                    className="p-2 hover:bg-sky-100 dark:hover:bg-white/[0.06] rounded-full transition-colors"
                                 >
-                                    <X className="w-5 h-5 text-sky-600" />
+                                    <X className="w-5 h-5 text-sky-600 dark:text-[#C4CDD5]" />
                                 </motion.button>
                             </div>
                         </div>
@@ -254,7 +254,7 @@ export function CompanyInfoEditor({ company, onUpdate, onClose }: CompanyInfoEdi
                         </form>
 
                         {/* Footer with buttons */}
-                        <div className="relative px-8 py-6 bg-gradient-to-r from-sky-50 via-white to-green-50/30 border-t border-sky-100">
+                        <div className="relative px-8 py-6 bg-gradient-to-r from-sky-50 via-white to-green-50/30 dark:from-sky-900/10 dark:via-[#1C252E] dark:to-green-900/5 border-t border-sky-100 dark:border-white/[0.08]">
                             <div className="flex gap-4">
                                 <motion.button
                                     type="submit"
@@ -272,7 +272,7 @@ export function CompanyInfoEditor({ company, onUpdate, onClose }: CompanyInfoEdi
                                     onClick={onClose}
                                     whileHover={{ scale: 1.02, y: -2 }}
                                     whileTap={{ scale: 0.98 }}
-                                    className="flex-1 py-4 px-6 bg-white hover:bg-sky-50 text-sky-700 rounded-2xl font-semibold border-2 border-sky-200 hover:border-sky-300 transition-all flex items-center justify-center gap-2"
+                                    className="flex-1 py-4 px-6 bg-white dark:bg-white/[0.04] hover:bg-sky-50 dark:hover:bg-white/[0.06] text-sky-700 dark:text-[#C4CDD5] rounded-2xl font-semibold border-2 border-sky-200 dark:border-white/[0.08] hover:border-sky-300 dark:hover:border-white/[0.16] transition-all flex items-center justify-center gap-2"
                                 >
                                     <X className="w-5 h-5" />
                                     Hủy bỏ
@@ -320,7 +320,7 @@ function FormSection({
                 <div className={`w-8 h-8 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center text-white shadow-lg`}>
                     {icon}
                 </div>
-                <h3 className="font-semibold text-sky-900">{title}</h3>
+                <h3 className="font-semibold text-sky-900 dark:text-white">{title}</h3>
             </div>
             <div className="pl-10">{children}</div>
         </motion.div>
@@ -365,7 +365,7 @@ function PremiumInput({
 
     return (
         <div className="space-y-1.5">
-            <label className="text-sm font-medium text-slate-600 flex items-center gap-1.5">
+            <label className="text-sm font-medium text-slate-600 dark:text-[#C4CDD5] flex items-center gap-1.5">
                 <span className={`text-transparent bg-clip-text bg-gradient-to-r ${gradientColors[gradient]}`}>
                     {icon}
                 </span>
@@ -388,7 +388,7 @@ function PremiumInput({
                     required={required}
                     onFocus={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}
-                    className="relative w-full px-4 py-3 bg-white rounded-xl border-2 border-slate-200 focus:border-transparent focus:outline-none text-slate-800 placeholder:text-slate-400 transition-all"
+                    className="relative w-full px-4 py-3 bg-white dark:bg-[#1C252E] rounded-xl border-2 border-slate-200 dark:border-white/[0.08] focus:border-transparent focus:outline-none text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-[#637381] transition-all"
                 />
             </div>
         </div>
@@ -442,7 +442,7 @@ function PremiumSelect({
 
     return (
         <div className="space-y-1.5" ref={ref}>
-            <label className="text-sm font-medium text-slate-600 flex items-center gap-1.5">
+            <label className="text-sm font-medium text-slate-600 dark:text-[#C4CDD5] flex items-center gap-1.5">
                 <span className={`text-transparent bg-clip-text bg-gradient-to-r ${gradientColors[gradient]}`}>
                     {icon}
                 </span>
@@ -463,16 +463,16 @@ function PremiumSelect({
                         setIsFocused(true);
                     }}
                     whileTap={{ scale: 0.98 }}
-                    className="relative w-full px-4 py-3 bg-white rounded-xl border-2 border-slate-200 focus:border-transparent focus:outline-none text-left flex items-center justify-between transition-all"
+                    className="relative w-full px-4 py-3 bg-white dark:bg-[#1C252E] rounded-xl border-2 border-slate-200 dark:border-white/[0.08] focus:border-transparent focus:outline-none text-left flex items-center justify-between transition-all"
                 >
-                    <span className={selectedOption ? "text-slate-800" : "text-slate-400"}>
+                    <span className={selectedOption ? "text-slate-800 dark:text-white" : "text-slate-400 dark:text-[#637381]"}>
                         {selectedOption?.label || placeholder}
                     </span>
                     <motion.div
                         animate={{ rotate: isOpen ? 180 : 0 }}
                         transition={{ duration: 0.2 }}
                     >
-                        <ChevronDown className="w-5 h-5 text-slate-400" />
+                        <ChevronDown className="w-5 h-5 text-slate-400 dark:text-[#637381]" />
                     </motion.div>
                 </motion.button>
 
@@ -484,7 +484,7 @@ function PremiumSelect({
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             exit={{ opacity: 0, y: -10, scale: 0.95 }}
                             transition={{ duration: 0.15 }}
-                            className="absolute z-50 w-full mt-2 bg-white rounded-2xl shadow-2xl shadow-slate-200/50 border border-slate-100 overflow-hidden"
+                            className="absolute z-50 w-full mt-2 bg-white dark:bg-[#1C252E] rounded-2xl shadow-2xl shadow-slate-200/50 dark:shadow-black/30 border border-slate-100 dark:border-white/[0.08] overflow-hidden"
                         >
                             {/* Gradient header */}
                             <div className={`h-1 bg-gradient-to-r ${gradientColors[gradient]}`} />
@@ -504,14 +504,14 @@ function PremiumSelect({
                                         transition={{ delay: index * 0.02 }}
                                         whileHover={{ backgroundColor: "rgba(14, 165, 233, 0.1)", x: 4 }}
                                         className={`w-full px-4 py-3 text-left flex items-center gap-3 transition-colors ${value === option.value
-                                                ? "bg-sky-50 text-sky-700"
-                                                : "text-slate-700 hover:text-sky-700"
+                                                ? "bg-sky-50 dark:bg-sky-900/20 text-sky-700 dark:text-sky-400"
+                                                : "text-slate-700 dark:text-[#C4CDD5] hover:text-sky-700 dark:hover:text-sky-400"
                                             }`}
                                     >
                                         <div
                                             className={`w-2 h-2 rounded-full ${value === option.value
                                                     ? `bg-gradient-to-r ${gradientColors[gradient]}`
-                                                    : "bg-slate-300"
+                                                    : "bg-slate-300 dark:bg-[#637381]"
                                                 }`}
                                         />
                                         <span className="font-medium">{option.label}</span>

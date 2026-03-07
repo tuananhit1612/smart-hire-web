@@ -83,13 +83,13 @@ function ApplicationCard({ application }: { application: Application }) {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       // Card Design: Rounded-2xl, Shadow-xl shadow-blue-900/5, Border Sky-100
-      className="group bg-white border border-slate-100 rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-sky-900/5 hover:border-sky-200 transition-all duration-300 transform hover:-translate-y-1"
+      className="group bg-white dark:bg-[#1C252E] border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-sky-900/5 hover:border-sky-200 dark:hover:border-sky-700/40 transition-all duration-300 transform hover:-translate-y-1"
     >
       <div className="p-6">
         <div className="flex flex-col md:flex-row gap-6">
           {/* Logo Container */}
           <div className="shrink-0">
-            <div className="w-16 h-16 rounded-xl border border-sky-50 bg-white p-2 flex items-center justify-center shadow-sm">
+            <div className="w-16 h-16 rounded-xl border border-[rgba(145,158,171,0.1)] dark:border-white/[0.06] bg-white dark:bg-[#1C252E] p-2 flex items-center justify-center shadow-sm">
               <img
                 src={application.job.logoUrl}
                 alt={application.job.company}
@@ -103,11 +103,11 @@ function ApplicationCard({ application }: { application: Application }) {
               <div>
                 <Link href={`/jobs/${application.job.id}`} className="block">
                   {/* Primary Color: Text Sky 900 */}
-                  <h3 className="text-xl font-bold text-sky-900 group-hover:text-sky-600 transition-colors">
+                  <h3 className="text-xl font-bold text-[#1C252E] dark:text-white group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
                     {application.job.title}
                   </h3>
                 </Link>
-                <p className="text-slate-500 font-medium mt-1">
+                <p className="text-[#637381] dark:text-[#919EAB] font-medium mt-1">
                   {application.job.company}
                 </p>
               </div>
@@ -117,7 +117,7 @@ function ApplicationCard({ application }: { application: Application }) {
             </div>
 
             {/* Meta */}
-            <div className="flex flex-wrap gap-4 text-sm text-slate-500 mb-6">
+            <div className="flex flex-wrap gap-4 text-sm text-[#637381] dark:text-[#919EAB] mb-6">
               <div className="flex items-center gap-1.5">
                 <MapPin className="w-4 h-4 text-sky-400" />
                 {application.job.location}
@@ -136,10 +136,10 @@ function ApplicationCard({ application }: { application: Application }) {
             <div
               onClick={() => setIsExpanded(!isExpanded)}
               // Interaction: Cursor pointer
-              className="bg-slate-50 rounded-xl p-4 border border-slate-100 cursor-pointer hover:bg-sky-50/50 hover:border-sky-100 transition-colors"
+              className="bg-[rgba(145,158,171,0.06)] dark:bg-white/[0.04] rounded-xl p-4 border border-[rgba(145,158,171,0.1)] dark:border-white/[0.06] cursor-pointer hover:bg-sky-50/50 dark:hover:bg-sky-900/10 hover:border-sky-100 dark:hover:border-sky-800/40 transition-colors"
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                <span className="text-xs font-bold text-[#919EAB] uppercase tracking-wider">
                   Tiến độ
                 </span>
                 <span className="text-xs text-sky-600 font-semibold flex items-center gap-1">
@@ -151,10 +151,10 @@ function ApplicationCard({ application }: { application: Application }) {
               <div className="flex items-center gap-3">
                 {/* Icon using Growth Green for active/success feeling */}
                 <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                <span className="font-semibold text-slate-700 text-sm">
+                <span className="font-semibold text-[#637381] dark:text-[#C4CDD5] text-sm">
                   {currentEvent?.title}
                 </span>
-                <span className="text-sm text-slate-400">
+                <span className="text-sm text-[#919EAB]">
                   • {currentEvent?.description || (currentEvent?.date && new Date(currentEvent.date).toLocaleDateString('vi-VN'))}
                 </span>
               </div>
@@ -170,23 +170,23 @@ function ApplicationCard({ application }: { application: Application }) {
                 >
                   <div className="pt-6 pl-2 space-y-6 relative">
                     {/* Time line connector */}
-                    <div className="absolute left-[19px] top-8 bottom-4 w-0.5 bg-slate-100" />
+                    <div className="absolute left-[19px] top-8 bottom-4 w-0.5 bg-[rgba(145,158,171,0.15)] dark:bg-white/[0.08]" />
 
                     {application.timeline.map((event) => (
                       <div key={event.id} className="relative flex gap-4">
                         <div className={cn(
-                          "w-10 h-10 rounded-full border-2 flex items-center justify-center shrink-0 z-10 bg-white",
+                          "w-10 h-10 rounded-full border-2 flex items-center justify-center shrink-0 z-10 bg-white dark:bg-[#1C252E]",
                           event.isCompleted
                             ? "border-green-500 text-green-500"
-                            : "border-slate-200 text-slate-300"
+                            : "border-[rgba(145,158,171,0.2)] dark:border-white/[0.1] text-[#C4CDD5] dark:text-[#637381]"
                         )}>
-                          {event.isCompleted ? <CheckCircle2 className="w-5 h-5" /> : <div className="w-2 h-2 rounded-full bg-slate-200" />}
+                          {event.isCompleted ? <CheckCircle2 className="w-5 h-5" /> : <div className="w-2 h-2 rounded-full bg-[rgba(145,158,171,0.3)] dark:bg-white/[0.15]" />}
                         </div>
                         <div className="flex-1 pt-2">
-                          <h5 className={cn("font-semibold", event.isCompleted ? "text-sky-900" : "text-slate-400")}>
+                          <h5 className={cn("font-semibold", event.isCompleted ? "text-[#1C252E] dark:text-white" : "text-[#919EAB]")}>
                             {event.title}
                           </h5>
-                          {event.description && <p className="text-sm text-slate-500 mt-1">{event.description}</p>}
+                          {event.description && <p className="text-sm text-[#637381] dark:text-[#919EAB] mt-1">{event.description}</p>}
                         </div>
                       </div>
                     ))}
@@ -276,27 +276,26 @@ export default function ApplicationsPage() {
 
         <div className="mb-10 text-center md:text-left">
           {/* Typography: Be Vietnam Pro (font-sans) */}
-          <h1 className="text-4xl font-bold text-sky-900 mb-3 tracking-tight">
+          <h1 className="text-4xl font-bold text-[#1C252E] dark:text-white mb-3 tracking-tight">
             Hồ sơ ứng tuyển
           </h1>
-          <p className="text-slate-500 text-lg">
+          <p className="text-[#637381] dark:text-[#919EAB] text-lg">
             Theo dõi hành trình sự nghiệp của bạn.
           </p>
         </div>
 
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-8 sticky top-20 z-30 bg-white/90 backdrop-blur-xl py-4 rounded-2xl border border-slate-100 shadow-sm px-6">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-8 sticky top-20 z-30 bg-white/90 dark:bg-[#1C252E]/90 backdrop-blur-xl py-4 rounded-2xl border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] shadow-sm px-6">
           {/* Tabs */}
-          <div className="flex p-1 bg-slate-100 rounded-full w-full md:w-auto">
+          <div className="flex p-1 bg-[rgba(145,158,171,0.1)] dark:bg-white/[0.06] rounded-full w-full md:w-auto">
             {(["active", "archived"] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                // Button: Rounded-full
                 className={cn(
                   "flex-1 md:flex-none px-6 py-2 rounded-full text-sm font-semibold transition-all duration-200",
                   activeTab === tab
-                    ? "bg-white text-sky-700 shadow-md"
-                    : "text-slate-500 hover:text-slate-700"
+                    ? "bg-white dark:bg-[#1C252E] text-sky-700 dark:text-sky-400 shadow-md"
+                    : "text-[#637381] dark:text-[#919EAB] hover:text-[#1C252E] dark:hover:text-white"
                 )}
               >
                 {tab === "active" ? "Đang ứng tuyển" : "Lịch sử"}
@@ -305,13 +304,12 @@ export default function ApplicationsPage() {
           </div>
 
           <div className="relative w-full md:w-80 group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-sky-500 transition-colors" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#919EAB] group-focus-within:text-sky-500 transition-colors" />
             <Input
               placeholder="Tìm theo vị trí..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              // Input shape: rounded-full per friendly guidelines? Or standard input. Design std says "Components... Softer corners".
-              className="pl-11 h-12 rounded-2xl bg-slate-50 border-slate-200 focus:border-sky-500 focus:ring-sky-500/20"
+              className="pl-11 h-12 rounded-2xl bg-[rgba(145,158,171,0.06)] dark:bg-white/[0.04] border-[rgba(145,158,171,0.2)] dark:border-white/[0.08] focus:border-sky-500 focus:ring-sky-500/20"
             />
           </div>
         </div>
@@ -323,12 +321,12 @@ export default function ApplicationsPage() {
                 <ApplicationCard key={app.id} application={app} />
               ))
             ) : (
-              <div className="text-center py-24 bg-slate-50 rounded-3xl border border-dashed border-slate-200">
-                <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
+              <div className="text-center py-24 bg-[rgba(145,158,171,0.04)] dark:bg-white/[0.02] rounded-3xl border border-dashed border-[rgba(145,158,171,0.2)] dark:border-white/[0.08]">
+                <div className="w-20 h-20 bg-white dark:bg-[#1C252E] rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
                   <Briefcase className="w-10 h-10 text-sky-200" />
                 </div>
-                <h3 className="text-xl font-bold text-sky-900 mb-2">Chưa có hồ sơ nào</h3>
-                <p className="text-slate-500 mb-8 max-w-sm mx-auto">Hãy bắt đầu hành trình mới bằng việc tìm kiếm công việc phù hợp.</p>
+                <h3 className="text-xl font-bold text-[#1C252E] dark:text-white mb-2">Chưa có hồ sơ nào</h3>
+                <p className="text-[#637381] dark:text-[#919EAB] mb-8 max-w-sm mx-auto">Hãy bắt đầu hành trình mới bằng việc tìm kiếm công việc phù hợp.</p>
                 <Link href="/jobs">
                   {/* Button: Primary Gradient Blue or Solid Green. Using Green for Action */}
                   <Button className="bg-green-500 hover:bg-green-600 text-white rounded-full px-8 h-12 text-base font-semibold shadow-lg shadow-green-500/20 hover:scale-105 transition-transform">

@@ -106,16 +106,16 @@ export function TemplateCard({ template, onSelect, onPreview, isRecommended }: T
 
             {/* Card */}
             <div className={cn(
-                "relative bg-white backdrop-blur-xl rounded-3xl overflow-hidden",
-                "border border-gray-200",
+                "relative bg-white dark:bg-[#1C252E] backdrop-blur-xl rounded-3xl overflow-hidden",
+                "border border-[rgba(145,158,171,0.15)] dark:border-white/[0.08]",
                 "shadow-[0_8px_30px_rgb(0,0,0,0.06)]",
                 "transition-shadow duration-500",
                 isHovered && "shadow-2xl"
             )}>
                 {/* Thumbnail */}
-                <div className="relative aspect-[3/4] bg-gray-50 overflow-hidden" ref={containerRef}>
+                <div className="relative aspect-[3/4] bg-[#F4F6F8] dark:bg-[#161C24] overflow-hidden" ref={containerRef}>
                     {/* Live CV Preview */}
-                    <div className="absolute inset-0 w-full h-full overflow-hidden bg-gray-100/50">
+                    <div className="absolute inset-0 w-full h-full overflow-hidden bg-[rgba(145,158,171,0.06)] dark:bg-black/20">
                         <div
                             className="w-[210mm] min-h-[297mm] bg-white text-[10px] transform origin-top-left shadow-sm transition-transform duration-75 ease-out"
                             style={{ transform: `scale(${scale})` }}
@@ -180,10 +180,10 @@ export function TemplateCard({ template, onSelect, onPreview, isRecommended }: T
 
                 {/* Info */}
                 <div className="p-4 space-y-2">
-                    <h3 className="font-semibold text-gray-900">
+                    <h3 className="font-semibold text-[#1C252E] dark:text-white">
                         {template.name}
                     </h3>
-                    <p className="text-sm text-gray-500 line-clamp-2">
+                    <p className="text-sm text-[#637381] dark:text-[#919EAB] line-clamp-2">
                         {template.description}
                     </p>
 
@@ -192,7 +192,7 @@ export function TemplateCard({ template, onSelect, onPreview, isRecommended }: T
                         {template.features.slice(0, 3).map((feature) => (
                             <span
                                 key={feature}
-                                className="px-2 py-0.5 rounded-md bg-gray-100 text-xs text-gray-600"
+                                className="px-2 py-0.5 rounded-md bg-[rgba(145,158,171,0.1)] dark:bg-white/[0.06] text-xs text-[#637381] dark:text-[#919EAB]"
                             >
                                 {feature}
                             </span>

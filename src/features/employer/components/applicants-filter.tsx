@@ -26,15 +26,15 @@ export function ApplicantsFilter({
     onSortChange
 }: ApplicantsFilterProps) {
     return (
-        <div className="flex flex-col md:flex-row gap-4 items-center justify-between mb-8 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm sticky top-20 z-10">
+        <div className="flex flex-col md:flex-row gap-4 items-center justify-between mb-8 bg-white dark:bg-[#1C252E] p-4 rounded-2xl border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] shadow-sm sticky top-20 z-10">
             {/* Search */}
             <div className="relative w-full md:w-80 group">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-sky-500 transition-colors" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#919EAB] group-focus-within:text-sky-500 transition-colors" />
                 <Input 
                     placeholder="Tìm theo tên, kỹ năng..." 
                     value={searchQuery}
                     onChange={(e) => onSearchChange(e.target.value)}
-                    className="pl-10 rounded-xl bg-slate-50 border-slate-200 focus:ring-sky-500/20"
+                    className="pl-10 rounded-xl bg-[rgba(145,158,171,0.06)] dark:bg-white/[0.04] border-[rgba(145,158,171,0.2)] dark:border-white/[0.08] focus:ring-sky-500/20"
                 />
             </div>
 
@@ -43,7 +43,7 @@ export function ApplicantsFilter({
                 <Button 
                     variant="outline" 
                     size="sm" 
-                    className={`rounded-full border-slate-200 gap-2 ${sortBy.includes('score') ? 'bg-sky-50 text-sky-700 border-sky-200' : 'text-slate-600'}`}
+                    className={`rounded-full border-slate-200 dark:border-white/[0.08] gap-2 ${sortBy.includes('score') ? 'bg-sky-50 dark:bg-sky-900/20 text-sky-700 dark:text-sky-400 border-sky-200 dark:border-sky-700/40' : 'text-[#637381] dark:text-[#919EAB]'}`}
                     onClick={() => onSortChange("score-desc")}
                 >
                     <Sparkles className="w-4 h-4" />
@@ -54,15 +54,15 @@ export function ApplicantsFilter({
                 <Button 
                     variant="outline" 
                     size="sm" 
-                    className="rounded-full border-slate-200 gap-2 text-slate-600"
+                    className="rounded-full border-slate-200 dark:border-white/[0.08] gap-2 text-[#637381] dark:text-[#919EAB]"
                     onClick={() => onSortChange("date-desc")}
                 >
                     Mới nhất
                 </Button>
 
-                <div className="h-6 w-px bg-slate-200 mx-2" />
+                <div className="h-6 w-px bg-[rgba(145,158,171,0.2)] dark:bg-white/[0.1] mx-2" />
 
-                <Button variant="ghost" size="icon" className="rounded-full text-slate-400">
+                <Button variant="ghost" size="icon" className="rounded-full text-[#919EAB]">
                     <Filter className="w-4 h-4" />
                 </Button>
             </div>

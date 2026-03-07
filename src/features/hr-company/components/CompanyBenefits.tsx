@@ -15,12 +15,12 @@ const EMOJI_OPTIONS = ["💰", "🏥", "📚", "🏠", "🎮", "✈️", "🍔",
 
 // Gradient colors for benefit cards
 const CARD_GRADIENTS = [
-    { bg: "from-sky-50 via-white to-blue-50", border: "border-sky-200", hover: "hover:border-sky-300" },
-    { bg: "from-green-50 via-white to-emerald-50", border: "border-green-200", hover: "hover:border-green-300" },
-    { bg: "from-purple-50 via-white to-indigo-50", border: "border-purple-200", hover: "hover:border-purple-300" },
-    { bg: "from-orange-50 via-white to-amber-50", border: "border-orange-200", hover: "hover:border-orange-300" },
-    { bg: "from-pink-50 via-white to-rose-50", border: "border-pink-200", hover: "hover:border-pink-300" },
-    { bg: "from-teal-50 via-white to-cyan-50", border: "border-teal-200", hover: "hover:border-teal-300" },
+    { bg: "from-sky-50 via-white to-blue-50 dark:from-sky-900/15 dark:via-[#1C252E] dark:to-blue-900/10", border: "border-sky-200 dark:border-sky-800/30", hover: "hover:border-sky-300 dark:hover:border-sky-700/50" },
+    { bg: "from-green-50 via-white to-emerald-50 dark:from-green-900/15 dark:via-[#1C252E] dark:to-emerald-900/10", border: "border-green-200 dark:border-green-800/30", hover: "hover:border-green-300 dark:hover:border-green-700/50" },
+    { bg: "from-purple-50 via-white to-indigo-50 dark:from-purple-900/15 dark:via-[#1C252E] dark:to-indigo-900/10", border: "border-purple-200 dark:border-purple-800/30", hover: "hover:border-purple-300 dark:hover:border-purple-700/50" },
+    { bg: "from-orange-50 via-white to-amber-50 dark:from-orange-900/15 dark:via-[#1C252E] dark:to-amber-900/10", border: "border-orange-200 dark:border-orange-800/30", hover: "hover:border-orange-300 dark:hover:border-orange-700/50" },
+    { bg: "from-pink-50 via-white to-rose-50 dark:from-pink-900/15 dark:via-[#1C252E] dark:to-rose-900/10", border: "border-pink-200 dark:border-pink-800/30", hover: "hover:border-pink-300 dark:hover:border-pink-700/50" },
+    { bg: "from-teal-50 via-white to-cyan-50 dark:from-teal-900/15 dark:via-[#1C252E] dark:to-cyan-900/10", border: "border-teal-200 dark:border-teal-800/30", hover: "hover:border-teal-300 dark:hover:border-teal-700/50" },
 ];
 
 export function CompanyBenefits({ benefits, onUpdate, editable = true }: CompanyBenefitsProps) {
@@ -65,8 +65,8 @@ export function CompanyBenefits({ benefits, onUpdate, editable = true }: Company
                         <Gift className="w-6 h-6 text-white" />
                     </motion.div>
                     <div>
-                        <h2 className="text-xl font-bold text-sky-900">Phúc lợi & Đãi ngộ</h2>
-                        <p className="text-sm text-sky-600">Những gì bạn nhận được khi làm việc cùng chúng tôi</p>
+                        <h2 className="text-xl font-bold text-sky-900 dark:text-white">Phúc lợi & Đãi ngộ</h2>
+                        <p className="text-sm text-sky-600 dark:text-[#919EAB]">Những gì bạn nhận được khi làm việc cùng chúng tôi</p>
                     </div>
                 </div>
                 {editable && !isAdding && (
@@ -91,11 +91,11 @@ export function CompanyBenefits({ benefits, onUpdate, editable = true }: Company
                         exit={{ opacity: 0, height: 0, y: -20 }}
                         className="overflow-hidden"
                     >
-                        <div className="p-6 bg-gradient-to-br from-green-50 via-white to-emerald-50 rounded-2xl border-2 border-dashed border-green-300">
+                        <div className="p-6 bg-gradient-to-br from-green-50 via-white to-emerald-50 dark:from-green-900/10 dark:via-[#1C252E] dark:to-emerald-900/10 rounded-2xl border-2 border-dashed border-green-300 dark:border-green-700">
                             <div className="space-y-4">
                                 {/* Emoji Picker */}
                                 <div>
-                                    <label className="block text-sm font-semibold text-green-700 mb-3">
+                                    <label className="block text-sm font-semibold text-green-700 dark:text-green-400 mb-3">
                                         <Sparkles className="w-4 h-4 inline mr-1" />
                                         Chọn biểu tượng
                                     </label>
@@ -108,8 +108,8 @@ export function CompanyBenefits({ benefits, onUpdate, editable = true }: Company
                                                 whileTap={{ scale: 0.9 }}
                                                 onClick={() => setNewBenefit({ ...newBenefit, icon: emoji })}
                                                 className={`w-12 h-12 rounded-xl text-2xl flex items-center justify-center transition-all ${newBenefit.icon === emoji
-                                                    ? "bg-gradient-to-br from-green-500 to-emerald-600 shadow-lg shadow-green-500/30 ring-4 ring-green-200"
-                                                    : "bg-white hover:bg-green-50 border-2 border-green-100"
+                                                    ? "bg-gradient-to-br from-green-500 to-emerald-600 shadow-lg shadow-green-500/30 ring-4 ring-green-200 dark:ring-green-800"
+                                                    : "bg-white dark:bg-white/[0.04] hover:bg-green-50 dark:hover:bg-white/[0.06] border-2 border-green-100 dark:border-white/[0.08]"
                                                     }`}
                                             >
                                                 {emoji}
@@ -121,23 +121,23 @@ export function CompanyBenefits({ benefits, onUpdate, editable = true }: Company
                                 {/* Input fields with gradient focus */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div className="space-y-1">
-                                        <label className="text-sm font-semibold text-slate-600">Tiêu đề</label>
+                                        <label className="text-sm font-semibold text-slate-600 dark:text-[#C4CDD5]">Tiêu đề</label>
                                         <input
                                             type="text"
                                             value={newBenefit.title}
                                             onChange={(e) => setNewBenefit({ ...newBenefit, title: e.target.value })}
                                             placeholder="Ví dụ: Bảo hiểm sức khỏe"
-                                            className="w-full bg-white rounded-xl px-4 py-3 border-2 border-slate-200 focus:border-green-500 focus:outline-none transition-colors"
+                                            className="w-full bg-white dark:bg-[#1C252E] rounded-xl px-4 py-3 border-2 border-slate-200 dark:border-white/[0.08] focus:border-green-500 focus:outline-none text-slate-800 dark:text-white transition-colors"
                                         />
                                     </div>
                                     <div className="space-y-1">
-                                        <label className="text-sm font-semibold text-slate-600">Mô tả chi tiết</label>
+                                        <label className="text-sm font-semibold text-slate-600 dark:text-[#C4CDD5]">Mô tả chi tiết</label>
                                         <input
                                             type="text"
                                             value={newBenefit.description}
                                             onChange={(e) => setNewBenefit({ ...newBenefit, description: e.target.value })}
                                             placeholder="Bảo hiểm cao cấp cho bạn và gia đình"
-                                            className="w-full bg-white rounded-xl px-4 py-3 border-2 border-slate-200 focus:border-green-500 focus:outline-none transition-colors"
+                                            className="w-full bg-white dark:bg-[#1C252E] rounded-xl px-4 py-3 border-2 border-slate-200 dark:border-white/[0.08] focus:border-green-500 focus:outline-none text-slate-800 dark:text-white transition-colors"
                                         />
                                     </div>
                                 </div>
@@ -158,7 +158,7 @@ export function CompanyBenefits({ benefits, onUpdate, editable = true }: Company
                                         whileHover={{ scale: 1.02 }}
                                         whileTap={{ scale: 0.98 }}
                                         onClick={() => setIsAdding(false)}
-                                        className="px-6 py-3 bg-white text-slate-600 rounded-full font-semibold border-2 border-slate-200"
+                                        className="px-6 py-3 bg-white dark:bg-white/[0.04] text-slate-600 dark:text-[#C4CDD5] rounded-full font-semibold border-2 border-slate-200 dark:border-white/[0.08]"
                                     >
                                         Hủy
                                     </motion.button>
@@ -216,8 +216,8 @@ export function CompanyBenefits({ benefits, onUpdate, editable = true }: Company
                                 </div>
 
                                 {/* Content */}
-                                <h3 className="font-bold text-slate-800 mb-1">{benefit.title}</h3>
-                                <p className="text-sm text-slate-600 leading-relaxed">{benefit.description}</p>
+                                <h3 className="font-bold text-slate-800 dark:text-white mb-1">{benefit.title}</h3>
+                                <p className="text-sm text-slate-600 dark:text-[#C4CDD5] leading-relaxed">{benefit.description}</p>
                             </motion.div>
                         );
                     })}
@@ -226,12 +226,12 @@ export function CompanyBenefits({ benefits, onUpdate, editable = true }: Company
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="text-center py-12 rounded-2xl bg-gradient-to-br from-slate-50 to-white border-2 border-dashed border-slate-200"
+                    className="text-center py-12 rounded-2xl bg-gradient-to-br from-slate-50 to-white dark:from-white/[0.02] dark:to-[#1C252E] border-2 border-dashed border-slate-200 dark:border-white/[0.08]"
                 >
-                    <Gift className="w-16 h-16 mx-auto mb-3 text-slate-300" />
-                    <p className="text-slate-500 font-medium">Chưa có phúc lợi nào được thêm</p>
+                    <Gift className="w-16 h-16 mx-auto mb-3 text-slate-300 dark:text-[#637381]" />
+                    <p className="text-slate-500 dark:text-[#919EAB] font-medium">Chưa có phúc lợi nào được thêm</p>
                     {editable && (
-                        <p className="text-sm text-slate-400 mt-1">Nhấn "Thêm mới" để bắt đầu</p>
+                        <p className="text-sm text-slate-400 dark:text-[#637381] mt-1">Nhấn "Thêm mới" để bắt đầu</p>
                     )}
                 </motion.div>
             )}

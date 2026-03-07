@@ -242,24 +242,21 @@ const JobCard = React.memo(function JobCard({ job, index, onViewApplicants }: { 
         >
             <div
                 onClick={handleCardClick}
-                className={`relative bg-gradient-to-br from-white to-sky-50/60 backdrop-blur-xl rounded-3xl border cursor-pointer transition-all duration-300 overflow-hidden hover:shadow-2xl hover:shadow-sky-500/15 hover:-translate-y-1.5 hover:scale-[1.01] hover:from-sky-50/50 hover:to-blue-50/50 ${job.status === "paused"
-                    ? "border-sky-200/40 opacity-75 grayscale-[20%]"
-                    : "border-sky-200/60 shadow-lg shadow-sky-900/[0.06]"
+                className={`relative bg-gradient-to-br from-white dark:from-[#1C252E] to-sky-50/60 dark:to-[#1C252E] backdrop-blur-xl rounded-3xl border cursor-pointer transition-all duration-300 overflow-hidden hover:shadow-2xl hover:shadow-sky-500/15 hover:-translate-y-1.5 hover:scale-[1.01] hover:from-sky-50/50 hover:to-blue-50/50 dark:hover:from-[#1E2C38] dark:hover:to-[#1E2C38] ${job.status === "paused"
+                    ? "border-sky-200/40 dark:border-white/[0.06] opacity-75 grayscale-[20%]"
+                    : "border-sky-200/60 dark:border-white/[0.08] shadow-lg shadow-sky-900/[0.06]"
                     }`}
             >
-                {/* Left gradient accent strip - absolutely positioned */}
-                <div
-                    className={`absolute left-0 top-0 bottom-0 w-1.5 ${job.status === "paused" ? "bg-amber-400" : `bg-gradient-to-b ${dept.bg}`}`}
-                />
+
 
                 <div className="p-5 pb-4 pl-6">
                     {/* Header row: Department icon + Status badge */}
                     <div className="flex items-start justify-between mb-4">
                         <motion.div
                             whileHover={{ rotate: 8, scale: 1.05 }}
-                            className={`w-12 h-12 rounded-2xl ${dept.icon} flex items-center justify-center shadow-sm border border-white/50`}
+                            className="w-12 h-12 rounded-2xl bg-[rgba(145,158,171,0.08)] dark:bg-white/[0.06] flex items-center justify-center border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08]"
                         >
-                            <Briefcase className="w-6 h-6" />
+                            <Briefcase className="w-6 h-6 text-[#637381] dark:text-[#919EAB]" />
                         </motion.div>
                         <div className="flex items-center gap-2">
                             {/* Deadline warning */}
@@ -285,27 +282,27 @@ const JobCard = React.memo(function JobCard({ job, index, onViewApplicants }: { 
 
                     {/* Title & Department */}
                     <div className="mb-3">
-                        <h3 className="font-bold text-[15px] text-sky-900 truncate leading-tight group-hover:text-sky-700 transition-all">
+                        <h3 className="font-bold text-[15px] text-[#1C252E] dark:text-white truncate leading-tight group-hover:text-sky-700 transition-all">
                             {job.title}
                         </h3>
-                        <p className={`text-xs mt-1 font-semibold ${dept.text} flex items-center gap-1`}>
-                            <span className={`w-1.5 h-1.5 rounded-full ${dept.accent}`} />
+                        <p className="text-xs mt-1 font-semibold text-[#637381] dark:text-[#919EAB] flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#919EAB] dark:bg-[#637381]" />
                             {job.department}
                         </p>
                     </div>
 
                     {/* Info row - compact inline */}
-                    <div className="flex items-center gap-2 text-[11px] text-sky-700 mb-3 flex-wrap">
-                        <span className="flex items-center gap-1 bg-sky-50 px-2 py-0.5 rounded-lg">
-                            <MapPin className="w-3 h-3 text-sky-400" />
+                    <div className="flex items-center gap-2 text-[11px] text-[#637381] dark:text-[#919EAB] mb-3 flex-wrap">
+                        <span className="flex items-center gap-1 bg-[rgba(145,158,171,0.08)] dark:bg-white/[0.04] px-2 py-0.5 rounded-lg">
+                            <MapPin className="w-3 h-3 text-[#919EAB]" />
                             {job.remote === "remote" ? "Remote" : job.location}
                         </span>
-                        <span className="flex items-center gap-1 bg-sky-50 px-2 py-0.5 rounded-lg">
-                            <Clock className="w-3 h-3 text-sky-400" />
+                        <span className="flex items-center gap-1 bg-[rgba(145,158,171,0.08)] dark:bg-white/[0.04] px-2 py-0.5 rounded-lg">
+                            <Clock className="w-3 h-3 text-[#919EAB]" />
                             {JOB_TYPES[job.type]}
                         </span>
-                        <span className="flex items-center gap-1 bg-green-50 text-green-700 px-2 py-0.5 rounded-lg font-semibold">
-                            <DollarSign className="w-3 h-3" />
+                        <span className="flex items-center gap-1 bg-[rgba(145,158,171,0.08)] dark:bg-white/[0.04] px-2 py-0.5 rounded-lg font-semibold">
+                            <DollarSign className="w-3 h-3 text-[#919EAB]" />
                             {formatSalary(job.salaryMin, job.salaryMax)}
                         </span>
                     </div>
@@ -315,40 +312,40 @@ const JobCard = React.memo(function JobCard({ job, index, onViewApplicants }: { 
                         {job.mustHaveSkills.slice(0, 3).map((skill) => (
                             <span
                                 key={skill.id}
-                                className="px-2.5 py-0.5 rounded-lg text-[10px] font-semibold border border-sky-200 text-sky-700 bg-sky-50/50"
+                                className="px-2.5 py-0.5 rounded-lg text-[10px] font-semibold border border-[rgba(145,158,171,0.2)] dark:border-white/[0.08] text-[#637381] dark:text-[#919EAB] bg-[rgba(145,158,171,0.06)] dark:bg-white/[0.03]"
                             >
                                 {skill.name}
                             </span>
                         ))}
                         {job.mustHaveSkills.length > 3 && (
-                            <span className="px-2 py-0.5 bg-sky-50 text-sky-500 rounded-lg text-[10px] font-medium border border-sky-100">
+                            <span className="px-2 py-0.5 bg-[rgba(145,158,171,0.06)] dark:bg-white/[0.03] text-[#919EAB] rounded-lg text-[10px] font-medium border border-[rgba(145,158,171,0.2)] dark:border-white/[0.08]">
                                 +{job.mustHaveSkills.length - 3}
                             </span>
                         )}
                     </div>
 
                     {/* Bottom section: Stats + Actions */}
-                    <div className="flex items-center justify-between pt-3 border-t border-sky-100/60">
+                    <div className="flex items-center justify-between pt-3 border-t border-sky-100/60 dark:border-white/[0.06]">
                         {/* Mini stat pills */}
                         <div className="flex items-center gap-2">
-                            <div className="flex items-center gap-1 px-2 py-1 bg-violet-50 rounded-lg" title="Ứng viên">
-                                <Users className="w-3 h-3 text-violet-500" />
-                                <span className="text-[11px] font-bold text-violet-700">{job.applicantCount}</span>
+                            <div className="flex items-center gap-1 px-2 py-1 bg-[rgba(145,158,171,0.08)] dark:bg-white/[0.04] rounded-lg" title="Ứng viên">
+                                <Users className="w-3 h-3 text-[#919EAB]" />
+                                <span className="text-[11px] font-bold text-[#637381] dark:text-[#919EAB]">{job.applicantCount}</span>
                             </div>
-                            <div className="flex items-center gap-1 px-2 py-1 bg-sky-50 rounded-lg" title="Lượt xem">
-                                <Eye className="w-3 h-3 text-sky-500" />
-                                <span className="text-[11px] font-bold text-sky-700">{job.viewCount}</span>
+                            <div className="flex items-center gap-1 px-2 py-1 bg-[rgba(145,158,171,0.08)] dark:bg-white/[0.04] rounded-lg" title="Lượt xem">
+                                <Eye className="w-3 h-3 text-[#919EAB]" />
+                                <span className="text-[11px] font-bold text-[#637381] dark:text-[#919EAB]">{job.viewCount}</span>
                             </div>
                         </div>
 
-                        {/* Action buttons - slide in on hover */}
+                        {/* Action buttons - neutral, only color on individual hover */}
                         <div className="flex items-center gap-0.5 translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-200">
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     onViewApplicants(job);
                                 }}
-                                className="p-1.5 rounded-lg text-sky-400 hover:text-violet-600 hover:bg-violet-50 transition-colors"
+                                className="p-1.5 rounded-lg text-[#919EAB] dark:text-[#637381] hover:text-sky-600 dark:hover:text-sky-400 hover:bg-[rgba(145,158,171,0.08)] dark:hover:bg-white/[0.06] transition-colors"
                                 title="Xem ứng viên"
                             >
                                 <Users className="w-3.5 h-3.5" />
@@ -359,28 +356,28 @@ const JobCard = React.memo(function JobCard({ job, index, onViewApplicants }: { 
                                     selectJob(job);
                                     setFormOpen(true);
                                 }}
-                                className="p-1.5 rounded-lg text-sky-400 hover:text-sky-600 hover:bg-sky-50 transition-colors"
+                                className="p-1.5 rounded-lg text-[#919EAB] dark:text-[#637381] hover:text-sky-600 dark:hover:text-sky-400 hover:bg-[rgba(145,158,171,0.08)] dark:hover:bg-white/[0.06] transition-colors"
                                 title="Chỉnh sửa"
                             >
                                 <Edit3 className="w-3.5 h-3.5" />
                             </button>
                             <button
                                 onClick={handleClone}
-                                className="p-1.5 rounded-lg text-sky-400 hover:text-green-600 hover:bg-green-50 transition-colors"
+                                className="p-1.5 rounded-lg text-[#919EAB] dark:text-[#637381] hover:text-sky-600 dark:hover:text-sky-400 hover:bg-[rgba(145,158,171,0.08)] dark:hover:bg-white/[0.06] transition-colors"
                                 title="Nhân bản"
                             >
                                 <Copy className="w-3.5 h-3.5" />
                             </button>
                             <button
                                 onClick={handlePause}
-                                className="p-1.5 rounded-lg text-sky-400 hover:text-amber-600 hover:bg-amber-50 transition-colors"
+                                className="p-1.5 rounded-lg text-[#919EAB] dark:text-[#637381] hover:text-amber-500 dark:hover:text-amber-400 hover:bg-[rgba(145,158,171,0.08)] dark:hover:bg-white/[0.06] transition-colors"
                                 title={pauseTitle}
                             >
                                 {job.status === "open" ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
                             </button>
                             <button
                                 onClick={handleDelete}
-                                className="p-1.5 rounded-lg text-sky-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+                                className="p-1.5 rounded-lg text-[#919EAB] dark:text-[#637381] hover:text-red-500 dark:hover:text-red-400 hover:bg-[rgba(145,158,171,0.08)] dark:hover:bg-white/[0.06] transition-colors"
                                 title="Xóa tin"
                             >
                                 <Trash2 className="w-3.5 h-3.5" />
@@ -417,7 +414,7 @@ function FilterPills({
                     onClick={() => setFilters({ status: status.value as JobStatus | "all" })}
                     className={`px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2 transition-all ${filters.status === status.value
                         ? "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-lg shadow-sky-500/30"
-                        : "bg-white text-sky-700 border border-sky-100 hover:border-sky-300 hover:scale-105"
+                        : "bg-white dark:bg-[#1C252E] text-sky-700 dark:text-[#919EAB] border border-sky-100 dark:border-white/[0.08] hover:border-sky-300 dark:hover:border-sky-600 hover:scale-105"
                         }`}
                 >
                     <status.icon className="w-4 h-4" />
@@ -452,13 +449,13 @@ function ClosedJobsSection() {
                     <Archive className="w-5 h-5 text-sky-700" />
                 </div>
                 <div className="flex-1">
-                    <h3 className="text-lg font-bold text-sky-900 flex items-center gap-2">
+                    <h3 className="text-lg font-bold text-[#1C252E] dark:text-white flex items-center gap-2">
                         Tin đã đóng
                         <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-600 border border-red-200">
                             {closedJobs.length}
                         </span>
                     </h3>
-                    <p className="text-sm text-sky-500">Bạn có thể khôi phục hoặc xóa vĩnh viễn</p>
+                    <p className="text-sm text-[#637381] dark:text-[#919EAB]">Bạn có thể khôi phục hoặc xóa vĩnh viễn</p>
                 </div>
                 <motion.div animate={{ rotate: isExpanded ? 180 : 0 }} transition={{ duration: 0.2 }}>
                     <ChevronDown className="w-5 h-5 text-sky-400" />
@@ -483,7 +480,7 @@ function ClosedJobsSection() {
                                     animate={{ opacity: 1, x: 0 }}
                                     exit={{ opacity: 0, x: -10, scale: 0.95 }}
                                     transition={{ delay: i * 0.05 }}
-                                    className="flex items-center gap-4 p-4 bg-white/70 backdrop-blur-xl rounded-2xl border border-sky-100 shadow-md hover:shadow-lg transition-all group"
+                                    className="flex items-center gap-4 p-4 bg-white/70 dark:bg-[#1C252E] backdrop-blur-xl rounded-2xl border border-sky-100 dark:border-white/[0.08] shadow-md hover:shadow-lg transition-all group"
                                 >
                                     {/* Job icon */}
                                     <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-sky-200 to-sky-300 flex items-center justify-center flex-shrink-0 opacity-60">
@@ -492,8 +489,8 @@ function ClosedJobsSection() {
 
                                     {/* Job info */}
                                     <div className="flex-1 min-w-0">
-                                        <h4 className="font-bold text-sky-900 truncate">{job.title}</h4>
-                                        <div className="flex items-center gap-3 text-sm text-sky-500 mt-0.5">
+                                        <h4 className="font-bold text-[#1C252E] dark:text-white truncate">{job.title}</h4>
+                                        <div className="flex items-center gap-3 text-sm text-[#637381] dark:text-[#919EAB] mt-0.5">
                                             <span className="flex items-center gap-1">
                                                 <Building2 className="w-3.5 h-3.5" />
                                                 {job.department}
@@ -588,15 +585,13 @@ export function JobListView() {
     }, [jobs, searchValue, sortBy]);
 
     return (
-        <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-sky-50/50 via-white to-green-50/30">
-            {/* Floating Background Elements */}
-            <FloatingElements />
+        <div className="relative bg-gradient-to-br from-sky-50/50 via-white to-green-50/30 dark:from-[#141A21] dark:via-[#141A21] dark:to-[#141A21] -m-6 px-6 pb-16">
 
             {/* Content */}
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="relative z-10 container mx-auto px-4 pt-28 pb-16 max-w-7xl"
+                className="relative z-10 container mx-auto px-0 pt-6 pb-16 max-w-7xl"
             >
                 {/* Page Header */}
                 <motion.div
@@ -608,13 +603,13 @@ export function JobListView() {
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         transition={{ type: "spring", stiffness: 200, delay: 0.1 }}
-                        className="inline-flex items-center gap-2 px-4 py-1.5 bg-green-100 rounded-full text-green-700 text-sm font-medium mb-4"
+                        className="inline-flex items-center gap-2 px-4 py-1.5 bg-green-100 dark:bg-green-900/30 rounded-full text-green-700 dark:text-green-400 text-sm font-medium mb-4"
                     >
                         <Zap className="w-4 h-4" />
                         Quản lý tuyển dụng thông minh
                     </motion.div>
                     <h1 className="text-4xl sm:text-5xl font-bold">
-                        <span className="text-sky-900">Tin </span>
+                        <span className="text-[#1C252E] dark:text-white">Tin </span>
                         <span className="relative">
                             <span className="bg-gradient-to-r from-sky-600 via-blue-600 to-sky-600 bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient">
                                 Tuyển dụng
@@ -632,7 +627,7 @@ export function JobListView() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.3 }}
-                        className="text-sky-600 mt-3 text-lg"
+                        className="text-sky-600 dark:text-[#C4CDD5] mt-3 text-lg"
                     >
                         Tạo và quản lý vị trí tuyển dụng, thu hút ứng viên chất lượng
                     </motion.p>
@@ -691,7 +686,7 @@ export function JobListView() {
                                     value={searchValue}
                                     onChange={(e) => setSearchValue(e.target.value)}
                                     placeholder="Tìm kiếm tin tuyển dụng..."
-                                    className="w-full pl-12 pr-4 py-3 bg-sky-50/50 border-2 border-transparent focus:border-sky-300 rounded-2xl text-sky-900 placeholder:text-sky-400 focus:outline-none transition-all"
+                                    className="w-full pl-12 pr-4 py-3 bg-sky-50/50 dark:bg-white/[0.04] border-2 border-transparent focus:border-sky-300 dark:focus:border-sky-600 rounded-2xl text-[#1C252E] dark:text-white placeholder:text-sky-400 dark:placeholder:text-[#637381] focus:outline-none transition-all"
                                 />
                             </div>
 
@@ -705,7 +700,7 @@ export function JobListView() {
                                         whileHover={{ scale: 1.05 }}
                                         whileTap={{ scale: 0.95 }}
                                         onClick={() => setShowSortMenu(!showSortMenu)}
-                                        className="flex items-center gap-2 px-4 py-3 bg-white border-2 border-sky-100 hover:border-sky-300 text-sky-700 rounded-2xl text-sm font-medium transition-all"
+                                        className="flex items-center gap-2 px-4 py-3 bg-white dark:bg-[#1C252E] border-2 border-sky-100 dark:border-white/[0.08] hover:border-sky-300 dark:hover:border-sky-600 text-sky-700 dark:text-[#919EAB] rounded-2xl text-sm font-medium transition-all"
                                     >
                                         <Filter className="w-4 h-4" />
                                         {SORT_OPTIONS.find(o => o.value === sortBy)?.label}
@@ -718,15 +713,15 @@ export function JobListView() {
                                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                                 exit={{ opacity: 0, y: -8, scale: 0.95 }}
                                                 transition={{ duration: 0.15 }}
-                                                className="absolute top-full mt-2 right-0 w-48 bg-white/95 backdrop-blur-xl rounded-2xl border border-sky-100 shadow-xl z-50 overflow-hidden"
+                                                className="absolute top-full mt-2 right-0 w-48 bg-white/95 dark:bg-[#1C252E] backdrop-blur-xl rounded-2xl border border-sky-100 dark:border-white/[0.08] shadow-xl dark:shadow-black/40 z-50 overflow-hidden"
                                             >
                                                 {SORT_OPTIONS.map((option) => (
                                                     <button
                                                         key={option.value}
                                                         onClick={() => { setSortBy(option.value); setShowSortMenu(false); }}
                                                         className={`w-full px-4 py-3 text-left text-sm font-medium transition-colors flex items-center gap-2 ${sortBy === option.value
-                                                            ? "bg-sky-50 text-sky-700"
-                                                            : "text-sky-600 hover:bg-sky-50/50"
+                                                            ? "bg-sky-50 dark:bg-sky-900/20 text-sky-700 dark:text-sky-400"
+                                                            : "text-sky-600 dark:text-[#919EAB] hover:bg-sky-50/50 dark:hover:bg-white/[0.04]"
                                                             }`}
                                                     >
                                                         {sortBy === option.value && <CheckCircle2 className="w-4 h-4 text-sky-500" />}
@@ -769,10 +764,10 @@ export function JobListView() {
                         <div className="w-24 h-24 mx-auto mb-6 rounded-3xl bg-gradient-to-br from-sky-100 to-blue-100 flex items-center justify-center">
                             <Briefcase className="w-12 h-12 text-sky-400" />
                         </div>
-                        <h3 className="text-2xl font-bold text-sky-900 mb-2">
+                        <h3 className="text-2xl font-bold text-[#1C252E] dark:text-white mb-2">
                             Chưa có tin tuyển dụng
                         </h3>
-                        <p className="text-sky-500 mb-8">
+                        <p className="text-sky-500 dark:text-[#919EAB] mb-8">
                             Bắt đầu tạo tin tuyển dụng đầu tiên để thu hút ứng viên
                         </p>
                         <motion.button

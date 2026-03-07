@@ -66,10 +66,10 @@ export function PositionSelector({ selectedPosition, onSelect }: PositionSelecto
     return (
         <div className="space-y-4">
             <div className="text-center space-y-2">
-                <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">
+                <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-[#1C252E] dark:text-white">
                     Bạn đang tìm việc vị trí gì?
                 </h2>
-                <p className="text-gray-500 text-sm">
+                <p className="text-[#637381] dark:text-[#919EAB] text-sm">
                     Chọn vị trí để xem các mẫu CV phù hợp nhất
                 </p>
             </div>
@@ -95,7 +95,7 @@ export function PositionSelector({ selectedPosition, onSelect }: PositionSelecto
                                 "flex flex-col items-center gap-3 text-center",
                                 isSelected
                                     ? `${colors.border} ${colors.bg} shadow-lg ${colors.shadow}`
-                                    : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-md"
+                                    : "border-[rgba(145,158,171,0.2)] dark:border-white/[0.08] bg-white dark:bg-[#1C252E] hover:border-[rgba(145,158,171,0.4)] dark:hover:border-white/[0.16] hover:shadow-md"
                             )}
                         >
                             {/* Selected checkmark */}
@@ -118,7 +118,7 @@ export function PositionSelector({ selectedPosition, onSelect }: PositionSelecto
                                     "px-2 py-0.5 rounded-full text-xs font-semibold",
                                     isSelected
                                         ? `bg-gradient-to-r ${colors.icon} text-white`
-                                        : "bg-gray-100 text-gray-600"
+                                        : "bg-[rgba(145,158,171,0.1)] dark:bg-white/[0.06] text-[#637381] dark:text-[#919EAB]"
                                 )}>
                                     {templateCount} mẫu
                                 </span>
@@ -137,11 +137,11 @@ export function PositionSelector({ selectedPosition, onSelect }: PositionSelecto
                             <div className="space-y-1">
                                 <p className={cn(
                                     "font-bold text-sm md:text-base",
-                                    isSelected ? colors.text : "text-gray-900"
+                                    isSelected ? colors.text : "text-[#1C252E] dark:text-white"
                                 )}>
                                     {position.name}
                                 </p>
-                                <p className="text-xs hidden md:block text-gray-500 line-clamp-1">
+                                <p className="text-xs hidden md:block text-[#637381] dark:text-[#919EAB] line-clamp-1">
                                     {position.description}
                                 </p>
                             </div>

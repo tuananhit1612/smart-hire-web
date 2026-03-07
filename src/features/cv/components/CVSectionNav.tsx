@@ -56,8 +56,8 @@ export function CVSectionNav({
                         className={cn(
                             "relative flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all duration-200 cursor-pointer group",
                             isActive
-                                ? "bg-white shadow-lg shadow-green-900/5"
-                                : "hover:bg-green-50"
+                                ? "bg-white dark:bg-white/[0.08] shadow-lg shadow-green-900/5 dark:shadow-none"
+                                : "hover:bg-green-50 dark:hover:bg-white/[0.04]"
                         )}
                         whileHover={{ x: 4 }}
                         whileTap={{ scale: 0.98 }}
@@ -82,8 +82,8 @@ export function CVSectionNav({
                                     isActive
                                         ? "bg-gradient-to-r from-sky-500 to-green-500 text-white shadow-md shadow-green-500/20"
                                         : isCompleted
-                                            ? "bg-green-100 text-green-600"
-                                            : "bg-gray-100 text-gray-400 group-hover:bg-white group-hover:text-green-500"
+                                            ? "bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400"
+                                            : "bg-gray-100 dark:bg-white/[0.04] text-gray-400 group-hover:bg-white dark:group-hover:bg-white/[0.08] group-hover:text-green-500"
                                 )}
                             >
                                 {isCompleted && !isActive ? (
@@ -99,13 +99,13 @@ export function CVSectionNav({
                                     className={cn(
                                         "text-sm font-medium truncate transition-colors font-sans",
                                         isActive
-                                            ? "text-sky-900"
-                                            : "text-gray-600 group-hover:text-green-700"
+                                            ? "text-sky-900 dark:text-white"
+                                            : "text-gray-600 dark:text-gray-300 group-hover:text-green-700 dark:group-hover:text-green-400"
                                     )}
                                 >
                                     {section.title}
                                 </div>
-                                <div className="text-xs text-gray-400 truncate group-hover:text-green-600/70">
+                                <div className="text-xs text-gray-400 dark:text-gray-500 truncate group-hover:text-green-600/70 dark:group-hover:text-green-400/70">
                                     {section.description}
                                 </div>
                             </div>

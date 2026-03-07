@@ -87,7 +87,7 @@ function AvatarDropzone({ value, onChange }: { value?: string; onChange: (url: s
                     ? "bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 shadow-xl shadow-purple-500/30"
                     : "bg-gradient-to-r from-sky-400 via-cyan-400 to-emerald-400"
             )}>
-                <div className="w-full h-full rounded-2xl bg-gray-50 flex items-center justify-center overflow-hidden relative">
+                <div className="w-full h-full rounded-2xl bg-gray-50 dark:bg-[#1C252E] flex items-center justify-center overflow-hidden relative">
                     {value ? (
                         <img
                             src={value}
@@ -166,7 +166,7 @@ function SocialSelect({ value, onChange }: { value: string; onChange: (value: st
             <button
                 type="button" // Prevent form submission
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full h-11 pl-3 pr-2 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 flex items-center justify-between hover:border-sky-300 focus:ring-2 focus:ring-sky-500/20 transition-all"
+                className="w-full h-11 pl-3 pr-2 bg-white dark:bg-[#141A21] border border-gray-200 dark:border-white/10 rounded-xl text-sm text-gray-700 dark:text-gray-300 flex items-center justify-between hover:border-sky-300 dark:hover:border-sky-500 focus:ring-2 focus:ring-sky-500/20 transition-all"
             >
                 <div className="flex items-center gap-2">
                     <Icon className="w-4 h-4 text-gray-400" />
@@ -189,7 +189,7 @@ function SocialSelect({ value, onChange }: { value: string; onChange: (value: st
             </button>
 
             {isOpen && (
-                <div className="absolute top-full left-0 mt-1 w-full bg-white border border-gray-100 rounded-xl shadow-xl shadow-gray-200/50 z-50 max-h-60 overflow-y-auto py-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
+                <div className="absolute top-full left-0 mt-1 w-full bg-white dark:bg-[#1C252E] border border-gray-100 dark:border-white/10 rounded-xl shadow-xl shadow-gray-200/50 dark:shadow-none z-50 max-h-60 overflow-y-auto py-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
                     {SOCIAL_NETWORKS.map((network) => {
                         const NetworkIcon = network.icon;
                         return (
@@ -200,7 +200,7 @@ function SocialSelect({ value, onChange }: { value: string; onChange: (value: st
                                     onChange(network.value);
                                     setIsOpen(false);
                                 }}
-                                className="w-full px-3 py-2 text-sm text-left flex items-center gap-2 hover:bg-sky-50 text-gray-700 hover:text-sky-700 transition-colors"
+                                className="w-full px-3 py-2 text-sm text-left flex items-center gap-2 hover:bg-sky-50 dark:hover:bg-white/5 text-gray-700 dark:text-gray-300 hover:text-sky-700 dark:hover:text-white transition-colors"
                             >
                                 <NetworkIcon className="w-4 h-4 text-gray-400" />
                                 {network.label}
@@ -263,13 +263,13 @@ export function PersonalInfoSection({ data, onChange }: PersonalInfoSectionProps
         >
             {/* Section Header */}
             <div>
-                <h2 className="text-xl md:text-2xl font-bold tracking-tight text-sky-900 flex items-center gap-2 md:gap-3">
+                <h2 className="text-xl md:text-2xl font-bold tracking-tight text-sky-900 dark:text-white flex items-center gap-2 md:gap-3">
                     <div className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-gradient-to-r from-sky-500 to-green-500 text-white flex-shrink-0 shadow-lg shadow-sky-500/20">
                         <User className="w-4 h-4 md:w-5 md:h-5" />
                     </div>
                     <span>Thông tin cá nhân</span>
                 </h2>
-                <p className="text-sm md:text-base text-gray-500 mt-2">
+                <p className="text-sm md:text-base text-gray-500 dark:text-gray-400 mt-2">
                     Thông tin liên hệ cơ bản để nhà tuyển dụng có thể liên lạc với bạn
                 </p>
             </div>
@@ -281,10 +281,10 @@ export function PersonalInfoSection({ data, onChange }: PersonalInfoSectionProps
                     onChange={(url) => handleChange("avatarUrl", url)}
                 />
                 <div>
-                    <p className="text-sm font-medium text-gray-700">
+                    <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
                         Ảnh đại diện
                     </p>
-                    <p className="text-xs text-gray-500 max-w-[200px] leading-relaxed">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 max-w-[200px] leading-relaxed">
                         Kéo thả hoặc click để tải ảnh lên (Max 2MB).
                         <br />Khuyên dùng ảnh chân dung chuyên nghiệp.
                     </p>
@@ -358,14 +358,14 @@ export function PersonalInfoSection({ data, onChange }: PersonalInfoSectionProps
                 />
 
                 {/* Social Links Dynamic List */}
-                <div className="pt-6 border-t border-slate-100">
+                <div className="pt-6 border-t border-slate-100 dark:border-white/10">
                     <div className="flex items-center justify-between mb-4">
                         <div>
-                            <p className="text-sm font-semibold text-slate-800 flex items-center gap-2">
+                            <p className="text-sm font-semibold text-slate-800 dark:text-white flex items-center gap-2">
                                 <Globe className="w-4 h-4 text-sky-500" />
                                 Mạng xã hội & Liên kết
                             </p>
-                            <p className="text-xs text-slate-500 mt-1">Thêm các liên kết như LinkedIn, Portfolio, GitHub...</p>
+                            <p className="text-xs text-slate-500 dark:text-gray-400 mt-1">Thêm các liên kết như LinkedIn, Portfolio, GitHub...</p>
                         </div>
                     </div>
 
@@ -391,7 +391,7 @@ export function PersonalInfoSection({ data, onChange }: PersonalInfoSectionProps
                                 <div className="flex-1 w-full relative">
                                     <input
                                         type="text"
-                                        className="w-full h-11 px-4 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all hover:border-sky-300"
+                                        className="w-full h-11 px-4 bg-white dark:bg-[#141A21] border border-gray-200 dark:border-white/10 rounded-xl text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all hover:border-sky-300 dark:hover:border-sky-500"
                                         placeholder={
                                             social.network === 'LinkedIn' ? 'linkedin.com/in/username' :
                                                 social.network === 'GitHub' ? 'github.com/username' :
@@ -429,7 +429,7 @@ export function PersonalInfoSection({ data, onChange }: PersonalInfoSectionProps
                                 ];
                                 handleChange('socials', newSocials);
                             }}
-                            className="w-full border-dashed border-2 border-slate-200 text-slate-600 hover:border-sky-500 hover:text-sky-600 hover:bg-sky-50 h-12 rounded-xl text-sm font-medium transition-all duration-200"
+                            className="w-full border-dashed border-2 border-slate-200 dark:border-white/10 text-slate-600 dark:text-gray-400 hover:border-sky-500 dark:hover:border-sky-500 hover:text-sky-600 dark:hover:text-white hover:bg-sky-50 dark:hover:bg-white/5 h-12 rounded-xl text-sm font-medium transition-all duration-200"
                         >
                             <Plus className="w-5 h-5 mr-2" />
                             Thêm liên kết mới

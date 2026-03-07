@@ -27,8 +27,8 @@ import {
 const GRADE_CONFIG: Record<string, { bg: string; text: string; glow: string }> = {
     "A+": { bg: "bg-emerald-500", text: "text-white", glow: "shadow-emerald-500/30" },
     A: { bg: "bg-emerald-500", text: "text-white", glow: "shadow-emerald-500/30" },
-    "B+": { bg: "bg-sky-500", text: "text-white", glow: "shadow-sky-500/30" },
-    B: { bg: "bg-sky-500", text: "text-white", glow: "shadow-sky-500/30" },
+    "B+": { bg: "bg-green-", text: "text-white", glow: "shadow-green-/30" },
+    B: { bg: "bg-green-", text: "text-white", glow: "shadow-green-/30" },
     "C+": { bg: "bg-amber-500", text: "text-white", glow: "shadow-amber-500/30" },
     C: { bg: "bg-amber-500", text: "text-white", glow: "shadow-amber-500/30" },
     D: { bg: "bg-rose-500", text: "text-white", glow: "shadow-rose-500/30" },
@@ -43,7 +43,7 @@ function CircularScore({ score, max, size = 120 }: { readonly score: number; rea
 
     const getColor = () => {
         if (percentage >= 80) return "stroke-emerald-500";
-        if (percentage >= 60) return "stroke-sky-500";
+        if (percentage >= 60) return "stroke-green-";
         if (percentage >= 40) return "stroke-amber-500";
         return "stroke-rose-500";
     };
@@ -51,7 +51,7 @@ function CircularScore({ score, max, size = 120 }: { readonly score: number; rea
     return (
         <div className="relative" style={{ width: size, height: size }}>
             <svg width={size} height={size} className="-rotate-90">
-                <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="#f1f5f9" strokeWidth={10} />
+                <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="#f1f5f9" strokeWidth={10} className="dark:stroke-white/[0.06]" />
                 <motion.circle
                     cx={size / 2}
                     cy={size / 2}
@@ -71,11 +71,11 @@ function CircularScore({ score, max, size = 120 }: { readonly score: number; rea
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.8 }}
-                    className="text-3xl font-black text-sky-900"
+                    className="text-3xl font-black text-green- dark:text-white"
                 >
                     {score}
                 </motion.span>
-                <span className="text-xs text-slate-400 -mt-0.5">/ {max}</span>
+                <span className="text-xs text-slate-400 dark:text-[#637381] -mt-0.5">/ {max}</span>
             </div>
         </div>
     );
@@ -86,7 +86,7 @@ function RubricBar({ rubric }: { readonly rubric: RubricScore }) {
     const percentage = (rubric.score / rubric.maxScore) * 100;
 
     const colorMap: Record<string, { bar: string; bg: string; text: string }> = {
-        sky: { bar: "bg-sky-500", bg: "bg-sky-50", text: "text-sky-700" },
+        sky: { bar: "bg-green-", bg: "bg-green-", text: "text-green-" },
         violet: { bar: "bg-violet-500", bg: "bg-violet-50", text: "text-violet-700" },
         emerald: { bar: "bg-emerald-500", bg: "bg-emerald-50", text: "text-emerald-700" },
     };
@@ -96,10 +96,10 @@ function RubricBar({ rubric }: { readonly rubric: RubricScore }) {
     return (
         <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-                <span className={cn("text-sm font-semibold", colors.text)}>{rubric.label}</span>
-                <span className="text-sm font-bold text-slate-700">{rubric.score}/{rubric.maxScore}</span>
+                <span className={cn("text-base font-semibold", colors.text)}>{rubric.label}</span>
+                <span className="text-base font-bold text-slate-700 dark:text-white">{rubric.score}/{rubric.maxScore}</span>
             </div>
-            <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+            <div className="h-2 bg-slate-100 dark:bg-white/[0.06] rounded-full overflow-hidden">
                 <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${percentage}%` }}
@@ -107,18 +107,18 @@ function RubricBar({ rubric }: { readonly rubric: RubricScore }) {
                     className={cn("h-full rounded-full", colors.bar)}
                 />
             </div>
-            <p className="text-sm text-slate-500 leading-relaxed">{rubric.feedback}</p>
+            <p className="text-base text-slate-500 dark:text-[#C4CDD5] leading-relaxed">{rubric.feedback}</p>
         </div>
     );
 }
 
 // ─── Answer Evaluation Card (Expandable) ─────────────
 const CATEGORY_LABELS: Record<string, { label: string; color: string }> = {
-    introduction: { label: "Giới thiệu", color: "bg-sky-100 text-sky-700" },
-    technical: { label: "Kỹ thuật", color: "bg-violet-100 text-violet-700" },
-    behavioral: { label: "Hành vi", color: "bg-amber-100 text-amber-700" },
-    situational: { label: "Tình huống", color: "bg-emerald-100 text-emerald-700" },
-    closing: { label: "Kết thúc", color: "bg-rose-100 text-rose-700" },
+    introduction: { label: "Giới thiệu", color: "bg-green- dark:bg-green-/30 text-green- dark:text-green-" },
+    technical: { label: "Kỹ thuật", color: "bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400" },
+    behavioral: { label: "Hành vi", color: "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400" },
+    situational: { label: "Tình huống", color: "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400" },
+    closing: { label: "Kết thúc", color: "bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400" },
 };
 
 function EvaluationCard({
@@ -132,10 +132,10 @@ function EvaluationCard({
     const cat = CATEGORY_LABELS[evaluation.category];
 
     const getScoreColor = (score: number) => {
-        if (score >= 80) return "text-emerald-600 bg-emerald-50";
-        if (score >= 60) return "text-sky-600 bg-sky-50";
-        if (score >= 40) return "text-amber-600 bg-amber-50";
-        return "text-rose-600 bg-rose-50";
+        if (score >= 80) return "text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 dark:text-emerald-400";
+        if (score >= 60) return "text-green- bg-green- dark:bg-green-/20 dark:text-green-";
+        if (score >= 40) return "text-amber-600 bg-amber-50 dark:bg-amber-900/20 dark:text-amber-400";
+        return "text-rose-600 bg-rose-50 dark:bg-rose-900/20 dark:text-rose-400";
     };
 
     return (
@@ -143,36 +143,36 @@ function EvaluationCard({
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden"
+            className="bg-white dark:bg-[#1C252E] rounded-2xl border border-slate-100 dark:border-white/[0.08] shadow-sm overflow-hidden"
         >
             {/* Header (clickable) */}
             <button
                 onClick={() => setExpanded(!expanded)}
-                className="w-full flex items-center gap-3 p-4 text-left hover:bg-slate-50/50 transition-colors cursor-pointer"
+                className="w-full flex items-center gap-3 p-5 text-left hover:bg-slate-50/50 dark:hover:bg-white/[0.03] transition-colors cursor-pointer"
             >
                 <span
                     className={cn(
-                        "w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold shrink-0",
+                        "w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold shrink-0",
                         getScoreColor(evaluation.overallScore)
                     )}
                 >
                     {evaluation.overallScore}
                 </span>
                 <div className="flex-1 min-w-0">
-                    <p className="text-base font-semibold text-sky-900 truncate">{evaluation.question}</p>
+                    <p className="text-lg font-semibold text-green- dark:text-white truncate">{evaluation.question}</p>
                     <div className="flex items-center gap-2 mt-1">
-                        <span className={cn("text-xs font-semibold px-2 py-0.5 rounded-full", cat?.color)}>
+                        <span className={cn("text-sm font-semibold px-2.5 py-0.5 rounded-full", cat?.color)}>
                             {cat?.label}
                         </span>
-                        <span className="text-xs text-slate-400">
+                        <span className="text-sm text-slate-400 dark:text-[#637381]">
                             {evaluation.rubricScores.map((r) => `${r.label}: ${r.score}`).join(" • ")}
                         </span>
                     </div>
                 </div>
                 {expanded ? (
-                    <ChevronUp className="w-4 h-4 text-slate-400 shrink-0" />
+                    <ChevronUp className="w-4 h-4 text-slate-400 dark:text-[#637381] shrink-0" />
                 ) : (
-                    <ChevronDown className="w-4 h-4 text-slate-400 shrink-0" />
+                    <ChevronDown className="w-4 h-4 text-slate-400 dark:text-[#637381] shrink-0" />
                 )}
             </button>
 
@@ -186,18 +186,18 @@ function EvaluationCard({
                         transition={{ duration: 0.25 }}
                         className="overflow-hidden"
                     >
-                        <div className="px-4 pb-4 space-y-4 border-t border-slate-50 pt-3">
+                        <div className="px-4 pb-4 space-y-4 border-t border-slate-50 dark:border-white/[0.04] pt-3">
                             {/* User Answer */}
                             <div>
-                                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Câu trả lời của bạn</p>
-                                <div className="bg-sky-50/50 rounded-xl p-3 text-sm text-slate-700 leading-relaxed border border-sky-100/50">
+                                <p className="text-sm font-semibold text-slate-400 dark:text-[#637381] uppercase tracking-wider mb-1.5">Câu trả lời của bạn</p>
+                                <div className="bg-green-/50 dark:bg-green-/10 rounded-xl p-3 text-base text-slate-700 dark:text-[#C4CDD5] leading-relaxed border border-green-/50 dark:border-green-/30">
                                     {evaluation.userAnswer}
                                 </div>
                             </div>
 
                             {/* Rubric Scores */}
                             <div>
-                                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Đánh giá theo tiêu chí</p>
+                                <p className="text-sm font-semibold text-slate-400 dark:text-[#637381] uppercase tracking-wider mb-3">Đánh giá theo tiêu chí</p>
                                 <div className="space-y-4">
                                     {evaluation.rubricScores.map((rubric) => (
                                         <RubricBar key={rubric.criterion} rubric={rubric} />
@@ -207,28 +207,28 @@ function EvaluationCard({
 
                             {/* Strengths & Improvements */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                <div className="bg-emerald-50/50 rounded-xl p-3 border border-emerald-100/50">
+                                <div className="bg-emerald-50/50 dark:bg-emerald-900/10 rounded-xl p-3 border border-emerald-100/50 dark:border-emerald-800/30">
                                     <div className="flex items-center gap-1.5 mb-2">
                                         <Star className="w-4 h-4 text-emerald-500" />
-                                        <p className="text-xs font-bold text-emerald-700 uppercase">Điểm mạnh</p>
+                                        <p className="text-sm font-bold text-emerald-700 dark:text-emerald-400 uppercase">Điểm mạnh</p>
                                     </div>
                                     <ul className="space-y-1">
                                         {evaluation.strengths.map((s) => (
-                                            <li key={s} className="text-sm text-emerald-700 flex items-start gap-1.5">
+                                            <li key={s} className="text-base text-emerald-700 dark:text-emerald-400/80 flex items-start gap-1.5">
                                                 <span className="text-emerald-400 mt-1">•</span>
                                                 {s}
                                             </li>
                                         ))}
                                     </ul>
                                 </div>
-                                <div className="bg-amber-50/50 rounded-xl p-3 border border-amber-100/50">
+                                <div className="bg-amber-50/50 dark:bg-amber-900/10 rounded-xl p-3 border border-amber-100/50 dark:border-amber-800/30">
                                     <div className="flex items-center gap-1.5 mb-2">
                                         <TrendingUp className="w-4 h-4 text-amber-500" />
-                                        <p className="text-xs font-bold text-amber-700 uppercase">Cần cải thiện</p>
+                                        <p className="text-sm font-bold text-amber-700 dark:text-amber-400 uppercase">Cần cải thiện</p>
                                     </div>
                                     <ul className="space-y-1">
                                         {evaluation.improvements.map((imp) => (
-                                            <li key={imp} className="text-sm text-amber-700 flex items-start gap-1.5">
+                                            <li key={imp} className="text-base text-amber-700 dark:text-amber-400/80 flex items-start gap-1.5">
                                                 <span className="text-amber-400 mt-1">•</span>
                                                 {imp}
                                             </li>
@@ -264,9 +264,9 @@ export default function InterviewResultPage() {
                 {/* Back Link */}
                 <Link
                     href="/interview/setup"
-                    className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-sky-600 transition-colors mb-6"
+                    className="inline-flex items-center gap-2 text-base text-slate-400 dark:text-[#637381] hover:text-green- dark:hover:text-green- transition-colors mb-6"
                 >
-                    <ArrowLeft className="w-3.5 h-3.5" />
+                    <ArrowLeft className="w-4.5 h-4.5" />
                     Quay lại
                 </Link>
 
@@ -274,7 +274,7 @@ export default function InterviewResultPage() {
                 <motion.div
                     initial={{ opacity: 0, y: -15 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 mb-6"
+                    className="bg-white dark:bg-[#1C252E] rounded-2xl border border-slate-100 dark:border-white/[0.08] shadow-sm p-6 mb-6"
                 >
                     <div className="flex flex-col sm:flex-row items-center gap-5">
                         <CircularScore score={result.totalScore} max={result.maxScore} />
@@ -282,7 +282,7 @@ export default function InterviewResultPage() {
                         <div className="flex-1 text-center sm:text-left">
                             <div className="flex items-center justify-center sm:justify-start gap-2 mb-2">
                                 <Trophy className="w-5 h-5 text-amber-500" />
-                                <h1 className="text-xl font-bold text-sky-900">Kết quả phỏng vấn</h1>
+                                <h1 className="text-2xl font-bold text-green- dark:text-white">Kết quả phỏng vấn</h1>
                                 <span
                                     className={cn(
                                         "px-2.5 py-1 rounded-lg text-xs font-black shadow-lg",
@@ -294,14 +294,14 @@ export default function InterviewResultPage() {
                                     {result.grade}
                                 </span>
                             </div>
-                            <p className="text-base text-slate-500 leading-relaxed">{result.summary}</p>
+                            <p className="text-lg text-slate-500 dark:text-[#C4CDD5] leading-relaxed">{result.summary}</p>
 
                             {/* Rubric Summary */}
                             <div className="flex items-center gap-4 mt-3">
                                 {rubricAverages.map((r) => (
                                     <div key={r.criterion} className="text-center">
-                                        <p className="text-xl font-bold text-sky-900">{r.avg}</p>
-                                        <p className="text-xs text-slate-400 capitalize">
+                                        <p className="text-2xl font-bold text-green- dark:text-white">{r.avg}</p>
+                                        <p className="text-sm text-slate-400 dark:text-[#637381] capitalize">
                                             {r.criterion === "clarity" ? "Rõ ràng" : r.criterion === "relevance" ? "Liên quan" : "Cấu trúc"}
                                         </p>
                                     </div>
@@ -316,13 +316,13 @@ export default function InterviewResultPage() {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.15 }}
-                    className="bg-gradient-to-br from-violet-50 to-fuchsia-50 border border-violet-100 rounded-2xl p-4 mb-6"
+                    className="bg-gradient-to-br from-violet-50 to-fuchsia-50 dark:from-violet-900/15 dark:to-fuchsia-900/10 border border-violet-100 dark:border-violet-800/30 rounded-2xl p-4 mb-6"
                 >
                     <div className="flex items-start gap-2.5">
                         <Sparkles className="w-4 h-4 text-violet-500 mt-0.5 shrink-0" />
                         <div>
-                            <p className="text-sm font-bold text-violet-800">Gợi ý từ AI</p>
-                            <p className="text-sm text-violet-600 mt-0.5 leading-relaxed">
+                            <p className="text-base font-bold text-violet-800 dark:text-violet-400">Gợi ý từ AI</p>
+                            <p className="text-base text-violet-600 dark:text-violet-400/80 mt-0.5 leading-relaxed">
                                 Hãy luyện tập sử dụng phương pháp STAR (Situation, Task, Action, Result) cho các câu hỏi behavioral.
                                 Thêm số liệu cụ thể và metric sẽ giúp câu trả lời thuyết phục hơn.
                             </p>
@@ -332,8 +332,8 @@ export default function InterviewResultPage() {
 
                 {/* Per-Answer Evaluations */}
                 <div className="flex items-center gap-2 mb-4">
-                    <BrainCircuit className="w-4 h-4 text-sky-600" />
-                    <h2 className="text-base font-bold text-sky-900">
+                    <BrainCircuit className="w-4 h-4 text-green-" />
+                    <h2 className="text-lg font-bold text-green- dark:text-white">
                         Chi tiết từng câu ({result.evaluations.length})
                     </h2>
                 </div>
@@ -352,7 +352,7 @@ export default function InterviewResultPage() {
                     className="flex items-center justify-center gap-3 mt-8"
                 >
                     <Link href="/interview/setup">
-                        <Button variant="ghost" className="rounded-full text-sm gap-1.5 cursor-pointer">
+                        <Button variant="ghost" className="rounded-full text-base gap-1.5 cursor-pointer">
                             <RotateCcw className="w-4 h-4" />
                             Phỏng vấn lại
                         </Button>

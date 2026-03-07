@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
     Upload,
     Search,
-    Filter,
     SortAsc,
     FileText,
     Plus,
@@ -17,6 +16,7 @@ import { MOCK_CV_FILES } from "../data/mock-cv-files";
 import { CVFileCard } from "./cv-files/CVFileCard";
 import { DeleteConfirmDialog } from "./cv-files/DeleteConfirmDialog";
 import { RenameDialog } from "./cv-files/RenameDialog";
+import { UploadCVModal } from "./cv-files/UploadCVModal";
 
 type FilterTab = "all" | CVFileStatus;
 
@@ -26,6 +26,7 @@ export function CVFileList() {
     const [activeFilter, setActiveFilter] = React.useState<FilterTab>("all");
     const [sortBy, setSortBy] = React.useState<CVFileSortOption>("newest");
     const [showSortMenu, setShowSortMenu] = React.useState(false);
+    const [uploadModalOpen, setUploadModalOpen] = React.useState(false);
 
     // Dialog states
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
@@ -49,12 +50,10 @@ export function CVFileList() {
     const filteredFiles = React.useMemo(() => {
         let result = [...files];
 
-        // Filter by status
         if (activeFilter !== "all") {
             result = result.filter((f) => f.status === activeFilter);
         }
 
-        // Filter by search query
         if (searchQuery) {
             const query = searchQuery.toLowerCase();
             result = result.filter(
@@ -64,7 +63,6 @@ export function CVFileList() {
             );
         }
 
-        // Sort
         switch (sortBy) {
             case "newest":
                 result.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
@@ -98,13 +96,11 @@ export function CVFileList() {
     // Handlers
     const handleView = (file: CVFile) => {
         console.log("View:", file.name);
-        // TODO: Open preview modal
     };
 
     const handleDownload = (file: CVFile, version?: CVFileVersion) => {
         const v = version || file.currentVersion;
         console.log("Download:", v.fileName);
-        // TODO: Implement download
     };
 
     const handleRename = (file: CVFile) => {
@@ -181,7 +177,7 @@ export function CVFileList() {
                         animate={{ opacity: 1, y: 0 }}
                         className="text-center mb-8"
                     >
-                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-sky-100/80 text-sky-700 text-sm font-medium mb-4">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-sky-100/80 dark:bg-sky-900/30 text-sky-700 dark:text-sky-300 text-sm font-medium mb-4">
                             <Sparkles className="w-4 h-4" />
                             Quản lý CV của bạn
                         </div>
@@ -232,17 +228,17 @@ export function CVFileList() {
                                 initial={{ opacity: 0, scale: 0.9 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 transition={{ delay: 0.1 + i * 0.05 }}
-                                className="bg-white rounded-2xl p-4 border border-sky-100 shadow-sm hover:shadow-md transition-shadow"
+                                className="bg-white dark:bg-[#1C252E] rounded-2xl p-4 border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] shadow-sm hover:shadow-md transition-shadow"
                             >
                                 <div
                                     className={`w-10 h-10 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center mb-3`}
                                 >
                                     <stat.icon className="w-5 h-5 text-white" />
                                 </div>
-                                <p className="text-2xl font-bold text-sky-900">
+                                <p className="text-2xl font-bold text-[#1C252E] dark:text-white">
                                     {stat.value}
                                 </p>
-                                <p className="text-sm text-sky-600">{stat.label}</p>
+                                <p className="text-sm text-[#637381] dark:text-[#919EAB]">{stat.label}</p>
                             </motion.div>
                         ))}
                     </motion.div>
@@ -256,13 +252,13 @@ export function CVFileList() {
                     >
                         {/* Search */}
                         <div className="flex-1 relative">
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-sky-400" />
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#919EAB]" />
                             <input
                                 type="text"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder="Tìm kiếm CV..."
-                                className="w-full pl-12 pr-4 py-3.5 rounded-full border-2 border-sky-200 focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10 outline-none text-sky-900 font-medium transition-all bg-white"
+                                className="w-full pl-12 pr-4 py-3.5 rounded-full border-2 border-[rgba(145,158,171,0.2)] dark:border-white/[0.08] bg-white dark:bg-[#1C252E] text-[#1C252E] dark:text-white placeholder:text-[#919EAB] focus:border-sky-500 dark:focus:border-sky-400 focus:ring-4 focus:ring-sky-500/10 outline-none font-medium transition-all"
                             />
                         </div>
 
@@ -270,6 +266,7 @@ export function CVFileList() {
                         <motion.button
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
+                            onClick={() => setUploadModalOpen(true)}
                             className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-gradient-to-r from-sky-600 to-green-500 text-white font-semibold shadow-lg shadow-sky-500/25 hover:shadow-xl transition-all"
                         >
                             <Upload className="w-5 h-5" />
@@ -291,17 +288,19 @@ export function CVFileList() {
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                                 onClick={() => setActiveFilter(tab.id)}
-                                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${activeFilter === tab.id
-                                    ? "bg-sky-600 text-white shadow-lg shadow-sky-500/25"
-                                    : "bg-white text-sky-700 border border-sky-200 hover:bg-sky-50"
-                                    }`}
+                                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
+                                    activeFilter === tab.id
+                                        ? "bg-sky-600 text-white shadow-lg shadow-sky-500/25"
+                                        : "bg-white dark:bg-[#1C252E] text-[#637381] dark:text-[#919EAB] border border-[rgba(145,158,171,0.2)] dark:border-white/[0.08] hover:bg-[rgba(145,158,171,0.06)] dark:hover:bg-white/[0.04]"
+                                }`}
                             >
                                 {tab.label}
                                 <span
-                                    className={`ml-2 px-2 py-0.5 rounded-full text-xs ${activeFilter === tab.id
-                                        ? "bg-white/20 text-white"
-                                        : "bg-sky-100 text-sky-600"
-                                        }`}
+                                    className={`ml-2 px-2 py-0.5 rounded-full text-xs ${
+                                        activeFilter === tab.id
+                                            ? "bg-white/20 text-white"
+                                            : "bg-[rgba(145,158,171,0.1)] dark:bg-white/[0.06] text-[#637381] dark:text-[#919EAB]"
+                                    }`}
                                 >
                                     {tab.count}
                                 </span>
@@ -315,7 +314,7 @@ export function CVFileList() {
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                             onClick={() => setShowSortMenu(!showSortMenu)}
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-sky-200 text-sky-700 text-sm font-medium hover:bg-sky-50 transition-colors"
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-[#1C252E] border border-[rgba(145,158,171,0.2)] dark:border-white/[0.08] text-[#637381] dark:text-[#919EAB] text-sm font-medium hover:bg-[rgba(145,158,171,0.06)] dark:hover:bg-white/[0.04] transition-colors"
                         >
                             <SortAsc className="w-4 h-4" />
                             {sortOptions.find((o) => o.id === sortBy)?.label}
@@ -327,7 +326,7 @@ export function CVFileList() {
                                     initial={{ opacity: 0, scale: 0.95, y: -10 }}
                                     animate={{ opacity: 1, scale: 1, y: 0 }}
                                     exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                                    className="absolute right-0 top-full mt-2 w-40 bg-white rounded-xl shadow-xl shadow-sky-900/10 border border-sky-100 py-2 z-20"
+                                    className="absolute right-0 top-full mt-2 w-44 bg-white dark:bg-[#1C252E] rounded-xl shadow-xl shadow-black/10 dark:shadow-black/30 border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] py-2 z-20"
                                 >
                                     {sortOptions.map((option) => (
                                         <button
@@ -336,10 +335,11 @@ export function CVFileList() {
                                                 setSortBy(option.id);
                                                 setShowSortMenu(false);
                                             }}
-                                            className={`w-full text-left px-4 py-2 text-sm transition-colors ${sortBy === option.id
-                                                ? "bg-sky-50 text-sky-700 font-medium"
-                                                : "text-sky-800 hover:bg-sky-50"
-                                                }`}
+                                            className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
+                                                sortBy === option.id
+                                                    ? "bg-sky-50 dark:bg-sky-900/20 text-sky-700 dark:text-sky-300 font-medium"
+                                                    : "text-[#637381] dark:text-[#919EAB] hover:bg-[rgba(145,158,171,0.06)] dark:hover:bg-white/[0.04]"
+                                            }`}
                                         >
                                             {option.label}
                                         </button>
@@ -380,13 +380,13 @@ export function CVFileList() {
                                 animate={{ opacity: 1 }}
                                 className="text-center py-16"
                             >
-                                <div className="w-20 h-20 rounded-full bg-sky-100 flex items-center justify-center mx-auto mb-4">
-                                    <FileText className="w-10 h-10 text-sky-400" />
+                                <div className="w-20 h-20 rounded-full bg-[rgba(145,158,171,0.08)] dark:bg-white/[0.04] flex items-center justify-center mx-auto mb-4">
+                                    <FileText className="w-10 h-10 text-[#919EAB]" />
                                 </div>
-                                <h3 className="text-lg font-semibold text-sky-900 mb-2">
+                                <h3 className="text-lg font-semibold text-[#1C252E] dark:text-white mb-2">
                                     Không tìm thấy CV
                                 </h3>
-                                <p className="text-sky-600/70 mb-6">
+                                <p className="text-[#637381] dark:text-[#919EAB] mb-6">
                                     {searchQuery
                                         ? "Thử thay đổi từ khóa tìm kiếm"
                                         : "Hãy tải lên CV đầu tiên của bạn"}
@@ -394,6 +394,7 @@ export function CVFileList() {
                                 <motion.button
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
+                                    onClick={() => setUploadModalOpen(true)}
                                     className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-sky-600 to-green-500 text-white font-semibold shadow-lg shadow-sky-500/25"
                                 >
                                     <Plus className="w-5 h-5" />
@@ -404,6 +405,15 @@ export function CVFileList() {
                     </AnimatePresence>
                 </div>
             </div>
+
+            {/* Upload Modal */}
+            <UploadCVModal
+                isOpen={uploadModalOpen}
+                onClose={() => setUploadModalOpen(false)}
+                onUpload={(newFile) => {
+                    setFiles((prev) => [newFile, ...prev]);
+                }}
+            />
 
             {/* Dialogs */}
             <DeleteConfirmDialog
