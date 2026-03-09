@@ -79,7 +79,7 @@ function CVCard({
             whileTap={{ scale: 0.98 }}
             onClick={onSelect}
             className={cn(
-                "w-full text-left p-5 rounded-2xl border-2 transition-all duration-200 cursor-pointer",
+                "w-full relative hover:z-10 text-left p-5 rounded-2xl border-2 transition-all duration-200 cursor-pointer",
                 selected
                     ? "border-[#22c55e] bg-[#22c55e]/10 dark:bg-[#22c55e]/20 shadow-lg shadow-[#22c55e]/10"
                     : "border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] bg-white dark:bg-[#1C252E] hover:border-[#22c55e] dark:hover:border-[#22c55e]/50 hover:shadow-md"
@@ -128,7 +128,7 @@ function JobCard({
             whileTap={{ scale: 0.98 }}
             onClick={onSelect}
             className={cn(
-                "w-full text-left p-5 rounded-2xl border-2 transition-all duration-200 cursor-pointer",
+                "w-full relative hover:z-10 text-left p-5 rounded-2xl border-2 transition-all duration-200 cursor-pointer",
                 selected
                     ? "border-[#22c55e] bg-[#22c55e]/10 dark:bg-[#22c55e]/20 shadow-lg shadow-[#22c55e]/10"
                     : "border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] bg-white dark:bg-[#1C252E] hover:border-[#22c55e] dark:hover:border-[#22c55e]/50 hover:shadow-md"
@@ -349,7 +349,7 @@ export default function InterviewSetupPage() {
                                 />
                             </div>
 
-                            <div className="space-y-3 max-h-[400px] overflow-y-auto pr-1">
+                            <div className="space-y-3 max-h-[400px] overflow-y-auto p-2 -mx-2">
                                 {filteredJobs.map((job) => (
                                     <JobCard
                                         key={job.id}
