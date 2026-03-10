@@ -52,10 +52,10 @@ export function CVBuilderLayout({
 
                         {/* Title */}
                         <div className="flex-1 min-w-0">
-                            <h1 className="text-lg md:text-2xl font-bold tracking-tight text-sky-900 dark:text-white truncate">
+                            <h1 className="text-lg md:text-2xl font-bold tracking-tight text-green-900 dark:text-white truncate">
                                 CV Builder
                             </h1>
-                            <p className="text-xs md:text-sm text-sky-700 dark:text-sky-300 invisible sm:visible block">
+                            <p className="text-xs md:text-sm text-green-700 dark:text-green-300 invisible sm:visible block">
                                 Tạo CV chuyên nghiệp theo chuẩn ATS
                             </p>
                         </div>
@@ -85,7 +85,7 @@ export function CVBuilderLayout({
                                     size="sm"
                                     leftIcon={<Eye className="w-4 h-4" />}
                                     onClick={onPreview}
-                                    className="hidden sm:inline-flex border-sky-200 hover:bg-sky-50 text-sky-700 hover:border-sky-300 transition-all hover:scale-105 active:scale-95"
+                                    className="hidden sm:inline-flex border-green-200 hover:bg-green-50 text-green-700 hover:border-green-300 transition-all hover:scale-105 active:scale-95"
                                 >
                                     Xem trước
                                 </Button>
@@ -93,7 +93,7 @@ export function CVBuilderLayout({
                                     variant="outline"
                                     size="icon"
                                     onClick={onPreview}
-                                    className="sm:hidden border-sky-200 text-sky-700 transition-all hover:scale-105 active:scale-95"
+                                    className="sm:hidden border-green-200 text-green-700 transition-all hover:scale-105 active:scale-95"
                                 >
                                     <Eye className="w-4 h-4" />
                                 </Button>

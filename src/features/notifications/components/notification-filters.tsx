@@ -26,8 +26,8 @@ export function NotificationFilters({ activeFilter, onFilterChange, unreadCount 
                     className={cn(
                         "relative px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 cursor-pointer",
                         activeFilter === f.key
-                            ? "bg-sky-600 text-white shadow-md shadow-sky-600/25"
-                            : "bg-white dark:bg-[#1C252E] text-[#637381] dark:text-[#919EAB] border border-[rgba(145,158,171,0.2)] dark:border-white/[0.08] hover:border-sky-300 dark:hover:border-sky-600 hover:text-sky-700 dark:hover:text-sky-400"
+                            ? "bg-[#22c55e] text-white shadow-md shadow-green-500/20"
+                            : "bg-white dark:bg-[#1C252E] text-[#637381] dark:text-[#919EAB] border border-[rgba(145,158,171,0.2)] dark:border-white/[0.08] hover:border-[#22c55e]/30 dark:hover:border-[#22c55e]/30 hover:text-[#22c55e] dark:hover:text-[#22c55e]"
                     )}
                 >
                     {f.label}
@@ -37,7 +37,7 @@ export function NotificationFilters({ activeFilter, onFilterChange, unreadCount 
                                 "absolute -top-1.5 -right-1.5 min-w-5 h-5 flex items-center justify-center",
                                 "text-[10px] font-bold rounded-full px-1",
                                 activeFilter === "unread"
-                                    ? "bg-white text-sky-600"
+                                    ? "bg-white text-[#22c55e]"
                                     : "bg-red-500 text-white"
                             )}
                         >
@@ -49,3 +49,4 @@ export function NotificationFilters({ activeFilter, onFilterChange, unreadCount 
         </div>
     );
 }
+

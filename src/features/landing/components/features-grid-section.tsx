@@ -50,7 +50,7 @@ export function FeaturesGridSection() {
                                         <h3 className="text-xl font-bold text-white leading-none mb-1">Tuấn Anh</h3>
                                         <p className="text-sm font-medium text-gray-400 mb-2">4 năm kinh nghiệm • Fullstack Developer</p>
                                         <div className="flex gap-2 flex-wrap">
-                                            <span className="px-2 py-0.5 bg-sky-900/30 text-sky-400 border border-sky-800/50 text-[10px] font-bold uppercase rounded">React</span>
+                                            <span className="px-2 py-0.5 bg-[#1C252E] text-[#22c55e] border border-[#22c55e]/30 text-[10px] font-bold uppercase rounded">React</span>
                                             <span className="px-2 py-0.5 bg-emerald-900/30 text-emerald-400 border border-emerald-800/50 text-[10px] font-bold uppercase rounded">Node.js</span>
                                             <span className="px-2 py-0.5 bg-purple-900/30 text-purple-400 border border-purple-800/50 text-[10px] font-bold uppercase rounded">Startup</span>
                                         </div>
@@ -78,3 +78,4 @@ export function FeaturesGridSection() {
         </section>
     );
 }
+

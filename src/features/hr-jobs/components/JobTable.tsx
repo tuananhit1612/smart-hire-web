@@ -115,7 +115,7 @@ function ActionMenu({ job, onClose }: { job: Job; onClose: () => void }) {
             initial={{ opacity: 0, scale: 0.95, y: -10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -10 }}
-            className="absolute right-0 top-full mt-1 w-48 bg-white rounded-xl shadow-xl border border-sky-100 overflow-hidden z-50"
+            className="absolute right-0 top-full mt-1 w-48 bg-white rounded-xl shadow-xl border border-[rgba(145,158,171,0.12)] overflow-hidden z-50"
         >
             {actions.map((action, i) => (
                 <button
@@ -123,7 +123,7 @@ function ActionMenu({ job, onClose }: { job: Job; onClose: () => void }) {
                     onClick={action.onClick}
                     className={`w-full flex items-center gap-3 px-4 py-2.5 text-left text-sm transition-colors ${action.danger
                         ? "text-red-600 hover:bg-red-50"
-                        : "text-slate-700 hover:bg-sky-50"
+                        : "text-slate-700 hover:bg-[#22c55e]/10"
                         }`}
                 >
                     <action.icon className="w-4 h-4" />
@@ -160,33 +160,33 @@ function JobTableRow({ job, index }: { job: Job; index: number }) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.05 }}
-            className="group hover:bg-sky-50/50 cursor-pointer transition-colors"
+            className="group hover:bg-[#22c55e]/10 cursor-pointer transition-colors"
             onClick={handleRowClick}
         >
             <td className="px-5 py-4">
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-100 to-blue-100 flex items-center justify-center">
-                        <Briefcase className="w-5 h-5 text-sky-600" />
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[rgba(145,158,171,0.04)] to-[#22c55e]/5 flex items-center justify-center">
+                        <Briefcase className="w-5 h-5 text-[#22c55e]" />
                     </div>
                     <div>
-                        <p className="font-semibold text-sky-900 group-hover:text-sky-700 transition-colors">
+                        <p className="font-semibold text-[#1C252E] group-hover:text-[#22c55e] transition-colors">
                             {job.title}
                         </p>
-                        <p className="text-sm text-sky-500">{job.department}</p>
+                        <p className="text-sm text-[#22c55e]">{job.department}</p>
                     </div>
                 </div>
             </td>
             <td className="px-5 py-4">
-                <div className="flex items-center gap-2 text-sm text-sky-700">
-                    <span className="px-2 py-1 bg-sky-100 rounded-lg">{JOB_TYPES[job.type]}</span>
+                <div className="flex items-center gap-2 text-sm text-[#22c55e]">
+                    <span className="px-2 py-1 bg-[#22c55e]/15 rounded-lg">{JOB_TYPES[job.type]}</span>
                 </div>
             </td>
             <td className="px-5 py-4">
-                <span className="text-sm text-sky-600">{JOB_LEVELS[job.level]}</span>
+                <span className="text-sm text-[#22c55e]">{JOB_LEVELS[job.level]}</span>
             </td>
             <td className="px-5 py-4">
-                <div className="flex items-center gap-1.5 text-sm text-sky-600">
-                    <MapPin className="w-4 h-4 text-sky-400" />
+                <div className="flex items-center gap-1.5 text-sm text-[#22c55e]">
+                    <MapPin className="w-4 h-4 text-[#22c55e]" />
                     {job.remote === "remote" ? "Remote" : job.location}
                 </div>
             </td>
@@ -194,12 +194,12 @@ function JobTableRow({ job, index }: { job: Job; index: number }) {
                 <StatusBadge status={job.status} />
             </td>
             <td className="px-5 py-4">
-                <div className="flex items-center gap-3 text-sky-600">
+                <div className="flex items-center gap-3 text-[#22c55e]">
                     <div className="flex items-center gap-1">
                         <Users className="w-4 h-4" />
                         <span className="text-sm font-medium">{job.applicantCount}</span>
                     </div>
-                    <div className="flex items-center gap-1 text-sky-400">
+                    <div className="flex items-center gap-1 text-[#22c55e]">
                         <Eye className="w-4 h-4" />
                         <span className="text-sm">{job.viewCount}</span>
                     </div>
@@ -209,7 +209,7 @@ function JobTableRow({ job, index }: { job: Job; index: number }) {
                 <div ref={menuRef} className="relative">
                     <button
                         onClick={() => setShowMenu(!showMenu)}
-                        className="p-2 rounded-lg hover:bg-sky-100 text-sky-500 hover:text-sky-700 transition-colors"
+                        className="p-2 rounded-lg hover:bg-[#22c55e]/15 text-[#22c55e] hover:text-[#22c55e] transition-colors"
                     >
                         <MoreHorizontal className="w-5 h-5" />
                     </button>
@@ -246,10 +246,10 @@ function JobGridCard({ job, index }: { job: Job; index: number }) {
             transition={{ delay: index * 0.05 }}
             whileHover={{ y: -4, scale: 1.02 }}
             onClick={handleClick}
-            className="group relative bg-white rounded-2xl border border-sky-100 p-5 shadow-lg hover:shadow-xl cursor-pointer transition-all overflow-hidden"
+            className="group relative bg-white rounded-2xl border border-[rgba(145,158,171,0.12)] p-5 shadow-lg hover:shadow-xl cursor-pointer transition-all overflow-hidden"
         >
             {/* Background decoration */}
-            <div className="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-sky-100/50 to-blue-100/30 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-[rgba(145,158,171,0.04)] to-[#22c55e]/5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
 
             {/* Status indicator */}
             <div className="absolute top-4 right-4">
@@ -260,25 +260,25 @@ function JobGridCard({ job, index }: { job: Job; index: number }) {
             <div className="relative">
                 {/* Icon and Title */}
                 <div className="flex items-start gap-3 mb-4 pr-24">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center shadow-lg shadow-sky-500/20">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#22c55e] to-[#10b981] flex items-center justify-center shadow-lg shadow-green-500/20">
                         <Briefcase className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                        <h3 className="font-bold text-sky-900 group-hover:text-sky-700 transition-colors">
+                        <h3 className="font-bold text-[#1C252E] group-hover:text-[#22c55e] transition-colors">
                             {job.title}
                         </h3>
-                        <p className="text-sm text-sky-500">{job.department}</p>
+                        <p className="text-sm text-[#22c55e]">{job.department}</p>
                     </div>
                 </div>
 
                 {/* Meta info */}
                 <div className="space-y-2 mb-4">
-                    <div className="flex items-center gap-2 text-sm text-sky-600">
-                        <MapPin className="w-4 h-4 text-sky-400" />
+                    <div className="flex items-center gap-2 text-sm text-[#22c55e]">
+                        <MapPin className="w-4 h-4 text-[#22c55e]" />
                         {job.remote === "remote" ? "Remote" : job.location}
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-sky-600">
-                        <Clock className="w-4 h-4 text-sky-400" />
+                    <div className="flex items-center gap-2 text-sm text-[#22c55e]">
+                        <Clock className="w-4 h-4 text-[#22c55e]" />
                         {JOB_TYPES[job.type]} • {JOB_LEVELS[job.level]}
                     </div>
                     {(job.salaryMin || job.salaryMax) && (
@@ -293,7 +293,7 @@ function JobGridCard({ job, index }: { job: Job; index: number }) {
                     {job.mustHaveSkills.slice(0, 3).map((skill) => (
                         <span
                             key={skill.id}
-                            className="px-2 py-0.5 bg-sky-100 text-sky-700 rounded-full text-xs font-medium"
+                            className="px-2 py-0.5 bg-[#22c55e]/15 text-[#22c55e] rounded-full text-xs font-medium"
                         >
                             {skill.name}
                         </span>
@@ -306,8 +306,8 @@ function JobGridCard({ job, index }: { job: Job; index: number }) {
                 </div>
 
                 {/* Footer stats */}
-                <div className="flex items-center justify-between pt-4 border-t border-sky-100">
-                    <div className="flex items-center gap-4 text-sm text-sky-500">
+                <div className="flex items-center justify-between pt-4 border-t border-[rgba(145,158,171,0.12)]">
+                    <div className="flex items-center gap-4 text-sm text-[#22c55e]">
                         <span className="flex items-center gap-1">
                             <Users className="w-4 h-4" />
                             {job.applicantCount} ứng viên
@@ -317,7 +317,7 @@ function JobGridCard({ job, index }: { job: Job; index: number }) {
                             {job.viewCount}
                         </span>
                     </div>
-                    <ChevronRight className="w-5 h-5 text-sky-400 group-hover:translate-x-1 transition-transform" />
+                    <ChevronRight className="w-5 h-5 text-[#22c55e] group-hover:translate-x-1 transition-transform" />
                 </div>
             </div>
         </motion.div>
@@ -330,13 +330,13 @@ export function JobTable({ jobs, viewMode }: JobTableProps) {
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="text-center py-16 bg-white/80 backdrop-blur-xl rounded-2xl border border-sky-100"
+                className="text-center py-16 bg-white/80 backdrop-blur-xl rounded-2xl border border-[rgba(145,158,171,0.12)]"
             >
-                <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-sky-100 to-blue-100 flex items-center justify-center">
-                    <Briefcase className="w-10 h-10 text-sky-400" />
+                <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-[rgba(145,158,171,0.04)] to-[#22c55e]/5 flex items-center justify-center">
+                    <Briefcase className="w-10 h-10 text-[#22c55e]" />
                 </div>
-                <h3 className="text-xl font-bold text-sky-900 mb-2">Chưa có tin tuyển dụng</h3>
-                <p className="text-sky-500 mb-6">
+                <h3 className="text-xl font-bold text-[#1C252E] mb-2">Chưa có tin tuyển dụng</h3>
+                <p className="text-[#22c55e] mb-6">
                     Bắt đầu tạo tin tuyển dụng đầu tiên cho công ty của bạn
                 </p>
                 <button
@@ -360,29 +360,29 @@ export function JobTable({ jobs, viewMode }: JobTableProps) {
     }
 
     return (
-        <div className="bg-white/80 backdrop-blur-xl rounded-2xl border border-sky-100 shadow-lg overflow-hidden">
+        <div className="bg-white/80 backdrop-blur-xl rounded-2xl border border-[rgba(145,158,171,0.12)] shadow-lg overflow-hidden">
             <table className="w-full">
                 <thead>
-                    <tr className="bg-gradient-to-r from-sky-50 to-blue-50 border-b border-sky-100">
-                        <th className="px-5 py-4 text-left text-sm font-semibold text-sky-700">
+                    <tr className="bg-gradient-to-r from-[rgba(145,158,171,0.04)] to-[#22c55e]/5 border-b border-[rgba(145,158,171,0.12)]">
+                        <th className="px-5 py-4 text-left text-sm font-semibold text-[#22c55e]">
                             Vị trí tuyển dụng
                         </th>
-                        <th className="px-5 py-4 text-left text-sm font-semibold text-sky-700">
+                        <th className="px-5 py-4 text-left text-sm font-semibold text-[#22c55e]">
                             Loại
                         </th>
-                        <th className="px-5 py-4 text-left text-sm font-semibold text-sky-700">
+                        <th className="px-5 py-4 text-left text-sm font-semibold text-[#22c55e]">
                             Cấp bậc
                         </th>
-                        <th className="px-5 py-4 text-left text-sm font-semibold text-sky-700">
+                        <th className="px-5 py-4 text-left text-sm font-semibold text-[#22c55e]">
                             Địa điểm
                         </th>
-                        <th className="px-5 py-4 text-left text-sm font-semibold text-sky-700">
+                        <th className="px-5 py-4 text-left text-sm font-semibold text-[#22c55e]">
                             Trạng thái
                         </th>
-                        <th className="px-5 py-4 text-left text-sm font-semibold text-sky-700">
+                        <th className="px-5 py-4 text-left text-sm font-semibold text-[#22c55e]">
                             Ứng viên
                         </th>
-                        <th className="px-5 py-4 text-left text-sm font-semibold text-sky-700">
+                        <th className="px-5 py-4 text-left text-sm font-semibold text-[#22c55e]">
                             Thao tác
                         </th>
                     </tr>
@@ -396,3 +396,4 @@ export function JobTable({ jobs, viewMode }: JobTableProps) {
         </div>
     );
 }
+

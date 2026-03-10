@@ -115,7 +115,7 @@ export function TemplatePreviewModal({ template, isOpen, onClose, onSelect }: Te
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
                                     onClick={() => onSelect(template)}
-                                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-sky-500 via-emerald-500 to-green-500 text-white font-semibold flex items-center gap-2 shadow-lg shadow-sky-500/25"
+                                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-green-500 via-emerald-500 to-green-500 text-white font-semibold flex items-center gap-2 shadow-lg shadow-green-500/25"
                                 >
                                     <Check className="w-5 h-5" />
                                     Sử dụng mẫu này

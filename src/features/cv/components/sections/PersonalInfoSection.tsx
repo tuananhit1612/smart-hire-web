@@ -84,8 +84,8 @@ function AvatarDropzone({ value, onChange }: { value?: string; onChange: (url: s
             <div className={cn(
                 "w-24 h-24 rounded-2xl p-[2px] transition-all duration-300",
                 isDragActive
-                    ? "bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 shadow-xl shadow-purple-500/30"
-                    : "bg-gradient-to-r from-sky-400 via-cyan-400 to-emerald-400"
+                    ? "bg-gradient-to-r from-pink-500 via-amber-500 to-emerald-500 shadow-xl shadow-amber-500/30"
+                    : "bg-gradient-to-r from-green-400 via-[#10b981] to-emerald-400"
             )}>
                 <div className="w-full h-full rounded-2xl bg-gray-50 dark:bg-[#1C252E] flex items-center justify-center overflow-hidden relative">
                     {value ? (
@@ -166,7 +166,7 @@ function SocialSelect({ value, onChange }: { value: string; onChange: (value: st
             <button
                 type="button" // Prevent form submission
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full h-11 pl-3 pr-2 bg-white dark:bg-[#141A21] border border-gray-200 dark:border-white/10 rounded-xl text-sm text-gray-700 dark:text-gray-300 flex items-center justify-between hover:border-sky-300 dark:hover:border-sky-500 focus:ring-2 focus:ring-sky-500/20 transition-all"
+                className="w-full h-11 pl-3 pr-2 bg-white dark:bg-[#141A21] border border-gray-200 dark:border-white/10 rounded-xl text-sm text-gray-700 dark:text-gray-300 flex items-center justify-between hover:border-green-300 dark:hover:border-green-500 focus:ring-2 focus:ring-green-500/20 transition-all"
             >
                 <div className="flex items-center gap-2">
                     <Icon className="w-4 h-4 text-gray-400" />
@@ -200,7 +200,7 @@ function SocialSelect({ value, onChange }: { value: string; onChange: (value: st
                                     onChange(network.value);
                                     setIsOpen(false);
                                 }}
-                                className="w-full px-3 py-2 text-sm text-left flex items-center gap-2 hover:bg-sky-50 dark:hover:bg-white/5 text-gray-700 dark:text-gray-300 hover:text-sky-700 dark:hover:text-white transition-colors"
+                                className="w-full px-3 py-2 text-sm text-left flex items-center gap-2 hover:bg-green-50 dark:hover:bg-white/5 text-gray-700 dark:text-gray-300 hover:text-green-700 dark:hover:text-white transition-colors"
                             >
                                 <NetworkIcon className="w-4 h-4 text-gray-400" />
                                 {network.label}
@@ -263,8 +263,8 @@ export function PersonalInfoSection({ data, onChange }: PersonalInfoSectionProps
         >
             {/* Section Header */}
             <div>
-                <h2 className="text-xl md:text-2xl font-bold tracking-tight text-sky-900 dark:text-white flex items-center gap-2 md:gap-3">
-                    <div className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-gradient-to-r from-sky-500 to-green-500 text-white flex-shrink-0 shadow-lg shadow-sky-500/20">
+                <h2 className="text-xl md:text-2xl font-bold tracking-tight text-green-900 dark:text-white flex items-center gap-2 md:gap-3">
+                    <div className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-gradient-to-r from-green-500 to-green-500 text-white flex-shrink-0 shadow-lg shadow-green-500/20">
                         <User className="w-4 h-4 md:w-5 md:h-5" />
                     </div>
                     <span>Thông tin cá nhân</span>
@@ -362,7 +362,7 @@ export function PersonalInfoSection({ data, onChange }: PersonalInfoSectionProps
                     <div className="flex items-center justify-between mb-4">
                         <div>
                             <p className="text-sm font-semibold text-slate-800 dark:text-white flex items-center gap-2">
-                                <Globe className="w-4 h-4 text-sky-500" />
+                                <Globe className="w-4 h-4 text-green-500" />
                                 Mạng xã hội & Liên kết
                             </p>
                             <p className="text-xs text-slate-500 dark:text-gray-400 mt-1">Thêm các liên kết như LinkedIn, Portfolio, GitHub...</p>
@@ -391,7 +391,7 @@ export function PersonalInfoSection({ data, onChange }: PersonalInfoSectionProps
                                 <div className="flex-1 w-full relative">
                                     <input
                                         type="text"
-                                        className="w-full h-11 px-4 bg-white dark:bg-[#141A21] border border-gray-200 dark:border-white/10 rounded-xl text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all hover:border-sky-300 dark:hover:border-sky-500"
+                                        className="w-full h-11 px-4 bg-white dark:bg-[#141A21] border border-gray-200 dark:border-white/10 rounded-xl text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all hover:border-green-300 dark:hover:border-green-500"
                                         placeholder={
                                             social.network === 'LinkedIn' ? 'linkedin.com/in/username' :
                                                 social.network === 'GitHub' ? 'github.com/username' :
@@ -429,7 +429,7 @@ export function PersonalInfoSection({ data, onChange }: PersonalInfoSectionProps
                                 ];
                                 handleChange('socials', newSocials);
                             }}
-                            className="w-full border-dashed border-2 border-slate-200 dark:border-white/10 text-slate-600 dark:text-gray-400 hover:border-sky-500 dark:hover:border-sky-500 hover:text-sky-600 dark:hover:text-white hover:bg-sky-50 dark:hover:bg-white/5 h-12 rounded-xl text-sm font-medium transition-all duration-200"
+                            className="w-full border-dashed border-2 border-slate-200 dark:border-white/10 text-slate-600 dark:text-gray-400 hover:border-green-500 dark:hover:border-green-500 hover:text-green-600 dark:hover:text-white hover:bg-green-50 dark:hover:bg-white/5 h-12 rounded-xl text-sm font-medium transition-all duration-200"
                         >
                             <Plus className="w-5 h-5 mr-2" />
                             Thêm liên kết mới
@@ -440,4 +440,5 @@ export function PersonalInfoSection({ data, onChange }: PersonalInfoSectionProps
         </motion.div>
     );
 }
+
 

@@ -37,7 +37,7 @@ const defaultSkills: MissingSkill[] = [
 
 // ─── Category Config ─────────────────────────────────
 const CATEGORY_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
-    technical: { label: "Kỹ thuật", color: "text-sky-700 dark:text-sky-400", bg: "bg-sky-100 dark:bg-sky-900/30" },
+    technical: { label: "Kỹ thuật", color: "text-[#22c55e] dark:text-[#22c55e]", bg: "bg-[#22c55e]/15 dark:bg-[#22c55e]/20" },
     soft: { label: "Soft skill", color: "text-violet-700 dark:text-violet-400", bg: "bg-violet-100 dark:bg-violet-900/30" },
     tool: { label: "Công cụ", color: "text-amber-700 dark:text-amber-400", bg: "bg-amber-100 dark:bg-amber-900/30" },
     certification: { label: "Chứng chỉ", color: "text-emerald-700 dark:text-emerald-400", bg: "bg-emerald-100 dark:bg-emerald-900/30" },
@@ -55,7 +55,7 @@ function GapBar({ gap, delay }: { readonly gap: number; readonly delay: number }
     const getColor = () => {
         if (gap >= 70) return "bg-rose-500";
         if (gap >= 50) return "bg-amber-500";
-        return "bg-sky-500";
+        return "bg-[#22c55e]";
     };
 
     return (
@@ -70,7 +70,7 @@ function GapBar({ gap, delay }: { readonly gap: number; readonly delay: number }
             </div>
             <span className={cn(
                 "text-xs font-bold",
-                gap >= 70 ? "text-rose-600" : gap >= 50 ? "text-amber-600" : "text-sky-600"
+                gap >= 70 ? "text-rose-600" : gap >= 50 ? "text-amber-600" : "text-[#22c55e]"
             )}>
                 {gap}%
             </span>
@@ -166,10 +166,11 @@ export default function TopMissingSkills({
                     <AlertTriangle className="w-3 h-3 text-amber-400" />
                     {sorted.filter((s) => s.candidateGap >= 70).length} kỹ năng có gap &gt; 70%
                 </div>
-                <button className="text-[10px] text-sky-500 hover:text-sky-700 font-semibold flex items-center gap-0.5 transition-colors cursor-pointer">
+                <button className="text-[10px] text-[#22c55e] hover:text-[#22c55e] font-semibold flex items-center gap-0.5 transition-colors cursor-pointer">
                     Xem báo cáo đầy đủ <ExternalLink className="w-3 h-3" />
                 </button>
             </motion.div>
         </div>
     );
 }
+

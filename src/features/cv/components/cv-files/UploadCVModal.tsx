@@ -226,16 +226,16 @@ export function UploadCVModal({ isOpen, onClose, onUpload }: UploadCVModalProps)
                                             >
                                                 <motion.div
                                                     animate={isDragging ? { scale: 1.15 } : { scale: 1 }}
-                                                    className="w-14 h-14 rounded-2xl bg-sky-100 dark:bg-sky-900/30 flex items-center justify-center"
+                                                    className="w-14 h-14 rounded-2xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center"
                                                 >
-                                                    <Upload className="w-7 h-7 text-sky-500 dark:text-sky-400" />
+                                                    <Upload className="w-7 h-7 text-green-500 dark:text-green-400" />
                                                 </motion.div>
                                                 <div>
                                                     <p className="font-semibold text-[#1C252E] dark:text-white">
                                                         {isDragging ? "Thả file vào đây" : "Kéo thả file vào đây"}
                                                     </p>
                                                     <p className="text-sm text-[#637381] dark:text-[#919EAB] mt-1">
-                                                        hoặc <span className="text-sky-600 dark:text-sky-400 font-medium">chọn file</span> từ máy tính
+                                                        hoặc <span className="text-green-600 dark:text-green-400 font-medium">chọn file</span> từ máy tính
                                                     </p>
                                                 </div>
                                                 <p className="text-xs text-[#919EAB]">PDF, DOCX — tối đa 10MB</p>
@@ -276,7 +276,7 @@ export function UploadCVModal({ isOpen, onClose, onUpload }: UploadCVModalProps)
                                                 value={cvName}
                                                 onChange={(e) => setCvName(e.target.value)}
                                                 placeholder="VD: CV Frontend Developer 2025"
-                                                className="w-full px-4 py-3 rounded-xl border-2 border-[rgba(145,158,171,0.2)] dark:border-white/[0.1] bg-white dark:bg-[#161C24] text-[#1C252E] dark:text-white placeholder:text-[#919EAB] focus:border-sky-500 dark:focus:border-sky-400 focus:ring-4 focus:ring-sky-500/10 outline-none font-medium transition-all"
+                                                className="w-full px-4 py-3 rounded-xl border-2 border-[rgba(145,158,171,0.2)] dark:border-white/[0.1] bg-white dark:bg-[#161C24] text-[#1C252E] dark:text-white placeholder:text-[#919EAB] focus:border-green-500 dark:focus:border-green-400 focus:ring-4 focus:ring-green-500/10 outline-none font-medium transition-all"
                                             />
                                         </motion.div>
                                     )}
@@ -295,7 +295,7 @@ export function UploadCVModal({ isOpen, onClose, onUpload }: UploadCVModalProps)
                                         whileTap={hasFile && cvName.trim() ? { scale: 0.98 } : {}}
                                         onClick={handleUpload}
                                         disabled={!hasFile || !cvName.trim() || uploadState === "uploading" || uploadState === "success"}
-                                        className="flex-1 h-12 rounded-xl bg-gradient-to-r from-sky-600 to-green-500 text-white font-semibold shadow-lg shadow-sky-500/25 hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                        className="flex-1 h-12 rounded-xl bg-gradient-to-r from-green-600 to-green-500 text-white font-semibold shadow-lg shadow-green-500/25 hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                                     >
                                         <AnimatePresence mode="wait">
                                             {uploadState === "uploading" ? (

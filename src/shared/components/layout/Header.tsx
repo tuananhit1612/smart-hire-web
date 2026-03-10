@@ -11,6 +11,7 @@ import {
 import { motion, useMotionValueEvent, useScroll, AnimatePresence } from "framer-motion";
 import { Button } from "@/shared/components/ui/button";
 import { ThemeToggle } from "@/shared/components/ui/theme-toggle";
+import { AvatarInitials } from "@/shared/components/ui/avatar-initials";
 import { useAuth } from "@/features/auth/hooks/use-auth";
 import { cn } from "@/lib/utils";
 
@@ -163,9 +164,10 @@ export function Header() {
                             {user ? (
                                 <div className="relative group">
                                     <button className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-full border border-[rgba(145,158,171,0.2)] hover:border-[#22c55e]/50 hover:bg-[rgba(145,158,171,0.04)] transition-all">
-                                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#22c55e] to-[#10b981] flex items-center justify-center text-white text-sm font-bold shadow-sm">
-                                            {user.name ? user.name.charAt(0).toUpperCase() : "U"}
-                                        </div>
+                                        <AvatarInitials 
+                                            initials={user.name ? user.name.charAt(0).toUpperCase() : "U"} 
+                                            size="sm"
+                                        />
                                         <span className="text-sm font-medium text-[#1C252E] dark:text-white max-w-[100px] truncate">
                                             {user.name || "User"}
                                         </span>
@@ -275,9 +277,10 @@ export function Header() {
                                 {user ? (
                                     <>
                                         <div className="flex items-center gap-3 mb-4 px-2">
-                                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#22c55e] to-[#10b981] flex items-center justify-center text-white font-bold">
-                                                {user.name ? user.name.charAt(0).toUpperCase() : "U"}
-                                            </div>
+                                            <AvatarInitials 
+                                                initials={user.name ? user.name.charAt(0).toUpperCase() : "U"} 
+                                                size="md"
+                                            />
                                             <div>
                                                 <p className="text-sm font-bold text-[#1C252E] dark:text-white">{user.name || "User"}</p>
                                                 <p className="text-xs text-[#637381] dark:text-[#919EAB]">{user.email || "user@example.com"}</p>

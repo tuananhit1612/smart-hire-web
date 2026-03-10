@@ -65,7 +65,7 @@ export interface StageUpdateData {
 
 // ─── Stage Config ────────────────────────────────────
 const STAGE_META: Record<StageId, { label: string; color: string; bg: string; dot: string }> = {
-    applied: { label: "Ứng tuyển", color: "text-sky-700 dark:text-sky-400", bg: "bg-sky-100 dark:bg-sky-900/30", dot: "bg-sky-400" },
+    applied: { label: "Ứng tuyển", color: "text-[#22c55e] dark:text-[#22c55e]", bg: "bg-[#22c55e]/15 dark:bg-[#22c55e]/20", dot: "bg-[#22c55e]" },
     screening: { label: "Sàng lọc", color: "text-violet-700 dark:text-violet-400", bg: "bg-violet-100 dark:bg-violet-900/30", dot: "bg-violet-400" },
     interview: { label: "Phỏng vấn", color: "text-amber-700 dark:text-amber-400", bg: "bg-amber-100 dark:bg-amber-900/30", dot: "bg-amber-400" },
     offer: { label: "Đề nghị", color: "text-emerald-700 dark:text-emerald-400", bg: "bg-emerald-100 dark:bg-emerald-900/30", dot: "bg-emerald-400" },
@@ -175,14 +175,14 @@ export function StageUpdateModal({
                             <div className="px-6 py-4 space-y-5">
                                 {/* Candidate Info */}
                                 <div className="flex items-center gap-3 bg-[rgba(145,158,171,0.06)] dark:bg-white/[0.04] rounded-xl p-3">
-                                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-sky-100 to-violet-100 dark:from-sky-900/30 dark:to-violet-900/30 flex items-center justify-center text-xs font-bold text-sky-700 dark:text-sky-400">
+                                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[rgba(145,158,171,0.04)] to-violet-100 dark:from-[rgba(145,158,171,0.04)] dark:to-violet-900/30 flex items-center justify-center text-xs font-bold text-[#22c55e] dark:text-[#22c55e]">
                                         {candidate.avatar}
                                     </div>
                                     <div className="flex-1 min-w-0">
                                         <p className="text-sm font-semibold text-[#1C252E] dark:text-white">{candidate.name}</p>
                                         <p className="text-[11px] text-[#919EAB]">{candidate.position}</p>
                                     </div>
-                                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-sky-100 dark:bg-sky-900/30 text-sky-700 dark:text-sky-400 flex items-center gap-0.5">
+                                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#22c55e]/15 dark:bg-[#22c55e]/20 text-[#22c55e] dark:text-[#22c55e] flex items-center gap-0.5">
                                         <Star className="w-2.5 h-2.5" /> {candidate.aiScore}
                                     </span>
                                 </div>
@@ -222,8 +222,8 @@ export function StageUpdateModal({
                                                     className={cn(
                                                         "text-[10px] px-2.5 py-1 rounded-full border transition-colors cursor-pointer",
                                                         note === t
-                                                            ? "bg-sky-100 dark:bg-sky-900/30 border-sky-300 dark:border-sky-700/50 text-sky-700 dark:text-sky-400"
-                                                            : "bg-white dark:bg-white/[0.04] border-[rgba(145,158,171,0.2)] dark:border-white/[0.08] text-[#637381] dark:text-[#919EAB] hover:border-sky-200 dark:hover:border-sky-700/50"
+                                                            ? "bg-[#22c55e]/15 dark:bg-[#22c55e]/20 border-[#22c55e]/30 dark:border-[#22c55e]/30 text-[#22c55e] dark:text-[#22c55e]"
+                                                            : "bg-white dark:bg-white/[0.04] border-[rgba(145,158,171,0.2)] dark:border-white/[0.08] text-[#637381] dark:text-[#919EAB] hover:border-[#22c55e]/30 dark:hover:border-[#22c55e]/30"
                                                     )}
                                                 >
                                                     {t}
@@ -243,7 +243,7 @@ export function StageUpdateModal({
                                         onChange={(e) => setNote(e.target.value)}
                                         placeholder="Thêm ghi chú cho lần chuyển giai đoạn này..."
                                         rows={3}
-                                        className="w-full px-3 py-2 text-sm bg-white dark:bg-white/[0.04] border border-[rgba(145,158,171,0.2)] dark:border-white/[0.08] rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-200 dark:focus:ring-sky-800 focus:border-sky-400 resize-none transition-all text-[#1C252E] dark:text-white placeholder:text-[#919EAB]"
+                                        className="w-full px-3 py-2 text-sm bg-white dark:bg-white/[0.04] border border-[rgba(145,158,171,0.2)] dark:border-white/[0.08] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#22c55e]/30 dark:focus:ring-[#22c55e]/30 focus:border-[#22c55e]/30 resize-none transition-all text-[#1C252E] dark:text-white placeholder:text-[#919EAB]"
                                     />
                                 </div>
 
@@ -334,7 +334,7 @@ export function StageUpdateModal({
                                         "px-5 py-2 text-xs font-bold rounded-xl transition-colors cursor-pointer flex items-center gap-1.5",
                                         isRejection
                                             ? "bg-rose-600 text-white hover:bg-rose-700"
-                                            : "bg-sky-600 text-white hover:bg-sky-700"
+                                            : "bg-[#22c55e] text-white hover:bg-[#22c55e]"
                                     )}
                                 >
                                     <CheckCircle2 className="w-3.5 h-3.5" />
@@ -348,3 +348,4 @@ export function StageUpdateModal({
         </AnimatePresence>
     );
 }
+

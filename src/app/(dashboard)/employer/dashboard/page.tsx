@@ -62,8 +62,8 @@ const statCards: StatCard[] = [
         change: "+12.5%",
         trend: "up",
         icon: Users,
-        gradient: "from-sky-500 to-blue-600",
-        shadowColor: "shadow-sky-500/25",
+        gradient: "from-[#22c55e] to-[#10b981]",
+        shadowColor: "shadow-green-500/20",
     },
     {
         label: "Tin tuyển dụng",
@@ -115,7 +115,7 @@ const recentActivities: ActivityItem[] = [
 ];
 
 const ACTIVITY_COLORS: Record<string, { dot: string; bg: string }> = {
-    application: { dot: "bg-sky-500", bg: "bg-sky-50 dark:bg-sky-900/20" },
+    application: { dot: "bg-[#22c55e]", bg: "bg-[#22c55e]/10 dark:bg-[#22c55e]/20" },
     interview: { dot: "bg-violet-500", bg: "bg-violet-50 dark:bg-violet-900/20" },
     hired: { dot: "bg-emerald-500", bg: "bg-emerald-50 dark:bg-emerald-900/20" },
     posted: { dot: "bg-amber-500", bg: "bg-amber-50 dark:bg-amber-900/20" },
@@ -280,7 +280,7 @@ export default function HRDashboardPage() {
                             </div>
                             <MiniBar
                                 values={[45, 62, 38, 78, 55, 92, 67, 85]}
-                                colors={["bg-sky-300 dark:bg-sky-600", "bg-sky-400 dark:bg-sky-500", "bg-sky-500 dark:bg-sky-400", "bg-sky-400 dark:bg-sky-500"]}
+                                colors={["bg-[rgba(145,158,171,0.04)] dark:bg-[#22c55e]", "bg-[#22c55e] dark:bg-[#22c55e]", "bg-[#22c55e] dark:bg-[#22c55e]", "bg-[#22c55e] dark:bg-[#22c55e]"]}
                             />
                             <div className="flex justify-between mt-3 px-1">
                                 {["T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8"].map((l) => (
@@ -419,3 +419,4 @@ export default function HRDashboardPage() {
         </section>
     );
 }
+

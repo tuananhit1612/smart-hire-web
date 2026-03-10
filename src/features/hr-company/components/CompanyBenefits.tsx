@@ -15,12 +15,12 @@ const EMOJI_OPTIONS = ["💰", "🏥", "📚", "🏠", "🎮", "✈️", "🍔",
 
 // Gradient colors for benefit cards
 const CARD_GRADIENTS = [
-    { bg: "from-sky-50 via-white to-blue-50 dark:from-sky-900/15 dark:via-[#1C252E] dark:to-blue-900/10", border: "border-sky-200 dark:border-sky-800/30", hover: "hover:border-sky-300 dark:hover:border-sky-700/50" },
+    { bg: "from-[rgba(145,158,171,0.04)] via-white to-[#22c55e]/5 dark:from-[rgba(145,158,171,0.04)] dark:via-[#1C252E] dark:to-[#22c55e]/5", border: "border-[#22c55e]/30 dark:border-[#22c55e]/30", hover: "hover:border-[#22c55e]/30 dark:hover:border-[#22c55e]/30" },
     { bg: "from-green-50 via-white to-emerald-50 dark:from-green-900/15 dark:via-[#1C252E] dark:to-emerald-900/10", border: "border-green-200 dark:border-green-800/30", hover: "hover:border-green-300 dark:hover:border-green-700/50" },
-    { bg: "from-purple-50 via-white to-indigo-50 dark:from-purple-900/15 dark:via-[#1C252E] dark:to-indigo-900/10", border: "border-purple-200 dark:border-purple-800/30", hover: "hover:border-purple-300 dark:hover:border-purple-700/50" },
+    { bg: "from-purple-50 via-white to-[#22c55e]/5 dark:from-purple-900/15 dark:via-[#1C252E] dark:to-[#22c55e]/5", border: "border-purple-200 dark:border-purple-800/30", hover: "hover:border-purple-300 dark:hover:border-purple-700/50" },
     { bg: "from-orange-50 via-white to-amber-50 dark:from-orange-900/15 dark:via-[#1C252E] dark:to-amber-900/10", border: "border-orange-200 dark:border-orange-800/30", hover: "hover:border-orange-300 dark:hover:border-orange-700/50" },
     { bg: "from-pink-50 via-white to-rose-50 dark:from-pink-900/15 dark:via-[#1C252E] dark:to-rose-900/10", border: "border-pink-200 dark:border-pink-800/30", hover: "hover:border-pink-300 dark:hover:border-pink-700/50" },
-    { bg: "from-teal-50 via-white to-cyan-50 dark:from-teal-900/15 dark:via-[#1C252E] dark:to-cyan-900/10", border: "border-teal-200 dark:border-teal-800/30", hover: "hover:border-teal-300 dark:hover:border-teal-700/50" },
+    { bg: "from-teal-50 via-white to-[#22c55e]/5 dark:from-teal-900/15 dark:via-[#1C252E] dark:to-[#22c55e]/5", border: "border-teal-200 dark:border-teal-800/30", hover: "hover:border-teal-300 dark:hover:border-teal-700/50" },
 ];
 
 export function CompanyBenefits({ benefits, onUpdate, editable = true }: CompanyBenefitsProps) {
@@ -65,8 +65,8 @@ export function CompanyBenefits({ benefits, onUpdate, editable = true }: Company
                         <Gift className="w-6 h-6 text-white" />
                     </motion.div>
                     <div>
-                        <h2 className="text-xl font-bold text-sky-900 dark:text-white">Phúc lợi & Đãi ngộ</h2>
-                        <p className="text-sm text-sky-600 dark:text-[#919EAB]">Những gì bạn nhận được khi làm việc cùng chúng tôi</p>
+                        <h2 className="text-xl font-bold text-[#1C252E] dark:text-white">Phúc lợi & Đãi ngộ</h2>
+                        <p className="text-sm text-[#22c55e] dark:text-[#919EAB]">Những gì bạn nhận được khi làm việc cùng chúng tôi</p>
                     </div>
                 </div>
                 {editable && !isAdding && (
@@ -238,3 +238,4 @@ export function CompanyBenefits({ benefits, onUpdate, editable = true }: Company
         </div>
     );
 }
+

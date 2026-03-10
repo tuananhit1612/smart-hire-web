@@ -12,7 +12,7 @@ export default function InterviewPage() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                className="max-w-md w-full"
+                className="max-w-2xl w-full"
             >
                 {/* Back button */}
                 <div className="flex justify-start mb-8">
@@ -20,7 +20,7 @@ export default function InterviewPage() {
                 </div>
 
                 {/* Icon */}
-                <div className="w-20 h-20 rounded-3xl bg-gradient-to-tr from-green- to-emerald-600 flex items-center justify-center mx-auto mb-6 shadow-xl shadow-green-/25">
+                <div className="w-20 h-20 rounded-3xl bg-gradient-to-tr from-[#22c55e] to-[#10b981] flex items-center justify-center mx-auto mb-6 shadow-xl shadow-[#22c55e]/25">
                     <Mic2 className="w-9 h-9 text-white" />
                 </div>
 
@@ -37,7 +37,7 @@ export default function InterviewPage() {
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
                     <Link
                         href="/interview/setup"
-                        className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-green- hover:bg-green- text-white text-base font-semibold transition-all hover:scale-105 active:scale-95 shadow-lg shadow-green-/20"
+                        className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-[#22c55e] hover:bg-[#16a34a] text-white text-base font-semibold transition-all hover:scale-105 active:scale-95 shadow-lg shadow-[#22c55e]/20"
                     >
                         <BrainCircuit className="w-5 h-5" />
                         Bắt đầu phỏng vấn thử

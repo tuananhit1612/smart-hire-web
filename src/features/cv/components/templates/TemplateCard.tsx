@@ -86,7 +86,7 @@ export function TemplateCard({ template, onSelect, onPreview, isRecommended }: T
         >
             {/* Holographic border on hover - Sky/Green */}
             <div className={cn(
-                "absolute -inset-[2px] rounded-3xl bg-gradient-to-r from-sky-500 via-emerald-400 to-lime-500 opacity-0 transition-opacity duration-500",
+                "absolute -inset-[2px] rounded-3xl bg-gradient-to-r from-green-500 via-emerald-400 to-lime-500 opacity-0 transition-opacity duration-500",
                 isHovered && "opacity-100"
             )} />
 
@@ -96,7 +96,7 @@ export function TemplateCard({ template, onSelect, onPreview, isRecommended }: T
                     <motion.div
                         initial={{ scale: 0, y: 10 }}
                         animate={{ scale: 1, y: 0 }}
-                        className="px-3 py-1 rounded-full bg-gradient-to-r from-sky-500 via-emerald-500 to-lime-500 text-white text-xs font-bold shadow-lg flex items-center gap-1"
+                        className="px-3 py-1 rounded-full bg-gradient-to-r from-green-500 via-emerald-500 to-lime-500 text-white text-xs font-bold shadow-lg flex items-center gap-1"
                     >
                         <Star className="w-3 h-3 fill-current" />
                         Phù hợp nhất
@@ -137,7 +137,7 @@ export function TemplateCard({ template, onSelect, onPreview, isRecommended }: T
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: isHovered ? 1 : 0 }}
-                        className="absolute inset-0 bg-gradient-to-t from-sky-900/60 via-sky-900/20 to-transparent flex items-end justify-center pb-6"
+                        className="absolute inset-0 bg-gradient-to-t from-green-900/60 via-green-900/20 to-transparent flex items-end justify-center pb-6"
                     >
                         <div className="flex gap-3">
                             <motion.button
@@ -153,7 +153,7 @@ export function TemplateCard({ template, onSelect, onPreview, isRecommended }: T
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 onClick={() => onSelect(template)}
-                                className="px-4 py-2 rounded-xl bg-gradient-to-r from-sky-500 to-green-500 text-white text-sm font-medium flex items-center gap-2 shadow-lg shadow-sky-500/25"
+                                className="px-4 py-2 rounded-xl bg-gradient-to-r from-green-500 to-green-500 text-white text-sm font-medium flex items-center gap-2 shadow-lg shadow-green-500/25"
                             >
                                 <Check className="w-4 h-4" />
                                 Chọn

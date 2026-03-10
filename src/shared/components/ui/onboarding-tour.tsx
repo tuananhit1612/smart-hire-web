@@ -125,7 +125,7 @@ export function OnboardingTour({ onComplete }: OnboardingTourProps) {
                     >
                         <div className="relative w-full max-w-lg bg-white dark:bg-zinc-900 rounded-3xl shadow-2xl overflow-hidden">
                             {/* Gradient Header */}
-                            <div className="relative h-32 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center">
+                            <div className="relative h-32 bg-gradient-to-r from-[#22c55e] via-purple-500 to-pink-500 flex items-center justify-center">
                                 {/* Animated background circles */}
                                 <div className="absolute inset-0 overflow-hidden">
                                     <div className="absolute -top-10 -left-10 w-40 h-40 bg-white/10 rounded-full blur-2xl" />
@@ -178,9 +178,9 @@ export function OnboardingTour({ onComplete }: OnboardingTourProps) {
                                         className={cn(
                                             "w-2 h-2 rounded-full transition-all duration-300",
                                             index === currentStep
-                                                ? "w-6 bg-gradient-to-r from-indigo-500 to-purple-500"
+                                                ? "w-6 bg-gradient-to-r from-[#22c55e] to-purple-500"
                                                 : index < currentStep
-                                                    ? "bg-indigo-300"
+                                                    ? "bg-[rgba(145,158,171,0.04)]"
                                                     : "bg-gray-300 dark:bg-gray-600"
                                         )}
                                     />
@@ -234,3 +234,4 @@ export function useOnboardingTour() {
 
     return { resetTour };
 }
+

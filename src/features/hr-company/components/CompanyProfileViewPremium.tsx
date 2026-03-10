@@ -69,7 +69,7 @@ export function CompanyProfileViewPremium() {
     };
 
     return (
-        <div className="relative w-full bg-gradient-to-br from-sky-50/50 via-white to-green-50/30 dark:from-[#141A21] dark:via-[#141A21] dark:to-[#141A21] -m-6 px-6 pb-16">
+        <div className="relative w-full bg-gradient-to-br from-[rgba(145,158,171,0.04)] via-white to-green-50/30 dark:from-[#141A21] dark:via-[#141A21] dark:to-[#141A21] -m-6 px-6 pb-16">
 
             {/* Content */}
             <motion.div
@@ -88,7 +88,7 @@ export function CompanyProfileViewPremium() {
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
-                        className="inline-flex items-center gap-2 px-4 py-1.5 bg-sky-100 dark:bg-sky-900/30 rounded-full text-sky-700 dark:text-sky-400 text-sm font-medium mb-4"
+                        className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#22c55e]/15 dark:bg-[#22c55e]/20 rounded-full text-[#22c55e] dark:text-[#22c55e] text-sm font-medium mb-4"
                     >
                         <Zap className="w-4 h-4" />
                         Hồ sơ công ty được xác minh
@@ -96,7 +96,7 @@ export function CompanyProfileViewPremium() {
                     <h1 className="text-4xl sm:text-5xl font-bold">
                         <span className="text-[#1C252E] dark:text-white">Hồ sơ </span>
                         <span className="relative">
-                            <span className="bg-gradient-to-r from-sky-600 via-blue-600 to-sky-600 bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient">
+                            <span className="bg-gradient-to-r from-[#22c55e] via-[#10b981] to-[#10b981] bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient">
                                 Công ty
                             </span>
                             <motion.span
@@ -207,7 +207,7 @@ export function CompanyProfileViewPremium() {
                     <BentoItem className="lg:col-span-4" delay={0.6}>
                         <div className="p-6 h-full flex flex-col">
                             <h3 className="text-lg font-bold text-[#1C252E] dark:text-white mb-4 flex items-center gap-2">
-                                <Target className="w-5 h-5 text-sky-500" />
+                                <Target className="w-5 h-5 text-[#22c55e]" />
                                 Hành động nhanh
                             </h3>
                             <div className="space-y-3 flex-1">
@@ -219,12 +219,12 @@ export function CompanyProfileViewPremium() {
                                 <QuickActionButton
                                     label="Xem analytics"
                                     description="Theo dõi hiệu suất"
-                                    gradient="from-sky-500 to-blue-600"
+                                    gradient="from-[#22c55e] to-[#10b981]"
                                 />
                                 <QuickActionButton
                                     label="Quản lý ứng viên"
                                     description="Xử lý hồ sơ ứng tuyển"
-                                    gradient="from-purple-500 to-indigo-600"
+                                    gradient="from-purple-500 to-[#10b981]"
                                 />
                             </div>
                         </div>
@@ -299,7 +299,7 @@ function QuickActionButton({
         <motion.button
             whileHover={{ scale: 1.02, x: 5 }}
             whileTap={{ scale: 0.98 }}
-            className="w-full p-4 bg-sky-50 dark:bg-white/[0.04] hover:bg-sky-100 dark:hover:bg-white/[0.06] rounded-xl text-left transition-all group border border-sky-100 dark:border-white/[0.08] hover:border-sky-200 dark:hover:border-white/[0.12]"
+            className="w-full p-4 bg-[#22c55e]/10 dark:bg-white/[0.04] hover:bg-[#22c55e]/15 dark:hover:bg-white/[0.06] rounded-xl text-left transition-all group border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] hover:border-[#22c55e]/30 dark:hover:border-white/[0.12]"
         >
             <div className="flex items-center justify-between">
                 <div>
@@ -315,3 +315,4 @@ function QuickActionButton({
         </motion.button>
     );
 }
+

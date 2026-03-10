@@ -31,8 +31,8 @@ interface AvatarInitialsProps {
 export function AvatarInitials({
     initials,
     size = "sm",
-    colorClassName = "bg-gradient-to-br from-sky-100 to-violet-100 text-sky-700",
-    shape = "square",
+    colorClassName = "bg-gradient-to-br from-[#22c55e] to-[#10b981] text-white shadow-lg shadow-green-500/25",
+    shape = "circle",
     className,
 }: AvatarInitialsProps) {
     return (

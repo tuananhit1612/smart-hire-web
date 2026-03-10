@@ -19,8 +19,8 @@ const MOCK_EVENTS: MockEvent[] = [
     {
         label: "Hồ sơ được xem",
         icon: Briefcase,
-        color: "text-sky-600 dark:text-sky-400",
-        bg: "bg-sky-50 dark:bg-sky-900/20 hover:bg-sky-100 dark:hover:bg-sky-900/30 border-sky-200 dark:border-sky-700/50",
+        color: "text-[#22c55e] dark:text-[#22c55e]",
+        bg: "bg-[#22c55e]/10 dark:bg-[#22c55e]/20 hover:bg-[#22c55e]/15 dark:hover:bg-[#22c55e]/20 border-[#22c55e]/30 dark:border-[#22c55e]/30",
         fire: (t) => t.info("Hồ sơ đã được xem", "Nhà tuyển dụng FPT Software vừa xem hồ sơ của bạn."),
     },
     {
@@ -119,3 +119,4 @@ export function RealtimeEventTrigger() {
         </div>
     );
 }
+

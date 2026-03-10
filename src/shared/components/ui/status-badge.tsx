@@ -18,7 +18,7 @@ interface ScoreBadgeProps {
 
 function getScoreColor(score: number) {
     if (score >= 90) return { bg: "bg-emerald-100", text: "text-emerald-700" };
-    if (score >= 75) return { bg: "bg-sky-100", text: "text-sky-700" };
+    if (score >= 75) return { bg: "bg-[#22c55e]/15", text: "text-[#22c55e]" };
     if (score >= 60) return { bg: "bg-amber-100", text: "text-amber-700" };
     return { bg: "bg-rose-100", text: "text-rose-700" };
 }
@@ -45,7 +45,7 @@ const STATUS_COLORS: Record<StatusVariant, { bg: string; text: string; dot: stri
     success: { bg: "bg-emerald-100", text: "text-emerald-700", dot: "bg-emerald-500" },
     warning: { bg: "bg-amber-100", text: "text-amber-700", dot: "bg-amber-500" },
     danger: { bg: "bg-rose-100", text: "text-rose-700", dot: "bg-rose-500" },
-    info: { bg: "bg-sky-100", text: "text-sky-700", dot: "bg-sky-500" },
+    info: { bg: "bg-[#22c55e]/15", text: "text-[#22c55e]", dot: "bg-[#22c55e]" },
     neutral: { bg: "bg-slate-100", text: "text-slate-600", dot: "bg-slate-400" },
     purple: { bg: "bg-violet-100", text: "text-violet-700", dot: "bg-violet-500" },
 };
@@ -69,3 +69,4 @@ export function StatusBadge({ label, variant = "neutral", showDot = false, size 
 }
 
 export { getScoreColor, STATUS_COLORS, type StatusVariant };
+
