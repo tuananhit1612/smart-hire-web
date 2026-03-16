@@ -1,10 +1,11 @@
 "use client";
 
+import { useRef, useState } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
-import { Mail, MapPin, Phone, Linkedin, Github, Globe, Twitter, Pencil } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Mail, MapPin, Phone, Linkedin, Github, Globe, Twitter, CheckCircle2, Camera, X, Upload } from "lucide-react";
 import { CandidateProfile, SocialLink } from "../types/profile";
-import { Button } from "@/shared/components/ui/button";
+import { useProfileStore } from "../stores/profile-store";
 
 interface ProfileHeaderProps {
   profile: CandidateProfile;
@@ -18,93 +19,248 @@ const socialIcons: Record<SocialLink["platform"], React.ElementType> = {
 };
 
 export function ProfileHeader({ profile }: ProfileHeaderProps) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="glass-card overflow-hidden"
-    >
-      {/* Holographic Cover */}
-      <div className="h-32 sm:h-40 md:h-48 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 relative">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml,...')] opacity-20" />
-      </div>
+  const { updateProfile } = useProfileStore();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isHoveringAvatar, setIsHoveringAvatar] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-      {/* Profile Info */}
-      <div className="px-4 sm:px-6 md:px-8 pb-6 md:pb-8 -mt-16 sm:-mt-20 relative">
-        {/* Avatar */}
-        <div className="relative inline-block">
-          <div className="h-28 w-28 sm:h-32 sm:w-32 md:h-40 md:w-40 rounded-full border-4 border-white dark:border-gray-900 overflow-hidden shadow-xl glow-primary">
-            {profile.avatarUrl ? (
-              <Image
-                src={profile.avatarUrl}
-                alt={profile.fullName}
-                fill
-                className="object-cover"
-              />
-            ) : (
-              <div className="w-full h-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white text-4xl font-bold">
-                {profile.fullName.charAt(0)}
-              </div>
-            )}
+  const handleAvatarClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) return;
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) return;
+
+    const url = URL.createObjectURL(file);
+    setPreviewUrl(url);
+    setShowPreview(true);
+  };
+
+  const handleConfirmAvatar = () => {
+    if (previewUrl) {
+      updateProfile({ avatarUrl: previewUrl });
+      setShowPreview(false);
+    }
+  };
+
+  const handleCancelAvatar = () => {
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    setPreviewUrl(null);
+    setShowPreview(false);
+    // Reset file input
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  return (
+    <>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        className="bg-white dark:bg-[#1C252E] rounded-2xl overflow-hidden border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] hover:border-[rgba(145,158,171,0.32)] dark:hover:border-white/[0.12] transition-all"
+      >
+        {/* Cover Banner */}
+        <div className="h-36 md:h-48 relative bg-gradient-to-br from-[#1C252E] to-[#0A0F14]">
+          <div className="absolute inset-0 opacity-30">
+            <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-[#22C55E]/40 to-transparent rounded-full blur-3xl" />
+            <div className="absolute bottom-0 left-0 w-60 h-60 bg-gradient-to-tr from-[#10B981]/30 to-transparent rounded-full blur-3xl" />
           </div>
         </div>
 
-        {/* Name & Title */}
-        <div className="mt-4">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-foreground">
-            {profile.fullName}
-          </h1>
-          <p className="text-lg sm:text-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent font-semibold mt-1">
-            {profile.title}
-          </p>
-        </div>
-
-        {/* Contact Info */}
-        <div className="flex flex-wrap items-center gap-4 mt-4 text-muted-foreground text-sm">
-          <span className="flex items-center gap-1.5">
-            <Mail className="h-4 w-4" />
-            <span className="truncate max-w-[200px]">{profile.email}</span>
-          </span>
-          {profile.phone && (
-            <span className="flex items-center gap-1.5">
-              <Phone className="h-4 w-4" />
-              {profile.phone}
-            </span>
-          )}
-          <span className="flex items-center gap-1.5">
-            <MapPin className="h-4 w-4" />
-            {profile.location}
-          </span>
-        </div>
-
-        {/* Social Links */}
-        <div className="flex items-center gap-3 mt-6">
-          {profile.socialLinks.map((link) => {
-            const Icon = socialIcons[link.platform];
-            return (
-              <motion.a
-                key={link.platform}
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-2 px-3 py-2 rounded-xl bg-muted/50 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
+        {/* Profile Info — overlaps cover */}
+        <div className="px-6 md:px-8 pb-6 md:pb-8 -mt-16 md:-mt-20 relative z-10">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-5">
+            <div className="flex-1 min-w-0">
+              {/* Avatar with Upload */}
+              <div
+                className="relative inline-block mb-3 cursor-pointer group"
+                onMouseEnter={() => setIsHoveringAvatar(true)}
+                onMouseLeave={() => setIsHoveringAvatar(false)}
+                onClick={handleAvatarClick}
               >
-                <Icon className="h-4 w-4" />
-                <span className="text-sm hidden xs:inline">{link.platform}</span>
-              </motion.a>
-            );
-          })}
-        </div>
+                <div className="h-28 w-28 md:h-32 md:w-32 rounded-2xl border-4 border-white dark:border-[#1C252E] overflow-hidden shadow-lg bg-white dark:bg-[#1C252E] relative">
+                  {profile.avatarUrl ? (
+                    <Image
+                      src={profile.avatarUrl}
+                      alt={profile.fullName}
+                      fill
+                      className="object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-4xl font-extrabold text-[#22C55E] bg-gradient-to-br from-[#22C55E]/10 to-transparent">
+                      {profile.fullName.charAt(0)}
+                    </div>
+                  )}
 
-        {/* Edit Button */}
-        <div className="absolute top-4 right-4 sm:right-6 md:right-8">
-          <Button variant="outline" size="sm" leftIcon={<Pencil className="h-4 w-4" />}>
-            Edit Profile
-          </Button>
+                  {/* Hover Overlay */}
+                  <AnimatePresence>
+                    {isHoveringAvatar && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center gap-1"
+                      >
+                        <Camera className="w-6 h-6 text-white" />
+                        <span className="text-[11px] font-semibold text-white">
+                          {profile.avatarUrl ? "Đổi ảnh" : "Thêm ảnh"}
+                        </span>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                {/* Online indicator */}
+                <div className="absolute bottom-1 right-1 w-6 h-6 bg-[#22C55E] border-[3px] border-white dark:border-[#1C252E] rounded-full shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
+
+                {/* Hidden file input */}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  className="hidden"
+                  onChange={handleFileChange}
+                />
+              </div>
+
+              {/* Name & Title */}
+              <div>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[#1C252E] dark:text-white">
+                    {profile.fullName}
+                  </h1>
+                  <CheckCircle2 className="w-6 h-6 text-[#22C55E] fill-[#22C55E]/20 shrink-0" />
+                </div>
+                <p className="text-base font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#22C55E] to-[#10B981] mt-0.5 inline-block">
+                  {profile.title}
+                </p>
+              </div>
+
+              {/* Contact Info */}
+              <div className="flex flex-wrap items-center gap-y-3 gap-x-5 mt-4 text-[14px] font-medium text-[#637381] dark:text-[#C4CDD5]">
+                {profile.email && (
+                  <span className="flex items-center gap-2 hover:text-[#22C55E] transition-colors cursor-pointer">
+                    <div className="w-8 h-8 rounded-lg bg-[rgba(145,158,171,0.04)] dark:bg-[rgba(145,158,171,0.08)] flex items-center justify-center">
+                      <Mail className="w-4 h-4 text-[#1C252E] dark:text-white" />
+                    </div>
+                    {profile.email}
+                  </span>
+                )}
+                {profile.phone && (
+                  <span className="flex items-center gap-2 hover:text-[#22C55E] transition-colors cursor-pointer">
+                    <div className="w-8 h-8 rounded-lg bg-[rgba(145,158,171,0.04)] dark:bg-[rgba(145,158,171,0.08)] flex items-center justify-center">
+                      <Phone className="w-4 h-4 text-[#1C252E] dark:text-white" />
+                    </div>
+                    {profile.phone}
+                  </span>
+                )}
+                {profile.location && (
+                  <span className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-[rgba(145,158,171,0.04)] dark:bg-[rgba(145,158,171,0.08)] flex items-center justify-center">
+                      <MapPin className="w-4 h-4 text-[#1C252E] dark:text-white" />
+                    </div>
+                    {profile.location}
+                  </span>
+                )}
+              </div>
+
+              {/* Social Links */}
+              {profile.socialLinks && profile.socialLinks.length > 0 && (
+                <div className="flex items-center gap-2 mt-4">
+                  {profile.socialLinks.map((link) => {
+                    const Icon = socialIcons[link.platform];
+                    return (
+                      <motion.a
+                        key={link.platform}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="w-10 h-10 rounded-xl flex items-center justify-center bg-[rgba(145,158,171,0.04)] dark:bg-[rgba(145,158,171,0.08)] border border-transparent hover:border-[#22C55E]/30 hover:bg-[#22C55E]/10 text-[#637381] dark:text-[#919EAB] hover:text-[#22C55E] transition-all"
+                        title={link.platform}
+                      >
+                        <Icon className="h-[18px] w-[18px]" />
+                      </motion.a>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
         </div>
-      </div>
-    </motion.div>
+      </motion.div>
+
+      {/* Avatar Preview Modal */}
+      <AnimatePresence>
+        {showPreview && previewUrl && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+            onClick={handleCancelAvatar}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              className="bg-white dark:bg-[#1C252E] rounded-2xl p-6 shadow-2xl border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] max-w-sm w-full mx-4"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-bold text-[#1C252E] dark:text-white">Xem trước ảnh đại diện</h3>
+                <button
+                  onClick={handleCancelAvatar}
+                  className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-[rgba(145,158,171,0.08)] text-[#919EAB] hover:text-[#1C252E] dark:hover:text-white transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Preview */}
+              <div className="flex justify-center mb-6">
+                <div className="w-40 h-40 rounded-2xl overflow-hidden border-4 border-[#22C55E]/20 shadow-lg">
+                  <img
+                    src={previewUrl}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex gap-3">
+                <button
+                  onClick={handleCancelAvatar}
+                  className="flex-1 h-12 px-4 text-[14px] font-bold rounded-xl border border-[rgba(145,158,171,0.32)] text-[#1C252E] dark:text-white hover:bg-[rgba(145,158,171,0.08)] transition-all"
+                >
+                  Hủy
+                </button>
+                <button
+                  onClick={handleConfirmAvatar}
+                  className="flex-1 h-12 px-4 text-[14px] font-bold rounded-xl bg-[#1C252E] dark:bg-white text-white dark:text-[#1C252E] hover:bg-[#1C252E]/90 dark:hover:bg-white/90 transition-all inline-flex items-center justify-center gap-2"
+                >
+                  <Upload className="w-4 h-4" />
+                  Cập nhật
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

@@ -38,7 +38,7 @@ export function CVSectionNav({
         <nav className="flex flex-col gap-2">
             {/* Header */}
             <div className="mb-4">
-                <h2 className="text-xs uppercase tracking-widest text-gray-500 dark:text-gray-400 font-medium">
+                <h2 className="text-xs uppercase tracking-widest text-gray-500 font-medium font-sans">
                     Các mục CV
                 </h2>
             </div>
@@ -56,8 +56,8 @@ export function CVSectionNav({
                         className={cn(
                             "relative flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all duration-200 cursor-pointer group",
                             isActive
-                                ? "bg-white dark:bg-white/10 shadow-lg"
-                                : "hover:bg-gray-100 dark:hover:bg-white/5"
+                                ? "bg-white dark:bg-white/[0.08] shadow-lg shadow-green-900/5 dark:shadow-none"
+                                : "hover:bg-green-50 dark:hover:bg-white/[0.04]"
                         )}
                         whileHover={{ x: 4 }}
                         whileTap={{ scale: 0.98 }}
@@ -66,10 +66,10 @@ export function CVSectionNav({
                         {isActive && (
                             <motion.div
                                 layoutId="activeSection"
-                                className="absolute inset-0 rounded-xl p-[1px] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
+                                className="absolute inset-0 rounded-xl p-[1px] bg-gradient-to-r from-green-400 via-green-400 to-teal-400"
                                 transition={{ type: "spring", duration: 0.5 }}
                             >
-                                <div className="absolute inset-[1px] rounded-xl bg-white dark:bg-[#0B0F19]" />
+                                <div className="absolute inset-[1px] rounded-xl bg-white" />
                             </motion.div>
                         )}
 
@@ -80,10 +80,10 @@ export function CVSectionNav({
                                 className={cn(
                                     "flex items-center justify-center w-9 h-9 rounded-lg transition-colors",
                                     isActive
-                                        ? "bg-gradient-to-r from-indigo-500 to-purple-500 text-white"
+                                        ? "bg-gradient-to-r from-green-500 to-green-500 text-white shadow-md shadow-green-500/20"
                                         : isCompleted
                                             ? "bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400"
-                                            : "bg-gray-100 dark:bg-white/10 text-gray-500 dark:text-gray-400"
+                                            : "bg-gray-100 dark:bg-white/[0.04] text-gray-400 group-hover:bg-white dark:group-hover:bg-white/[0.08] group-hover:text-green-500"
                                 )}
                             >
                                 {isCompleted && !isActive ? (
@@ -97,15 +97,15 @@ export function CVSectionNav({
                             <div className="flex-1 min-w-0">
                                 <div
                                     className={cn(
-                                        "text-sm font-medium truncate transition-colors",
+                                        "text-sm font-medium truncate transition-colors font-sans",
                                         isActive
-                                            ? "text-gray-900 dark:text-white"
-                                            : "text-gray-700 dark:text-gray-300"
+                                            ? "text-green-900 dark:text-white"
+                                            : "text-gray-600 dark:text-gray-300 group-hover:text-green-700 dark:group-hover:text-green-400"
                                     )}
                                 >
                                     {section.title}
                                 </div>
-                                <div className="text-xs text-gray-500 dark:text-gray-500 truncate">
+                                <div className="text-xs text-gray-400 dark:text-gray-500 truncate group-hover:text-green-600/70 dark:group-hover:text-green-400/70">
                                     {section.description}
                                 </div>
                             </div>
@@ -115,8 +115,8 @@ export function CVSectionNav({
                                 className={cn(
                                     "text-xs font-medium",
                                     isActive
-                                        ? "text-indigo-600 dark:text-indigo-400"
-                                        : "text-gray-400 dark:text-gray-600"
+                                        ? "text-green-600"
+                                        : "text-gray-300 group-hover:text-green-400"
                                 )}
                             >
                                 {index + 1}/{CV_SECTIONS.length}

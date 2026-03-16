@@ -15,10 +15,10 @@ interface SkillsSectionProps {
 }
 
 const SKILL_LEVELS: { value: Skill["level"]; label: string; color: string; bgColor: string }[] = [
-    { value: "beginner", label: "Cơ bản", color: "bg-gray-400", bgColor: "bg-gray-100 dark:bg-gray-800" },
-    { value: "intermediate", label: "Trung bình", color: "bg-blue-500", bgColor: "bg-blue-50 dark:bg-blue-900/20" },
-    { value: "advanced", label: "Nâng cao", color: "bg-indigo-500", bgColor: "bg-indigo-50 dark:bg-indigo-900/20" },
-    { value: "expert", label: "Chuyên gia", color: "bg-amber-500", bgColor: "bg-amber-50 dark:bg-amber-900/20" },
+    { value: "beginner", label: "Cơ bản", color: "bg-gray-400", bgColor: "bg-gray-100" },
+    { value: "intermediate", label: "Trung bình", color: "bg-green-500", bgColor: "bg-green-50" },
+    { value: "advanced", label: "Nâng cao", color: "bg-green-500", bgColor: "bg-green-50" },
+    { value: "expert", label: "Chuyên gia", color: "bg-teal-500", bgColor: "bg-teal-50" },
 ];
 
 // Technical skill suggestions
@@ -70,14 +70,14 @@ function LevelDropdown({
                 onClick={() => setIsOpen(!isOpen)}
                 className={cn(
                     "flex items-center gap-2 h-9 px-3 rounded-xl border border-gray-200 dark:border-zinc-700",
-                    "bg-white dark:bg-zinc-800 text-sm font-medium",
-                    "hover:border-indigo-400 dark:hover:border-indigo-500",
-                    "focus:outline-none focus:ring-2 focus:ring-indigo-500",
+                    "bg-white text-sm font-medium",
+                    "hover:border-green-400",
+                    "focus:outline-none focus:ring-2 focus:ring-green-500",
                     "transition-all duration-200 flex-1"
                 )}
             >
                 <span className={cn("w-2.5 h-2.5 rounded-full", currentLevel.color)} />
-                <span className="text-gray-700 dark:text-white flex-1 text-left">
+                <span className="text-gray-700 flex-1 text-left">
                     {currentLevel.label}
                 </span>
                 <ChevronDown className={cn(
@@ -94,7 +94,7 @@ function LevelDropdown({
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -8, scale: 0.95 }}
                         transition={{ duration: 0.15 }}
-                        className="absolute z-30 mt-1 w-full min-w-[140px] bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl shadow-lg overflow-hidden"
+                        className="absolute z-30 mt-1 w-full min-w-[140px] bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden"
                     >
                         {SKILL_LEVELS.map((level) => (
                             <button
@@ -115,7 +115,7 @@ function LevelDropdown({
                                     {level.label}
                                 </span>
                                 {value === level.value && (
-                                    <Check className="w-4 h-4 text-indigo-500" />
+                                    <Check className="w-4 h-4 text-green-500" />
                                 )}
                             </button>
                         ))}
@@ -234,9 +234,103 @@ export function SkillsSection({ data, onChange }: SkillsSectionProps) {
     const getLevelInfo = (level: Skill["level"]) => {
         return SKILL_LEVELS.find((l) => l.value === level) || SKILL_LEVELS[1];
     };
+    return (
+        <>
+            {DialogComponent}
+            <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-6"
+            >
+                {/* Section Header */}
+                <div>
+                    <h2 className="text-xl md:text-2xl font-bold tracking-tight text-green-900 flex items-center gap-2 md:gap-3">
+                        <div className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-gradient-to-r from-green-500 to-green-500 text-white flex-shrink-0 shadow-lg shadow-green-500/20">
+                            <Zap className="w-4 h-4 md:w-5 md:h-5" />
+                        </div>
+                        <span>Kỹ năng</span>
+                    </h2>
+                    <p className="text-sm md:text-base text-gray-500 mt-2">
+                        Liệt kê kỹ năng chuyên môn và kỹ năng mềm của bạn
+                    </p>
+                </div>
 
-    // Skill Card Component
-    const SkillCard = ({ skill }: { skill: Skill }) => (
+                {/* Two Columns */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* Technical Skills */}
+                    <SkillColumn
+                        title="Kỹ năng chuyên môn"
+                        icon={Code}
+                        iconColor="bg-green-500"
+                        skills={technicalSkills}
+                        inputValue={newTechnicalSkill}
+                        onInputChange={setNewTechnicalSkill}
+                        onAdd={handleAddTechnical}
+                        selectedLevel={selectedTechnicalLevel}
+                        onLevelChange={setSelectedTechnicalLevel}
+                        showSuggestions={showTechnicalSuggestions}
+                        setShowSuggestions={setShowTechnicalSuggestions}
+                        suggestions={filteredTechnicalSuggestions}
+                        onSelectSuggestion={handleSelectTechnicalSuggestion}
+                        placeholder="VD: React, Python..."
+                        onUpdateLevel={handleUpdateLevel}
+                        onRemove={handleRemove}
+                    />
+
+                    {/* Soft Skills */}
+                    <SkillColumn
+                        title="Kỹ năng mềm"
+                        icon={Users}
+                        iconColor="bg-green-500"
+                        skills={softSkills}
+                        inputValue={newSoftSkill}
+                        onInputChange={setNewSoftSkill}
+                        onAdd={handleAddSoft}
+                        selectedLevel={selectedSoftLevel}
+                        onLevelChange={setSelectedSoftLevel}
+                        showSuggestions={showSoftSuggestions}
+                        setShowSuggestions={setShowSoftSuggestions}
+                        suggestions={filteredSoftSuggestions}
+                        onSelectSuggestion={handleSelectSoftSuggestion}
+                        placeholder="VD: Giao tiếp, Làm việc nhóm..."
+                        onUpdateLevel={handleUpdateLevel}
+                        onRemove={handleRemove}
+                    />
+                </div>
+
+                {/* Total Count */}
+                {data.length > 0 && (
+                    <div className="text-center pt-2">
+                        <span className="text-sm text-gray-500 dark:text-gray-400">
+                            Tổng cộng: {data.length} kỹ năng ({technicalSkills.length} chuyên môn, {softSkills.length} kỹ năng mềm)
+                        </span>
+                    </div>
+                )}
+            </motion.div>
+        </>
+    );
+}
+
+// Extracted Skill Card Component
+function SkillCard({ 
+    skill, 
+    onUpdateLevel, 
+    onRemove 
+}: { 
+    skill: Skill;
+    onUpdateLevel: (id: string, level: Skill["level"]) => void;
+    onRemove: (id: string) => void;
+}) {
+    const getLevelIndex = (level: Skill["level"]) => {
+        return SKILL_LEVELS.findIndex((l) => l.value === level);
+    };
+
+    const getLevelInfo = (level: Skill["level"]) => {
+        return SKILL_LEVELS.find((l) => l.value === level) || SKILL_LEVELS[1];
+    };
+
+    return (
         <motion.div
             layout
             initial={{ opacity: 0, scale: 0.95 }}
@@ -257,7 +351,7 @@ export function SkillsSection({ data, onChange }: SkillsSectionProps) {
                     <button
                         key={level.value}
                         type="button"
-                        onClick={() => handleUpdateLevel(skill.id, level.value)}
+                        onClick={() => onUpdateLevel(skill.id, level.value)}
                         className={cn(
                             "w-5 h-5 rounded-full transition-all duration-200",
                             levelIdx <= getLevelIndex(skill.level)
@@ -272,46 +366,52 @@ export function SkillsSection({ data, onChange }: SkillsSectionProps) {
 
             {/* Delete Button */}
             <button
-                onClick={() => handleRemove(skill.id)}
+                onClick={() => onRemove(skill.id)}
                 className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors opacity-0 group-hover:opacity-100"
             >
                 <X className="w-4 h-4" />
             </button>
         </motion.div>
     );
+}
 
-    // Skill Column Component
-    const SkillColumn = ({
-        title,
-        icon: Icon,
-        iconColor,
-        skills,
-        inputValue,
-        onInputChange,
-        onAdd,
-        selectedLevel,
-        onLevelChange,
-        showSuggestions,
-        setShowSuggestions,
-        suggestions,
-        onSelectSuggestion,
-        placeholder,
-    }: {
-        title: string;
-        icon: React.ElementType;
-        iconColor: string;
-        skills: Skill[];
-        inputValue: string;
-        onInputChange: (value: string) => void;
-        onAdd: () => void;
-        selectedLevel: Skill["level"];
-        onLevelChange: (level: Skill["level"]) => void;
-        showSuggestions: boolean;
-        setShowSuggestions: (show: boolean) => void;
-        suggestions: string[];
-        onSelectSuggestion: (skill: string) => void;
-        placeholder: string;
-    }) => (
+// Extracted Skill Column Component
+function SkillColumn({
+    title,
+    icon: Icon,
+    iconColor,
+    skills,
+    inputValue,
+    onInputChange,
+    onAdd,
+    selectedLevel,
+    onLevelChange,
+    showSuggestions,
+    setShowSuggestions,
+    suggestions,
+    onSelectSuggestion,
+    placeholder,
+    onUpdateLevel,
+    onRemove
+}: {
+    title: string;
+    icon: React.ElementType;
+    iconColor: string;
+    skills: Skill[];
+    inputValue: string;
+    onInputChange: (value: string) => void;
+    onAdd: () => void;
+    selectedLevel: Skill["level"];
+    onLevelChange: (level: Skill["level"]) => void;
+    showSuggestions: boolean;
+    setShowSuggestions: (show: boolean) => void;
+    suggestions: string[];
+    onSelectSuggestion: (skill: string) => void;
+    placeholder: string;
+    onUpdateLevel: (id: string, level: Skill["level"]) => void;
+    onRemove: (id: string) => void;
+}) {
+    return (
         <div className="flex-1 min-w-0">
             {/* Column Header */}
             <div className="flex items-center gap-2 mb-4">
@@ -350,7 +450,7 @@ export function SkillsSection({ data, onChange }: SkillsSectionProps) {
                                     key={skill}
                                     type="button"
                                     onClick={() => onSelectSuggestion(skill)}
-                                    className="w-full px-3 py-2 text-left text-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/20 text-gray-700 dark:text-gray-300"
+                                    className="w-full px-3 py-2 text-left text-sm hover:bg-green-50 text-gray-700"
                                 >
                                     {skill}
                                 </button>
@@ -390,84 +490,16 @@ export function SkillsSection({ data, onChange }: SkillsSectionProps) {
                         </motion.div>
                     ) : (
                         skills.map((skill) => (
-                            <SkillCard key={skill.id} skill={skill} />
+                            <SkillCard 
+                                key={skill.id} 
+                                skill={skill} 
+                                onUpdateLevel={onUpdateLevel}
+                                onRemove={onRemove}
+                            />
                         ))
                     )}
                 </AnimatePresence>
             </div>
         </div>
-    );
-
-    return (
-        <>
-            {DialogComponent}
-            <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-                className="space-y-6"
-            >
-                {/* Section Header */}
-                <div>
-                    <h2 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white flex items-center gap-2 md:gap-3">
-                        <div className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white flex-shrink-0">
-                            <Zap className="w-4 h-4 md:w-5 md:h-5" />
-                        </div>
-                        <span>Kỹ năng</span>
-                    </h2>
-                    <p className="text-sm md:text-base text-gray-500 dark:text-gray-400 mt-2">
-                        Liệt kê kỹ năng chuyên môn và kỹ năng mềm của bạn
-                    </p>
-                </div>
-
-                {/* Two Columns */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {/* Technical Skills */}
-                    <SkillColumn
-                        title="Kỹ năng chuyên môn"
-                        icon={Code}
-                        iconColor="bg-blue-500"
-                        skills={technicalSkills}
-                        inputValue={newTechnicalSkill}
-                        onInputChange={setNewTechnicalSkill}
-                        onAdd={handleAddTechnical}
-                        selectedLevel={selectedTechnicalLevel}
-                        onLevelChange={setSelectedTechnicalLevel}
-                        showSuggestions={showTechnicalSuggestions}
-                        setShowSuggestions={setShowTechnicalSuggestions}
-                        suggestions={filteredTechnicalSuggestions}
-                        onSelectSuggestion={handleSelectTechnicalSuggestion}
-                        placeholder="VD: React, Python..."
-                    />
-
-                    {/* Soft Skills */}
-                    <SkillColumn
-                        title="Kỹ năng mềm"
-                        icon={Users}
-                        iconColor="bg-purple-500"
-                        skills={softSkills}
-                        inputValue={newSoftSkill}
-                        onInputChange={setNewSoftSkill}
-                        onAdd={handleAddSoft}
-                        selectedLevel={selectedSoftLevel}
-                        onLevelChange={setSelectedSoftLevel}
-                        showSuggestions={showSoftSuggestions}
-                        setShowSuggestions={setShowSoftSuggestions}
-                        suggestions={filteredSoftSuggestions}
-                        onSelectSuggestion={handleSelectSoftSuggestion}
-                        placeholder="VD: Giao tiếp, Làm việc nhóm..."
-                    />
-                </div>
-
-                {/* Total Count */}
-                {data.length > 0 && (
-                    <div className="text-center pt-2">
-                        <span className="text-sm text-gray-500 dark:text-gray-400">
-                            Tổng cộng: {data.length} kỹ năng ({technicalSkills.length} chuyên môn, {softSkills.length} kỹ năng mềm)
-                        </span>
-                    </div>
-                )}
-            </motion.div>
-        </>
     );
 }

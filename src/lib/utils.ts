@@ -1,6 +1,6 @@
-import { type ClassValue, clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
-
-export function cn(...inputs: ClassValue[]) {
-    return twMerge(clsx(inputs));
-}
+/**
+ * Re-export cn utility from shared/utils for backward compatibility.
+ * Canonical source: @/shared/utils/cn
+ * This file exists so imports from "@/lib/utils" still work.
+ */
+export { cn } from "@/shared/utils/cn";

@@ -12,106 +12,89 @@ interface RegisterRoleSelectionProps {
     onRoleSelect?: (role: UserRole) => void;
 }
 
-export function RegisterRoleSelection() {
+export function RegisterRoleSelection({ onRoleSelect }: RegisterRoleSelectionProps) {
     const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
 
     const handleContinue = () => {
-        if (selectedRole) {
-            console.log("Selected role:", selectedRole);
-            // In a real app, this would navigate to the next step or save to store
-        }
-    };
-
-    const containerVariants = {
-        hidden: { opacity: 0, scale: 0.95 },
-        visible: {
-            opacity: 1,
-            scale: 1,
-            transition: { staggerChildren: 0.1, duration: 0.4 }
+        if (selectedRole && onRoleSelect) {
+            onRoleSelect(selectedRole);
         }
     };
 
     const itemVariants = {
-        hidden: { opacity: 0, y: 10 },
-        visible: { opacity: 1, y: 0 }
+        hidden: { opacity: 0, y: 12 },
+        visible: { opacity: 1, y: 0 },
     };
 
     return (
         <motion.div
             initial="hidden"
             animate="visible"
-            variants={containerVariants}
+            transition={{ staggerChildren: 0.1, duration: 0.4 }}
             className="space-y-8"
         >
-            <div className="space-y-2 text-center">
-                <motion.h1
-                    className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white font-inter"
-                    variants={itemVariants}
-                >
-                    Create an account
-                </motion.h1>
-                <motion.p
-                    className="text-slate-500 dark:text-slate-400 max-w-sm mx-auto text-base"
-                    variants={itemVariants}
-                >
-                    Choose how you want to use SmartHire.
-                </motion.p>
-            </div>
+            {/* Header */}
+            <motion.div className="space-y-2 text-center" variants={itemVariants}>
+                <h1 className="text-2xl font-bold tracking-tight text-[#1C252E] dark:text-white">
+                    Tạo tài khoản
+                </h1>
+                <p className="text-[#637381] dark:text-[#C4CDD5] text-sm max-w-sm mx-auto">
+                    Chọn cách bạn muốn sử dụng SmartHire.
+                </p>
+            </motion.div>
 
-            <motion.div
-                className="grid gap-4 md:grid-cols-2"
-                variants={itemVariants}
-            >
+            {/* Role cards */}
+            <motion.div className="grid gap-4 md:grid-cols-2" variants={itemVariants}>
                 <RoleCard
-                    role="candidate"
                     icon={User}
-                    title="I'm a Candidate"
-                    description="Find jobs & build your career"
+                    title="Tôi là Ứng viên"
+                    description="Tìm việc & phát triển sự nghiệp"
                     isSelected={selectedRole === "candidate"}
                     onSelect={() => setSelectedRole("candidate")}
                 />
                 <RoleCard
-                    role="employer"
                     icon={Building2}
-                    title="I'm an Employer"
-                    description="Hire talent & post jobs"
+                    title="Tôi là Nhà tuyển dụng"
+                    description="Tuyển dụng nhân tài & đăng tin"
                     isSelected={selectedRole === "employer"}
                     onSelect={() => setSelectedRole("employer")}
                 />
             </motion.div>
 
+            {/* Continue */}
             <motion.div variants={itemVariants}>
                 <Button
-                    className="w-full h-14 text-base font-semibold shadow-lg shadow-blue-600/20 hover:shadow-blue-600/30 transition-all duration-300 bg-blue-600 hover:bg-blue-700 text-white rounded-xl"
+                    className="w-full h-12 text-base font-semibold bg-[#1C252E] dark:bg-white text-white dark:text-[#1C252E] hover:bg-[#1C252E]/90 dark:hover:bg-white/90 shadow-none border-0 rounded-xl transition-all disabled:opacity-40"
                     disabled={!selectedRole}
                     onClick={handleContinue}
                     variant="primary"
+                    size="lg"
+                    rightIcon={<ArrowRight className="h-5 w-5" />}
                 >
-                    <span className="flex items-center justify-center">
-                        Continue
-                        <ArrowRight className="ml-2 h-5 w-5" />
-                    </span>
+                    Tiếp tục
                 </Button>
             </motion.div>
 
+            {/* Login link */}
             <motion.p
-                className="text-center text-sm text-slate-500 dark:text-slate-400"
+                className="text-center text-sm text-[#637381] dark:text-[#C4CDD5]"
                 variants={itemVariants}
             >
-                Already have an account?{" "}
+                Đã có tài khoản?{" "}
                 <Link
                     href="/login"
-                    className="font-semibold text-blue-600 hover:underline hover:text-blue-700 transition-colors"
+                    className="font-semibold text-[#22C55E] hover:text-[#16A34A] transition-colors"
                 >
-                    Log in
+                    Đăng nhập
                 </Link>
             </motion.p>
         </motion.div>
     );
 }
 
+// ─── Role Card ──────────────────────────────────────
+
 interface RoleCardProps {
-    role: UserRole;
     icon: React.ElementType;
     title: string;
     description: string;
@@ -119,37 +102,44 @@ interface RoleCardProps {
     onSelect: () => void;
 }
 
-function RoleCard({ role, icon: Icon, title, description, isSelected, onSelect }: RoleCardProps) {
+function RoleCard({ icon: Icon, title, description, isSelected, onSelect }: RoleCardProps) {
     return (
         <motion.div
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={onSelect}
             className={cn(
-                "relative cursor-pointer rounded-2xl p-6 transition-all duration-200 border-2",
+                "relative cursor-pointer rounded-2xl p-6 transition-all duration-300 border-2 group",
                 isSelected
-                    ? "border-blue-600 bg-blue-50/50 dark:bg-blue-900/10"
-                    : "border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-blue-200 dark:hover:border-blue-800"
+                    ? "border-[#22C55E]/40 bg-[#22C55E]/[0.04] dark:bg-[#22C55E]/[0.06] shadow-[0_8px_30px_-5px_rgba(34,197,94,0.12)]"
+                    : "border-[rgba(145,158,171,0.12)] bg-white dark:bg-[#1C252E] hover:border-[rgba(145,158,171,0.32)] hover:shadow-lg"
             )}
         >
+            {/* Check icon when selected */}
             {isSelected && (
-                <div className="absolute top-4 right-4 text-blue-600">
-                    <CheckCircle className="w-5 h-5 fill-blue-600 text-white" />
+                <div className="absolute top-4 right-4">
+                    <CheckCircle className="w-5 h-5 fill-[#22C55E] text-white" />
                 </div>
             )}
 
+            {/* Icon container */}
             <div className={cn(
-                "mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl transition-colors",
-                isSelected ? "bg-blue-600 text-white" : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"
+                "mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl transition-all duration-300",
+                isSelected
+                    ? "bg-gradient-to-br from-[#22c55e] to-[#10b981] shadow-lg shadow-green-500/25"
+                    : "bg-[rgba(145,158,171,0.06)] dark:bg-[rgba(145,158,171,0.1)] group-hover:bg-[rgba(145,158,171,0.1)]"
             )}>
-                <Icon className="h-6 w-6" />
+                <Icon className={cn(
+                    "h-6 w-6 transition-colors",
+                    isSelected ? "text-white" : "text-[#1C252E] dark:text-white"
+                )} />
             </div>
 
             <div className="space-y-1">
-                <h3 className={cn("font-bold text-lg", isSelected ? "text-blue-900 dark:text-blue-100" : "text-slate-900 dark:text-white")}>
+                <h3 className="font-bold text-lg text-[#1C252E] dark:text-white">
                     {title}
                 </h3>
-                <p className={cn("text-sm", isSelected ? "text-blue-700 dark:text-blue-300" : "text-slate-500 dark:text-slate-400")}>
+                <p className="text-sm text-[#637381] dark:text-[#C4CDD5]">
                     {description}
                 </p>
             </div>

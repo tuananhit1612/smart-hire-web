@@ -1,161 +1,183 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { Github, ArrowRight, Wallet, Fingerprint, ShieldCheck } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Github, Fingerprint, User, Briefcase, Sparkles, UserCheck, ShieldCheck } from "lucide-react";
 import { motion } from "framer-motion";
 
 import { Button } from "@/shared/components/ui/button";
-import { Input } from "@/shared/components/ui/input";
-import { Tabs } from "@/shared/components/ui/tabs";
 import { useToastHelpers } from "@/shared/components/ui/toast";
-import {
-    Card,
-    CardContent,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/shared/components/ui/card";
-import { loginSchema, type LoginSchema } from "../schemas/login-schema";
+import { useAuth } from "../hooks/use-auth";
+import type { MockUserKey } from "../types/auth-types";
+import { cn } from "@/lib/utils";
+
+const MOCK_OPTIONS = [
+    {
+        id: "candidate-new" as MockUserKey,
+        label: "Ứng viên (Mới)",
+        desc: "Luồng tạo CV / Hoàn thiện hồ sơ lần đầu",
+        icon: Sparkles,
+        role: "candidate"
+    },
+    {
+        id: "candidate-returning" as MockUserKey,
+        label: "Ứng viên (Đã có data)",
+        desc: "Luồng tìm việc / Quản lý việc làm, CV",
+        icon: User,
+        role: "candidate"
+    },
+    {
+        id: "employer-new" as MockUserKey,
+        label: "Nhà tuyển dụng (Mới)",
+        desc: "Luồng setup thông tin công ty lần đầu",
+        icon: ShieldCheck,
+        role: "employer"
+    },
+    {
+        id: "employer-returning" as MockUserKey,
+        label: "Nhà tuyển dụng (Đã có data)",
+        desc: "Luồng quản lý ứng viên, tin tuyển dụng",
+        icon: Briefcase,
+        role: "employer"
+    },
+];
 
 export function LoginForm() {
-    const [role, setRole] = useState("candidate");
+    const [selectedRoleKey, setSelectedRoleKey] = useState<MockUserKey>("candidate-returning");
     const [isLoading, setIsLoading] = useState(false);
     const toastHelpers = useToastHelpers();
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const { login } = useAuth();
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm<LoginSchema>({
-        resolver: zodResolver(loginSchema),
-        defaultValues: {
-            email: "topre@ultratech.ai",
-            password: "password",
-        }
-    });
-
-    const onSubmit = async (data: LoginSchema) => {
+    const handleLogin = async (e: React.FormEvent) => {
+        e.preventDefault();
         setIsLoading(true);
-        // Simulate API call
-        console.log("Login data:", { ...data, role });
-        await new Promise((resolve) => setTimeout(resolve, 1500));
+        await login(selectedRoleKey);
         setIsLoading(false);
-        toastHelpers.success("Welcome back!", "You have successfully logged in.");
+
+        toastHelpers.success("Chào mừng trở lại!", "Bạn đã đăng nhập thành công giả lập.");
+
+        const callbackUrl = searchParams.get("callbackUrl");
+        if (callbackUrl) {
+            router.push(callbackUrl);
+        } else {
+            // Role mapping for fallback
+            const role = MOCK_OPTIONS.find(o => o.id === selectedRoleKey)?.role;
+            const redirectMap: Record<string, string> = {
+                candidate: "/jobs",
+                employer: "/employer/dashboard",
+                admin: "/admin/dashboard",
+            };
+            router.push(redirectMap[role || "candidate"] ?? "/jobs");
+        }
     };
 
-    const containerVariants = {
-        hidden: { opacity: 0, scale: 0.95 },
-        visible: {
-            opacity: 1,
-            scale: 1,
-            transition: {
-                staggerChildren: 0.1,
-                duration: 0.4,
-                ease: "easeOut" as const
-            }
-        }
+    const itemVariants = {
+        hidden: { opacity: 0, y: 12 },
+        visible: { opacity: 1, y: 0 },
     };
 
     return (
         <motion.div
             initial="hidden"
             animate="visible"
-            variants={containerVariants}
+            transition={{ staggerChildren: 0.08, duration: 0.4 }}
             className="space-y-6"
         >
-            <div className="space-y-1 text-center mb-8">
-                <div className="inline-flex items-center justify-center p-3 mb-4 rounded-2xl bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400">
-                    <Fingerprint className="w-8 h-8" />
+            {/* Header */}
+            <motion.div className="space-y-2 text-center mb-6" variants={itemVariants}>
+                <div className="inline-flex items-center justify-center w-14 h-14 mb-3 rounded-2xl bg-gradient-to-br from-[#22c55e] to-[#10b981] shadow-lg shadow-green-500/25">
+                    <Fingerprint className="w-7 h-7 text-white" />
                 </div>
-                <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white font-inter">
-                    Welcome back
+                <h1 className="text-2xl font-bold tracking-tight text-[#1C252E] dark:text-white">
+                    Simulate Login
                 </h1>
-                <p className="text-slate-500 dark:text-slate-400 text-sm">
-                    Enter your credentials to access your account.
+                <p className="text-[#637381] dark:text-[#C4CDD5] text-sm">
+                    Chọn một tài khoản mock dưới đây để trải nghiệm các luồng.
                 </p>
-            </div>
+            </motion.div>
 
-            <Tabs
-                activeTab={role}
-                onChange={setRole}
-                tabs={[
-                    { id: "candidate", label: "Candidate" },
-                    { id: "employer", label: "Employer" },
-                ]}
-                className="mb-6 w-full"
-            />
+            <form onSubmit={handleLogin} className="space-y-4">
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                <div className="space-y-2">
-                    <Input
-                        label="Work Email"
-                        type="email"
-                        placeholder="name@company.com"
-                        error={errors.email?.message}
-                        {...register("email")}
-                        className="h-12 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 focus:border-blue-600 focus:ring-blue-600/10 rounded-lg transition-all"
-                    />
-                </div>
-                <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                        <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-slate-700 dark:text-slate-300">Password</label>
-                        <Link
-                            href="/forgot-password"
-                            className="text-xs font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400"
-                        >
-                            Forgot password?
-                        </Link>
-                    </div>
-                    <Input
-                        type="password"
-                        placeholder="••••••••"
-                        error={errors.password?.message}
-                        {...register("password")}
-                        className="h-12 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 focus:border-blue-600 focus:ring-blue-600/10 rounded-lg transition-all"
-                    />
-                </div>
+                <motion.div variants={itemVariants} className="grid grid-cols-1 gap-3">
+                    {MOCK_OPTIONS.map((option) => {
+                        const Icon = option.icon;
+                        const isSelected = selectedRoleKey === option.id;
+                        return (
+                            <div
+                                key={option.id}
+                                onClick={() => setSelectedRoleKey(option.id)}
+                                className={cn(
+                                    "relative flex items-center p-4 border rounded-xl cursor-pointer transition-all",
+                                    isSelected
+                                        ? "border-[#22c55e] bg-[#22c55e]/5 shadow-sm"
+                                        : "border-[rgba(145,158,171,0.2)] dark:border-[rgba(145,158,171,0.12)] hover:bg-[rgba(145,158,171,0.04)]"
+                                )}
+                            >
+                                <div className={cn(
+                                    "flex items-center justify-center w-10 h-10 rounded-full mr-4 transition-colors",
+                                    isSelected
+                                        ? "bg-[#22c55e]/20 text-[#22c55e]"
+                                        : "bg-[rgba(145,158,171,0.08)] text-[#637381] dark:text-[#919EAB]"
+                                )}>
+                                    <Icon className="w-5 h-5" />
+                                </div>
+                                <div className="flex-1">
+                                    <h3 className={cn("text-sm font-bold", isSelected ? "text-[#22c55e]" : "text-[#1C252E] dark:text-white")}>
+                                        {option.label}
+                                    </h3>
+                                    <p className="text-xs text-[#919EAB] mt-0.5">
+                                        {option.desc}
+                                    </p>
+                                </div>
+                                <div className={cn(
+                                    "w-5 h-5 rounded-full border-2 flex items-center justify-center ml-2",
+                                    isSelected ? "border-[#22c55e]" : "border-[rgba(145,158,171,0.32)]"
+                                )}>
+                                    {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-[#22c55e]" />}
+                                </div>
+                            </div>
+                        );
+                    })}
+                </motion.div>
 
-                <Button
-                    type="submit"
-                    className="w-full h-12 text-sm font-semibold transition-all shadow-[0_4px_14px_0_rgba(37,99,235,0.39)] hover:shadow-[0_6px_20px_rgba(37,99,235,0.23)] hover:bg-blue-700 bg-blue-600 text-white border-0 rounded-lg mt-4"
-                    isLoading={isLoading}
-                    variant="primary"
-                >
-                    Sign In
-                </Button>
+                {/* Submit */}
+                <motion.div variants={itemVariants} className="pt-4">
+                    <Button
+                        type="submit"
+                        className="w-full h-12 text-base font-semibold bg-[#1C252E] dark:bg-white text-white dark:text-[#1C252E] hover:bg-[#1C252E]/90 dark:hover:bg-white/90 shadow-none border-0 rounded-xl transition-all"
+                        isLoading={isLoading}
+                        variant="primary"
+                    >
+                        Đăng nhập bằng Mock
+                    </Button>
+                </motion.div>
 
-                <div className="relative w-full py-4">
+                {/* Divider */}
+                <motion.div className="relative w-full py-3" variants={itemVariants}>
                     <div className="absolute inset-0 flex items-center">
-                        <span className="w-full border-t border-slate-200 dark:border-slate-800" />
+                        <span className="w-full border-t border-[rgba(145,158,171,0.2)] dark:border-white/[0.08]" />
                     </div>
                     <div className="relative flex justify-center text-xs uppercase font-medium">
-                        <span className="bg-white dark:bg-[#0B0F19] px-2 text-slate-400">
-                            Or continue with
+                        <span className="bg-white/80 dark:bg-white/[0.04] px-3 text-[#919EAB]">
+                            Hoặc
                         </span>
                     </div>
-                </div>
+                </motion.div>
 
-                <Button
-                    variant="outline"
-                    className="w-full h-12 border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all rounded-lg text-slate-600 dark:text-slate-300 font-medium bg-transparent"
-                    type="button"
-                >
-                    <Github className="mr-2 h-5 w-5" />
-                    GitHub
-                </Button>
-
-                <div className="text-center text-sm text-slate-500 mt-6">
-                    Don't have an account?{" "}
-                    <Link
-                        href="/register"
-                        className="font-semibold text-blue-600 hover:underline"
-                    >
-                        Sign up
-                    </Link>
-                </div>
+                {/* Register link */}
+                <motion.div variants={itemVariants}>
+                    <p className="text-center text-sm text-[#637381] dark:text-[#C4CDD5]">
+                        <Link
+                            href="/register"
+                            className="font-semibold text-[#22C55E] hover:text-[#16A34A] transition-colors"
+                        >
+                            Đăng ký tài khoản
+                        </Link>
+                    </p>
+                </motion.div>
             </form>
         </motion.div>
     );
