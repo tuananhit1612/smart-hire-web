@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "export",
+  basePath: "/smart-hire-web",
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
