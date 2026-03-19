@@ -1,13 +1,14 @@
 import React from 'react';
 import { CVData } from '../../types/types';
-import { Mail, Phone, MapPin, Linkedin, Calendar, Globe, Award, FileText } from 'lucide-react';
+import { Mail, Phone, MapPin, Linkedin, Calendar, Globe, Award, FileText, Languages, ShieldCheck } from 'lucide-react';
+import { formatDateRange } from '../../utils/format-date';
 
 interface TemplateProps {
     data: CVData;
 }
 
 export function CreativeBATemplate({ data }: TemplateProps) {
-    const { personalInfo, summary, experience, education, skills, projects } = data;
+    const { personalInfo, summary, experience, education, skills, projects, languages, certifications, awards } = data;
 
     return (
         <div className="w-full bg-[#fffcf5] min-h-[1000px] grid grid-cols-12 text-slate-800 font-sans">
@@ -15,17 +16,7 @@ export function CreativeBATemplate({ data }: TemplateProps) {
             {/* Left Column (Main Content) - 8 Cols */}
             <div className="col-span-8 p-10 space-y-10">
 
-                {/* Header (Text Only, matching Image 4 Style) */}
-                {/* Actually used text header in sidebar? No, image 4 shows Name in Dark Right Sidebar. Main content has Summary etc. */}
-                {/* Wait, Image 4 top right has Name block. Let's look closer. */}
-                {/* Image 4: Top entire block is split. Left is Yellowish "Muc tieu nghe nghiep". Right is Dark Grey with Name. */}
-                {/* Below that: Left is Main Content. Right is Sidebar. */}
-
-                {/* Re-evaluating layout based on Image 4 */}
-                {/* It seems to be a 2-column layout where the Right Column is the dark sidebar containing profile photo, contact, skills. */}
-                {/* The Header Name is actually inside the Right Sidebar at the top. */}
-
-                {/* Summary Section - Highlighted background box? */}
+                {/* Summary Section - Highlighted background box */}
                 {summary && (
                     <section className="bg-[#fff3cd] p-6 rounded-lg border-l-4 border-[#e9bc2e]">
                         <h3 className="text-xl font-bold text-[#d4a017] uppercase mb-3">
@@ -53,7 +44,7 @@ export function CreativeBATemplate({ data }: TemplateProps) {
                                         <div className="text-slate-500 italic text-sm">{edu.field}</div>
                                     </div>
                                     <div className="text-slate-900 font-bold whitespace-nowrap">
-                                        {edu.startDate} - {edu.endDate}
+                                        {formatDateRange(edu.startDate, edu.endDate)}
                                     </div>
                                 </div>
                             ))}
@@ -80,13 +71,34 @@ export function CreativeBATemplate({ data }: TemplateProps) {
                                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline mb-2">
                                         <h4 className="font-bold text-slate-900 text-lg uppercase group-hover:text-[#d4a017] transition-colors">{exp.company}</h4>
                                         <span className="text-slate-500 font-mono text-sm bg-[#fff3cd] px-2 py-1 rounded">
-                                            {exp.startDate} - {exp.endDate}
+                                            {formatDateRange(exp.startDate, exp.isCurrent ? undefined : exp.endDate, exp.isCurrent)}
                                         </span>
                                     </div>
                                     <div className="text-[#d4a017] font-bold mb-3 uppercase tracking-wide text-sm">{exp.position}</div>
                                     <div className="text-slate-600 whitespace-pre-line leading-relaxed text-sm text-justify">
                                         {exp.description}
                                     </div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {/* Certifications */}
+                {certifications && certifications.length > 0 && (
+                    <section>
+                        <h3 className="text-xl font-bold text-[#d4a017] uppercase border-b-2 border-[#e9bc2e] pb-2 mb-6 flex items-center gap-2">
+                            <span>Chứng chỉ</span>
+                            <div className="flex-1 h-[1px] bg-[#e9bc2e]"></div>
+                        </h3>
+                        <div className="space-y-4">
+                            {certifications.map((cert) => (
+                                <div key={cert.id} className="flex justify-between items-baseline">
+                                    <div>
+                                        <div className="font-bold text-slate-900">{cert.name}</div>
+                                        <div className="text-slate-500 text-sm">{cert.issuer}</div>
+                                    </div>
+                                    <div className="text-slate-500 text-sm whitespace-nowrap">{cert.date}</div>
                                 </div>
                             ))}
                         </div>
@@ -176,8 +188,44 @@ export function CreativeBATemplate({ data }: TemplateProps) {
                     </section>
                 )}
 
+                {/* Languages */}
+                {languages && languages.length > 0 && (
+                    <section>
+                        <h3 className="text-[#e9bc2e] font-bold uppercase border-b border-gray-500 pb-2 mb-6 flex items-center gap-2">
+                            <Languages className="w-5 h-5" />
+                            Ngôn ngữ
+                        </h3>
+                        <div className="space-y-3 text-sm">
+                            {languages.map((lang) => (
+                                <div key={lang.id} className="flex justify-between">
+                                    <span className="text-gray-200">{lang.name}</span>
+                                    <span className="text-gray-400 text-xs">{lang.level}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
                 {/* Awards / Certs */}
-                {projects.length > 0 && (
+                {awards && awards.length > 0 && (
+                    <section>
+                        <h3 className="text-[#e9bc2e] font-bold uppercase border-b border-gray-500 pb-2 mb-6 flex items-center gap-2">
+                            <Award className="w-5 h-5" />
+                            Danh hiệu & Giải thưởng
+                        </h3>
+                        <div className="space-y-4 text-sm">
+                            {awards.map((award) => (
+                                <div key={award.id}>
+                                    <div className="font-bold text-white mb-1">{award.title}</div>
+                                    <div className="text-gray-400 text-xs">{award.issuer} · {award.date}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {/* Fallback: legacy projects as awards */}
+                {(!awards || awards.length === 0) && projects.length > 0 && (
                     <section>
                         <h3 className="text-[#e9bc2e] font-bold uppercase border-b border-gray-500 pb-2 mb-6 flex items-center gap-2">
                             <Award className="w-5 h-5" />

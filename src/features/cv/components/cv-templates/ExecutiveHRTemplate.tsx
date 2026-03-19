@@ -2,13 +2,14 @@ import React from 'react';
 import { CVData } from '../../types/types';
 import { Mail, Phone, MapPin, Globe, Linkedin, Award, Briefcase, GraduationCap } from 'lucide-react';
 import { cn } from '@/shared/utils/cn';
+import { formatDateRange } from '../../utils/format-date';
 
 interface TemplateProps {
     data: CVData;
 }
 
 export function ExecutiveHRTemplate({ data }: TemplateProps) {
-    const { personalInfo, summary, experience, education, skills, projects } = data;
+    const { personalInfo, summary, experience, education, skills, projects, languages, certifications, awards } = data;
 
     return (
         <div className="w-full bg-slate-50 min-h-[1000px] text-slate-800 font-sans p-8">
@@ -88,7 +89,7 @@ export function ExecutiveHRTemplate({ data }: TemplateProps) {
                                                 <h4 className="text-lg font-bold text-slate-800">{exp.position}</h4>
                                                 <div className="flex justify-between items-center text-emerald-700 font-medium text-sm">
                                                     <span>{exp.company}</span>
-                                                    <span className="italic bg-emerald-50 px-3 py-0.5 rounded-full">{exp.startDate} - {exp.isCurrent ? "Hiện tại" : exp.endDate}</span>
+                                                    <span className="italic bg-emerald-50 px-3 py-0.5 rounded-full">{formatDateRange(exp.startDate, exp.isCurrent ? undefined : exp.endDate, exp.isCurrent)}</span>
                                                 </div>
                                             </div>
                                             <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-line">
@@ -132,7 +133,7 @@ export function ExecutiveHRTemplate({ data }: TemplateProps) {
                                         <div key={edu.id} className="bg-emerald-50/50 p-4 rounded-lg">
                                             <h4 className="font-bold text-slate-800 text-sm">{edu.school}</h4>
                                             <div className="text-xs text-emerald-700 font-semibold mt-1">{edu.degree}</div>
-                                            <div className="text-xs text-slate-500 mt-1">{edu.startDate} - {edu.endDate}</div>
+                                            <div className="text-xs text-slate-500 mt-1">{formatDateRange(edu.startDate, edu.endDate)}</div>
                                         </div>
                                     ))}
                                 </div>
@@ -185,6 +186,53 @@ export function ExecutiveHRTemplate({ data }: TemplateProps) {
                                 </div>
                             </section>
                         )}
+
+                    {/* Languages */}
+                    {languages && languages.length > 0 && (
+                        <section>
+                            <h3 className="text-lg font-bold text-emerald-900 mb-4">Ngôn ngữ</h3>
+                            <div className="space-y-2">
+                                {languages.map((lang) => (
+                                    <div key={lang.id} className="flex justify-between text-sm bg-emerald-50/50 p-2 rounded-lg">
+                                        <span className="font-semibold text-slate-700">{lang.name}</span>
+                                        <span className="text-xs text-emerald-700 font-medium">{lang.level}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    )}
+
+                    {/* Certifications */}
+                    {certifications && certifications.length > 0 && (
+                        <section>
+                            <h3 className="text-lg font-bold text-emerald-900 mb-4">Chứng chỉ</h3>
+                            <div className="space-y-3">
+                                {certifications.map((cert) => (
+                                    <div key={cert.id} className="bg-emerald-50/50 p-3 rounded-lg">
+                                        <div className="font-bold text-sm text-slate-800">{cert.name}</div>
+                                        <div className="text-xs text-emerald-700">{cert.issuer}</div>
+                                        <div className="text-xs text-slate-500">{cert.date}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    )}
+
+                    {/* Awards */}
+                    {awards && awards.length > 0 && (
+                        <section>
+                            <h3 className="text-lg font-bold text-emerald-900 mb-4">Giải thưởng</h3>
+                            <div className="space-y-3">
+                                {awards.map((award) => (
+                                    <div key={award.id} className="bg-emerald-50/50 p-3 rounded-lg">
+                                        <div className="font-bold text-sm text-slate-800">{award.title}</div>
+                                        <div className="text-xs text-emerald-700">{award.issuer}</div>
+                                        <div className="text-xs text-slate-500">{award.date}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    )}
                     </div>
                 </div>
             </div>

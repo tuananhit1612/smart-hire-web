@@ -140,7 +140,7 @@ export function DashboardSidebar({ collapsed, onToggle }: Props) {
 
     return (
         <motion.aside
-            animate={{ width: collapsed ? 88 : 280 }}
+            animate={{ width: collapsed ? 88 : 220 }}
             transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
             className={cn(
                 "fixed top-0 left-0 z-30 h-full flex flex-col",

@@ -35,16 +35,19 @@ export function DatePicker({
     const [isOpen, setIsOpen] = React.useState(false);
     const [viewYear, setViewYear] = React.useState(() => {
         if (value) {
-            return parseInt(value.split("-")[0]);
+            const parts = value.split("-");
+            const y = parseInt(parts[0]);
+            return isNaN(y) ? new Date().getFullYear() : y;
         }
         return new Date().getFullYear();
     });
 
     const containerRef = React.useRef<HTMLDivElement>(null);
 
-    // Parse current value
-    const selectedYear = value ? parseInt(value.split("-")[0]) : null;
-    const selectedMonth = value ? parseInt(value.split("-")[1]) - 1 : null;
+    // Parse current value — handles both "YYYY-MM" and "YYYY" formats
+    const valueParts = value ? value.split("-") : [];
+    const selectedYear = valueParts.length > 0 ? parseInt(valueParts[0]) : null;
+    const selectedMonth = valueParts.length > 1 ? parseInt(valueParts[1]) - 1 : null;
 
     // Close on outside click
     React.useEffect(() => {
@@ -74,8 +77,14 @@ export function DatePicker({
 
     const formatDisplayValue = () => {
         if (!value) return "";
-        const [year, month] = value.split("-");
-        return `${MONTHS[parseInt(month) - 1]} ${year}`;
+        const parts = value.split("-");
+        const year = parts[0];
+        if (parts.length > 1) {
+            const monthIdx = parseInt(parts[1]) - 1;
+            const monthLabel = MONTHS[monthIdx];
+            return monthLabel ? `${monthLabel} ${year}` : year;
+        }
+        return year;
     };
 
     return (

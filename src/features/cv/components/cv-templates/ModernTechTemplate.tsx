@@ -2,13 +2,14 @@ import React from 'react';
 import { CVData } from '../../types/types';
 import { Mail, Phone, MapPin, Globe, Linkedin, Github } from 'lucide-react';
 import { cn } from '@/shared/utils/cn';
+import { formatDateRange } from '../../utils/format-date';
 
 interface TemplateProps {
     data: CVData;
 }
 
 export function ModernTechTemplate({ data }: TemplateProps) {
-    const { personalInfo, summary, experience, education, skills, projects } = data;
+    const { personalInfo, summary, experience, education, skills, projects, languages, certifications, awards } = data;
 
     return (
         <div className="w-full bg-white min-h-[1000px] text-slate-800 font-sans tracking-tight">
@@ -78,7 +79,7 @@ export function ModernTechTemplate({ data }: TemplateProps) {
                                         <h4 className="font-bold text-slate-900 text-base">{edu.school}</h4>
                                         <div className="text-sm text-rose-600 font-semibold mb-1">{edu.degree}</div>
                                         <div className="text-xs text-slate-500 italic mb-2 relative top-[-2px]">
-                                            {edu.startDate} - {edu.endDate}
+                                            {formatDateRange(edu.startDate, edu.endDate)}
                                         </div>
                                         <div className="text-xs text-slate-600 leading-snug">{edu.field}</div>
                                     </div>
@@ -119,6 +120,41 @@ export function ModernTechTemplate({ data }: TemplateProps) {
                             </div>
                         </section>
                     )}
+
+                    {/* Languages */}
+                    {languages && languages.length > 0 && (
+                        <section>
+                            <h3 className="text-sm font-bold uppercase tracking-widest text-slate-900 border-b-2 border-slate-200 pb-3 mb-5">
+                                Languages
+                            </h3>
+                            <div className="space-y-2">
+                                {languages.map((lang) => (
+                                    <div key={lang.id} className="flex justify-between items-center">
+                                        <span className="text-sm font-semibold text-slate-700">{lang.name}</span>
+                                        <span className="text-xs text-rose-600 font-medium bg-rose-50 px-2 py-0.5 rounded-full">{lang.level}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    )}
+
+                    {/* Certifications */}
+                    {certifications && certifications.length > 0 && (
+                        <section>
+                            <h3 className="text-sm font-bold uppercase tracking-widest text-slate-900 border-b-2 border-slate-200 pb-3 mb-5">
+                                Certifications
+                            </h3>
+                            <div className="space-y-4">
+                                {certifications.map((cert) => (
+                                    <div key={cert.id}>
+                                        <h4 className="font-bold text-slate-900 text-sm">{cert.name}</h4>
+                                        <div className="text-xs text-rose-600 font-semibold">{cert.issuer}</div>
+                                        <div className="text-xs text-slate-500 italic">{cert.date}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    )}
                 </div>
 
                 {/* Right Column (Main Content) */}
@@ -152,7 +188,7 @@ export function ModernTechTemplate({ data }: TemplateProps) {
                                         <div className="flex justify-between items-baseline mb-1">
                                             <h4 className="font-bold text-slate-900 text-lg group-hover:text-rose-700 transition-colors">{exp.position}</h4>
                                             <span className="text-xs text-slate-500 font-bold bg-slate-50 px-2 py-1 rounded">
-                                                {exp.startDate} - {exp.isCurrent ? 'Present' : exp.endDate}
+                                                {formatDateRange(exp.startDate, exp.isCurrent ? undefined : exp.endDate, exp.isCurrent)}
                                             </span>
                                         </div>
                                         <div className="text-sm text-rose-600 font-bold mb-3 uppercase tracking-wide">{exp.company}</div>
@@ -193,6 +229,26 @@ export function ModernTechTemplate({ data }: TemplateProps) {
                                         <p className="text-xs text-slate-600 leading-relaxed">
                                             {project.description}
                                         </p>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    )}
+
+                    {/* Awards */}
+                    {awards && awards.length > 0 && (
+                        <section>
+                            <h3 className="text-sm font-bold uppercase tracking-widest text-slate-400 mb-6 flex items-center gap-3">
+                                <span className="w-2 h-2 rounded-full bg-rose-500"></span>
+                                Awards & Achievements
+                            </h3>
+                            <div className="space-y-4">
+                                {awards.map((award) => (
+                                    <div key={award.id} className="bg-slate-50 p-4 rounded-xl border border-transparent hover:border-slate-100">
+                                        <h4 className="font-bold text-slate-800 text-sm">{award.title}</h4>
+                                        <div className="text-xs text-rose-600 font-semibold">{award.issuer}</div>
+                                        <div className="text-xs text-slate-500 italic mb-1">{award.date}</div>
+                                        {award.description && <p className="text-xs text-slate-600 leading-relaxed">{award.description}</p>}
                                     </div>
                                 ))}
                             </div>
