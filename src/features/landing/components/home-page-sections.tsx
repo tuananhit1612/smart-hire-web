@@ -33,9 +33,9 @@ export function HeroSection() {
                     </motion.div>
 
                     {/* H1 */}
-                    <h1 className="mb-6 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-[#1C252E] dark:text-white leading-[1.15]">
+                    <h1 className="mb-6 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-[#1C252E] dark:text-white leading-[1.2]">
                         <span className="block text-[#1C252E] dark:text-white">Tìm Việc Thông Minh,</span>
-                        <span className="block mt-1 bg-gradient-to-r from-[#22c55e] via-[#10b981] to-[#FFAB00] bg-clip-text text-transparent">
+                        <span className="block mt-1 pb-2 bg-gradient-to-r from-[#22c55e] via-[#10b981] to-[#FFAB00] bg-clip-text text-transparent">
                             Thành Công Dễ Dàng!
                         </span>
                     </h1>
