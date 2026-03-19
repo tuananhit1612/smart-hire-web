@@ -44,7 +44,7 @@ function CVBuilderContent() {
             }
             formContent={
                 <CVBuilderForm
-                    data={displayData}
+                    data={cvData}
                     activeSection={activeSection}
                     onSectionChange={setActiveSection}
                     onDataChange={setCvData}
