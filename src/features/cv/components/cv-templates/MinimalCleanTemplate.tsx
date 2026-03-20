@@ -2,13 +2,14 @@ import React from 'react';
 import { CVData } from '../../types/types';
 import { Mail, Phone, MapPin, Globe, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { formatDateRange } from '../../utils/format-date';
 
 interface TemplateProps {
     data: CVData;
 }
 
 export function MinimalCleanTemplate({ data }: TemplateProps) {
-    const { personalInfo, summary, experience, education, skills, projects } = data;
+    const { personalInfo, summary, experience, education, skills, projects, languages, certifications, awards } = data;
 
     return (
         <div className="w-full bg-white min-h-[1000px] p-12 text-gray-800 font-sans max-w-[210mm] mx-auto">
@@ -82,7 +83,7 @@ export function MinimalCleanTemplate({ data }: TemplateProps) {
                                     <div className="col-span-3 text-right pr-4">
                                         <div className="text-sm font-bold text-gray-900">{exp.company}</div>
                                         <div className="text-xs text-gray-500 mt-1">
-                                            {exp.startDate} – {exp.isCurrent ? 'Present' : exp.endDate}
+                                            {formatDateRange(exp.startDate, exp.isCurrent ? undefined : exp.endDate, exp.isCurrent)}
                                         </div>
                                     </div>
                                     <div className="col-span-9 border-l border-gray-100 pl-6 pb-2">
@@ -142,7 +143,7 @@ export function MinimalCleanTemplate({ data }: TemplateProps) {
                                     <div key={edu.id}>
                                         <div className="flex justify-between items-baseline mb-1">
                                             <h4 className="text-sm font-bold text-gray-900">{edu.school}</h4>
-                                            <span className="text-xs text-gray-500">{edu.startDate} - {edu.endDate}</span>
+                                            <span className="text-xs text-gray-500">{formatDateRange(edu.startDate, edu.endDate)}</span>
                                         </div>
                                         <div className="text-sm text-gray-700">{edu.degree}</div>
                                         <div className="text-xs text-gray-500">{edu.field}</div>
@@ -163,6 +164,57 @@ export function MinimalCleanTemplate({ data }: TemplateProps) {
                                     <span key={skill.id} className="text-sm text-gray-700 border-b border-gray-100 pb-0.5">
                                         {skill.name}
                                     </span>
+                                ))}
+                            </div>
+                        </section>
+                    )}
+                </div>
+
+                {/* Languages, Certifications, Awards - bottom row */}
+                <div className="grid grid-cols-3 gap-8">
+                    {languages && languages.length > 0 && (
+                        <section>
+                            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 mb-4 border-b border-gray-100 pb-2">
+                                Languages
+                            </h3>
+                            <div className="space-y-1.5">
+                                {languages.map((lang) => (
+                                    <div key={lang.id} className="flex justify-between text-sm">
+                                        <span className="text-gray-700">{lang.name}</span>
+                                        <span className="text-gray-400 text-xs">{lang.level}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    )}
+
+                    {certifications && certifications.length > 0 && (
+                        <section>
+                            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 mb-4 border-b border-gray-100 pb-2">
+                                Certifications
+                            </h3>
+                            <div className="space-y-3">
+                                {certifications.map((cert) => (
+                                    <div key={cert.id}>
+                                        <div className="text-sm font-bold text-gray-900">{cert.name}</div>
+                                        <div className="text-xs text-gray-500">{cert.issuer} · {cert.date}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    )}
+
+                    {awards && awards.length > 0 && (
+                        <section>
+                            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 mb-4 border-b border-gray-100 pb-2">
+                                Awards
+                            </h3>
+                            <div className="space-y-3">
+                                {awards.map((award) => (
+                                    <div key={award.id}>
+                                        <div className="text-sm font-bold text-gray-900">{award.title}</div>
+                                        <div className="text-xs text-gray-500">{award.issuer} · {award.date}</div>
+                                    </div>
                                 ))}
                             </div>
                         </section>

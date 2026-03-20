@@ -54,7 +54,13 @@ export const MOCK_DATA_INTERN: CVData = {
             technologies: ["Event Planning", "Communication"],
             description: "• Tham gia tổ chức chuỗi sự kiện Career Path và Meet-up."
         }
-    ]
+    ],
+    languages: [
+        { id: "l1", name: "Tiếng Anh", level: "upper-intermediate" },
+        { id: "l2", name: "Tiếng Việt", level: "native" }
+    ],
+    certifications: [],
+    awards: []
 };
 
 // DATA 2: Modern / Leader (Trần Mạnh Dũng)
@@ -110,7 +116,10 @@ export const MOCK_DATA_LEADER: CVData = {
         { id: "s3", name: "Team Management", level: "expert", category: "soft" },
         { id: "s4", name: "Data Analysis", level: "advanced", category: "technical" }
     ],
-    projects: []
+    projects: [],
+    languages: [],
+    certifications: [],
+    awards: []
 };
 
 // DATA 3: Professional / Developer (Lê Chiến)
@@ -166,7 +175,15 @@ export const MOCK_DATA_SENIOR: CVData = {
         { id: "s3", name: "Flutter / Dart", level: "advanced", category: "technical" },
         { id: "s4", name: "Git / JIRA", level: "advanced", category: "technical" }
     ],
-    projects: []
+    projects: [],
+    languages: [
+        { id: "l1", name: "Tiếng Anh", level: "intermediate" },
+        { id: "l2", name: "Tiếng Việt", level: "native" }
+    ],
+    certifications: [
+        { id: "c1", name: "AWS Certified Cloud Practitioner", issuer: "Amazon Web Services", date: "2023" }
+    ],
+    awards: []
 };
 
 // Default fallback
@@ -234,7 +251,10 @@ export const MOCK_DATA_SALES_ADMIN: CVData = {
             description: "Đại diện bộ phận Sales Admin tham gia dự án triển khai Salesforce. Xây dựng quy trình nhập liệu chuẩn, giúp giảm 30% sai sót dữ liệu đầu vào.",
             technologies: ["Salesforce", "Visio"]
         }
-    ]
+    ],
+    languages: [],
+    certifications: [],
+    awards: []
 };
 
 // DATA 5: CHRO (Trương Mỹ Linh) - Green Theme
@@ -311,6 +331,16 @@ export const MOCK_DATA_CHRO: CVData = {
             description: "Trưởng ban dự án triển khai SAP SuccessFactors, số hóa 100% quy trình nhân sự, giảm 50% giấy tờ hành chính.",
             technologies: ["SAP SuccessFactors", "Digital Transformation"]
         }
+    ],
+    languages: [
+        { id: "l1", name: "Tiếng Anh", level: "advanced" },
+        { id: "l2", name: "Tiếng Việt", level: "native" }
+    ],
+    certifications: [
+        { id: "c1", name: "SHRM-SCP", issuer: "Society for Human Resource Management", date: "2019" }
+    ],
+    awards: [
+        { id: "a1", title: "Lãnh đạo nhân sự xuất sắc 2023", issuer: "Vietnam HR Awards", date: "2023" }
     ]
 };
 
@@ -369,7 +399,10 @@ export const MOCK_DATA_SALES_EXEC: CVData = {
         { id: '4', name: "Thuyết phục & Đàm phán", level: 90, category: "soft" },
         { id: '5', name: "Xây dựng mối quan hệ", level: 95, category: "soft" }
     ],
-    projects: []
+    projects: [],
+    languages: [],
+    certifications: [],
+    awards: []
 };
 
 // DATA 7: Business Analyst (Phạm Hoàng Anh) - Yellow Theme
@@ -435,7 +468,12 @@ export const MOCK_DATA_BA: CVData = {
             description: "Phân tích và thiết kế luồng thanh toán QR Code. Tích hợp cổng thanh toán Napas. Kết quả: Giảm thời gian thanh toán trung bình xuống 3 giây.",
             technologies: ["Figma", "Jira", "SQL"]
         }
-    ]
+    ],
+    languages: [],
+    certifications: [
+        { id: "c1", name: "CBAP", issuer: "IIBA", date: "2022" }
+    ],
+    awards: []
 };
 
 export const MOCK_CV_DATA = MOCK_DATA_LEADER;

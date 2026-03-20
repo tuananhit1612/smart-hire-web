@@ -1,14 +1,14 @@
 import React from 'react';
 import { CVData } from '../../types/types';
-import { Mail, Phone, MapPin, Globe, Calendar, User, Award, BookOpen } from 'lucide-react';
-import { cn } from '@/shared/utils/cn';
+import { Mail, Phone, MapPin, Globe, Calendar, User, Award, BookOpen, Languages, ShieldCheck } from 'lucide-react';
+import { formatDateRange } from '../../utils/format-date';
 
 interface TemplateProps {
     data: CVData;
 }
 
 export function ProfessionalSalesTemplate({ data }: TemplateProps) {
-    const { personalInfo, summary, experience, education, skills, projects } = data;
+    const { personalInfo, summary, experience, education, skills, projects, languages, certifications, awards } = data;
 
     return (
         <div className="w-full bg-white min-h-[1000px] grid grid-cols-12 text-slate-800 font-sans">
@@ -79,7 +79,7 @@ export function ProfessionalSalesTemplate({ data }: TemplateProps) {
                                 <div key={edu.id}>
                                     <div className="flex justify-between items-baseline font-bold text-slate-800">
                                         <span>{edu.school}</span>
-                                        <span className="text-xs text-slate-600">{edu.startDate} - {edu.endDate}</span>
+                                        <span className="text-xs text-slate-600">{formatDateRange(edu.startDate, edu.endDate)}</span>
                                     </div>
                                     <div className="text-sm text-slate-700 mt-1">{edu.degree}</div>
                                     <div className="text-sm text-slate-600 italic">{edu.field}</div>
@@ -105,6 +105,24 @@ export function ProfessionalSalesTemplate({ data }: TemplateProps) {
                                             style={{ width: `${skill.level}%` }}
                                         />
                                     </div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {/* Languages */}
+                {languages && languages.length > 0 && (
+                    <section>
+                        <h3 className="text-lg font-bold text-[#8e5252] uppercase border-b border-[#ddb8a9] pb-2 mb-4 flex items-center gap-2">
+                            <Languages className="w-5 h-5" />
+                            Ngôn ngữ
+                        </h3>
+                        <div className="space-y-2 text-sm text-slate-700">
+                            {languages.map((lang) => (
+                                <div key={lang.id} className="flex justify-between">
+                                    <span className="font-medium">{lang.name}</span>
+                                    <span className="text-slate-500 text-xs">{lang.level}</span>
                                 </div>
                             ))}
                         </div>
@@ -148,7 +166,7 @@ export function ProfessionalSalesTemplate({ data }: TemplateProps) {
                                     <div className="flex justify-between items-end mb-1">
                                         <h4 className="font-bold text-slate-900 text-lg uppercase">{exp.position}</h4>
                                         <span className="text-slate-500 font-medium italic">
-                                            {exp.startDate} - {exp.endDate}
+                                            {formatDateRange(exp.startDate, exp.isCurrent ? undefined : exp.endDate, exp.isCurrent)}
                                         </span>
                                     </div>
                                     <div className="text-[#8e5252] font-bold mb-2">{exp.company}</div>
@@ -161,8 +179,44 @@ export function ProfessionalSalesTemplate({ data }: TemplateProps) {
                     </section>
                 )}
 
-                {/* Awards / Certificates */}
-                {projects.length > 0 && (
+                {/* Certifications */}
+                {certifications && certifications.length > 0 && (
+                    <section>
+                        <h3 className="text-xl font-bold text-[#8e5252] uppercase mb-4 flex items-center gap-2">
+                            <ShieldCheck className="w-5 h-5" />
+                            Chứng chỉ
+                        </h3>
+                        <div className="space-y-4">
+                            {certifications.map((cert) => (
+                                <div key={cert.id} className="border-l-4 border-[#fcede8] pl-4">
+                                    <div className="font-bold text-slate-800">{cert.name}</div>
+                                    <div className="text-sm text-slate-600">{cert.issuer} · {cert.date}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {/* Awards */}
+                {awards && awards.length > 0 && (
+                    <section>
+                        <h3 className="text-xl font-bold text-[#8e5252] uppercase mb-4 flex items-center gap-2">
+                            <Award className="w-5 h-5" />
+                            Danh hiệu & Giải thưởng
+                        </h3>
+                        <div className="space-y-4">
+                            {awards.map((award) => (
+                                <div key={award.id} className="border-l-4 border-[#fcede8] pl-4">
+                                    <div className="font-bold text-slate-800">{award.title}</div>
+                                    <div className="text-sm text-slate-600">{award.issuer} · {award.date}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {/* Fallback: legacy projects as awards */}
+                {(!awards || awards.length === 0) && projects.length > 0 && (
                     <section>
                         <h3 className="text-xl font-bold text-[#8e5252] uppercase mb-4 flex items-center gap-2">
                             Danh hiệu & Giải thưởng

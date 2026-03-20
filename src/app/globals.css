@@ -288,6 +288,49 @@ h1, h2, h3, h4, h5, h6 {
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
+/* ============================================
+   CUSTOM SCROLLBAR — Auto-hide, Thin Green
+   Visible only when hovering the scroll area
+   ============================================ */
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+*:hover {
+  scrollbar-color: rgba(34, 197, 94, 0.45) transparent;
+}
+
+/* Webkit (Chrome, Edge, Safari) */
+*::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(34, 197, 94, 0);
+  border-radius: 9999px;
+  transition: background 0.3s ease;
+}
+
+*:hover::-webkit-scrollbar-thumb {
+  background: rgba(34, 197, 94, 0.4);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(34, 197, 94, 0.7);
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
 .focus-ring:focus {
   outline: none;
 }

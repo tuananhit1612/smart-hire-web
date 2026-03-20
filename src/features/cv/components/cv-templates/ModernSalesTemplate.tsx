@@ -1,13 +1,14 @@
 import React from 'react';
 import { CVData } from '../../types/types';
-import { Mail, Phone, MapPin, Briefcase, GraduationCap, Award } from 'lucide-react';
+import { Mail, Phone, MapPin, Briefcase, GraduationCap, Award, Languages, ShieldCheck } from 'lucide-react';
+import { formatDateRange } from '../../utils/format-date';
 
 interface TemplateProps {
     data: CVData;
 }
 
 export function ModernSalesTemplate({ data }: TemplateProps) {
-    const { personalInfo, summary, experience, education, skills, projects } = data;
+    const { personalInfo, summary, experience, education, skills, projects, languages, certifications, awards } = data;
 
     // Helper to convert skill level to number (0-100)
     const getSkillLevel = (level: number | string): number => {
@@ -84,7 +85,7 @@ export function ModernSalesTemplate({ data }: TemplateProps) {
                     </div>
                 </section>
 
-                {/* Summary inside Sidebar? No, normally main. Image 3 has Summary in Sidebar (Muc tieu nghe nghiep). */}
+                {/* Summary */}
                 {summary && (
                     <section>
                         <h3 className="text-lg font-bold uppercase border-b border-emerald-400 pb-2 mb-4">
@@ -121,11 +122,28 @@ export function ModernSalesTemplate({ data }: TemplateProps) {
                         </div>
                     </section>
                 )}
+
+                {/* Languages */}
+                {languages && languages.length > 0 && (
+                    <section>
+                        <h3 className="text-lg font-bold uppercase border-b border-emerald-400 pb-2 mb-4 flex items-center gap-2">
+                            <Languages className="w-5 h-5" />
+                            Ngôn ngữ
+                        </h3>
+                        <div className="space-y-2 text-sm">
+                            {languages.map((lang) => (
+                                <div key={lang.id} className="flex justify-between">
+                                    <span>{lang.name}</span>
+                                    <span className="text-emerald-200 text-xs">{lang.level}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
             </div>
 
             {/* Main Content */}
             <div className="col-span-8 p-10 space-y-10 bg-[#f4f7f6]">
-                {/* Header for Main Content? No, already in sidebar. */}
 
                 {/* Key Achievements Grid - Sales Specific */}
                 {projects.length > 0 && (
@@ -157,18 +175,12 @@ export function ModernSalesTemplate({ data }: TemplateProps) {
                                 <div key={exp.id} className="relative group">
                                     <div className="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-white border-4 border-[#0fa3b1] group-hover:scale-125 transition-transform" />
 
-                                    {/* Date */}
-                                    <div className="absolute -left-[100px] top-1 w-16 text-right text-xs font-bold text-slate-400 hidden sm:block">
-                                        <div className="bg-slate-200 px-2 py-1 rounded inline-block">{exp.endDate}</div>
-                                        <div className="my-1 text-center opacity-50">to</div>
-                                        <div className="bg-slate-200 px-2 py-1 rounded inline-block">{exp.startDate}</div>
-                                    </div>
-
                                     <div className="font-bold text-gray-800 text-lg uppercase mb-1">{exp.company}</div>
                                     <div className="text-[#0fa3b1] font-bold mb-2 uppercase tracking-wide text-sm">{exp.position}</div>
 
-                                    {/* Mobile Date */}
-                                    <div className="sm:hidden text-xs font-bold text-slate-500 mb-2">{exp.startDate} - {exp.endDate}</div>
+                                    <div className="text-xs font-bold text-slate-500 mb-2">
+                                        {formatDateRange(exp.startDate, exp.isCurrent ? undefined : exp.endDate, exp.isCurrent)}
+                                    </div>
 
                                     <div className="text-slate-600 whitespace-pre-line leading-relaxed text-sm bg-white p-5 rounded-xl shadow-sm border-l-4 border-l-[#0fa3b1]">
                                         {exp.description}
@@ -194,8 +206,46 @@ export function ModernSalesTemplate({ data }: TemplateProps) {
                                         <div className="text-[#0fa3b1] font-semibold text-sm">{edu.degree}</div>
                                     </div>
                                     <div className="text-right">
-                                        <div className="text-slate-500 text-xs font-bold bg-slate-100 px-2 py-1 rounded">{edu.startDate} - {edu.endDate}</div>
+                                        <div className="text-slate-500 text-xs font-bold bg-slate-100 px-2 py-1 rounded">
+                                            {formatDateRange(edu.startDate, edu.endDate)}
+                                        </div>
                                     </div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {/* Certifications */}
+                {certifications && certifications.length > 0 && (
+                    <section>
+                        <h3 className="text-xl font-bold text-[#0fa3b1] uppercase flex items-center gap-3 mb-6 mt-8">
+                            <span className="p-2 bg-[#0fa3b1] text-white rounded-lg"><ShieldCheck className="w-5 h-5" /></span>
+                            Chứng chỉ
+                        </h3>
+                        <div className="space-y-4">
+                            {certifications.map((cert) => (
+                                <div key={cert.id} className="bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+                                    <div className="font-bold text-gray-800">{cert.name}</div>
+                                    <div className="text-sm text-slate-500">{cert.issuer} · {cert.date}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {/* Awards */}
+                {awards && awards.length > 0 && (
+                    <section>
+                        <h3 className="text-xl font-bold text-[#0fa3b1] uppercase flex items-center gap-3 mb-6 mt-8">
+                            <span className="p-2 bg-[#0fa3b1] text-white rounded-lg"><Award className="w-5 h-5" /></span>
+                            Danh hiệu & Giải thưởng
+                        </h3>
+                        <div className="grid grid-cols-2 gap-4">
+                            {awards.map((award) => (
+                                <div key={award.id} className="bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+                                    <div className="font-bold text-gray-800">{award.title}</div>
+                                    <div className="text-sm text-slate-500">{award.issuer} · {award.date}</div>
                                 </div>
                             ))}
                         </div>
