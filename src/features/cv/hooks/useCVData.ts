@@ -9,6 +9,7 @@ import { useToast } from "@/shared/components/ui/toast";
 import { useCVAutoFill } from "@/features/cv/hooks/useCVAutoFill";
 import { useCVHistory } from "@/features/cv/hooks/useCVHistory";
 import { format } from "date-fns";
+import { cvApi } from "@/features/cv/api/cv-api";
 
 interface UseCVDataReturn {
     cvData: CVData;
@@ -32,12 +33,29 @@ export function useCVData(): UseCVDataReturn {
     const activeTemplateId = searchParams.get('template') || 'modern-tech';
     const mode = searchParams.get('mode');
     const hasTemplate = !!searchParams.get('template');
+    const cvId = searchParams.get('id');
 
     const [cvData, setCvData] = React.useState<CVData>(DEFAULT_CV_DATA);
     const [isSaving, setIsSaving] = React.useState(false);
     const { addToast } = useToast();
     const { fillData, isFilling: isAutoFilling } = useCVAutoFill(setCvData);
     const { saveSnapshot } = useCVHistory();
+
+    // Fetch actual data if id is provided
+    React.useEffect(() => {
+        if (cvId) {
+            const fetchCV = async () => {
+                try {
+                    const data = await cvApi.getCVData(cvId);
+                    setCvData(data);
+                } catch (error) {
+                    console.error("Failed to fetch CV data", error);
+                    addToast("Không thể tải dữ liệu CV", "error");
+                }
+            };
+            fetchCV();
+        }
+    }, [cvId, addToast]);
 
     // Mock autosave values for UI compatibility (autosave was removed)
     const autosaveStatus = "saved" as const;
@@ -113,9 +131,15 @@ export function useCVData(): UseCVDataReturn {
     const handleSave = async () => {
         setIsSaving(true);
         try {
+            if (cvData.id) {
+                const updatedCV = await cvApi.updateCV(cvData.id, cvData);
+                setCvData(updatedCV);
+            } else {
+                const newCV = await cvApi.createCV(cvData);
+                setCvData(newCV);
+            }
             saveSnapshot(cvData, `Bản lưu thủ công ${format(new Date(), "HH:mm dd/MM")}`);
-            await new Promise((resolve) => setTimeout(resolve, 500));
-            addToast("CV đã được lưu vào Lịch sử!", "success");
+            addToast("CV đã được lưu trên hệ thống!", "success");
         } catch {
             addToast("Có lỗi khi lưu CV. Vui lòng thử lại.", "error");
         } finally {

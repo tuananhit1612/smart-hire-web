@@ -13,6 +13,8 @@ import {
 } from "lucide-react";
 import { CVFile, CVFileVersion, CVFileSortOption, CVFileStatus } from "../types/cv-file-types";
 import { MOCK_CV_FILES } from "../data/mock-cv-files";
+import { cvApi } from "../api/cv-api";
+import { useToast } from "@/shared/components/ui/toast";
 import { CVFileCard } from "./cv-files/CVFileCard";
 import { DeleteConfirmDialog } from "./cv-files/DeleteConfirmDialog";
 import { RenameDialog } from "./cv-files/RenameDialog";
@@ -21,8 +23,26 @@ import { UploadCVModal } from "./cv-files/UploadCVModal";
 type FilterTab = "all" | CVFileStatus;
 
 export function CVFileList() {
-    const [files, setFiles] = React.useState<CVFile[]>(MOCK_CV_FILES);
+    const [files, setFiles] = React.useState<CVFile[]>([]);
+    const [isLoading, setIsLoading] = React.useState(true);
+    const { addToast } = useToast();
     const [searchQuery, setSearchQuery] = React.useState("");
+
+    React.useEffect(() => {
+        const fetchFiles = async () => {
+            try {
+                const data = await cvApi.getCVFiles();
+                setFiles(data);
+            } catch (error) {
+                console.error("Failed to fetch CV files:", error);
+                // Fallback for UI demonstration if backend is not available
+                setFiles(MOCK_CV_FILES);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchFiles();
+    }, []);
     const [activeFilter, setActiveFilter] = React.useState<FilterTab>("all");
     const [sortBy, setSortBy] = React.useState<CVFileSortOption>("newest");
     const [showSortMenu, setShowSortMenu] = React.useState(false);
@@ -113,42 +133,68 @@ export function CVFileList() {
         setDeleteDialogOpen(true);
     };
 
-    const handleSetDefault = (file: CVFile) => {
-        setFiles((prev) =>
-            prev.map((f) => ({
-                ...f,
-                isDefault: f.id === file.id,
-            }))
-        );
-    };
-
-    const handleArchive = (file: CVFile) => {
-        setFiles((prev) =>
-            prev.map((f) =>
-                f.id === file.id
-                    ? { ...f, status: "archived" as CVFileStatus, isDefault: false }
-                    : f
-            )
-        );
-    };
-
-    const confirmDelete = () => {
-        if (selectedFile) {
-            setFiles((prev) => prev.filter((f) => f.id !== selectedFile.id));
-            setDeleteDialogOpen(false);
-            setSelectedFile(null);
+    const handleSetDefault = async (file: CVFile) => {
+        try {
+            await cvApi.setDefaultCV(file.id);
+            setFiles((prev: CVFile[]) =>
+                prev.map((f: CVFile) => ({
+                    ...f,
+                    isDefault: f.id === file.id,
+                }))
+            );
+            addToast("Đã đặt làm CV mặc định", "success");
+        } catch (error) {
+            addToast("Lỗi khi đặt CV mặc định", "error");
         }
     };
 
-    const confirmRename = (newName: string) => {
-        if (selectedFile) {
-            setFiles((prev) =>
-                prev.map((f) =>
-                    f.id === selectedFile.id ? { ...f, name: newName } : f
+    const handleArchive = async (file: CVFile) => {
+        try {
+            await cvApi.archiveCVFile(file.id);
+            setFiles((prev: CVFile[]) =>
+                prev.map((f: CVFile) =>
+                    f.id === file.id
+                        ? { ...f, status: "archived" as CVFileStatus, isDefault: false }
+                        : f
                 )
             );
-            setRenameDialogOpen(false);
-            setSelectedFile(null);
+            addToast("Đã lưu trữ CV", "success");
+        } catch (error) {
+            addToast("Lỗi khi lưu trữ CV", "error");
+        }
+    };
+
+    const confirmDelete = async () => {
+        if (selectedFile) {
+            try {
+                await cvApi.deleteCVFile(selectedFile.id);
+                setFiles((prev: CVFile[]) => prev.filter((f: CVFile) => f.id !== selectedFile.id));
+                addToast("Đã xóa CV", "success");
+            } catch (error) {
+                addToast("Lỗi khi xóa CV", "error");
+            } finally {
+                setDeleteDialogOpen(false);
+                setSelectedFile(null);
+            }
+        }
+    };
+
+    const confirmRename = async (newName: string) => {
+        if (selectedFile) {
+            try {
+                await cvApi.renameCVFile(selectedFile.id, newName);
+                setFiles((prev: CVFile[]) =>
+                    prev.map((f: CVFile) =>
+                        f.id === selectedFile.id ? { ...f, name: newName } : f
+                    )
+                );
+                addToast("Đã đổi tên CV", "success");
+            } catch (error) {
+                addToast("Lỗi khi đổi tên CV", "error");
+            } finally {
+                setRenameDialogOpen(false);
+                setSelectedFile(null);
+            }
         }
     };
 
@@ -352,57 +398,64 @@ export function CVFileList() {
 
                 {/* CV File List */}
                 <div className="space-y-4">
-                    <AnimatePresence mode="popLayout">
-                        {filteredFiles.length > 0 ? (
-                            filteredFiles.map((file, index) => (
+                    {isLoading ? (
+                        <div className="text-center py-16">
+                            <div className="w-8 h-8 mx-auto border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+                            <p className="mt-4 text-[#637381]">Đang tải CV...</p>
+                        </div>
+                    ) : (
+                        <AnimatePresence mode="popLayout">
+                            {filteredFiles.length > 0 ? (
+                                filteredFiles.map((file, index) => (
+                                    <motion.div
+                                        key={file.id}
+                                        layout
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, scale: 0.95 }}
+                                        transition={{ delay: index * 0.05 }}
+                                    >
+                                        <CVFileCard
+                                            file={file}
+                                            onView={handleView}
+                                            onDownload={handleDownload}
+                                            onRename={handleRename}
+                                            onDelete={handleDelete}
+                                            onSetDefault={handleSetDefault}
+                                            onArchive={handleArchive}
+                                        />
+                                    </motion.div>
+                                ))
+                            ) : (
                                 <motion.div
-                                    key={file.id}
-                                    layout
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, scale: 0.95 }}
-                                    transition={{ delay: index * 0.05 }}
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    className="text-center py-16"
                                 >
-                                    <CVFileCard
-                                        file={file}
-                                        onView={handleView}
-                                        onDownload={handleDownload}
-                                        onRename={handleRename}
-                                        onDelete={handleDelete}
-                                        onSetDefault={handleSetDefault}
-                                        onArchive={handleArchive}
-                                    />
+                                    <div className="w-20 h-20 rounded-full bg-[rgba(145,158,171,0.08)] dark:bg-white/[0.04] flex items-center justify-center mx-auto mb-4">
+                                        <FileText className="w-10 h-10 text-[#919EAB]" />
+                                    </div>
+                                    <h3 className="text-lg font-semibold text-[#1C252E] dark:text-white mb-2">
+                                        Không tìm thấy CV
+                                    </h3>
+                                    <p className="text-[#637381] dark:text-[#919EAB] mb-6">
+                                        {searchQuery
+                                            ? "Thử thay đổi từ khóa tìm kiếm"
+                                            : "Hãy tải lên CV đầu tiên của bạn"}
+                                    </p>
+                                    <motion.button
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        onClick={() => setUploadModalOpen(true)}
+                                        className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-green-600 to-green-500 text-white font-semibold shadow-lg shadow-green-500/25"
+                                    >
+                                        <Plus className="w-5 h-5" />
+                                        Tải CV lên
+                                    </motion.button>
                                 </motion.div>
-                            ))
-                        ) : (
-                            <motion.div
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                className="text-center py-16"
-                            >
-                                <div className="w-20 h-20 rounded-full bg-[rgba(145,158,171,0.08)] dark:bg-white/[0.04] flex items-center justify-center mx-auto mb-4">
-                                    <FileText className="w-10 h-10 text-[#919EAB]" />
-                                </div>
-                                <h3 className="text-lg font-semibold text-[#1C252E] dark:text-white mb-2">
-                                    Không tìm thấy CV
-                                </h3>
-                                <p className="text-[#637381] dark:text-[#919EAB] mb-6">
-                                    {searchQuery
-                                        ? "Thử thay đổi từ khóa tìm kiếm"
-                                        : "Hãy tải lên CV đầu tiên của bạn"}
-                                </p>
-                                <motion.button
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    onClick={() => setUploadModalOpen(true)}
-                                    className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-green-600 to-green-500 text-white font-semibold shadow-lg shadow-green-500/25"
-                                >
-                                    <Plus className="w-5 h-5" />
-                                    Tải CV lên
-                                </motion.button>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
+                            )}
+                        </AnimatePresence>
+                    )}
                 </div>
             </div>
 
