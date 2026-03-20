@@ -204,6 +204,7 @@ function ApplicationCard({ application }: { application: Application }) {
 
 import { useApplicationStore } from "@/features/jobs/stores/application-store";
 import { mockJobs } from "@/features/jobs/types/mock-jobs";
+import { applicationApi } from "@/features/jobs/api/application-api";
 
 // ... previous imports
 
@@ -213,51 +214,24 @@ export default function ApplicationsPage() {
 
   // Get local state from store
   const { appliedJobIds, applicationDates } = useApplicationStore();
-  const [isMounted, setIsMounted] = useState(false);
+  const [allApplications, setAllApplications] = useState<Application[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setIsMounted(true);
+    const fetchApplications = async () => {
+      try {
+        setIsLoading(true);
+        const data = await applicationApi.getMyApplications();
+        setAllApplications(data);
+      } catch (error) {
+        console.error("Failed to fetch applications", error);
+        setAllApplications([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchApplications();
   }, []);
-
-  const allApplications = useMemo(() => {
-    if (!isMounted) return mockApplications;
-
-    // 1. Convert local Applied Job IDs to Application objects
-    const userApplications = appliedJobIds.map(jobId => {
-      const job = mockJobs.find(j => j.id === jobId);
-      if (!job) return null;
-
-      const appliedAt = applicationDates[jobId] || new Date().toISOString();
-
-      // Create a dynamic application object for locally applied jobs
-      const newApp: Application = {
-        id: `local-${jobId}`,
-        jobId: job.id,
-        job: job,
-        status: "APPLIED" as ApplicationStatus,
-        appliedAt: appliedAt,
-        lastUpdated: appliedAt,
-        timeline: [
-          {
-            id: `evt-${jobId}-1`,
-            stage: "APPLIED" as ApplicationStatus,
-            title: "Đã nộp hồ sơ",
-            date: appliedAt,
-            isCompleted: true
-          }
-        ],
-        notes: "Ứng tuyển gần đây"
-      };
-      return newApp;
-    }).filter((app): app is Application => app !== null);
-
-    // 2. Merge with mock applications
-    // Filter out mock apps if they are already in userApplications (by job ID) to avoid duplicates if we had overlapping IDs
-    const userJobIds = new Set(userApplications.map(app => app.jobId));
-    const nonDuplicateMocks = mockApplications.filter(app => !userJobIds.has(app.jobId));
-
-    return [...userApplications, ...nonDuplicateMocks];
-  }, [appliedJobIds, applicationDates, isMounted]);
 
   const filteredApplications = useMemo(() => {
     const query = searchQuery.toLowerCase().trim();
@@ -316,7 +290,9 @@ export default function ApplicationsPage() {
 
         <div className="space-y-6">
           <AnimatePresence mode="popLayout">
-            {filteredApplications.length > 0 ? (
+            {isLoading ? (
+               <div className="py-24 flex justify-center w-full min-h-[50vh]"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>
+            ) : filteredApplications.length > 0 ? (
               filteredApplications.map((app) => (
                 <ApplicationCard key={app.id} application={app} />
               ))

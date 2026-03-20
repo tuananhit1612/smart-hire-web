@@ -1,4 +1,5 @@
 import { api } from '@/core/api/client';
+import { Application } from '@/features/jobs/types/mock-applications';
 
 export interface ApplyJobPayload {
     jobId: string;
@@ -18,4 +19,8 @@ export const applicationApi = {
     // --- Application Submission ---
     applyToJob: (payload: ApplyJobPayload) => 
         api.post<ApplicationResponse>('/api/v1/applications', payload),
+        
+    // --- Application Tracking ---
+    getMyApplications: () =>
+        api.get<Application[]>('/api/v1/applications'),
 };
