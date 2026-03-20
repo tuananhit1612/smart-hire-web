@@ -18,10 +18,13 @@ import {
 } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { Job } from "@/features/jobs/types/job";
-import { mockCVVersions, CVVersion } from "@/features/cv/types/cv-versions";
+import { CVFile } from "@/features/cv/types/cv-file-types";
 import { useRouter } from "next/navigation";
 import { useApplicationStore } from "../stores/application-store";
 import Link from "next/link";
+import { cvApi } from "@/features/cv/api/cv-api";
+import { applicationApi } from "@/features/jobs/api/application-api";
+import { useToast } from "@/shared/components/ui/toast";
 
 type ModalState = "form" | "submitting" | "success" | "already-applied" | "job-closed";
 
@@ -37,7 +40,10 @@ export function ApplyModal({ job, isOpen, onClose, onSuccess }: ApplyModalProps)
   const [selectedCV, setSelectedCV] = useState<string>("");
   const [coverLetter, setCoverLetter] = useState("");
   const [modalState, setModalState] = useState<ModalState>("form");
+  const [cvFiles, setCvFiles] = useState<CVFile[]>([]);
+  const [isLoadingCVs, setIsLoadingCVs] = useState(false);
   const hasInitializedRef = useRef(false);
+  const { addToast } = useToast();
 
   const { applyToJob, hasApplied } = useApplicationStore();
 
@@ -66,6 +72,21 @@ export function ApplyModal({ job, isOpen, onClose, onSuccess }: ApplyModalProps)
       } else {
         setModalState("form");
       }
+      
+      // Fetch user CVs
+      const fetchCVs = async () => {
+        setIsLoadingCVs(true);
+        try {
+          const fetchedCvs = await cvApi.getCVFiles();
+          setCvFiles(fetchedCvs.filter((cv: CVFile) => cv.status !== "archived"));
+        } catch (error) {
+          console.error("Failed to fetch CVs", error);
+        } finally {
+          setIsLoadingCVs(false);
+        }
+      };
+      
+      fetchCVs();
     }
   }, [isOpen, job.id, job.status, hasApplied]);
 
@@ -82,7 +103,7 @@ export function ApplyModal({ job, isOpen, onClose, onSuccess }: ApplyModalProps)
   }, [isOpen]);
 
   // Format date
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString: string | Date) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("vi-VN", {
       day: "numeric",
@@ -92,7 +113,7 @@ export function ApplyModal({ job, isOpen, onClose, onSuccess }: ApplyModalProps)
   };
 
   // Handle view CV - navigate to full preview page
-  const handleViewCV = (cv: CVVersion) => {
+  const handleViewCV = (cv: CVFile) => {
     // Close modal and navigate to preview page
     onClose();
     router.push(`/cv-preview?id=${cv.id}&returnTo=apply&jobId=${job.id}`);
@@ -102,11 +123,19 @@ export function ApplyModal({ job, isOpen, onClose, onSuccess }: ApplyModalProps)
   const handleSubmit = async () => {
     if (!selectedCV) return;
     setModalState("submitting");
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    // Mark as applied
-    applyToJob(job.id);
-    setModalState("success");
+    try {
+      await applicationApi.applyToJob({
+        jobId: job.id,
+        cvId: selectedCV,
+        coverLetter: coverLetter
+      });
+      // Mark as applied in local store
+      applyToJob(job.id);
+      setModalState("success");
+    } catch (error) {
+      addToast("Có lỗi khi tải lên đơn ứng tuyển. Vui lòng thử lại.", "error");
+      setModalState("form");
+    }
   };
 
   // Handle close after success
@@ -150,6 +179,8 @@ export function ApplyModal({ job, isOpen, onClose, onSuccess }: ApplyModalProps)
             {(modalState === "form" || modalState === "submitting") && (
               <FormView
                 job={job}
+                cvFiles={cvFiles}
+                isLoadingCVs={isLoadingCVs}
                 selectedCV={selectedCV}
                 coverLetter={coverLetter}
                 isSubmitting={modalState === "submitting"}
@@ -496,19 +527,23 @@ function JobClosedView({ job, onClose }: { job: Job; onClose: () => void }) {
 // ==================== Form View (Original) ====================
 interface FormViewProps {
   job: Job;
+  cvFiles: CVFile[];
+  isLoadingCVs: boolean;
   selectedCV: string;
   coverLetter: string;
   isSubmitting: boolean;
   onCoverLetterChange: (value: string) => void;
   onSelectCV: (cvId: string) => void;
-  onViewCV: (cv: CVVersion) => void;
+  onViewCV: (cv: CVFile) => void;
   onSubmit: () => void;
   onClose: () => void;
-  formatDate: (date: string) => string;
+  formatDate: (date: string | Date) => string;
 }
 
 function FormView({
   job,
+  cvFiles,
+  isLoadingCVs,
   selectedCV,
   coverLetter,
   isSubmitting,
@@ -556,16 +591,22 @@ function FormView({
             Click vào CV để chọn, hoặc click "Xem CV" để xem chi tiết và chỉnh sửa
           </p>
           <div className="space-y-3">
-            {mockCVVersions.map((cv) => (
-              <CVCard
-                key={cv.id}
-                cv={cv}
-                isSelected={selectedCV === cv.id}
-                onSelect={() => onSelectCV(cv.id)}
-                onView={() => onViewCV(cv)}
-                formatDate={formatDate}
-              />
-            ))}
+            {isLoadingCVs ? (
+              <div className="py-4 text-center text-sm text-[#919EAB]">Đang tải CV...</div>
+            ) : cvFiles.length === 0 ? (
+              <div className="py-4 text-center text-sm text-[#919EAB]">Bạn chưa có CV nào.</div>
+            ) : (
+              cvFiles.map((cv) => (
+                <CVCard
+                  key={cv.id}
+                  cv={cv}
+                  isSelected={selectedCV === cv.id}
+                  onSelect={() => onSelectCV(cv.id)}
+                  onView={() => onViewCV(cv)}
+                  formatDate={formatDate}
+                />
+              ))
+            )}
           </div>
         </div>
 
@@ -578,7 +619,7 @@ function FormView({
             <div className="mb-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-xl border border-green-200 dark:border-green-800">
               <p className="text-sm text-green-700 dark:text-green-400 flex items-center gap-2">
                 <Check className="w-4 h-4" />
-                Đã chọn: <strong>{mockCVVersions.find((cv) => cv.id === selectedCV)?.name}</strong>
+                Đã chọn: <strong>{cvFiles.find((cv) => cv.id === selectedCV)?.name}</strong>
               </p>
             </div>
 
@@ -652,11 +693,11 @@ function FormView({
 
 // ==================== CV Card Component ====================
 interface CVCardProps {
-  cv: CVVersion;
+  cv: CVFile;
   isSelected: boolean;
   onSelect: () => void;
   onView: () => void;
-  formatDate: (date: string) => string;
+  formatDate: (date: string | Date) => string;
 }
 
 function CVCard({ cv, isSelected, onSelect, onView, formatDate }: CVCardProps) {
@@ -672,17 +713,9 @@ function CVCard({ cv, isSelected, onSelect, onView, formatDate }: CVCardProps) {
     >
       {/* Thumbnail */}
       <div className="w-16 h-22 rounded-lg overflow-hidden bg-[rgba(145,158,171,0.04)] dark:bg-[rgba(145,158,171,0.08)] shrink-0">
-        {cv.thumbnail ? (
-          <img
-            src={cv.thumbnail}
-            alt={cv.name}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <FileText className="w-6 h-6 text-[#919EAB]" />
-          </div>
-        )}
+        <div className="w-full h-full flex items-center justify-center">
+          <FileText className="w-6 h-6 text-[#919EAB]" />
+        </div>
       </div>
 
       {/* Info */}
@@ -704,26 +737,11 @@ function CVCard({ cv, isSelected, onSelect, onView, formatDate }: CVCardProps) {
           )}
         </div>
         <p className="text-sm text-[#919EAB] mt-0.5">
-          Template: {cv.templateName}
+          {cv.currentVersion?.fileType ?? "PDF Document"}
         </p>
         <p className="text-xs text-[#919EAB] mt-1">
           Cập nhật: {formatDate(cv.updatedAt)}
         </p>
-
-        {/* Skills preview */}
-        <div className="flex flex-wrap gap-1 mt-2">
-          {cv.data.skills.slice(0, 4).map((skill) => (
-            <span
-              key={skill.id}
-              className="text-xs px-2 py-0.5 rounded-full bg-[rgba(145,158,171,0.04)] dark:bg-[rgba(145,158,171,0.08)] text-[#637381] dark:text-[#919EAB]"
-            >
-              {skill.name}
-            </span>
-          ))}
-          {cv.data.skills.length > 4 && (
-            <span className="text-xs text-[#919EAB]">+{cv.data.skills.length - 4}</span>
-          )}
-        </div>
       </div>
 
       {/* View button - separate click handler */}
