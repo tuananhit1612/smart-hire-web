@@ -10,7 +10,8 @@ import {
   CheckCircle2,
   XCircle,
   AlertCircle,
-  ArrowRight
+  ArrowRight,
+  Trash2
 } from "lucide-react";
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
@@ -71,6 +72,17 @@ function StatusBadge({ status }: { status: ApplicationStatus }) {
 
 function ApplicationCard({ application }: { application: Application }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [confirmWithdraw, setConfirmWithdraw] = useState(false);
+  const { withdrawApplication } = useApplicationStore();
+  const isLocalApp = application.id.startsWith("local-");
+
+  const handleWithdraw = () => {
+    if (!confirmWithdraw) {
+      setConfirmWithdraw(true);
+      return;
+    }
+    withdrawApplication(application.jobId);
+  };
 
   const currentEvent = useMemo(() =>
     application.timeline.find(e => !e.isCompleted) ||
@@ -111,8 +123,26 @@ function ApplicationCard({ application }: { application: Application }) {
                   {application.job.company}
                 </p>
               </div>
-              <div className="shrink-0">
+              <div className="shrink-0 flex items-center gap-2">
                 <StatusBadge status={application.status} />
+                {isLocalApp && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleWithdraw();
+                    }}
+                    onBlur={() => setConfirmWithdraw(false)}
+                    className={cn(
+                      "px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 flex items-center gap-1.5",
+                      confirmWithdraw
+                        ? "bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-300 dark:border-red-700 hover:bg-red-100"
+                        : "bg-white dark:bg-[#1C252E] text-[#637381] dark:text-[#919EAB] border-[rgba(145,158,171,0.2)] dark:border-white/[0.08] hover:text-red-600 hover:border-red-300 hover:bg-red-50"
+                    )}
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    {confirmWithdraw ? "Xác nhận rút?" : "Rút hồ sơ"}
+                  </button>
+                )}
               </div>
             </div>
 

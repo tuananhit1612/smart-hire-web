@@ -9,6 +9,7 @@ interface ApplicationState {
   
   // Actions
   applyToJob: (jobId: string) => void;
+  withdrawApplication: (jobId: string) => void;
   hasApplied: (jobId: string) => boolean;
   getApplicationDate: (jobId: string) => string | null;
   
@@ -31,6 +32,18 @@ export const useApplicationStore = create<ApplicationState>()(
               ...applicationDates,
               [jobId]: new Date().toISOString(),
             },
+          });
+        }
+      },
+
+      withdrawApplication: (jobId: string) => {
+        const { appliedJobIds, applicationDates } = get();
+        if (appliedJobIds.includes(jobId)) {
+          const newDates = { ...applicationDates };
+          delete newDates[jobId];
+          set({
+            appliedJobIds: appliedJobIds.filter((id) => id !== jobId),
+            applicationDates: newDates,
           });
         }
       },
