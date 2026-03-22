@@ -1,4 +1,6 @@
 export type UserRole = "candidate" | "employer" | "admin";
+
+/** @deprecated Mock-based auth has been replaced by real API */
 export type MockUserKey = "candidate-new" | "candidate-returning" | "employer-new" | "employer-returning" | "admin";
 
 export interface RegisterFlowState {
@@ -18,7 +20,8 @@ export interface SessionUser {
     phone?: string;
     location?: string;
     joinedDate: string;
-    isFirstLogin?: boolean;
+    /** True when the user just registered and hasn't completed onboarding */
+    isNewUser?: boolean;
 }
 
 export type AuthStatus = "authenticated" | "unauthenticated" | "loading";

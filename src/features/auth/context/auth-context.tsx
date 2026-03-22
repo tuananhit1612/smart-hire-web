@@ -4,8 +4,11 @@
  * ═════════════════════════════════════════════════════════
  *  Auth Context & Provider
  *  Provides authentication state to the entire app via
- *  React Context. Persists session in localStorage + cookie
- *  for middleware route guards.
+ *  React Context. Calls the real SmartHire API for
+ *  login/register and persists tokens via tokenStorage.
+ *
+ *  Session is hydrated on mount by reading the stored token
+ *  and calling GET /users/me.
  * ═════════════════════════════════════════════════════════
  */
 
@@ -17,14 +20,13 @@ import {
     useState,
     type ReactNode,
 } from "react";
-import type { SessionUser, UserRole, AuthStatus, MockUserKey } from "../types/auth-types";
-import { DEFAULT_MOCK_USER, mockUsers } from "../types/mock-session";
+import type { SessionUser, UserRole, AuthStatus } from "../types/auth-types";
+import { tokenStorage } from "../lib/token-storage";
+import { authService } from "../services/auth-service";
 
-// ─── Storage Keys ────────────────────────────────────
-const STORAGE_KEY = "smarthire-session";
+// ─── Cookie helpers (for middleware route guard) ──────
 const COOKIE_NAME = "smarthire-session";
 
-// ─── Cookie Helpers ──────────────────────────────────
 function setCookie(name: string, value: string, days = 7) {
     const expires = new Date(Date.now() + days * 864e5).toUTCString();
     document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Lax`;
@@ -32,11 +34,6 @@ function setCookie(name: string, value: string, days = 7) {
 
 function deleteCookie(name: string) {
     document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax`;
-}
-
-function getCookie(name: string): string | null {
-    const match = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`));
-    return match ? decodeURIComponent(match[1]) : null;
 }
 
 // ─── Context Value ───────────────────────────────────
@@ -49,12 +46,29 @@ export interface AuthContextValue {
     isAuthenticated: boolean;
     /** Convenience: status === "loading" */
     isLoading: boolean;
-    /** Login with a mock role (simulates API call) */
-    login: (roleKey?: MockUserKey) => Promise<void>;
-    /** Logout and clear session */
+
+    /**
+     * Login with email + password.
+     * Calls POST /auth/login → stores token → sets user.
+     * Throws a user-friendly error string on failure.
+     */
+    login: (email: string, password: string) => Promise<SessionUser>;
+
+    /**
+     * Register a new account.
+     * Calls POST /auth/register → stores token → sets user.
+     * Throws a user-friendly error string on failure.
+     */
+    register: (data: {
+        fullName: string;
+        email: string;
+        password: string;
+        role: UserRole;
+    }) => Promise<SessionUser>;
+
+    /** Logout and clear session/token */
     logout: () => void;
-    /** Switch to a different mock user role */
-    switchRole: (roleKey: MockUserKey) => void;
+
     /** Mark the user as having completed onboarding */
     completeOnboarding: () => void;
 }
@@ -64,86 +78,114 @@ export const AuthContext = createContext<AuthContextValue | null>(null);
 // ─── Provider ────────────────────────────────────────
 interface AuthProviderProps {
     readonly children: ReactNode;
-    /** Override initial mock user (default: candidate) */
-    readonly initialUser?: SessionUser | null;
 }
 
-export function AuthProvider({
-    children,
-    initialUser,
-}: AuthProviderProps) {
+export function AuthProvider({ children }: AuthProviderProps) {
     const [user, setUser] = useState<SessionUser | null>(null);
     const [status, setStatus] = useState<AuthStatus>("loading");
 
-    // ─── Restore session from localStorage on mount ──
-    useEffect(() => {
-        try {
-            const stored = localStorage.getItem(STORAGE_KEY);
-            if (stored) {
-                const parsed = JSON.parse(stored) as SessionUser;
-                // Verify it has required fields
-                if (parsed && parsed.id && parsed.role && parsed.email) {
-                    setUser(parsed);
-                    setStatus("authenticated");
-                    // Sync cookie in case it was cleared
-                    setCookie(COOKIE_NAME, JSON.stringify({ role: parsed.role, isFirstLogin: parsed.isFirstLogin }));
-                    return;
-                }
-            }
-        } catch {
-            // Corrupted storage — ignore
-            localStorage.removeItem(STORAGE_KEY);
+    // ─── Sync session cookie (for middleware guard) ──
+    function syncCookie(sessionUser: SessionUser | null) {
+        if (sessionUser) {
+            setCookie(
+                COOKIE_NAME,
+                JSON.stringify({ role: sessionUser.role, isNewUser: sessionUser.isNewUser }),
+            );
+        } else {
             deleteCookie(COOKIE_NAME);
         }
+    }
 
-        // No valid session found
-        setUser(null);
-        setStatus("unauthenticated");
+    // ─── Hydrate session on mount ────────────────────
+    useEffect(() => {
+        async function hydrate() {
+            const token = tokenStorage.getAccessToken();
+            if (!token) {
+                setStatus("unauthenticated");
+                return;
+            }
+
+            try {
+                const me = await authService.getMe();
+                setUser(me);
+                setStatus("authenticated");
+                syncCookie(me);
+            } catch {
+                // Token invalid/expired — clear everything
+                tokenStorage.clearTokens();
+                deleteCookie(COOKIE_NAME);
+                setStatus("unauthenticated");
+            }
+        }
+
+        hydrate();
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    // ─── Persist helpers ─────────────────────────────
-    function persistSession(sessionUser: SessionUser) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(sessionUser));
-        setCookie(COOKIE_NAME, JSON.stringify({ role: sessionUser.role, isFirstLogin: sessionUser.isFirstLogin }));
-    }
-
-    function clearSession() {
-        localStorage.removeItem(STORAGE_KEY);
-        deleteCookie(COOKIE_NAME);
-    }
-
-    // ─── Actions ─────────────────────────────────────
-    const login = useCallback(async (roleKey?: MockUserKey) => {
+    // ─── Login ───────────────────────────────────────
+    const login = useCallback(async (email: string, password: string): Promise<SessionUser> => {
         setStatus("loading");
-        // Simulate API call delay
-        await new Promise((r) => setTimeout(r, 800));
-        const mockUser = roleKey ? mockUsers[roleKey] : DEFAULT_MOCK_USER;
-        setUser(mockUser);
-        setStatus("authenticated");
-        persistSession(mockUser);
-    }, []);
+        try {
+            const res = await authService.login({ email, password });
 
+            // Store token
+            tokenStorage.setAccessToken(res.token);
+
+            // Set user state
+            setUser(res.user);
+            setStatus("authenticated");
+            syncCookie(res.user);
+            return res.user;
+        } catch (err) {
+            setStatus("unauthenticated");
+            throw authService.parseError(err);
+        }
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+    // ─── Register ────────────────────────────────────
+    const register = useCallback(
+        async (data: {
+            fullName: string;
+            email: string;
+            password: string;
+            role: UserRole;
+        }): Promise<SessionUser> => {
+            setStatus("loading");
+            try {
+                const res = await authService.register(data);
+
+                tokenStorage.setAccessToken(res.token);
+                setUser(res.user);
+                setStatus("authenticated");
+                syncCookie(res.user);
+                return res.user;
+            } catch (err) {
+                setStatus("unauthenticated");
+                throw authService.parseError(err);
+            }
+        },
+        [], // eslint-disable-line react-hooks/exhaustive-deps
+    );
+
+    // ─── Logout ──────────────────────────────────────
     const logout = useCallback(() => {
+        // Fire-and-forget the backend logout
+        authService.logout();
+
+        tokenStorage.clearTokens();
         setUser(null);
         setStatus("unauthenticated");
-        clearSession();
-    }, []);
+        syncCookie(null);
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    const switchRole = useCallback((roleKey: MockUserKey) => {
-        const mockUser = mockUsers[roleKey];
-        setUser(mockUser);
-        setStatus("authenticated");
-        persistSession(mockUser);
-    }, []);
-
+    // ─── Complete Onboarding ─────────────────────────
     const completeOnboarding = useCallback(() => {
-        setUser((currentUser) => {
-            if (!currentUser) return null;
-            const updatedUser = { ...currentUser, isFirstLogin: false };
-            persistSession(updatedUser);
-            return updatedUser;
+        setUser((prev) => {
+            if (!prev) return null;
+            const updated = { ...prev, isNewUser: false };
+            syncCookie(updated);
+            return updated;
         });
-    }, []);
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const value = useMemo<AuthContextValue>(
         () => ({
@@ -152,11 +194,11 @@ export function AuthProvider({
             isAuthenticated: user !== null,
             isLoading: status === "loading",
             login,
+            register,
             logout,
-            switchRole,
             completeOnboarding,
         }),
-        [user, status, login, logout, switchRole, completeOnboarding]
+        [user, status, login, register, logout, completeOnboarding],
     );
 
     return (
