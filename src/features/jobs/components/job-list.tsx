@@ -105,7 +105,7 @@ export function JobList() {
               job={job}
               index={i}
               isSaved={savedJobIds.has(job.id)}
-              onApply={(id) => console.log("Apply", id)}
+              onApply={() => {}}
               onSave={toggleSaveJob}
             />
           ))}

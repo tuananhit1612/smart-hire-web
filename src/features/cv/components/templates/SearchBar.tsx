@@ -16,10 +16,10 @@ const quickTags = [
     { label: "ATS-friendly", icon: Zap, color: "from-emerald-500 to-teal-500", shadow: "shadow-emerald-500/30" },
     { label: "Minimal", icon: Minimize2, color: "from-slate-500 to-zinc-600", shadow: "shadow-slate-500/30" },
     { label: "Creative", icon: Palette, color: "from-pink-500 to-rose-500", shadow: "shadow-pink-500/30" },
-    { label: "Tech", icon: Code, color: "from-sky-500 to-blue-500", shadow: "shadow-sky-500/30" },
+    { label: "Tech", icon: Code, color: "from-green-500 to-emerald-500", shadow: "shadow-green-500/30" },
     { label: "Business", icon: Briefcase, color: "from-amber-500 to-orange-500", shadow: "shadow-amber-500/30" },
-    { label: "Marketing", icon: TrendingUp, color: "from-purple-500 to-violet-500", shadow: "shadow-purple-500/30" },
-    { label: "Clean layout", icon: LayoutGrid, color: "from-indigo-500 to-blue-500", shadow: "shadow-indigo-500/30" }
+    { label: "Marketing", icon: TrendingUp, color: "from-amber-500 to-violet-500", shadow: "shadow-amber-500/30" },
+    { label: "Clean layout", icon: LayoutGrid, color: "from-emerald-500 to-emerald-500", shadow: "shadow-emerald-500/30" }
 ];
 
 export function SearchBar({ value, onChange, placeholder = "Tìm kiếm trong hàng triệu mẫu..." }: SearchBarProps) {
@@ -46,7 +46,7 @@ export function SearchBar({ value, onChange, placeholder = "Tìm kiếm trong h�
                 {/* Animated glow effect - Sky/Green */}
                 <motion.div
                     className={cn(
-                        "absolute -inset-1 rounded-2xl bg-gradient-to-r from-sky-500 via-emerald-400 to-lime-500 blur-md transition-opacity duration-500",
+                        "absolute -inset-1 rounded-2xl bg-gradient-to-r from-green-500 via-emerald-400 to-lime-500 blur-md transition-opacity duration-500",
                         isFocused ? "opacity-60" : "opacity-0"
                     )}
                     animate={isFocused ? {
@@ -56,10 +56,10 @@ export function SearchBar({ value, onChange, placeholder = "Tìm kiếm trong h�
                     style={{ backgroundSize: "200% 200%" }}
                 />
 
-                <div className="relative bg-white rounded-2xl shadow-xl shadow-gray-200/50">
+                <div className="relative bg-white dark:bg-[#1C252E] rounded-2xl shadow-xl shadow-gray-200/50 dark:shadow-black/30">
                     <Search className={cn(
                         "absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 transition-all duration-300",
-                        isFocused ? "text-sky-500 scale-110" : "text-gray-400"
+                        isFocused ? "text-green-500 scale-110" : "text-[#919EAB]"
                     )} />
 
                     <input
@@ -72,8 +72,8 @@ export function SearchBar({ value, onChange, placeholder = "Tìm kiếm trong h�
                         className={cn(
                             "w-full h-16 pl-14 pr-14 rounded-2xl text-base",
                             "bg-transparent",
-                            "border-2 border-gray-100",
-                            "text-gray-900 placeholder:text-gray-400",
+                            "border-2 border-[rgba(145,158,171,0.15)] dark:border-white/[0.08]",
+                            "text-[#1C252E] dark:text-white placeholder:text-[#919EAB]",
                             "focus:outline-none focus:border-transparent",
                             "transition-all duration-300"
                         )}
@@ -88,9 +88,9 @@ export function SearchBar({ value, onChange, placeholder = "Tìm kiếm trong h�
                                 exit={{ scale: 0, rotate: 90 }}
                                 transition={{ type: "spring", stiffness: 300 }}
                                 onClick={() => onChange("")}
-                                className="absolute right-5 top-1/2 -translate-y-1/2 p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                                className="absolute right-5 top-1/2 -translate-y-1/2 p-2 rounded-full bg-[rgba(145,158,171,0.12)] dark:bg-white/[0.08] hover:bg-[rgba(145,158,171,0.2)] dark:hover:bg-white/[0.12] transition-colors"
                             >
-                                <X className="w-4 h-4 text-gray-500" />
+                                <X className="w-4 h-4 text-[#637381] dark:text-[#919EAB]" />
                             </motion.button>
                         )}
                     </AnimatePresence>
@@ -98,10 +98,10 @@ export function SearchBar({ value, onChange, placeholder = "Tìm kiếm trong h�
                     {/* Submit arrow */}
                     {!value && (
                         <motion.div
-                            className="absolute right-5 top-1/2 -translate-y-1/2 p-3 rounded-xl bg-gray-100"
+                            className="absolute right-5 top-1/2 -translate-y-1/2 p-3 rounded-xl bg-[rgba(145,158,171,0.1)] dark:bg-white/[0.06]"
                             whileHover={{ scale: 1.05, x: 3 }}
                         >
-                            <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg className="w-4 h-4 text-[#919EAB]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                             </svg>
                         </motion.div>
@@ -135,7 +135,7 @@ export function SearchBar({ value, onChange, placeholder = "Tìm kiếm trong h�
                                 "relative flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300",
                                 isActive
                                     ? `bg-gradient-to-r ${tag.color} text-white shadow-lg ${tag.shadow}`
-                                    : "bg-white border border-gray-200 text-gray-600 hover:border-gray-300 hover:shadow-md"
+                                    : "bg-white dark:bg-[#1C252E] border border-[rgba(145,158,171,0.2)] dark:border-white/[0.08] text-[#637381] dark:text-[#919EAB] hover:border-[rgba(145,158,171,0.4)] dark:hover:border-white/[0.16] hover:shadow-md"
                             )}
                         >
                             {/* Ripple effect on active */}

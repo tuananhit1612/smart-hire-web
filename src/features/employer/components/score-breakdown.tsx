@@ -22,14 +22,14 @@ export function ScoreBreakdown({ breakdown }: ScoreBreakdownProps) {
     ];
 
     return (
-        <div className="space-y-3 mt-6 pt-6 border-t border-slate-100">
+        <div className="space-y-3 mt-6 pt-6 border-t border-[rgba(145,158,171,0.12)] dark:border-white/[0.08]">
             {items.map((item, index) => (
                 <div key={item.label} className="space-y-1">
-                    <div className="flex justify-between text-xs font-medium text-slate-600">
+                    <div className="flex justify-between text-xs font-medium text-[#637381] dark:text-[#919EAB]">
                         <span>{item.label}</span>
                         <span>{item.score}%</span>
                     </div>
-                    <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                    <div className="h-2 w-full bg-[rgba(145,158,171,0.12)] dark:bg-white/[0.06] rounded-full overflow-hidden">
                         <motion.div
                             initial={{ width: 0 }}
                             animate={{ width: `${item.score}%` }}

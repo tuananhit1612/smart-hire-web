@@ -11,12 +11,16 @@ import { EducationSection } from "./sections/EducationSection";
 import { ExperienceSection } from "./sections/ExperienceSection";
 import { SkillsSection } from "./sections/SkillsSection";
 import { ProjectsSection } from "./sections/ProjectsSection";
+import { LanguagesSection } from "./sections/LanguagesSection";
+import { CertificationsSection } from "./sections/CertificationsSection";
+import { AwardsSection } from "./sections/AwardsSection";
 
 interface CVBuilderFormProps {
     data?: CVData;
     activeSection: CVSection;
     onSectionChange: (section: CVSection) => void;
     onDataChange?: (data: CVData) => void;
+    onComplete?: () => void;
 }
 
 export function CVBuilderForm({
@@ -24,6 +28,7 @@ export function CVBuilderForm({
     activeSection,
     onSectionChange,
     onDataChange,
+    onComplete,
 }: CVBuilderFormProps) {
     // REMOVED LOCAL STATE - Now strictly controlled by parent
 
@@ -39,7 +44,9 @@ export function CVBuilderForm({
     };
 
     const handleNext = () => {
-        if (!isLast) {
+        if (isLast) {
+            onComplete?.();
+        } else {
             onSectionChange(CV_SECTIONS[currentIndex + 1].id);
         }
     };
@@ -99,6 +106,27 @@ export function CVBuilderForm({
                         onChange={(projects) => updateData("projects", projects)}
                     />
                 );
+            case "languages":
+                return (
+                    <LanguagesSection
+                        data={data.languages || []}
+                        onChange={(languages) => updateData("languages", languages)}
+                    />
+                );
+            case "certifications":
+                return (
+                    <CertificationsSection
+                        data={data.certifications || []}
+                        onChange={(certifications) => updateData("certifications", certifications)}
+                    />
+                );
+            case "awards":
+                return (
+                    <AwardsSection
+                        data={data.awards || []}
+                        onChange={(awards) => updateData("awards", awards)}
+                    />
+                );
             default:
                 return null;
         }
@@ -140,7 +168,7 @@ export function CVBuilderForm({
                             className={`w-2 h-2 rounded-full transition-all duration-200 ${index === currentIndex
                                 ? "w-6 bg-green-500 shadow-lg shadow-green-500/30"
                                 : index < currentIndex
-                                    ? "bg-sky-400"
+                                    ? "bg-green-400"
                                     : "bg-gray-200"
                                 }`}
                         />
@@ -152,7 +180,6 @@ export function CVBuilderForm({
                     size="md"
                     rightIcon={<ChevronRight className="w-4 h-4" />}
                     onClick={handleNext}
-                    disabled={isLast}
                 >
                     {isLast ? "Hoàn thành" : "Tiếp theo"}
                 </Button>

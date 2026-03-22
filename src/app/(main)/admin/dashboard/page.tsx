@@ -34,7 +34,7 @@ interface AdminStat {
 }
 
 const adminStats: AdminStat[] = [
-    { label: "Tổng người dùng", value: "12,485", change: "+324", trend: "up", icon: Users, color: "text-sky-600", bg: "bg-sky-50" },
+    { label: "Tổng người dùng", value: "12,485", change: "+324", trend: "up", icon: Users, color: "text-[#22c55e]", bg: "bg-[#22c55e]/10" },
     { label: "Nhà tuyển dụng", value: "486", change: "+18", trend: "up", icon: Building2, color: "text-violet-600", bg: "bg-violet-50" },
     { label: "Tin tuyển dụng", value: "1,842", change: "+67", trend: "up", icon: Briefcase, color: "text-emerald-600", bg: "bg-emerald-50" },
     { label: "CV đã tạo", value: "8,294", change: "+412", trend: "up", icon: FileText, color: "text-amber-600", bg: "bg-amber-50" },
@@ -86,7 +86,7 @@ const adminActivities: AdminActivity[] = [
 ];
 
 const ACTIVITY_TYPE_COLORS: Record<string, { dot: string }> = {
-    user: { dot: "bg-sky-500" },
+    user: { dot: "bg-[#22c55e]" },
     employer: { dot: "bg-violet-500" },
     system: { dot: "bg-slate-400" },
     security: { dot: "bg-rose-500" },
@@ -106,7 +106,7 @@ function GrowthBar({ values, labels }: { readonly values: number[]; readonly lab
                             initial={{ height: 0 }}
                             animate={{ height: `${(v / max) * 100}%` }}
                             transition={{ duration: 0.6, delay: i * 0.08, ease: "easeOut" }}
-                            className="w-full rounded-t bg-gradient-to-t from-sky-500 to-sky-300"
+                            className="w-full rounded-t bg-gradient-to-t from-[#22c55e] to-[#10b981]"
                         />
                     </div>
                 ))}
@@ -139,7 +139,7 @@ const pendingActions: PendingAction[] = [
 const URGENCY_COLOR: Record<string, string> = {
     high: "bg-rose-100 text-rose-700",
     medium: "bg-amber-100 text-amber-700",
-    low: "bg-sky-100 text-sky-700",
+    low: "bg-[#22c55e]/15 text-[#22c55e]",
 };
 
 // ─── Main Page ───────────────────────────────────────
@@ -154,8 +154,8 @@ export default function AdminDashboardPage() {
                     className="mb-8"
                 >
                     <div className="flex items-center gap-2">
-                        <ShieldCheck className="w-6 h-6 text-sky-600" />
-                        <h1 className="text-2xl font-bold text-sky-900">Admin Dashboard</h1>
+                        <ShieldCheck className="w-6 h-6 text-[#22c55e]" />
+                        <h1 className="text-2xl font-bold text-[#1C252E]">Admin Dashboard</h1>
                     </div>
                     <p className="text-sm text-slate-500 mt-1">Tổng quan hệ thống — Tháng 2, 2026</p>
                 </motion.div>
@@ -184,7 +184,7 @@ export default function AdminDashboardPage() {
                                         {card.change}
                                     </div>
                                 </div>
-                                <h3 className="text-2xl font-black text-sky-900">{card.value}</h3>
+                                <h3 className="text-2xl font-black text-[#1C252E]">{card.value}</h3>
                                 <p className="text-xs text-slate-400 mt-0.5">{card.label}</p>
                             </motion.div>
                         );
@@ -202,7 +202,7 @@ export default function AdminDashboardPage() {
                     >
                         <div className="flex items-center gap-2 mb-4">
                             <Server className="w-5 h-5 text-emerald-600" />
-                            <h3 className="text-sm font-bold text-sky-900">System Health</h3>
+                            <h3 className="text-sm font-bold text-[#1C252E]">System Health</h3>
                             <span className="ml-auto text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full flex items-center gap-0.5">
                                 <CheckCircle2 className="w-3 h-3" /> Online
                             </span>
@@ -238,8 +238,8 @@ export default function AdminDashboardPage() {
                     >
                         <div className="flex items-center justify-between mb-4">
                             <div className="flex items-center gap-2">
-                                <BarChart3 className="w-5 h-5 text-sky-600" />
-                                <h3 className="text-sm font-bold text-sky-900">Tăng trưởng người dùng</h3>
+                                <BarChart3 className="w-5 h-5 text-[#22c55e]" />
+                                <h3 className="text-sm font-bold text-[#1C252E]">Tăng trưởng người dùng</h3>
                             </div>
                             <span className="text-xs text-slate-400">6 tháng</span>
                         </div>
@@ -250,7 +250,7 @@ export default function AdminDashboardPage() {
                         <div className="mt-3 flex items-center justify-between">
                             <span className="text-[10px] text-slate-400">Tổng mới tháng này</span>
                             <div className="flex items-center gap-1">
-                                <span className="text-sm font-bold text-sky-900">{fmtNumber(3240)}</span>
+                                <span className="text-sm font-bold text-[#1C252E]">{fmtNumber(3240)}</span>
                                 <span className="text-[10px] font-semibold text-emerald-600 flex items-center gap-0.5">
                                     <TrendingUp className="w-2.5 h-2.5" /> +19.1%
                                 </span>
@@ -267,8 +267,8 @@ export default function AdminDashboardPage() {
                     >
                         <div className="flex items-center gap-2 mb-4">
                             <AlertTriangle className="w-5 h-5 text-amber-500" />
-                            <h3 className="text-sm font-bold text-sky-900">Cần xử lý</h3>
-                            <span className="ml-auto text-sm font-bold text-sky-900">
+                            <h3 className="text-sm font-bold text-[#1C252E]">Cần xử lý</h3>
+                            <span className="ml-auto text-sm font-bold text-[#1C252E]">
                                 {pendingActions.reduce((s, a) => s + a.count, 0)}
                             </span>
                         </div>
@@ -283,7 +283,7 @@ export default function AdminDashboardPage() {
                                         transition={{ delay: 0.45 + i * 0.06 }}
                                         className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer group"
                                     >
-                                        <Icon className="w-4 h-4 text-slate-400 group-hover:text-sky-500 transition-colors" />
+                                        <Icon className="w-4 h-4 text-slate-400 group-hover:text-[#22c55e] transition-colors" />
                                         <span className="text-xs font-medium text-slate-700 flex-1">{action.label}</span>
                                         <span className={cn("text-[10px] font-bold px-2 py-0.5 rounded-full", URGENCY_COLOR[action.urgency])}>
                                             {action.count}
@@ -304,10 +304,10 @@ export default function AdminDashboardPage() {
                 >
                     <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-2">
-                            <Activity className="w-5 h-5 text-sky-600" />
-                            <h3 className="text-sm font-bold text-sky-900">Nhật ký hệ thống</h3>
+                            <Activity className="w-5 h-5 text-[#22c55e]" />
+                            <h3 className="text-sm font-bold text-[#1C252E]">Nhật ký hệ thống</h3>
                         </div>
-                        <button className="text-xs text-slate-400 hover:text-sky-600 transition-colors cursor-pointer">
+                        <button className="text-xs text-slate-400 hover:text-[#22c55e] transition-colors cursor-pointer">
                             Xem tất cả →
                         </button>
                     </div>
@@ -329,7 +329,7 @@ export default function AdminDashboardPage() {
                                         )}
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <p className="text-xs font-semibold text-sky-900">{act.action}</p>
+                                        <p className="text-xs font-semibold text-[#1C252E]">{act.action}</p>
                                         <p className="text-xs text-slate-500 truncate">{act.detail}</p>
                                         <p className="text-[10px] text-slate-300 mt-0.5 flex items-center gap-1">
                                             <Clock className="w-2.5 h-2.5" /> {act.time}
@@ -341,7 +341,7 @@ export default function AdminDashboardPage() {
                                         act.type === "system" ? "bg-slate-100 text-slate-500" :
                                         act.type === "employer" ? "bg-violet-50 text-violet-600" :
                                         act.type === "content" ? "bg-emerald-50 text-emerald-600" :
-                                        "bg-sky-50 text-sky-600"
+                                        "bg-[#22c55e]/10 text-[#22c55e]"
                                     )}>
                                         {act.type}
                                     </span>
@@ -354,3 +354,4 @@ export default function AdminDashboardPage() {
         </section>
     );
 }
+

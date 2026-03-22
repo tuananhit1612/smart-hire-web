@@ -243,7 +243,7 @@ export function FaqsPage() {
                             : "bg-white/50 dark:bg-[#1C252E]/50 border-[rgba(145,158,171,0.12)] hover:border-[#22c55e]/50 text-[#637381] dark:text-[#919EAB]"
                             }`}
                     >
-                        <div className={`p-2 rounded-full ${activeCategory === "resume" ? "bg-blue-100 dark:bg-blue-900/30 text-blue-500" : "bg-gray-100 dark:bg-gray-800"}`}>
+                        <div className={`p-2 rounded-full ${activeCategory === "resume" ? "bg-[#22c55e]/15 dark:bg-[#22c55e]/20 text-[#22c55e]" : "bg-gray-100 dark:bg-gray-800"}`}>
                             <FileText className="w-5 h-5" />
                         </div>
                         <span className={`font-semibold ${activeCategory === "resume" ? "text-[#1C252E] dark:text-white" : ""}`}>
@@ -319,3 +319,4 @@ export function FaqsPage() {
         </div>
     );
 }
+

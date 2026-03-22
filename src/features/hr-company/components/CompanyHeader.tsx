@@ -51,7 +51,7 @@ export function CompanyHeader({ company, onUpdate, editable = true }: CompanyHea
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="relative overflow-hidden rounded-3xl bg-white/80 backdrop-blur-xl border border-white/40 shadow-xl shadow-sky-900/5"
+            className="relative overflow-hidden rounded-3xl bg-white/80 backdrop-blur-xl border border-white/40 shadow-xl shadow-[#22c55e]/20"
         >
             {/* Cover Image */}
             <div className="h-48 sm:h-56 relative overflow-hidden">
@@ -62,7 +62,7 @@ export function CompanyHeader({ company, onUpdate, editable = true }: CompanyHea
                         className="w-full h-full object-cover"
                     />
                 ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-sky-500 via-sky-600 to-blue-700" />
+                    <div className="w-full h-full bg-gradient-to-br from-[#22c55e] via-[#10b981] to-[#10b981]" />
                 )}
                 {/* Gradient Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
@@ -103,7 +103,7 @@ export function CompanyHeader({ company, onUpdate, editable = true }: CompanyHea
                                 onChange={(e) =>
                                     setEditData({ ...editData, name: e.target.value })
                                 }
-                                className="w-full text-2xl font-bold bg-sky-50 rounded-xl px-4 py-2 border-2 border-sky-200 focus:border-sky-500 focus:outline-none text-sky-900"
+                                className="w-full text-2xl font-bold bg-[#22c55e]/10 rounded-xl px-4 py-2 border-2 border-[#22c55e]/30 focus:border-[#22c55e]/30 focus:outline-none text-[#1C252E]"
                                 placeholder="Tên công ty"
                             />
                             <input
@@ -112,7 +112,7 @@ export function CompanyHeader({ company, onUpdate, editable = true }: CompanyHea
                                 onChange={(e) =>
                                     setEditData({ ...editData, tagline: e.target.value })
                                 }
-                                className="w-full text-base bg-sky-50 rounded-xl px-4 py-2 border-2 border-sky-200 focus:border-sky-500 focus:outline-none text-sky-700"
+                                className="w-full text-base bg-[#22c55e]/10 rounded-xl px-4 py-2 border-2 border-[#22c55e]/30 focus:border-[#22c55e]/30 focus:outline-none text-[#22c55e]"
                                 placeholder="Slogan công ty"
                             />
                             <div className="flex gap-2">
@@ -136,18 +136,18 @@ export function CompanyHeader({ company, onUpdate, editable = true }: CompanyHea
                     ) : (
                         <div className="flex items-start justify-between">
                             <div>
-                                <h1 className="text-2xl sm:text-3xl font-bold text-sky-900">
+                                <h1 className="text-2xl sm:text-3xl font-bold text-[#1C252E]">
                                     {company.name}
                                 </h1>
                                 {company.tagline && (
-                                    <p className="text-sky-600 mt-1 text-lg">{company.tagline}</p>
+                                    <p className="text-[#22c55e] mt-1 text-lg">{company.tagline}</p>
                                 )}
                             </div>
                             {editable && (
                                 <Button
                                     onClick={() => setIsEditing(true)}
                                     variant="outline"
-                                    className="rounded-full border-sky-200 hover:bg-sky-50"
+                                    className="rounded-full border-[#22c55e]/30 hover:bg-[#22c55e]/10"
                                 >
                                     <Pencil className="w-4 h-4 mr-1" />
                                     Chỉnh sửa
@@ -185,7 +185,7 @@ export function CompanyHeader({ company, onUpdate, editable = true }: CompanyHea
                                 href={company.website}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-1.5 px-3 py-1.5 bg-sky-50 rounded-full text-sm text-sky-700 hover:bg-sky-100 transition-colors"
+                                className="flex items-center gap-1.5 px-3 py-1.5 bg-[#22c55e]/10 rounded-full text-sm text-[#22c55e] hover:bg-[#22c55e]/15 transition-colors"
                             >
                                 <Globe className="w-4 h-4" />
                                 Website
@@ -194,7 +194,7 @@ export function CompanyHeader({ company, onUpdate, editable = true }: CompanyHea
                         {company.email && (
                             <a
                                 href={`mailto:${company.email}`}
-                                className="flex items-center gap-1.5 px-3 py-1.5 bg-sky-50 rounded-full text-sm text-sky-700 hover:bg-sky-100 transition-colors"
+                                className="flex items-center gap-1.5 px-3 py-1.5 bg-[#22c55e]/10 rounded-full text-sm text-[#22c55e] hover:bg-[#22c55e]/15 transition-colors"
                             >
                                 <Mail className="w-4 h-4" />
                                 {company.email}
@@ -203,7 +203,7 @@ export function CompanyHeader({ company, onUpdate, editable = true }: CompanyHea
                         {company.phone && (
                             <a
                                 href={`tel:${company.phone}`}
-                                className="flex items-center gap-1.5 px-3 py-1.5 bg-sky-50 rounded-full text-sm text-sky-700 hover:bg-sky-100 transition-colors"
+                                className="flex items-center gap-1.5 px-3 py-1.5 bg-[#22c55e]/10 rounded-full text-sm text-[#22c55e] hover:bg-[#22c55e]/15 transition-colors"
                             >
                                 <Phone className="w-4 h-4" />
                                 {company.phone}
@@ -218,9 +218,10 @@ export function CompanyHeader({ company, onUpdate, editable = true }: CompanyHea
 
 function QuickStat({ icon, label }: { icon: React.ReactNode; label: string }) {
     return (
-        <div className="flex items-center gap-1.5 text-sm text-sky-700">
-            <span className="text-sky-500">{icon}</span>
+        <div className="flex items-center gap-1.5 text-sm text-[#22c55e]">
+            <span className="text-[#22c55e]">{icon}</span>
             <span>{label}</span>
         </div>
     );
 }
+

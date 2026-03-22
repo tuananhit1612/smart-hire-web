@@ -66,8 +66,8 @@ const TOAST_CONFIG: Record<ToastType, { icon: React.ElementType; color: string; 
     },
     info: {
         icon: Info,
-        color: "text-sky-500",
-        stripColor: "bg-sky-500",
+        color: "text-[#22c55e]",
+        stripColor: "bg-[#22c55e]",
     }
 };
 
@@ -172,3 +172,4 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
         </ToastContext.Provider>
     );
 }
+

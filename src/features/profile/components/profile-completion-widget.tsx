@@ -166,7 +166,7 @@ export function ProfileCompletionWidget({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="bg-white/70 dark:bg-sky-950/30 backdrop-blur-xl border border-white/20 dark:border-sky-800/30 rounded-3xl shadow-xl shadow-blue-900/5 p-6"
+      className="bg-white/70 dark:bg-[#22c55e] backdrop-blur-xl border border-white/20 dark:border-[#22c55e]/30 rounded-3xl shadow-xl shadow-[#22c55e]/20 p-6"
     >
       <div className="flex flex-col md:flex-row gap-6 items-center">
         {/* Left: Circular Progress */}
@@ -188,8 +188,8 @@ export function ProfileCompletionWidget({
         <div className="flex-1 w-full">
           {/* Header */}
           <div className="flex items-center gap-2 mb-4">
-            <Sparkles className="w-5 h-5 text-sky-500" />
-            <h3 className="text-lg font-bold text-sky-900 dark:text-sky-100">
+            <Sparkles className="w-5 h-5 text-[#22c55e]" />
+            <h3 className="text-lg font-bold text-[#1C252E] dark:text-[#22c55e]">
               Độ hoàn thiện hồ sơ
             </h3>
           </div>
@@ -206,7 +206,7 @@ export function ProfileCompletionWidget({
           {/* CTA Button */}
           {percentage < 100 && (
             <Link href="/profile/edit" className="block">
-              <Button className="w-full bg-gradient-to-r from-sky-500 to-green-500 hover:from-sky-600 hover:to-green-600 text-white shadow-lg hover:scale-105 transition-transform">
+              <Button className="w-full bg-gradient-to-r from-[#22c55e] to-green-500 hover:from-[#22c55e] hover:to-green-600 text-white shadow-lg hover:scale-105 transition-transform">
                 Hoàn thiện hồ sơ ngay
                 <ChevronRight className="w-4 h-4 ml-2" />
               </Button>
@@ -226,3 +226,4 @@ export function ProfileCompletionWidget({
     </motion.div>
   );
 }
+

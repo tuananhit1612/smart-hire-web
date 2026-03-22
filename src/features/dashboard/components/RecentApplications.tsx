@@ -21,8 +21,8 @@ const RECENT_APPLICATIONS = [
         status: "Đã xem CV",
         date: "Hôm qua",
         logo: "V",
-        statusColor: "text-blue-500",
-        statusBg: "bg-blue-500/10",
+        statusColor: "text-[#22c55e]",
+        statusBg: "bg-[#22c55e]/10",
         icon: CheckCircle2,
     },
     {
@@ -106,3 +106,4 @@ export function RecentApplications() {
         </div>
     );
 }
+

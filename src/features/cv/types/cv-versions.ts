@@ -133,6 +133,19 @@ export const mockCVVersions: CVVersion[] = [
           endDate: "2022-02",
         },
       ],
+      languages: [
+        { id: "lang-1", name: "Tiếng Việt", level: "native" as const },
+        { id: "lang-2", name: "Tiếng Anh", level: "upper-intermediate" as const },
+        { id: "lang-3", name: "Tiếng Nhật", level: "elementary" as const },
+      ],
+      certifications: [
+        { id: "cert-1", name: "AWS Certified Cloud Practitioner", issuer: "Amazon Web Services", date: "2023-06", expiry: "2026-06", url: "https://aws.amazon.com/certification" },
+        { id: "cert-2", name: "Meta Front-End Developer", issuer: "Meta (Coursera)", date: "2022-12" },
+      ],
+      awards: [
+        { id: "award-1", title: "Best Innovation Award", issuer: "TechCorp Vietnam Hackathon", date: "2023-03", description: "Giải nhất cuộc thi hackathon nội bộ với dự án AI-powered code review tool." },
+        { id: "award-2", title: "Giải Ba HSG Thành phố", issuer: "Sở GD&ĐT TP.HCM", date: "2016-11" },
+      ],
     },
   },
   {
@@ -207,6 +220,12 @@ export const mockCVVersions: CVVersion[] = [
           link: "https://smarthire.vn",
         },
       ],
+      languages: [
+        { id: "lang-1", name: "Vietnamese", level: "native" as const },
+        { id: "lang-2", name: "English", level: "upper-intermediate" as const },
+      ],
+      certifications: [],
+      awards: [],
     },
   },
   {
@@ -289,6 +308,9 @@ export const mockCVVersions: CVVersion[] = [
           link: "https://github.com/annguyen/chat-app",
         },
       ],
+      languages: [],
+      certifications: [],
+      awards: [],
     },
   },
   {
@@ -370,6 +392,9 @@ export const mockCVVersions: CVVersion[] = [
           link: "https://anblog.netlify.app",
         },
       ],
+      languages: [],
+      certifications: [],
+      awards: [],
     },
   },
   {
@@ -445,6 +470,9 @@ export const mockCVVersions: CVVersion[] = [
           link: "https://github.com/annguyen/remote-dashboard",
         },
       ],
+      languages: [],
+      certifications: [],
+      awards: [],
     },
   },
 ];

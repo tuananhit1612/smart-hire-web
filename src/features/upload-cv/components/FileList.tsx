@@ -28,11 +28,11 @@ export function FileList({ files, onRemove, onClearAll }: FileListProps) {
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-xl bg-sky-100 dark:bg-sky-900/50">
-                        <DocumentDuplicateIcon className="w-5 h-5 text-sky-600 dark:text-sky-400" />
+                    <div className="p-2 rounded-xl bg-green-100 dark:bg-green-900/50">
+                        <DocumentDuplicateIcon className="w-5 h-5 text-green-600 dark:text-green-400" />
                     </div>
                     <div>
-                        <h3 className="text-lg font-semibold text-sky-900 dark:text-sky-100">
+                        <h3 className="text-lg font-semibold text-green-900 dark:text-green-100">
                             File đã tải lên
                         </h3>
                         <div className="flex items-center gap-2 text-sm">
@@ -44,7 +44,7 @@ export function FileList({ files, onRemove, onClearAll }: FileListProps) {
                             {uploadingCount > 0 && (
                                 <>
                                     {successCount > 0 && <span className="text-slate-400">•</span>}
-                                    <span className="text-sky-600 dark:text-sky-400">
+                                    <span className="text-green-600 dark:text-green-400">
                                         {uploadingCount} đang tải
                                     </span>
                                 </>

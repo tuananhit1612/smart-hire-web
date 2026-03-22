@@ -86,7 +86,7 @@ export function TemplateCard({ template, onSelect, onPreview, isRecommended }: T
         >
             {/* Holographic border on hover - Sky/Green */}
             <div className={cn(
-                "absolute -inset-[2px] rounded-3xl bg-gradient-to-r from-sky-500 via-emerald-400 to-lime-500 opacity-0 transition-opacity duration-500",
+                "absolute -inset-[2px] rounded-3xl bg-gradient-to-r from-green-500 via-emerald-400 to-lime-500 opacity-0 transition-opacity duration-500",
                 isHovered && "opacity-100"
             )} />
 
@@ -96,7 +96,7 @@ export function TemplateCard({ template, onSelect, onPreview, isRecommended }: T
                     <motion.div
                         initial={{ scale: 0, y: 10 }}
                         animate={{ scale: 1, y: 0 }}
-                        className="px-3 py-1 rounded-full bg-gradient-to-r from-sky-500 via-emerald-500 to-lime-500 text-white text-xs font-bold shadow-lg flex items-center gap-1"
+                        className="px-3 py-1 rounded-full bg-gradient-to-r from-green-500 via-emerald-500 to-lime-500 text-white text-xs font-bold shadow-lg flex items-center gap-1"
                     >
                         <Star className="w-3 h-3 fill-current" />
                         Phù hợp nhất
@@ -106,16 +106,16 @@ export function TemplateCard({ template, onSelect, onPreview, isRecommended }: T
 
             {/* Card */}
             <div className={cn(
-                "relative bg-white backdrop-blur-xl rounded-3xl overflow-hidden",
-                "border border-gray-200",
+                "relative bg-white dark:bg-[#1C252E] backdrop-blur-xl rounded-3xl overflow-hidden",
+                "border border-[rgba(145,158,171,0.15)] dark:border-white/[0.08]",
                 "shadow-[0_8px_30px_rgb(0,0,0,0.06)]",
                 "transition-shadow duration-500",
                 isHovered && "shadow-2xl"
             )}>
                 {/* Thumbnail */}
-                <div className="relative aspect-[3/4] bg-gray-50 overflow-hidden" ref={containerRef}>
+                <div className="relative aspect-[3/4] bg-[#F4F6F8] dark:bg-[#161C24] overflow-hidden" ref={containerRef}>
                     {/* Live CV Preview */}
-                    <div className="absolute inset-0 w-full h-full overflow-hidden bg-gray-100/50">
+                    <div className="absolute inset-0 w-full h-full overflow-hidden bg-[rgba(145,158,171,0.06)] dark:bg-black/20">
                         <div
                             className="w-[210mm] min-h-[297mm] bg-white text-[10px] transform origin-top-left shadow-sm transition-transform duration-75 ease-out"
                             style={{ transform: `scale(${scale})` }}
@@ -137,7 +137,7 @@ export function TemplateCard({ template, onSelect, onPreview, isRecommended }: T
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: isHovered ? 1 : 0 }}
-                        className="absolute inset-0 bg-gradient-to-t from-sky-900/60 via-sky-900/20 to-transparent flex items-end justify-center pb-6"
+                        className="absolute inset-0 bg-gradient-to-t from-green-900/60 via-green-900/20 to-transparent flex items-end justify-center pb-6"
                     >
                         <div className="flex gap-3">
                             <motion.button
@@ -153,7 +153,7 @@ export function TemplateCard({ template, onSelect, onPreview, isRecommended }: T
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 onClick={() => onSelect(template)}
-                                className="px-4 py-2 rounded-xl bg-gradient-to-r from-sky-500 to-green-500 text-white text-sm font-medium flex items-center gap-2 shadow-lg shadow-sky-500/25"
+                                className="px-4 py-2 rounded-xl bg-gradient-to-r from-green-500 to-green-500 text-white text-sm font-medium flex items-center gap-2 shadow-lg shadow-green-500/25"
                             >
                                 <Check className="w-4 h-4" />
                                 Chọn
@@ -180,10 +180,10 @@ export function TemplateCard({ template, onSelect, onPreview, isRecommended }: T
 
                 {/* Info */}
                 <div className="p-4 space-y-2">
-                    <h3 className="font-semibold text-gray-900">
+                    <h3 className="font-semibold text-[#1C252E] dark:text-white">
                         {template.name}
                     </h3>
-                    <p className="text-sm text-gray-500 line-clamp-2">
+                    <p className="text-sm text-[#637381] dark:text-[#919EAB] line-clamp-2">
                         {template.description}
                     </p>
 
@@ -192,7 +192,7 @@ export function TemplateCard({ template, onSelect, onPreview, isRecommended }: T
                         {template.features.slice(0, 3).map((feature) => (
                             <span
                                 key={feature}
-                                className="px-2 py-0.5 rounded-md bg-gray-100 text-xs text-gray-600"
+                                className="px-2 py-0.5 rounded-md bg-[rgba(145,158,171,0.1)] dark:bg-white/[0.06] text-xs text-[#637381] dark:text-[#919EAB]"
                             >
                                 {feature}
                             </span>

@@ -69,7 +69,7 @@ export function JobRecommendationWidget({ profile }: JobRecommendationWidgetProp
           </div>
         </div>
         <Link href="/jobs">
-          <Button variant="ghost" size="sm" className="text-sky-600 dark:text-sky-400">
+          <Button variant="ghost" size="sm" className="text-[#22c55e] dark:text-[#22c55e]">
             Xem tất cả
             <ChevronRight className="w-4 h-4 ml-1" />
           </Button>
@@ -97,7 +97,7 @@ function RecommendationCard({ result, index }: RecommendationCardProps) {
   // Determine score color
   const getScoreColor = (score: number) => {
     if (score >= 70) return "text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30";
-    if (score >= 50) return "text-sky-600 dark:text-sky-400 bg-sky-100 dark:bg-sky-900/30";
+    if (score >= 50) return "text-[#22c55e] dark:text-[#22c55e] bg-[#22c55e]/15 dark:bg-[#22c55e]/20";
     return "text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30";
   };
 
@@ -118,7 +118,7 @@ function RecommendationCard({ result, index }: RecommendationCardProps) {
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2">
               <div className="flex-1 min-w-0">
-                <h4 className="font-semibold text-slate-900 dark:text-white group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors line-clamp-1">
+                <h4 className="font-semibold text-slate-900 dark:text-white group-hover:text-[#22c55e] dark:group-hover:text-[#22c55e] transition-colors line-clamp-1">
                   {job.title}
                 </h4>
                 <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-1">
@@ -159,9 +159,10 @@ function RecommendationCard({ result, index }: RecommendationCardProps) {
           </div>
 
           {/* Arrow */}
-          <ChevronRight className="w-5 h-5 text-slate-300 dark:text-slate-600 group-hover:text-sky-500 transition-colors shrink-0 self-center" />
+          <ChevronRight className="w-5 h-5 text-slate-300 dark:text-slate-600 group-hover:text-[#22c55e] transition-colors shrink-0 self-center" />
         </div>
       </Link>
     </motion.div>
   );
 }
+

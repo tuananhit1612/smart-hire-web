@@ -65,7 +65,7 @@ export function RenameDialog({
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onCancel}
-                        className="absolute inset-0 bg-sky-950/30 backdrop-blur-sm"
+                        className="absolute inset-0 bg-green-950/30 backdrop-blur-sm"
                     />
 
                     {/* Dialog */}
@@ -74,7 +74,7 @@ export function RenameDialog({
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
                         transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                        className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl shadow-sky-900/20 overflow-hidden"
+                        className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl shadow-green-900/20 overflow-hidden"
                     >
                         {/* Close button */}
                         <button
@@ -91,26 +91,26 @@ export function RenameDialog({
                                 initial={{ scale: 0 }}
                                 animate={{ scale: 1 }}
                                 transition={{ delay: 0.1, type: "spring" }}
-                                className="mx-auto w-16 h-16 rounded-full bg-gradient-to-br from-sky-100 to-green-100 flex items-center justify-center mb-4"
+                                className="mx-auto w-16 h-16 rounded-full bg-gradient-to-br from-green-100 to-green-100 flex items-center justify-center mb-4"
                             >
                                 <div className="relative">
-                                    <FileText className="w-7 h-7 text-sky-600" />
+                                    <FileText className="w-7 h-7 text-green-600" />
                                     <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-green-500 flex items-center justify-center">
                                         <Pencil className="w-2.5 h-2.5 text-white" />
                                     </div>
                                 </div>
                             </motion.div>
 
-                            <h3 className="text-xl font-bold text-sky-900 text-center mb-2">
+                            <h3 className="text-xl font-bold text-green-900 text-center mb-2">
                                 Đổi tên CV
                             </h3>
-                            <p className="text-sky-700/70 text-center mb-6">
+                            <p className="text-green-700/70 text-center mb-6">
                                 Nhập tên mới cho CV của bạn
                             </p>
 
                             {/* Input */}
                             <div className="mb-6">
-                                <label className="block text-sm font-medium text-sky-800 mb-2">
+                                <label className="block text-sm font-medium text-green-800 mb-2">
                                     Tên CV
                                 </label>
                                 <input
@@ -118,7 +118,7 @@ export function RenameDialog({
                                     type="text"
                                     value={newName}
                                     onChange={(e) => setNewName(e.target.value)}
-                                    className="w-full px-4 py-3 rounded-xl border-2 border-sky-200 focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10 outline-none text-sky-900 font-medium transition-all"
+                                    className="w-full px-4 py-3 rounded-xl border-2 border-green-200 focus:border-green-500 focus:ring-4 focus:ring-green-500/10 outline-none text-green-900 font-medium transition-all"
                                     placeholder="Nhập tên CV..."
                                 />
                             </div>
@@ -130,7 +130,7 @@ export function RenameDialog({
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
                                     onClick={onCancel}
-                                    className="flex-1 px-6 py-3 rounded-full border border-sky-200 text-sky-700 font-semibold hover:bg-sky-50 transition-colors"
+                                    className="flex-1 px-6 py-3 rounded-full border border-green-200 text-green-700 font-semibold hover:bg-green-50 transition-colors"
                                 >
                                     Hủy bỏ
                                 </motion.button>
@@ -140,7 +140,7 @@ export function RenameDialog({
                                     whileTap={{ scale: isValid ? 0.98 : 1 }}
                                     disabled={!isValid}
                                     className={`flex-1 px-6 py-3 rounded-full font-semibold transition-all ${isValid
-                                            ? "bg-gradient-to-r from-sky-600 to-green-500 text-white shadow-lg shadow-sky-500/25 hover:shadow-xl"
+                                            ? "bg-gradient-to-r from-green-600 to-green-500 text-white shadow-lg shadow-green-500/25 hover:shadow-xl"
                                             : "bg-gray-200 text-gray-400 cursor-not-allowed"
                                         }`}
                                 >

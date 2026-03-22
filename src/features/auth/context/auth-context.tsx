@@ -1,209 +1,168 @@
 "use client";
 
 /**
- * ═════════════════════════════════════════════════════════
- *  Auth Context & Provider
- *  Provides authentication state to the entire app via
- *  React Context. Calls the real SmartHire API for
- *  login/register and persists tokens via tokenStorage.
+ * ═══════════════════════════════════════════════════════════
+ *  AuthContext — Real API Authentication
  *
- *  Session is hydrated on mount by reading the stored token
- *  and calling GET /users/me.
- * ═════════════════════════════════════════════════════════
+ *  • login(email, password)  → POST /auth/login
+ *  • register(payload)       → POST /auth/register (auto-login)
+ *  • logout()                → clears tokens + session
+ *  • Session restore on mount → validates stored token via /auth/me
+ *  • Tokens stored in localStorage, attached by apiClient interceptor
+ *
+ *  Backend wraps every response in { code, success, message, data }.
+ *  Axios res.data  = wrapper
+ *  Axios res.data.data = actual payload
+ * ═══════════════════════════════════════════════════════════
  */
 
-import {
+import React, {
     createContext,
     useCallback,
     useEffect,
     useMemo,
     useState,
-    type ReactNode,
 } from "react";
-import type { SessionUser, UserRole, AuthStatus } from "../types/auth-types";
+import type {
+    SessionUser,
+    AuthStatus,
+    AuthLoginData,
+    RegisterPayload,
+} from "../types/auth-types";
+import { authApi } from "../api/auth-api";
+import { isApiError } from "@/shared/lib/api-error";
 import { tokenStorage } from "../lib/token-storage";
-import { authService } from "../services/auth-service";
 
-// ─── Cookie helpers (for middleware route guard) ──────
-const COOKIE_NAME = "smarthire-session";
+// ─── Helpers ─────────────────────────────────────────────
 
-function setCookie(name: string, value: string, days = 7) {
-    const expires = new Date(Date.now() + days * 864e5).toUTCString();
-    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Lax`;
+/** Map the flat backend login/register payload to SessionUser */
+function toSessionUser(d: AuthLoginData): SessionUser {
+    return {
+        id: String(d.userId),
+        name: d.fullName,
+        email: d.email,
+        role: d.role.toLowerCase() as SessionUser["role"],
+        joinedDate: new Date().toISOString(),
+        isFirstLogin: true,
+    };
 }
 
-function deleteCookie(name: string) {
-    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax`;
-}
-
-// ─── Context Value ───────────────────────────────────
+// ─── Context Value ───────────────────────────────────────
 export interface AuthContextValue {
-    /** Current authenticated user (null if logged out) */
     user: SessionUser | null;
-    /** Auth status: loading | authenticated | unauthenticated */
     status: AuthStatus;
-    /** Convenience: user !== null */
     isAuthenticated: boolean;
-    /** Convenience: status === "loading" */
     isLoading: boolean;
-
-    /**
-     * Login with email + password.
-     * Calls POST /auth/login → stores token → sets user.
-     * Throws a user-friendly error string on failure.
-     */
-    login: (email: string, password: string) => Promise<SessionUser>;
-
-    /**
-     * Register a new account.
-     * Calls POST /auth/register → stores token → sets user.
-     * Throws a user-friendly error string on failure.
-     */
-    register: (data: {
-        fullName: string;
-        email: string;
-        password: string;
-        role: UserRole;
-    }) => Promise<SessionUser>;
-
-    /** Logout and clear session/token */
+    login: (email: string, password: string) => Promise<void>;
+    register: (data: RegisterPayload) => Promise<void>;
     logout: () => void;
-
-    /** Mark the user as having completed onboarding */
     completeOnboarding: () => void;
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null);
 
-// ─── Provider ────────────────────────────────────────
-interface AuthProviderProps {
-    readonly children: ReactNode;
-}
+// ─── Provider ────────────────────────────────────────────
 
-export function AuthProvider({ children }: AuthProviderProps) {
+export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<SessionUser | null>(null);
     const [status, setStatus] = useState<AuthStatus>("loading");
 
-    // ─── Sync session cookie (for middleware guard) ──
-    function syncCookie(sessionUser: SessionUser | null) {
-        if (sessionUser) {
-            setCookie(
-                COOKIE_NAME,
-                JSON.stringify({ role: sessionUser.role, isNewUser: sessionUser.isNewUser }),
-            );
-        } else {
-            deleteCookie(COOKIE_NAME);
+    // ── Session restore on mount ─────────────────────────
+    useEffect(() => {
+        const token = tokenStorage.getAccessToken();
+        if (!token) {
+            setStatus("unauthenticated");
+            return;
         }
     }
 
-    // ─── Hydrate session on mount ────────────────────
-    useEffect(() => {
-        async function hydrate() {
-            const token = tokenStorage.getAccessToken();
-            if (!token) {
-                setStatus("unauthenticated");
-                return;
-            }
-
-            try {
-                const me = await authService.getMe();
-                setUser(me);
+        // Try to validate the stored token via /auth/me
+        authApi
+            .getMe()
+            .then((res) => {
+                const meData = res.data.data; // { email }
+                // Build a minimal SessionUser from what the backend gives us
+                // If we had a cached user in localStorage we could merge, but
+                // /auth/me currently only returns email.
+                setUser({
+                    id: "",
+                    name: meData.email.split("@")[0], // best-effort name
+                    email: meData.email,
+                    role: "candidate", // will be overridden on next login
+                    joinedDate: new Date().toISOString(),
+                });
                 setStatus("authenticated");
-                syncCookie(me);
-            } catch {
-                // Token invalid/expired — clear everything
-                tokenStorage.clearTokens();
-                deleteCookie(COOKIE_NAME);
+            })
+            .catch(() => {
+                // Token expired or invalid — clear and mark unauthenticated
+                tokenStorage.clear();
                 setStatus("unauthenticated");
-            }
-        }
+            });
+    }, []);
 
-        hydrate();
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-    // ─── Login ───────────────────────────────────────
-    const login = useCallback(async (email: string, password: string): Promise<SessionUser> => {
+    // ── Login ────────────────────────────────────────────
+    const login = useCallback(async (email: string, password: string) => {
         setStatus("loading");
         try {
-            const res = await authService.login({ email, password });
+            const res = await authApi.login(email, password);
+            const payload = res.data.data; // AuthLoginData
 
-            // Store token
-            tokenStorage.setAccessToken(res.token);
-
-            // Set user state
-            setUser(res.user);
+            tokenStorage.setTokens(payload.accessToken, payload.refreshToken);
+            setUser(toSessionUser(payload));
             setStatus("authenticated");
-            syncCookie(res.user);
-            return res.user;
         } catch (err) {
             setStatus("unauthenticated");
-            throw authService.parseError(err);
+            // Re-throw so the form can display the error
+            if (isApiError(err)) throw err;
+            throw new Error("Đã xảy ra lỗi không xác định khi đăng nhập.");
         }
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    }, []);
 
-    // ─── Register ────────────────────────────────────
-    const register = useCallback(
-        async (data: {
-            fullName: string;
-            email: string;
-            password: string;
-            role: UserRole;
-        }): Promise<SessionUser> => {
-            setStatus("loading");
-            try {
-                const res = await authService.register(data);
+    // ── Register ─────────────────────────────────────────
+    const register = useCallback(async (data: RegisterPayload) => {
+        setStatus("loading");
+        try {
+            const res = await authApi.register(data);
+            const payload = res.data.data; // AuthLoginData
 
-                tokenStorage.setAccessToken(res.token);
-                setUser(res.user);
-                setStatus("authenticated");
-                syncCookie(res.user);
-                return res.user;
-            } catch (err) {
-                setStatus("unauthenticated");
-                throw authService.parseError(err);
-            }
-        },
-        [], // eslint-disable-line react-hooks/exhaustive-deps
-    );
+            tokenStorage.setTokens(payload.accessToken, payload.refreshToken);
+            setUser(toSessionUser(payload));
+            setStatus("authenticated");
+        } catch (err) {
+            setStatus("unauthenticated");
+            if (isApiError(err)) throw err;
+            throw new Error("Đã xảy ra lỗi không xác định khi đăng ký.");
+        }
+    }, []);
 
-    // ─── Logout ──────────────────────────────────────
+    // ── Logout ───────────────────────────────────────────
     const logout = useCallback(() => {
-        // Fire-and-forget the backend logout
-        authService.logout();
-
-        tokenStorage.clearTokens();
+        tokenStorage.clear();
         setUser(null);
         setStatus("unauthenticated");
-        syncCookie(null);
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    }, []);
 
-    // ─── Complete Onboarding ─────────────────────────
+    // ── Complete Onboarding ──────────────────────────────
     const completeOnboarding = useCallback(() => {
-        setUser((prev) => {
-            if (!prev) return null;
-            const updated = { ...prev, isNewUser: false };
-            syncCookie(updated);
-            return updated;
-        });
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+        setUser((prev) => (prev ? { ...prev, isFirstLogin: false } : null));
+    }, []);
 
+    // ── Memoised context value ───────────────────────────
     const value = useMemo<AuthContextValue>(
         () => ({
             user,
             status,
-            isAuthenticated: user !== null,
+            isAuthenticated: status === "authenticated",
             isLoading: status === "loading",
             login,
             register,
             logout,
             completeOnboarding,
         }),
-        [user, status, login, register, logout, completeOnboarding],
+        [user, status, login, register, logout, completeOnboarding]
     );
 
     return (
-        <AuthContext.Provider value={value}>
-            {children}
-        </AuthContext.Provider>
+        <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
     );
 }

@@ -13,8 +13,8 @@ const features = [
         icon: DocumentMagnifyingGlassIcon,
         title: 'AI Phân tích thông minh',
         description: 'Trích xuất tự động thông tin từ CV của bạn',
-        color: 'from-sky-500 to-blue-600',
-        bgColor: 'bg-sky-100 dark:bg-sky-900/50',
+        color: 'from-green-500 to-emerald-600',
+        bgColor: 'bg-green-500/10 dark:bg-green-500/20',
     },
     {
         icon: SparklesIcon,
@@ -28,7 +28,7 @@ const features = [
         title: 'Bảo mật cao',
         description: 'Dữ liệu của bạn được mã hóa an toàn',
         color: 'from-green-500 to-emerald-600',
-        bgColor: 'bg-green-100 dark:bg-green-900/50',
+        bgColor: 'bg-green-500/10 dark:bg-green-500/20',
     },
     {
         icon: ClockIcon,
@@ -57,11 +57,11 @@ export function FeatureCards() {
                         whileHover={{ scale: 1.03, y: -5 }}
                         className="
               relative overflow-hidden
-              bg-white/60 dark:bg-sky-950/40
+              bg-white dark:bg-[rgba(20,26,33,0.6)] border border-[rgba(145,158,171,0.12)] dark:border-[rgba(145,158,171,0.12)]
               backdrop-blur-xl
-              border border-white/20 dark:border-sky-800/30
+              
               rounded-2xl p-5
-              hover:shadow-xl hover:shadow-sky-500/10
+              hover:shadow-xl hover:border-[rgba(145,158,171,0.32)] dark:hover:border-[rgba(145,158,171,0.32)]
               transition-shadow duration-300
               group
             "
@@ -70,7 +70,7 @@ export function FeatureCards() {
                         <motion.div
                             className={`
                 absolute inset-0 opacity-0 group-hover:opacity-10
-                bg-gradient-to-br ${feature.color}
+                bg-[rgba(145,158,171,0.04)] dark:bg-[rgba(145,158,171,0.08)]
                 transition-opacity duration-300
               `}
                         />
@@ -78,14 +78,14 @@ export function FeatureCards() {
                         <div className="relative z-10">
                             {/* Icon */}
                             <div className={`inline-flex p-3 rounded-xl ${feature.bgColor} mb-4`}>
-                                <feature.icon className="w-6 h-6 text-sky-600 dark:text-sky-400" />
+                                <feature.icon className="w-6 h-6 text-[#22c55e]" />
                             </div>
 
                             {/* Text */}
-                            <h4 className="text-sm font-semibold text-sky-900 dark:text-sky-100 mb-1">
+                            <h4 className="text-sm font-semibold text-[#1C252E] dark:text-white mb-1">
                                 {feature.title}
                             </h4>
-                            <p className="text-xs text-sky-600/70 dark:text-sky-400/70">
+                            <p className="text-xs text-[#637381] dark:text-[#919EAB]">
                                 {feature.description}
                             </p>
                         </div>

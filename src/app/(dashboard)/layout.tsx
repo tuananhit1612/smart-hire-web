@@ -22,7 +22,7 @@ export default function DashboardLayout({
 
             {/* Main area — offset by sidebar width */}
             <motion.div
-                animate={{ marginLeft: collapsed ? 88 : 280 }}
+                animate={{ marginLeft: collapsed ? 88 : 220 }}
                 transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
                 className="flex flex-col flex-1 min-w-0"
             >

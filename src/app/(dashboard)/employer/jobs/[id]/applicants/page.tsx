@@ -62,23 +62,23 @@ export default function EmployerApplicantsPage({ params }: { params: { id: strin
     }, [searchQuery, sortBy]);
 
     return (
-        <div className="w-full bg-slate-50/50 pt-6 pb-12">
+        <div className="w-full bg-[#F4F6F8] dark:bg-[#141A21] pt-6 pb-12">
             <div className="container mx-auto px-4 max-w-7xl">
                 {/* Header */}
                 <div className="mb-8">
-                    <Link href="/employer/dashboard" className="inline-flex items-center text-sm text-slate-500 hover:text-sky-600 mb-4 transition-colors">
+                    <Link href="/employer/dashboard" className="inline-flex items-center text-sm text-slate-500 hover:text-[#22c55e] mb-4 transition-colors">
                         <ArrowLeft className="w-4 h-4 mr-1" />
                         Quay lại Dashboard
                     </Link>
 
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div>
-                            <h1 className="text-3xl font-bold text-slate-900 mb-1">
+                            <h1 className="text-3xl font-bold text-[#1C252E] dark:text-white mb-1">
                                 Danh sách ứng viên
                             </h1>
-                            <p className="text-slate-500 text-lg flex items-center gap-2">
-                                <span className="font-medium text-sky-700">{jobTitle}</span>
-                                <span className="w-1 h-1 rounded-full bg-slate-300" />
+                            <p className="text-[#637381] dark:text-[#919EAB] text-lg flex items-center gap-2">
+                                <span className="font-medium text-[#22c55e] dark:text-[#22c55e]">{jobTitle}</span>
+                                <span className="w-1 h-1 rounded-full bg-[rgba(145,158,171,0.3)]" />
                                 <span className="text-sm flex items-center gap-1">
                                     <Users className="w-4 h-4" /> {filteredApplicants.length} hồ sơ
                                 </span>
@@ -89,22 +89,22 @@ export default function EmployerApplicantsPage({ params }: { params: { id: strin
                         <motion.div
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
-                            className="bg-gradient-to-r from-sky-500 to-blue-600 rounded-2xl p-0.5 shadow-lg shadow-blue-500/20"
+                            className="bg-gradient-to-r from-[#22c55e] to-[#10b981] rounded-2xl p-0.5 shadow-lg shadow-[#22c55e]/20"
                         >
-                            <div className="bg-white/95 backdrop-blur-sm rounded-[14px] px-4 py-3 flex items-center gap-4">
-                                <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center">
-                                    <Sparkles className="w-5 h-5 text-blue-600" />
+                            <div className="bg-white/95 dark:bg-[#1C252E] backdrop-blur-sm rounded-[14px] px-4 py-3 flex items-center gap-4">
+                                <div className="w-10 h-10 rounded-full bg-[#22c55e]/10 dark:bg-[#22c55e]/20 flex items-center justify-center">
+                                    <Sparkles className="w-5 h-5 text-[#22c55e] dark:text-[#22c55e]" />
                                 </div>
                                 <div>
-                                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Top Match</p>
-                                    <p className="text-lg font-bold text-slate-900">
+                                    <p className="text-xs font-semibold text-[#919EAB] uppercase tracking-wider">Top Match</p>
+                                    <p className="text-lg font-bold text-[#1C252E] dark:text-white">
                                         {Math.max(...mockEmployerApplicants.map(a => a.aiAnalysis.matchScore))}%
                                     </p>
                                 </div>
-                                <div className="w-px h-8 bg-slate-100" />
+                                <div className="w-px h-8 bg-[rgba(145,158,171,0.15)] dark:bg-white/[0.08]" />
                                 <div>
-                                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Trung bình</p>
-                                    <p className="text-lg font-bold text-slate-900">
+                                    <p className="text-xs font-semibold text-[#919EAB] uppercase tracking-wider">Trung bình</p>
+                                    <p className="text-lg font-bold text-[#1C252E] dark:text-white">
                                         {Math.round(mockEmployerApplicants.reduce((acc, curr) => acc + curr.aiAnalysis.matchScore, 0) / mockEmployerApplicants.length)}%
                                     </p>
                                 </div>

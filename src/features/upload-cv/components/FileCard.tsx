@@ -27,7 +27,7 @@ export function FileCard({ file, index, onRemove }: FileCardProps) {
                         animate={{ rotate: 360 }}
                         transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
                     >
-                        <ArrowPathIcon className="w-5 h-5 text-sky-500" />
+                        <ArrowPathIcon className="w-5 h-5 text-green-500" />
                     </motion.div>
                 );
             case 'success':
@@ -62,8 +62,8 @@ export function FileCard({ file, index, onRemove }: FileCardProps) {
 
         // DOCX/DOC
         return (
-            <div className="p-3 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/50 dark:to-blue-800/50">
-                <DocumentIcon className="w-6 h-6 text-blue-500" />
+            <div className="p-3 rounded-2xl bg-gradient-to-br from-emerald-100 to-emerald-200 dark:from-emerald-900/50 dark:to-emerald-800/50">
+                <DocumentIcon className="w-6 h-6 text-emerald-500" />
             </div>
         );
     };
@@ -71,7 +71,7 @@ export function FileCard({ file, index, onRemove }: FileCardProps) {
     const getStatusColor = () => {
         switch (file.status) {
             case 'uploading':
-                return 'border-sky-200 dark:border-sky-800';
+                return 'border-green-200 dark:border-green-800';
             case 'success':
                 return 'border-green-200 dark:border-green-800';
             case 'error':
@@ -90,11 +90,11 @@ export function FileCard({ file, index, onRemove }: FileCardProps) {
             layout
             className={`
         relative group
-        bg-white/70 dark:bg-sky-950/40
+        bg-white/70 dark:bg-green-950/40
         backdrop-blur-xl
         border ${getStatusColor()}
         rounded-2xl p-4
-        hover:shadow-lg hover:shadow-sky-500/10
+        hover:shadow-lg hover:shadow-green-500/10
         transition-all duration-300
       `}
         >
@@ -109,15 +109,15 @@ export function FileCard({ file, index, onRemove }: FileCardProps) {
 
                 {/* File Info */}
                 <div className="flex-1 min-w-0">
-                    <h4 className="text-sm font-medium text-sky-900 dark:text-sky-100 truncate">
+                    <h4 className="text-sm font-medium text-green-900 dark:text-green-100 truncate">
                         {file.name}
                     </h4>
                     <div className="flex items-center gap-2 mt-1">
-                        <span className="text-xs text-sky-500/70 dark:text-sky-400/70">
+                        <span className="text-xs text-green-500/70 dark:text-green-400/70">
                             {formatFileSize(file.size)}
                         </span>
                         {file.status === 'uploading' && (
-                            <span className="text-xs text-sky-500 dark:text-sky-400">
+                            <span className="text-xs text-green-500 dark:text-green-400">
                                 • {Math.round(file.progress)}%
                             </span>
                         )}
@@ -130,9 +130,9 @@ export function FileCard({ file, index, onRemove }: FileCardProps) {
 
                     {/* Progress Bar */}
                     {file.status === 'uploading' && (
-                        <div className="mt-2 h-1.5 bg-sky-100 dark:bg-sky-900 rounded-full overflow-hidden">
+                        <div className="mt-2 h-1.5 bg-green-100 dark:bg-green-900 rounded-full overflow-hidden">
                             <motion.div
-                                className="h-full bg-gradient-to-r from-sky-500 to-blue-500 rounded-full"
+                                className="h-full bg-gradient-to-r from-green-500 to-emerald-500 rounded-full"
                                 initial={{ width: 0 }}
                                 animate={{ width: `${file.progress}%` }}
                                 transition={{ duration: 0.3, ease: 'easeOut' }}

@@ -70,8 +70,8 @@ export function ExperienceSection({ data, onChange }: ExperienceSectionProps) {
                 {/* Section Header */}
                 <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                     <div>
-                        <h2 className="text-xl md:text-2xl font-bold tracking-tight text-sky-900 flex items-center gap-2 md:gap-3">
-                            <div className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-gradient-to-r from-sky-500 to-green-500 text-white flex-shrink-0 shadow-lg shadow-sky-500/20">
+                        <h2 className="text-xl md:text-2xl font-bold tracking-tight text-green-900 flex items-center gap-2 md:gap-3">
+                            <div className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-gradient-to-r from-green-500 to-green-500 text-white flex-shrink-0 shadow-lg shadow-green-500/20">
                                 <Briefcase className="w-4 h-4 md:w-5 md:h-5" />
                             </div>
                             <span>Kinh nghiệm làm việc</span>
@@ -100,7 +100,7 @@ export function ExperienceSection({ data, onChange }: ExperienceSectionProps) {
                             exit={{ opacity: 0, scale: 0.95 }}
                             className="border-2 border-dashed border-gray-200 dark:border-zinc-800 rounded-2xl p-8 text-center"
                         >
-                            <Briefcase className="w-12 h-12 mx-auto text-sky-200 mb-3" />
+                            <Briefcase className="w-12 h-12 mx-auto text-green-200 mb-3" />
                             <p className="text-gray-500 text-sm">
                                 Chưa có kinh nghiệm làm việc
                             </p>
@@ -134,7 +134,7 @@ export function ExperienceSection({ data, onChange }: ExperienceSectionProps) {
                                     </button>
 
                                     {/* Item Number Badge */}
-                                    <div className="absolute -left-3 top-6 flex items-center justify-center w-6 h-6 rounded-full bg-gradient-to-r from-sky-500 to-green-500 text-white text-xs font-bold shadow-lg hidden md:flex">
+                                    <div className="absolute -left-3 top-6 flex items-center justify-center w-6 h-6 rounded-full bg-gradient-to-r from-green-500 to-green-500 text-white text-xs font-bold shadow-lg hidden md:flex">
                                         {index + 1}
                                     </div>
 
@@ -142,7 +142,7 @@ export function ExperienceSection({ data, onChange }: ExperienceSectionProps) {
                                         {/* Mobile Drag Handle & Number */}
                                         <div className="flex items-center gap-2 md:hidden">
                                             {dragHandle}
-                                            <span className="text-xs font-semibold text-sky-600">
+                                            <span className="text-xs font-semibold text-green-600">
                                                 #{index + 1}
                                             </span>
                                         </div>
@@ -223,8 +223,8 @@ export function ExperienceSection({ data, onChange }: ExperienceSectionProps) {
                                                     className="sr-only"
                                                 />
                                                 <div className={`w-5 h-5 rounded-md border-2 transition-all duration-200 flex items-center justify-center ${item.isCurrent
-                                                    ? "bg-gradient-to-r from-sky-500 to-green-500 border-transparent"
-                                                    : "border-gray-300 group-hover/checkbox:border-sky-400"
+                                                    ? "bg-gradient-to-r from-green-500 to-green-500 border-transparent"
+                                                    : "border-gray-300 group-hover/checkbox:border-green-400"
                                                     }`}>
                                                     {item.isCurrent && (
                                                         <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -250,7 +250,7 @@ export function ExperienceSection({ data, onChange }: ExperienceSectionProps) {
                                                 }
                                                 placeholder="Mô tả các trách nhiệm và thành tựu chính của bạn..."
                                                 rows={3}
-                                                className="w-full rounded-xl border border-gray-200 bg-transparent px-4 py-3 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all duration-200 resize-none hover:border-sky-200"
+                                                className="w-full rounded-xl border border-gray-200 bg-transparent px-4 py-3 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 resize-none hover:border-green-200"
                                             />
                                         </div>
                                     </div>

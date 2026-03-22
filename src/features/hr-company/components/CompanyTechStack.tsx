@@ -19,24 +19,24 @@ const TECH_SUGGESTIONS = [
 
 // Tech color mapping for visual variety
 const TECH_COLORS: Record<string, { bg: string; text: string; glow: string }> = {
-    "React": { bg: "from-cyan-400 to-blue-500", text: "text-white", glow: "shadow-cyan-500/40" },
+    "React": { bg: "from-[#22c55e] to-[#10b981]", text: "text-white", glow: "shadow-green-500/20" },
     "Vue": { bg: "from-emerald-400 to-green-600", text: "text-white", glow: "shadow-emerald-500/40" },
     "Angular": { bg: "from-red-400 to-red-600", text: "text-white", glow: "shadow-red-500/40" },
     "Next.js": { bg: "from-slate-700 to-slate-900", text: "text-white", glow: "shadow-slate-500/40" },
     "Node.js": { bg: "from-green-500 to-emerald-700", text: "text-white", glow: "shadow-green-500/40" },
-    "Python": { bg: "from-yellow-400 to-blue-500", text: "text-white", glow: "shadow-yellow-500/40" },
+    "Python": { bg: "from-yellow-400 to-[#10b981]", text: "text-white", glow: "shadow-yellow-500/40" },
     "Java": { bg: "from-orange-500 to-red-600", text: "text-white", glow: "shadow-orange-500/40" },
-    "Go": { bg: "from-cyan-500 to-blue-600", text: "text-white", glow: "shadow-cyan-500/40" },
-    "TypeScript": { bg: "from-blue-500 to-blue-700", text: "text-white", glow: "shadow-blue-500/40" },
-    "PostgreSQL": { bg: "from-blue-400 to-indigo-600", text: "text-white", glow: "shadow-indigo-500/40" },
+    "Go": { bg: "from-[#22c55e] to-[#10b981]", text: "text-white", glow: "shadow-green-500/20" },
+    "TypeScript": { bg: "from-[#22c55e] to-[#10b981]", text: "text-white", glow: "shadow-green-500/20" },
+    "PostgreSQL": { bg: "from-[#22c55e] to-[#10b981]", text: "text-white", glow: "shadow-green-500/20" },
     "MongoDB": { bg: "from-green-500 to-green-700", text: "text-white", glow: "shadow-green-500/40" },
     "AWS": { bg: "from-orange-400 to-yellow-500", text: "text-slate-900", glow: "shadow-orange-500/40" },
-    "Docker": { bg: "from-blue-400 to-blue-600", text: "text-white", glow: "shadow-blue-500/40" },
-    "Kubernetes": { bg: "from-blue-500 to-indigo-600", text: "text-white", glow: "shadow-blue-500/40" },
+    "Docker": { bg: "from-[#22c55e] to-[#10b981]", text: "text-white", glow: "shadow-green-500/20" },
+    "Kubernetes": { bg: "from-[#22c55e] to-[#10b981]", text: "text-white", glow: "shadow-green-500/20" },
     "GraphQL": { bg: "from-pink-500 to-purple-600", text: "text-white", glow: "shadow-pink-500/40" },
 };
 
-const DEFAULT_COLOR = { bg: "from-purple-400 to-indigo-600", text: "text-white", glow: "shadow-purple-500/40" };
+const DEFAULT_COLOR = { bg: "from-purple-400 to-[#10b981]", text: "text-white", glow: "shadow-purple-500/40" };
 
 export function CompanyTechStack({ techStack, onUpdate, editable = true }: CompanyTechStackProps) {
     const [isAdding, setIsAdding] = React.useState(false);
@@ -68,16 +68,16 @@ export function CompanyTechStack({ techStack, onUpdate, editable = true }: Compa
                             rotate: [0, 360],
                         }}
                         transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                        className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-500/30"
+                        className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500 to-[#10b981] flex items-center justify-center shadow-lg shadow-purple-500/30"
                     >
                         <Code2 className="w-6 h-6 text-white" />
                     </motion.div>
                     <div>
-                        <h2 className="text-xl font-bold text-sky-900 flex items-center gap-2">
+                        <h2 className="text-xl font-bold text-[#1C252E] dark:text-white flex items-center gap-2">
                             Tech Stack
                             <Zap className="w-5 h-5 text-yellow-500" />
                         </h2>
-                        <p className="text-sm text-sky-600">Công nghệ chúng tôi sử dụng</p>
+                        <p className="text-sm text-[#22c55e] dark:text-[#919EAB]">Công nghệ chúng tôi sử dụng</p>
                     </div>
                 </div>
                 {editable && !isAdding && (
@@ -85,7 +85,7 @@ export function CompanyTechStack({ techStack, onUpdate, editable = true }: Compa
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => setIsAdding(true)}
-                        className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-full font-medium shadow-lg shadow-purple-500/30 hover:shadow-xl transition-all"
+                        className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-[#10b981] text-white rounded-full font-medium shadow-lg shadow-purple-500/30 hover:shadow-xl transition-all"
                     >
                         <Plus className="w-4 h-4" />
                         Thêm
@@ -102,18 +102,18 @@ export function CompanyTechStack({ techStack, onUpdate, editable = true }: Compa
                         exit={{ opacity: 0, height: 0, y: -20 }}
                         className="overflow-hidden"
                     >
-                        <div className="p-6 bg-gradient-to-br from-purple-50 via-white to-indigo-50 rounded-2xl border-2 border-dashed border-purple-300">
+                        <div className="p-6 bg-gradient-to-br from-purple-50 via-white to-[#22c55e]/5 dark:from-purple-900/10 dark:via-[#1C252E] dark:to-[#22c55e]/5 rounded-2xl border-2 border-dashed border-purple-300 dark:border-purple-700">
                             <div className="space-y-4">
                                 {/* Input row */}
                                 <div className="flex gap-3">
                                     <div className="flex-1 relative group">
-                                        <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-xl opacity-20 group-focus-within:opacity-100 blur-sm transition-opacity" />
+                                        <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-500 to-[#10b981] rounded-xl opacity-20 group-focus-within:opacity-100 blur-sm transition-opacity" />
                                         <input
                                             type="text"
                                             value={newTech}
                                             onChange={(e) => setNewTech(e.target.value)}
                                             placeholder="Nhập tên công nghệ..."
-                                            className="relative w-full bg-white rounded-xl px-4 py-3 border-2 border-slate-200 focus:border-purple-500 focus:outline-none transition-colors"
+                                            className="relative w-full bg-white dark:bg-[#1C252E] rounded-xl px-4 py-3 border-2 border-slate-200 dark:border-white/[0.08] focus:border-purple-500 focus:outline-none text-slate-800 dark:text-white transition-colors"
                                             onKeyDown={(e) => e.key === "Enter" && handleAdd(newTech)}
                                         />
                                     </div>
@@ -122,7 +122,7 @@ export function CompanyTechStack({ techStack, onUpdate, editable = true }: Compa
                                         whileTap={{ scale: 0.98 }}
                                         onClick={() => handleAdd(newTech)}
                                         disabled={!newTech}
-                                        className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-xl font-semibold shadow-lg disabled:opacity-50"
+                                        className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-[#10b981] text-white rounded-xl font-semibold shadow-lg disabled:opacity-50"
                                     >
                                         <Check className="w-4 h-4" />
                                         Thêm
@@ -131,7 +131,7 @@ export function CompanyTechStack({ techStack, onUpdate, editable = true }: Compa
                                         whileHover={{ scale: 1.02 }}
                                         whileTap={{ scale: 0.98 }}
                                         onClick={() => setIsAdding(false)}
-                                        className="px-6 py-3 bg-white text-slate-600 rounded-xl font-semibold border-2 border-slate-200"
+                                        className="px-6 py-3 bg-white dark:bg-white/[0.04] text-slate-600 dark:text-[#C4CDD5] rounded-xl font-semibold border-2 border-slate-200 dark:border-white/[0.08]"
                                     >
                                         Hủy
                                     </motion.button>
@@ -140,7 +140,7 @@ export function CompanyTechStack({ techStack, onUpdate, editable = true }: Compa
                                 {/* Suggestions */}
                                 {availableSuggestions.length > 0 && (
                                     <div>
-                                        <p className="text-sm font-medium text-purple-700 mb-3 flex items-center gap-1">
+                                        <p className="text-sm font-medium text-purple-700 dark:text-purple-400 mb-3 flex items-center gap-1">
                                             <Sparkles className="w-4 h-4" />
                                             Gợi ý phổ biến:
                                         </p>
@@ -221,15 +221,16 @@ export function CompanyTechStack({ techStack, onUpdate, editable = true }: Compa
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="text-center py-12 rounded-2xl bg-gradient-to-br from-slate-50 to-white border-2 border-dashed border-slate-200"
+                    className="text-center py-12 rounded-2xl bg-gradient-to-br from-slate-50 to-white dark:from-white/[0.02] dark:to-[#1C252E] border-2 border-dashed border-slate-200 dark:border-white/[0.08]"
                 >
-                    <Code2 className="w-16 h-16 mx-auto mb-3 text-slate-300" />
-                    <p className="text-slate-500 font-medium">Chưa có công nghệ nào được thêm</p>
+                    <Code2 className="w-16 h-16 mx-auto mb-3 text-slate-300 dark:text-[#637381]" />
+                    <p className="text-slate-500 dark:text-[#919EAB] font-medium">Chưa có công nghệ nào được thêm</p>
                     {editable && (
-                        <p className="text-sm text-slate-400 mt-1">Nhấn "Thêm" để bắt đầu</p>
+                        <p className="text-sm text-slate-400 dark:text-[#637381] mt-1">Nhấn "Thêm" để bắt đầu</p>
                     )}
                 </motion.div>
             )}
         </div>
     );
 }
+

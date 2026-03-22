@@ -14,7 +14,8 @@ import {
   AlertTriangle,
   Briefcase,
   PartyPopper,
-  ArrowRight
+  ArrowRight,
+  Trash2
 } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { Job } from "@/features/jobs/types/job";
@@ -39,7 +40,7 @@ export function ApplyModal({ job, isOpen, onClose, onSuccess }: ApplyModalProps)
   const [modalState, setModalState] = useState<ModalState>("form");
   const hasInitializedRef = useRef(false);
 
-  const { applyToJob, hasApplied } = useApplicationStore();
+  const { applyToJob, hasApplied, withdrawApplication } = useApplicationStore();
 
   // Check for selected CV from URL params (returning from preview page)
   // Only run once when modal opens
@@ -142,7 +143,14 @@ export function ApplyModal({ job, isOpen, onClose, onSuccess }: ApplyModalProps)
               <SuccessView job={job} onClose={handleCloseAfterSuccess} />
             )}
             {modalState === "already-applied" && (
-              <AlreadyAppliedView job={job} onClose={onClose} />
+              <AlreadyAppliedView
+                job={job}
+                onClose={onClose}
+                onWithdraw={async () => {
+                  await withdrawApplication(job.id);
+                  setModalState("form");
+                }}
+              />
             )}
             {modalState === "job-closed" && (
               <JobClosedView job={job} onClose={onClose} />
@@ -304,9 +312,10 @@ function SuccessView({ job, onClose }: { job: Job; onClose: () => void }) {
 }
 
 // ==================== Already Applied View ====================
-function AlreadyAppliedView({ job, onClose }: { job: Job; onClose: () => void }) {
+function AlreadyAppliedView({ job, onClose, onWithdraw }: { job: Job; onClose: () => void; onWithdraw: () => void }) {
   const { getApplicationDate } = useApplicationStore();
   const appliedDate = getApplicationDate(job.id);
+  const [confirmWithdraw, setConfirmWithdraw] = useState(false);
 
   return (
     <div className="flex flex-col items-center justify-center p-8 min-h-[400px] text-center">
@@ -390,6 +399,40 @@ function AlreadyAppliedView({ job, onClose }: { job: Job; onClose: () => void })
           <ArrowRight className="w-4 h-4 ml-2" />
         </Button>
       </motion.div>
+
+      {/* Withdraw action */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+        className="mt-2"
+      >
+        {!confirmWithdraw ? (
+          <button
+            onClick={() => setConfirmWithdraw(true)}
+            className="text-xs text-slate-400 dark:text-slate-500 hover:text-red-500 dark:hover:text-red-400 transition-colors flex items-center gap-1 mx-auto"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+            Rút hồ sơ & ứng tuyển lại
+          </button>
+        ) : (
+          <div className="flex items-center justify-center gap-2">
+            <span className="text-xs text-red-500">Bạn chắc chứ?</span>
+            <button
+              onClick={onWithdraw}
+              className="text-xs font-semibold text-red-600 hover:text-red-700 underline"
+            >
+              Xác nhận
+            </button>
+            <button
+              onClick={() => setConfirmWithdraw(false)}
+              className="text-xs text-slate-400 hover:text-slate-600"
+            >
+              Huỷ
+            </button>
+          </div>
+        )}
+      </motion.div>
     </div>
   );
 }
@@ -459,9 +502,9 @@ function JobClosedView({ job, onClose }: { job: Job; onClose: () => void }) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="w-full max-w-sm bg-sky-50 dark:bg-sky-900/20 rounded-2xl p-4 mb-6 border border-sky-200 dark:border-sky-800"
+        className="w-full max-w-sm bg-[#22c55e]/10 dark:bg-[#22c55e]/20 rounded-2xl p-4 mb-6 border border-[#22c55e]/30 dark:border-[#22c55e]/30"
       >
-        <p className="text-sm text-sky-700 dark:text-sky-400">
+        <p className="text-sm text-[#22c55e] dark:text-[#22c55e]">
           💡 <strong>Tip:</strong> Hãy lưu công ty này vào danh sách theo dõi để nhận thông báo khi có vị trí mới!
         </p>
       </motion.div>
@@ -740,3 +783,4 @@ function CVCard({ cv, isSelected, onSelect, onView, formatDate }: CVCardProps) {
     </motion.div>
   );
 }
+

@@ -46,14 +46,13 @@ export default function RootLayout({
         suppressHydrationWarning
         className={`${beVietnamPro.variable} ${spaceGrotesk.variable} ${firaCode.variable} font-body antialiased flex flex-col min-h-screen bg-background text-foreground overflow-x-hidden`}
       >
-        <ParticleBackground />
-
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem={false}
           disableTransitionOnChange
         >
+          <ParticleBackground />
           <ToastProvider>
             <AuthProvider>
               {children}

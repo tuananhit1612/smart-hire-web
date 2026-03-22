@@ -97,10 +97,10 @@ export function LogoUpload({
             {/* Background */}
             <div
                 className={`absolute inset-0 transition-all duration-300 ${isDragging
-                    ? "bg-sky-100 border-2 border-dashed border-sky-500"
+                    ? "bg-[#22c55e]/15 dark:bg-[#22c55e]/20 border-2 border-dashed border-[#22c55e]/30"
                     : displayImage
-                        ? "bg-white"
-                        : "bg-gradient-to-br from-sky-50 to-white border-2 border-dashed border-sky-200"
+                        ? "bg-white dark:bg-[#1C252E]"
+                        : "bg-gradient-to-br from-[rgba(145,158,171,0.04)] to-white dark:from-[rgba(145,158,171,0.04)] dark:to-[#1C252E] border-2 border-dashed border-[#22c55e]/30 dark:border-white/[0.08]"
                     }`}
             />
 
@@ -112,7 +112,7 @@ export function LogoUpload({
                     className="absolute inset-0 w-full h-full object-cover"
                 />
             ) : (
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-sky-400">
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-[#22c55e] dark:text-[#22c55e]">
                     <Upload className={iconSizes[size]} />
                     {size === "lg" && (
                         <span className="text-xs mt-1 font-medium">Upload Logo</span>
@@ -125,7 +125,7 @@ export function LogoUpload({
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: isHovered ? 1 : 0 }}
-                    className="absolute inset-0 bg-sky-900/60 backdrop-blur-sm flex items-center justify-center"
+                    className="absolute inset-0 bg-[#1C252E] backdrop-blur-sm flex items-center justify-center"
                 >
                     <div className="text-white text-center">
                         <Camera className={iconSizes[size]} />
@@ -153,11 +153,11 @@ export function LogoUpload({
                 <motion.div
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="absolute inset-0 flex items-center justify-center bg-sky-500/20"
+                    className="absolute inset-0 flex items-center justify-center bg-[#22c55e]/20"
                 >
                     <div className="bg-white rounded-xl px-3 py-2 shadow-lg flex items-center gap-2">
                         <Check className="w-4 h-4 text-green-500" />
-                        <span className="text-sm font-medium text-sky-700">Thả để upload</span>
+                        <span className="text-sm font-medium text-[#22c55e] dark:text-[#22c55e]">Thả để upload</span>
                     </div>
                 </motion.div>
             )}
@@ -173,3 +173,4 @@ export function LogoUpload({
         </motion.div>
     );
 }
+

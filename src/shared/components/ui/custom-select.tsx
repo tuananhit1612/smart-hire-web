@@ -54,7 +54,7 @@ export function CustomSelect({
 
     return (
         <div className="space-y-1.5" ref={ref}>
-            <label className="block text-sm font-semibold text-sky-800">
+            <label className="block text-sm font-semibold text-[#1C252E]">
                 {label}
                 {required && <span className="text-red-500 ml-1">*</span>}
             </label>
@@ -63,18 +63,18 @@ export function CustomSelect({
                     type="button"
                     onClick={() => setIsOpen(!isOpen)}
                     className={`w-full flex items-center justify-between px-4 py-3.5 bg-white border-2 rounded-2xl transition-all text-left text-base ${isOpen
-                            ? "border-sky-400 ring-4 ring-sky-100"
-                            : "border-sky-100 hover:border-sky-200"
+                            ? "border-[#22c55e]/30 ring-4 ring-[#22c55e]/30"
+                            : "border-[rgba(145,158,171,0.12)] hover:border-[#22c55e]/30"
                         }`}
                 >
-                    <span className={selectedOption ? "text-sky-900" : "text-sky-300"}>
+                    <span className={selectedOption ? "text-[#1C252E]" : "text-[#22c55e]"}>
                         {selectedOption?.label || placeholder}
                     </span>
                     <motion.div
                         animate={{ rotate: isOpen ? 180 : 0 }}
                         transition={{ duration: 0.2 }}
                     >
-                        <ChevronDown className="w-5 h-5 text-sky-400" />
+                        <ChevronDown className="w-5 h-5 text-[#22c55e]" />
                     </motion.div>
                 </button>
 
@@ -85,7 +85,7 @@ export function CustomSelect({
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             exit={{ opacity: 0, y: -8, scale: 0.95 }}
                             transition={{ duration: 0.15 }}
-                            className="absolute z-50 w-full mt-2 bg-white rounded-2xl shadow-xl border border-sky-100 overflow-hidden"
+                            className="absolute z-50 w-full mt-2 bg-white rounded-2xl shadow-xl border border-[rgba(145,158,171,0.12)] overflow-hidden"
                         >
                             <div className="max-h-64 overflow-y-auto py-2">
                                 {options.map((option) => {
@@ -100,14 +100,14 @@ export function CustomSelect({
                                                 setIsOpen(false);
                                             }}
                                             className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors ${isSelected
-                                                    ? "bg-sky-50 text-sky-700"
-                                                    : "text-sky-800 hover:bg-sky-50"
+                                                    ? "bg-[#22c55e]/10 text-[#22c55e]"
+                                                    : "text-[#1C252E] hover:bg-[#22c55e]/10"
                                                 }`}
                                         >
-                                            {Icon && <Icon className="w-4 h-4 text-sky-400" />}
+                                            {Icon && <Icon className="w-4 h-4 text-[#22c55e]" />}
                                             <span className="flex-1">{option.label}</span>
                                             {isSelected && (
-                                                <Check className="w-4 h-4 text-sky-600" />
+                                                <Check className="w-4 h-4 text-[#22c55e]" />
                                             )}
                                         </button>
                                     );
@@ -120,3 +120,4 @@ export function CustomSelect({
         </div>
     );
 }
+

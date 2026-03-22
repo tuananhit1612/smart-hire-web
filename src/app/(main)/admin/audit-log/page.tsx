@@ -67,7 +67,7 @@ const mockLogs: AuditLogEntry[] = [
 
 // ─── Config ──────────────────────────────────────────
 const CATEGORY_CONFIG: Record<string, { label: string; icon: typeof User; color: string; bg: string }> = {
-    auth: { label: "Xác thực", icon: LogIn, color: "text-sky-700", bg: "bg-sky-100" },
+    auth: { label: "Xác thực", icon: LogIn, color: "text-[#22c55e]", bg: "bg-[#22c55e]/15" },
     user: { label: "Người dùng", icon: User, color: "text-violet-700", bg: "bg-violet-100" },
     content: { label: "Nội dung", icon: FileText, color: "text-emerald-700", bg: "bg-emerald-100" },
     system: { label: "Hệ thống", icon: Server, color: "text-slate-600", bg: "bg-slate-100" },
@@ -75,7 +75,7 @@ const CATEGORY_CONFIG: Record<string, { label: string; icon: typeof User; color:
 };
 
 const SEVERITY_CONFIG: Record<string, { color: string; bg: string; dot: string }> = {
-    info: { color: "text-sky-600", bg: "bg-sky-50", dot: "bg-sky-400" },
+    info: { color: "text-[#22c55e]", bg: "bg-[#22c55e]/10", dot: "bg-[#22c55e]" },
     success: { color: "text-emerald-600", bg: "bg-emerald-50", dot: "bg-emerald-400" },
     warning: { color: "text-amber-600", bg: "bg-amber-50", dot: "bg-amber-400" },
     error: { color: "text-rose-600", bg: "bg-rose-50", dot: "bg-rose-400" },
@@ -166,8 +166,8 @@ export default function AuditLogPage() {
                     className="mb-6"
                 >
                     <div className="flex items-center gap-2">
-                        <ScrollText className="w-6 h-6 text-sky-600" />
-                        <h1 className="text-2xl font-bold text-sky-900">Nhật ký hoạt động</h1>
+                        <ScrollText className="w-6 h-6 text-[#22c55e]" />
+                        <h1 className="text-2xl font-bold text-[#1C252E]">Nhật ký hoạt động</h1>
                     </div>
                     <p className="text-sm text-slate-500 mt-1">
                         {mockLogs.length} sự kiện hôm nay — Theo dõi mọi thao tác trên hệ thống
@@ -190,14 +190,14 @@ export default function AuditLogPage() {
                                 className={cn(
                                     "px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap",
                                     activeCategory === tab.key
-                                        ? "bg-white text-sky-900 shadow-sm"
+                                        ? "bg-white text-[#1C252E] shadow-sm"
                                         : "text-slate-500 hover:text-slate-700"
                                 )}
                             >
                                 {tab.label}
                                 <span className={cn(
                                     "ml-1.5 text-[10px] px-1.5 py-0.5 rounded-full",
-                                    activeCategory === tab.key ? "bg-sky-100 text-sky-700" : "bg-slate-200 text-slate-400"
+                                    activeCategory === tab.key ? "bg-[#22c55e]/15 text-[#22c55e]" : "bg-slate-200 text-slate-400"
                                 )}>
                                     {categoryCounts[tab.key]}
                                 </span>
@@ -214,14 +214,14 @@ export default function AuditLogPage() {
                                 placeholder="Tìm theo actor, action, target..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                className="w-full pl-9 pr-4 py-2 text-sm bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-200 focus:border-sky-400 transition-all"
+                                className="w-full pl-9 pr-4 py-2 text-sm bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#22c55e]/30 focus:border-[#22c55e]/30 transition-all"
                             />
                         </div>
                         <div className="relative">
                             <select
                                 value={severity}
                                 onChange={(e) => setSeverity(e.target.value as LogSeverity | "all")}
-                                className="appearance-none pl-3 pr-8 py-2 text-sm bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-200 focus:border-sky-400 cursor-pointer"
+                                className="appearance-none pl-3 pr-8 py-2 text-sm bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#22c55e]/30 focus:border-[#22c55e]/30 cursor-pointer"
                             >
                                 {SEVERITY_OPTIONS.map((opt) => (
                                     <option key={opt.key} value={opt.key}>{opt.label}</option>
@@ -257,7 +257,7 @@ export default function AuditLogPage() {
                                         exit={{ opacity: 0, x: 10 }}
                                         transition={{ delay: i * 0.02 }}
                                         onClick={() => setExpandedId(isExpanded ? null : log.id)}
-                                        className="px-5 py-3 hover:bg-sky-50/30 transition-colors cursor-pointer group"
+                                        className="px-5 py-3 hover:bg-[#22c55e]/10 transition-colors cursor-pointer group"
                                     >
                                         <div className="flex items-center gap-3">
                                             {/* Severity Dot */}
@@ -274,7 +274,7 @@ export default function AuditLogPage() {
                                             {/* Main Content */}
                                             <div className="flex-1 min-w-0">
                                                 <div className="flex items-center gap-2 flex-wrap">
-                                                    <span className="text-sm font-semibold text-sky-900">{log.action}</span>
+                                                    <span className="text-sm font-semibold text-[#1C252E]">{log.action}</span>
                                                     <span className="text-xs text-slate-400">→</span>
                                                     <span className="text-sm text-slate-600 truncate">{log.target}</span>
                                                 </div>
@@ -369,3 +369,4 @@ export default function AuditLogPage() {
         </section>
     );
 }
+

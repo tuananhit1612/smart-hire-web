@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
+import { motion } from "framer-motion";
 import {
     MapPin,
     Globe,
@@ -40,28 +40,6 @@ export function CompanyHeaderPremium({ company, onUpdate, editable = true }: Com
         name: company.name,
         tagline: company.tagline || "",
     });
-
-    // 3D tilt effect
-    const x = useMotionValue(0);
-    const y = useMotionValue(0);
-    const rotateX = useTransform(y, [-100, 100], [3, -3]);
-    const rotateY = useTransform(x, [-100, 100], [-3, 3]);
-    // Faster return with higher stiffness and damping
-    const springRotateX = useSpring(rotateX, { stiffness: 300, damping: 20, restDelta: 0.001 });
-    const springRotateY = useSpring(rotateY, { stiffness: 300, damping: 20, restDelta: 0.001 });
-
-    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        x.set(e.clientX - centerX);
-        y.set(e.clientY - centerY);
-    };
-
-    const handleMouseLeave = () => {
-        x.set(0);
-        y.set(0);
-    };
 
     const handleQuickSave = () => {
         onUpdate?.({
@@ -116,36 +94,24 @@ export function CompanyHeaderPremium({ company, onUpdate, editable = true }: Com
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                style={{
-                    perspective: 1000,
-                }}
-                onMouseMove={handleMouseMove}
-                onMouseLeave={handleMouseLeave}
                 className="relative"
             >
-                <motion.div
-                    style={{
-                        rotateX: springRotateX,
-                        rotateY: springRotateY,
-                    }}
-                    className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-white/90 via-white/80 to-sky-50/90 backdrop-blur-2xl border border-white/60 shadow-2xl shadow-sky-900/10"
+                <div
+                    className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-white/90 via-white/80 to-[#22c55e]/5 dark:from-[#1C252E] dark:via-[#1C252E] dark:to-[#1C252E] backdrop-blur-2xl border border-white/60 dark:border-white/[0.08] shadow-2xl shadow-[#22c55e]/20"
                 >
                     {/* Animated gradient border */}
-                    <div className="absolute inset-0 rounded-[2rem] p-[1px] bg-gradient-to-r from-sky-400/30 via-green-400/30 to-sky-400/30 animate-pulse" />
+                    <div className="absolute inset-0 rounded-[2rem] p-[1px] bg-gradient-to-r from-[#22c55e]/30 via-green-400/30 to-[#10b981]/30 animate-pulse" />
 
                     {/* Cover Image with Parallax */}
                     <div className="h-56 sm:h-64 relative overflow-hidden">
                         {company.coverUrl ? (
-                            <motion.img
-                                initial={{ scale: 1.1 }}
-                                animate={{ scale: 1 }}
-                                transition={{ duration: 1.5 }}
+                            <img
                                 src={company.coverUrl}
                                 alt="Company Cover"
                                 className="w-full h-full object-cover"
                             />
                         ) : (
-                            <div className="w-full h-full bg-gradient-to-br from-sky-500 via-blue-500 to-indigo-600 relative overflow-hidden">
+                            <div className="w-full h-full bg-gradient-to-br from-[#22c55e] via-[#10b981] to-[#10b981] relative overflow-hidden">
                                 {/* Animated waves */}
                                 <svg
                                     className="absolute bottom-0 left-0 w-full"
@@ -234,7 +200,7 @@ export function CompanyHeaderPremium({ company, onUpdate, editable = true }: Com
                                     ],
                                 }}
                                 transition={{ duration: 2, repeat: Infinity }}
-                                className="p-1.5 bg-white rounded-2xl shadow-2xl"
+                                className="p-1.5 bg-white dark:bg-[#1C252E] rounded-2xl shadow-2xl"
                             >
                                 <LogoUpload
                                     currentLogo={company.logoUrl}
@@ -259,7 +225,7 @@ export function CompanyHeaderPremium({ company, onUpdate, editable = true }: Com
                                         onChange={(e) =>
                                             setEditData({ ...editData, name: e.target.value })
                                         }
-                                        className="w-full text-2xl font-bold bg-sky-50 rounded-xl px-4 py-2 border-2 border-sky-200 focus:border-sky-500 focus:outline-none text-sky-900"
+                                        className="w-full text-2xl font-bold bg-[#22c55e]/10 dark:bg-white/[0.04] rounded-xl px-4 py-2 border-2 border-[#22c55e]/30 dark:border-white/[0.08] focus:border-[#22c55e]/30 focus:outline-none text-[#1C252E] dark:text-white"
                                         placeholder="Tên công ty"
                                     />
                                     <input
@@ -268,7 +234,7 @@ export function CompanyHeaderPremium({ company, onUpdate, editable = true }: Com
                                         onChange={(e) =>
                                             setEditData({ ...editData, tagline: e.target.value })
                                         }
-                                        className="w-full text-base bg-sky-50 rounded-xl px-4 py-2 border-2 border-sky-200 focus:border-sky-500 focus:outline-none text-sky-700"
+                                        className="w-full text-base bg-[#22c55e]/10 dark:bg-white/[0.04] rounded-xl px-4 py-2 border-2 border-[#22c55e]/30 dark:border-white/[0.08] focus:border-[#22c55e]/30 focus:outline-none text-[#22c55e] dark:text-[#C4CDD5]"
                                         placeholder="Slogan công ty"
                                     />
                                     <div className="flex gap-2">
@@ -296,7 +262,7 @@ export function CompanyHeaderPremium({ company, onUpdate, editable = true }: Com
                                             initial={{ opacity: 0, x: -20 }}
                                             animate={{ opacity: 1, x: 0 }}
                                             transition={{ delay: 0.4 }}
-                                            className="text-3xl sm:text-4xl font-bold text-sky-900"
+                                            className="text-3xl sm:text-4xl font-bold text-[#1C252E] dark:text-white"
                                         >
                                             {company.name}
                                         </motion.h1>
@@ -305,7 +271,7 @@ export function CompanyHeaderPremium({ company, onUpdate, editable = true }: Com
                                                 initial={{ opacity: 0 }}
                                                 animate={{ opacity: 1 }}
                                                 transition={{ delay: 0.5 }}
-                                                className="text-sky-600 mt-2 text-lg flex items-center gap-2"
+                                                className="text-[#22c55e] dark:text-[#C4CDD5] mt-2 text-lg flex items-center gap-2"
                                             >
                                                 <Sparkles className="w-4 h-4 text-yellow-500" />
                                                 {company.tagline}
@@ -321,7 +287,7 @@ export function CompanyHeaderPremium({ company, onUpdate, editable = true }: Com
                                         >
                                             <Button
                                                 onClick={() => setIsQuickEdit(true)}
-                                                className="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white rounded-full px-5 shadow-lg hover:shadow-xl transition-all"
+                                                className="bg-gradient-to-r from-[#22c55e] to-[#10b981] hover:from-[#22c55e] hover:to-[#10b981] text-white rounded-full px-5 shadow-lg hover:shadow-xl transition-all"
                                             >
                                                 <Pencil className="w-4 h-4 mr-2" />
                                                 Sửa nhanh
@@ -329,7 +295,7 @@ export function CompanyHeaderPremium({ company, onUpdate, editable = true }: Com
                                             <Button
                                                 onClick={() => setShowInfoEditor(true)}
                                                 variant="outline"
-                                                className="rounded-full px-5 border-sky-200 hover:border-sky-400 hover:bg-sky-50"
+                                                className="rounded-full px-5 border-[#22c55e]/30 dark:border-white/[0.08] hover:border-[#22c55e]/30 dark:hover:border-white/[0.16] hover:bg-[#22c55e]/10 dark:hover:bg-white/[0.04] dark:text-[#C4CDD5]"
                                             >
                                                 <Settings className="w-4 h-4 mr-2" />
                                                 Tất cả thông tin
@@ -351,7 +317,7 @@ export function CompanyHeaderPremium({ company, onUpdate, editable = true }: Com
                                     value={yearsActive}
                                     label="Năm hoạt động"
                                     suffix="+"
-                                    gradient="bg-gradient-to-br from-sky-500 to-blue-600"
+                                    gradient="bg-gradient-to-br from-[#22c55e] to-[#10b981]"
                                     delay={0.1}
                                 />
                                 <StatCard
@@ -366,7 +332,7 @@ export function CompanyHeaderPremium({ company, onUpdate, editable = true }: Com
                                     icon={<Award className="w-5 h-5" />}
                                     value={benefitCount}
                                     label="Phúc lợi"
-                                    gradient="bg-gradient-to-br from-purple-500 to-indigo-600"
+                                    gradient="bg-gradient-to-br from-purple-500 to-[#10b981]"
                                     delay={0.3}
                                 />
                                 <StatCard
@@ -434,7 +400,7 @@ export function CompanyHeaderPremium({ company, onUpdate, editable = true }: Com
                             </motion.div>
                         </div>
                     </div>
-                </motion.div>
+                </div>
             </motion.div>
 
             {/* Cover Upload Modal */}
@@ -477,12 +443,13 @@ function InfoPill({
             onClick={onClick}
             whileHover={isClickable ? { scale: 1.05, y: -2 } : {}}
             className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border transition-all ${isAdd
-                ? "bg-sky-100/50 border-dashed border-sky-300 text-sky-500 hover:bg-sky-100 hover:border-sky-400 cursor-pointer"
-                : "bg-sky-50 border-sky-100 text-sky-700"
-                } ${isClickable && !isAdd ? "hover:bg-sky-100 hover:border-sky-200 cursor-pointer" : ""}`}
+                ? "bg-[#22c55e]/15 dark:bg-[#22c55e]/20 border-dashed border-[#22c55e]/30 dark:border-[#22c55e]/30 text-[#22c55e] dark:text-[#22c55e] hover:bg-[#22c55e]/15 dark:hover:bg-[#22c55e]/20 hover:border-[#22c55e]/30 cursor-pointer"
+                : "bg-[#22c55e]/10 dark:bg-white/[0.04] border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] text-[#22c55e] dark:text-[#C4CDD5]"
+                } ${isClickable && !isAdd ? "hover:bg-[#22c55e]/15 dark:hover:bg-white/[0.06] hover:border-[#22c55e]/30 dark:hover:border-white/[0.12] cursor-pointer" : ""}`}
         >
-            <span className={isAdd ? "text-sky-400" : "text-sky-500"}>{icon}</span>
+            <span className={isAdd ? "text-[#22c55e]" : "text-[#22c55e]"}>{icon}</span>
             {text}
         </motion.div>
     );
 }
+

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { motion } from "framer-motion";
+import { motion, LayoutGroup } from "framer-motion";
 import { CVSection, CV_SECTIONS } from "../types/types";
 import { cn } from "@/lib/utils";
 import {
@@ -11,6 +11,9 @@ import {
     Briefcase,
     Zap,
     FolderKanban,
+    Globe,
+    Award,
+    Trophy,
     Check,
 } from "lucide-react";
 
@@ -27,6 +30,9 @@ const iconMap: Record<string, React.ElementType> = {
     Briefcase,
     Zap,
     FolderKanban,
+    Globe,
+    Award,
+    Trophy,
 };
 
 export function CVSectionNav({
@@ -34,97 +40,87 @@ export function CVSectionNav({
     onSectionChange,
     completedSections = [],
 }: CVSectionNavProps) {
+    const navRef = React.useRef<HTMLDivElement>(null);
+    const buttonRefs = React.useRef<Map<string, HTMLButtonElement>>(new Map());
+
+    // Auto-scroll the active tab into view (centered)
+    React.useEffect(() => {
+        const btn = buttonRefs.current.get(activeSection);
+        if (btn && navRef.current) {
+            const nav = navRef.current;
+            const btnRect = btn.getBoundingClientRect();
+            const navRect = nav.getBoundingClientRect();
+            const scrollLeft =
+                btn.offsetLeft - nav.offsetWidth / 2 + btnRect.width / 2;
+            nav.scrollTo({ left: scrollLeft, behavior: "smooth" });
+        }
+    }, [activeSection]);
+
     return (
-        <nav className="flex flex-col gap-2">
-            {/* Header */}
-            <div className="mb-4">
-                <h2 className="text-xs uppercase tracking-widest text-gray-500 font-medium font-sans">
-                    Các mục CV
-                </h2>
-            </div>
+        <LayoutGroup>
+            <nav
+                ref={navRef}
+                className="relative flex items-center gap-1 overflow-x-auto py-1 px-1 [&::-webkit-scrollbar]:hidden"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+                {CV_SECTIONS.map((section, index) => {
+                    const Icon = iconMap[section.icon];
+                    const isActive = activeSection === section.id;
+                    const isCompleted = completedSections.includes(section.id);
 
-            {/* Section Items */}
-            {CV_SECTIONS.map((section, index) => {
-                const Icon = iconMap[section.icon];
-                const isActive = activeSection === section.id;
-                const isCompleted = completedSections.includes(section.id);
+                    return (
+                        <button
+                            key={section.id}
+                            ref={(el) => {
+                                if (el) buttonRefs.current.set(section.id, el);
+                            }}
+                            onClick={() => onSectionChange(section.id)}
+                            className={cn(
+                                "relative flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors cursor-pointer font-sans",
+                                isActive
+                                    ? "text-green-700 dark:text-green-400"
+                                    : isCompleted
+                                        ? "text-green-600/70 dark:text-green-500/70 hover:text-green-700 dark:hover:text-green-400"
+                                        : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                            )}
+                        >
+                            {/* Sliding active pill background */}
+                            {isActive && (
+                                <motion.div
+                                    layoutId="activeSectionPill"
+                                    className="absolute inset-0 rounded-xl bg-green-50 dark:bg-green-500/15 border border-green-200/60 dark:border-green-500/25 shadow-sm"
+                                    transition={{
+                                        type: "spring",
+                                        stiffness: 350,
+                                        damping: 30,
+                                        mass: 0.8,
+                                    }}
+                                    style={{ originX: 0.5, originY: 0.5 }}
+                                />
+                            )}
 
-                return (
-                    <motion.button
-                        key={section.id}
-                        onClick={() => onSectionChange(section.id)}
-                        className={cn(
-                            "relative flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all duration-200 cursor-pointer group",
-                            isActive
-                                ? "bg-white shadow-lg shadow-green-900/5"
-                                : "hover:bg-green-50"
-                        )}
-                        whileHover={{ x: 4 }}
-                        whileTap={{ scale: 0.98 }}
-                    >
-                        {/* Holographic Active Border */}
-                        {isActive && (
-                            <motion.div
-                                layoutId="activeSection"
-                                className="absolute inset-0 rounded-xl p-[1px] bg-gradient-to-r from-sky-400 via-green-400 to-teal-400"
-                                transition={{ type: "spring", duration: 0.5 }}
-                            >
-                                <div className="absolute inset-[1px] rounded-xl bg-white" />
-                            </motion.div>
-                        )}
-
-                        {/* Content */}
-                        <div className="relative z-10 flex items-center gap-3 w-full">
-                            {/* Icon with number/check */}
-                            <div
-                                className={cn(
-                                    "flex items-center justify-center w-9 h-9 rounded-lg transition-colors",
-                                    isActive
-                                        ? "bg-gradient-to-r from-sky-500 to-green-500 text-white shadow-md shadow-green-500/20"
-                                        : isCompleted
-                                            ? "bg-green-100 text-green-600"
-                                            : "bg-gray-100 text-gray-400 group-hover:bg-white group-hover:text-green-500"
-                                )}
-                            >
+                            {/* Icon */}
+                            <span className="relative z-10">
                                 {isCompleted && !isActive ? (
-                                    <Check className="w-4 h-4" />
+                                    <Check className="w-3.5 h-3.5" />
                                 ) : (
-                                    <Icon className="w-4 h-4" />
+                                    <Icon className="w-3.5 h-3.5" />
                                 )}
-                            </div>
+                            </span>
 
-                            {/* Text */}
-                            <div className="flex-1 min-w-0">
-                                <div
-                                    className={cn(
-                                        "text-sm font-medium truncate transition-colors font-sans",
-                                        isActive
-                                            ? "text-sky-900"
-                                            : "text-gray-600 group-hover:text-green-700"
-                                    )}
-                                >
-                                    {section.title}
-                                </div>
-                                <div className="text-xs text-gray-400 truncate group-hover:text-green-600/70">
-                                    {section.description}
-                                </div>
-                            </div>
+                            {/* Label */}
+                            <span className="relative z-10 hidden sm:inline">
+                                {section.title}
+                            </span>
 
-                            {/* Step number */}
-                            <div
-                                className={cn(
-                                    "text-xs font-medium",
-                                    isActive
-                                        ? "text-green-600"
-                                        : "text-gray-300 group-hover:text-green-400"
-                                )}
-                            >
-                                {index + 1}/{CV_SECTIONS.length}
-                            </div>
-                        </div>
-                    </motion.button>
-                );
-            })}
-        </nav>
+                            {/* Step dot (mobile) */}
+                            <span className="relative z-10 sm:hidden text-[10px] opacity-60">
+                                {index + 1}
+                            </span>
+                        </button>
+                    );
+                })}
+            </nav>
+        </LayoutGroup>
     );
 }

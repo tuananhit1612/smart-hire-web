@@ -123,7 +123,7 @@ export function VersionHistoryDialog({ currentData, Template, onRestore }: Versi
                 <Button
                     variant="ghost"
                     size="sm"
-                    className="h-8 flex items-center gap-2 px-3 rounded-md text-sm font-medium transition-all !ring-0 !outline-none !border-transparent border-0 ring-0 outline-none shadow-none hover:shadow-none focus:ring-0 focus:outline-none focus:border-transparent text-slate-600 hover:text-sky-600 hover:bg-sky-50 active:bg-sky-100 active:text-sky-700 active:shadow-inner select-none"
+                    className="h-8 flex items-center gap-2 px-3 rounded-md text-sm font-medium transition-all !ring-0 !outline-none !border-transparent border-0 ring-0 outline-none shadow-none hover:shadow-none focus:ring-0 focus:outline-none focus:border-transparent text-slate-600 hover:text-green-600 hover:bg-green-50 active:bg-green-100 active:text-green-700 active:shadow-inner select-none"
                     style={{ boxSizing: 'border-box' }}
                 >
                     <History className="w-4 h-4" />
@@ -143,7 +143,7 @@ export function VersionHistoryDialog({ currentData, Template, onRestore }: Versi
                     <div className="px-8 py-4 bg-white/90 backdrop-blur-md border-b border-slate-200 flex items-center justify-between shrink-0 z-20 shadow-sm">
                         <DialogHeader className="p-0 text-left">
                             <DialogTitle className="flex items-center gap-3 text-slate-800 text-2xl font-bold font-be-vietnam">
-                                <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-sky-600 text-white shadow-md shadow-sky-600/20">
+                                <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-green-600 text-white shadow-md shadow-green-600/20">
                                     <History className="w-5 h-5" />
                                 </span>
                                 <div>
@@ -206,7 +206,7 @@ export function VersionHistoryDialog({ currentData, Template, onRestore }: Versi
                                     placeholder="Tên phiên bản mới..."
                                     value={newVersionName}
                                     onChange={(e) => setNewVersionName(e.target.value)}
-                                    className="pl-4 pr-10 h-11 rounded-full border-slate-200 bg-white focus:border-sky-500 focus:ring-4 focus:ring-sky-100 transition-all font-be-vietnam text-sm"
+                                    className="pl-4 pr-10 h-11 rounded-full border-slate-200 bg-white focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all font-be-vietnam text-sm"
                                 />
                                 <Save className="absolute right-4 top-3.5 w-4 h-4 text-slate-400" />
                             </div>
@@ -214,7 +214,7 @@ export function VersionHistoryDialog({ currentData, Template, onRestore }: Versi
                             <Button
                                 onClick={handleSave}
                                 disabled={!newVersionName.trim()}
-                                className="h-11 px-6 rounded-full bg-slate-900 hover:bg-sky-600 text-white font-bold shadow-lg active:scale-95 transition-all"
+                                className="h-11 px-6 rounded-full bg-slate-900 hover:bg-green-600 text-white font-bold shadow-lg active:scale-95 transition-all"
                             >
                                 Lưu
                             </Button>
@@ -232,7 +232,7 @@ export function VersionHistoryDialog({ currentData, Template, onRestore }: Versi
                         {history.length === 0 ? (
                             <div className="flex flex-col items-center justify-center h-full opacity-60">
                                 <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-sm mb-4">
-                                    <Sparkles className="w-10 h-10 text-sky-200" />
+                                    <Sparkles className="w-10 h-10 text-green-200" />
                                 </div>
                                 <h3 className="text-lg font-bold text-slate-700">Chưa có bản lưu nào</h3>
                                 <p className="text-slate-400 text-sm">Hãy lưu lại cột mốc đầu tiên của bạn</p>
@@ -255,8 +255,8 @@ export function VersionHistoryDialog({ currentData, Template, onRestore }: Versi
                                                 className={cn(
                                                     "group relative bg-white rounded-xl overflow-hidden cursor-pointer flex flex-col transition-all duration-300",
                                                     "border hover:shadow-xl hover:-translate-y-1",
-                                                    isSelected ? "ring-2 ring-sky-500 border-sky-500 shadow-md transform scale-[1.02] z-10" :
-                                                        (isLatest ? "border-sky-200 ring-2 ring-sky-50 shadow-md" : "border-slate-200 shadow-sm")
+                                                    isSelected ? "ring-2 ring-green-500 border-green-500 shadow-md transform scale-[1.02] z-10" :
+                                                        (isLatest ? "border-green-200 ring-2 ring-green-50 shadow-md" : "border-slate-200 shadow-sm")
                                                 )}
                                                 draggable
                                                 onDragStart={(e) => handleDragStart(e as any, item.id)}
@@ -266,7 +266,7 @@ export function VersionHistoryDialog({ currentData, Template, onRestore }: Versi
                                                 {/* Selection Checkbox */}
                                                 <div className={cn(
                                                     "absolute top-3 left-3 z-20 w-5 h-5 rounded-md border-2 bg-white flex items-center justify-center transition-all shadow-sm",
-                                                    isSelected ? "border-sky-500 bg-sky-500 text-white" : "border-slate-200 opacity-0 group-hover:opacity-100"
+                                                    isSelected ? "border-green-500 bg-green-500 text-white" : "border-slate-200 opacity-0 group-hover:opacity-100"
                                                 )}>
                                                     {isSelected && <Check className="w-3 h-3" />}
                                                 </div>
@@ -302,7 +302,7 @@ export function VersionHistoryDialog({ currentData, Template, onRestore }: Versi
                                                             size="icon"
                                                             title="Sử dụng phiên bản này (Thay thế hiện tại)"
                                                             onClick={(e) => { e.stopPropagation(); handleRestore(item.data); }}
-                                                            className="pointer-events-auto h-12 w-12 rounded-full bg-white/95 backdrop-blur-sm text-sky-600 shadow-xl border border-sky-100 hover:bg-sky-500 hover:text-white hover:scale-110 active:scale-95 transition-all duration-300"
+                                                            className="pointer-events-auto h-12 w-12 rounded-full bg-white/95 backdrop-blur-sm text-green-600 shadow-xl border border-green-100 hover:bg-green-500 hover:text-white hover:scale-110 active:scale-95 transition-all duration-300"
                                                         >
                                                             <RotateCcw className="w-6 h-6" />
                                                         </Button>

@@ -21,9 +21,9 @@ const PLATFORM_ICONS: Record<SocialLink["platform"], React.ElementType> = {
 };
 
 const PLATFORM_COLORS: Record<SocialLink["platform"], string> = {
-    LinkedIn: "from-blue-600 to-blue-700",
-    Facebook: "from-blue-500 to-blue-600",
-    Twitter: "from-sky-400 to-sky-500",
+    LinkedIn: "from-[#22c55e] to-[#10b981]",
+    Facebook: "from-[#22c55e] to-[#10b981]",
+    Twitter: "from-[#22c55e] to-[#10b981]",
     Website: "from-green-500 to-emerald-600",
     GitHub: "from-gray-700 to-gray-800",
 };
@@ -52,22 +52,22 @@ export function CompanySocialLinks({ socialLinks, onUpdate, editable = true }: C
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="bg-white/80 backdrop-blur-xl rounded-3xl border border-white/40 shadow-xl shadow-sky-900/5 p-6"
+            className="bg-white/80 dark:bg-[#1C252E]/80 backdrop-blur-xl rounded-3xl border border-white/40 dark:border-white/[0.08] shadow-xl shadow-[#22c55e]/20 dark:shadow-black/20 p-6"
         >
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#22c55e] to-[#10b981] flex items-center justify-center">
                         <Globe className="w-5 h-5 text-white" />
                     </div>
-                    <h2 className="text-lg font-bold text-sky-900">Liên kết mạng xã hội</h2>
+                    <h2 className="text-lg font-bold text-[#1C252E] dark:text-white">Liên kết mạng xã hội</h2>
                 </div>
                 {editable && !isAdding && (
                     <Button
                         onClick={() => setIsAdding(true)}
                         variant="ghost"
                         size="sm"
-                        className="text-sky-600 hover:text-sky-700 hover:bg-sky-50 rounded-full"
+                        className="text-[#22c55e] hover:text-[#22c55e] hover:bg-[#22c55e]/10 rounded-full"
                     >
                         <Plus className="w-4 h-4 mr-1" />
                         Thêm
@@ -80,7 +80,7 @@ export function CompanySocialLinks({ socialLinks, onUpdate, editable = true }: C
                 <motion.div
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: "auto" }}
-                    className="mb-4 p-4 bg-sky-50 rounded-2xl border border-sky-200"
+                    className="mb-4 p-4 bg-[#22c55e]/10 dark:bg-white/[0.04] rounded-2xl border border-[#22c55e]/30 dark:border-white/[0.08]"
                 >
                     <div className="flex flex-wrap gap-3">
                         <select
@@ -88,7 +88,7 @@ export function CompanySocialLinks({ socialLinks, onUpdate, editable = true }: C
                             onChange={(e) =>
                                 setNewLink({ ...newLink, platform: e.target.value as SocialLink["platform"] })
                             }
-                            className="bg-white rounded-xl px-4 py-2 border-2 border-sky-200 focus:border-sky-500 focus:outline-none"
+                            className="bg-white dark:bg-[#1C252E] rounded-xl px-4 py-2 border-2 border-[#22c55e]/30 dark:border-white/[0.08] focus:border-[#22c55e]/30 focus:outline-none text-slate-800 dark:text-white"
                         >
                             <option value="Website">Website</option>
                             <option value="LinkedIn">LinkedIn</option>
@@ -101,7 +101,7 @@ export function CompanySocialLinks({ socialLinks, onUpdate, editable = true }: C
                             value={newLink.url}
                             onChange={(e) => setNewLink({ ...newLink, url: e.target.value })}
                             placeholder="https://..."
-                            className="flex-1 min-w-[200px] bg-white rounded-xl px-4 py-2 border-2 border-sky-200 focus:border-sky-500 focus:outline-none"
+                            className="flex-1 min-w-[200px] bg-white dark:bg-[#1C252E] rounded-xl px-4 py-2 border-2 border-[#22c55e]/30 dark:border-white/[0.08] focus:border-[#22c55e]/30 focus:outline-none text-slate-800 dark:text-white"
                         />
                         <Button
                             onClick={handleAdd}
@@ -158,7 +158,7 @@ export function CompanySocialLinks({ socialLinks, onUpdate, editable = true }: C
                     })}
                 </div>
             ) : (
-                <div className="text-center py-6 text-sky-400">
+                <div className="text-center py-6 text-[#22c55e] dark:text-[#637381]">
                     <Globe className="w-10 h-10 mx-auto mb-2 opacity-50" />
                     <p>Chưa có liên kết mạng xã hội</p>
                 </div>
@@ -166,3 +166,4 @@ export function CompanySocialLinks({ socialLinks, onUpdate, editable = true }: C
         </motion.div>
     );
 }
+

@@ -34,10 +34,10 @@ import {
 
 // ─── Verdict Config ──────────────────────────────────
 const VERDICT_CONFIG: Record<string, { bg: string; text: string; border: string; icon: typeof ShieldCheck }> = {
-    "highly-recommended": { bg: "bg-emerald-50", text: "text-emerald-700", border: "border-emerald-200", icon: ShieldCheck },
-    recommended: { bg: "bg-sky-50", text: "text-sky-700", border: "border-sky-200", icon: ShieldCheck },
-    conditional: { bg: "bg-amber-50", text: "text-amber-700", border: "border-amber-200", icon: ShieldQuestion },
-    "not-recommended": { bg: "bg-rose-50", text: "text-rose-700", border: "border-rose-200", icon: ShieldAlert },
+    "highly-recommended": { bg: "bg-emerald-50 dark:bg-emerald-900/20", text: "text-emerald-700 dark:text-emerald-400", border: "border-emerald-200 dark:border-emerald-800/30", icon: ShieldCheck },
+    recommended: { bg: "bg-[#22c55e] dark:bg-[#22c55e]/20", text: "text-[#22c55e] dark:text-[#22c55e]", border: "border-[#22c55e] dark:border-[#22c55e]/30", icon: ShieldCheck },
+    conditional: { bg: "bg-amber-50 dark:bg-amber-900/20", text: "text-amber-700 dark:text-amber-400", border: "border-amber-200 dark:border-amber-800/30", icon: ShieldQuestion },
+    "not-recommended": { bg: "bg-rose-50 dark:bg-rose-900/20", text: "text-rose-700 dark:text-rose-400", border: "border-rose-200 dark:border-rose-800/30", icon: ShieldAlert },
 };
 
 // ─── Strength Icon Map ───────────────────────────────
@@ -51,16 +51,16 @@ const STRENGTH_ICONS: Record<string, typeof Star> = {
 
 // ─── Impact Badge ────────────────────────────────────
 const IMPACT_CONFIG: Record<string, { label: string; color: string }> = {
-    high: { label: "Cao", color: "bg-rose-100 text-rose-700" },
-    medium: { label: "Trung bình", color: "bg-amber-100 text-amber-700" },
-    low: { label: "Thấp", color: "bg-slate-100 text-slate-600" },
+    high: { label: "Cao", color: "bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400" },
+    medium: { label: "Trung bình", color: "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400" },
+    low: { label: "Thấp", color: "bg-slate-100 dark:bg-white/[0.06] text-slate-600 dark:text-[#919EAB]" },
 };
 
 // ─── Priority Badge ──────────────────────────────────
 const PRIORITY_CONFIG: Record<string, { label: string; color: string; dot: string }> = {
-    critical: { label: "Quan trọng", color: "bg-rose-50 text-rose-700 border-rose-200", dot: "bg-rose-500" },
-    important: { label: "Nên làm", color: "bg-amber-50 text-amber-700 border-amber-200", dot: "bg-amber-500" },
-    "nice-to-have": { label: "Tùy chọn", color: "bg-slate-50 text-slate-600 border-slate-200", dot: "bg-slate-400" },
+    critical: { label: "Quan trọng", color: "bg-rose-50 dark:bg-rose-900/20 text-rose-700 dark:text-rose-400 border-rose-200 dark:border-rose-800/30", dot: "bg-rose-500" },
+    important: { label: "Nên làm", color: "bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800/30", dot: "bg-amber-500" },
+    "nice-to-have": { label: "Tùy chọn", color: "bg-slate-50 dark:bg-white/[0.04] text-slate-600 dark:text-[#919EAB] border-slate-200 dark:border-white/[0.08]", dot: "bg-slate-400" },
 };
 
 // ─── Skill Bar ───────────────────────────────────────
@@ -68,15 +68,15 @@ function SkillBar({ skill, score, maxScore, delay }: { readonly skill: string; r
     const pct = (score / maxScore) * 100;
     const getColor = () => {
         if (pct >= 80) return "bg-emerald-500";
-        if (pct >= 60) return "bg-sky-500";
+        if (pct >= 60) return "bg-[#22c55e]";
         if (pct >= 40) return "bg-amber-500";
         return "bg-rose-500";
     };
 
     return (
         <div className="flex items-center gap-3">
-            <span className="text-sm font-medium text-slate-600 w-36 shrink-0">{skill}</span>
-            <div className="flex-1 h-3 bg-slate-100 rounded-full overflow-hidden">
+            <span className="text-base font-medium text-slate-600 dark:text-[#C4CDD5] w-36 shrink-0">{skill}</span>
+            <div className="flex-1 h-3 bg-slate-100 dark:bg-white/[0.06] rounded-full overflow-hidden">
                 <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${pct}%` }}
@@ -84,7 +84,7 @@ function SkillBar({ skill, score, maxScore, delay }: { readonly skill: string; r
                     className={cn("h-full rounded-full", getColor())}
                 />
             </div>
-            <span className="text-sm font-bold text-slate-700 w-8 text-right">{score}</span>
+            <span className="text-base font-bold text-slate-700 dark:text-white w-8 text-right">{score}</span>
         </div>
     );
 }
@@ -98,17 +98,17 @@ function StrengthCard({ strength, index }: { readonly strength: ReportStrength; 
             initial={{ opacity: 0, x: -15 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 hover:shadow-md transition-shadow"
+            className="bg-white dark:bg-[#1C252E] rounded-2xl border border-slate-100 dark:border-white/[0.08] shadow-sm p-4 hover:shadow-md transition-shadow"
         >
             <div className="flex items-start gap-3">
-                <div className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0">
+                <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center shrink-0">
                     <Icon className="w-4.5 h-4.5 text-emerald-600" />
                 </div>
                 <div className="flex-1 min-w-0">
-                    <h4 className="text-sm font-bold text-sky-900">{strength.title}</h4>
-                    <p className="text-sm text-slate-500 mt-1 leading-relaxed">{strength.description}</p>
-                    <div className="mt-2 bg-emerald-50/50 rounded-lg px-3 py-2 border border-emerald-100/50">
-                        <p className="text-xs text-emerald-700 italic">
+                    <h4 className="text-base font-bold text-[#22c55e] dark:text-white">{strength.title}</h4>
+                    <p className="text-base text-slate-500 dark:text-[#C4CDD5] mt-1 leading-relaxed">{strength.description}</p>
+                    <div className="mt-2 bg-emerald-50/50 dark:bg-emerald-900/10 rounded-lg px-3 py-2 border border-emerald-100/50 dark:border-emerald-800/30">
+                        <p className="text-sm text-emerald-700 dark:text-emerald-400 italic">
                             <span className="font-semibold not-italic">Minh chứng:</span> {strength.evidence}
                         </p>
                     </div>
@@ -127,23 +127,23 @@ function WeaknessCard({ weakness, index }: { readonly weakness: ReportWeakness; 
             initial={{ opacity: 0, x: -15 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 hover:shadow-md transition-shadow"
+            className="bg-white dark:bg-[#1C252E] rounded-2xl border border-slate-100 dark:border-white/[0.08] shadow-sm p-4 hover:shadow-md transition-shadow"
         >
             <div className="flex items-start gap-3">
-                <div className="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center shrink-0">
+                <div className="w-9 h-9 rounded-xl bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center shrink-0">
                     <AlertTriangle className="w-4.5 h-4.5 text-amber-600" />
                 </div>
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                        <h4 className="text-sm font-bold text-sky-900">{weakness.title}</h4>
-                        <span className={cn("text-[10px] font-bold px-1.5 py-0.5 rounded-full", impact?.color)}>
+                        <h4 className="text-base font-bold text-[#22c55e] dark:text-white">{weakness.title}</h4>
+                        <span className={cn("text-xs font-bold px-1.5 py-0.5 rounded-full", impact?.color)}>
                             {impact?.label}
                         </span>
                     </div>
-                    <p className="text-sm text-slate-500 mt-1 leading-relaxed">{weakness.description}</p>
-                    <div className="mt-2 bg-sky-50/50 rounded-lg px-3 py-2 border border-sky-100/50 flex items-start gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5 text-sky-500 mt-0.5 shrink-0" />
-                        <p className="text-xs text-sky-700">{weakness.suggestion}</p>
+                    <p className="text-base text-slate-500 dark:text-[#C4CDD5] mt-1 leading-relaxed">{weakness.description}</p>
+                    <div className="mt-2 bg-[#22c55e]/50 dark:bg-[#22c55e]/10 rounded-lg px-3 py-2 border border-[#22c55e]/50 dark:border-[#22c55e]/30 flex items-start gap-1.5">
+                        <Sparkles className="w-3.5 h-3.5 text-[#22c55e] mt-0.5 shrink-0" />
+                        <p className="text-sm text-[#22c55e] dark:text-[#22c55e]">{weakness.suggestion}</p>
                     </div>
                 </div>
             </div>
@@ -169,10 +169,10 @@ function RecommendationCard({ rec, index }: { readonly rec: Recommendation; read
             >
                 <div className={cn("w-2.5 h-2.5 rounded-full shrink-0", priority?.dot)} />
                 <div className="flex-1 min-w-0">
-                    <h4 className="text-sm font-bold">{rec.title}</h4>
-                    <p className="text-xs opacity-70 mt-0.5 truncate">{rec.description}</p>
+                    <h4 className="text-base font-bold">{rec.title}</h4>
+                    <p className="text-sm opacity-70 mt-0.5 truncate">{rec.description}</p>
                 </div>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border bg-white/60 shrink-0">
+                <span className="text-xs font-bold px-2 py-0.5 rounded-full border bg-white/60 shrink-0">
                     {priority?.label}
                 </span>
                 {expanded ? <ChevronUp className="w-4 h-4 opacity-50 shrink-0" /> : <ChevronDown className="w-4 h-4 opacity-50 shrink-0" />}
@@ -188,14 +188,14 @@ function RecommendationCard({ rec, index }: { readonly rec: Recommendation; read
                         className="overflow-hidden"
                     >
                         <div className="px-4 pb-4 space-y-3 border-t border-black/5 pt-3">
-                            <p className="text-sm leading-relaxed opacity-80">{rec.description}</p>
+                            <p className="text-base leading-relaxed opacity-80">{rec.description}</p>
 
                             {/* Action Items */}
                             <div>
-                                <p className="text-xs font-bold uppercase tracking-wider opacity-60 mb-2">Hành động cụ thể</p>
+                                <p className="text-sm font-bold uppercase tracking-wider opacity-60 mb-2">Hành động cụ thể</p>
                                 <ul className="space-y-1.5">
                                     {rec.actionItems.map((item, i) => (
-                                        <li key={item} className="flex items-start gap-2 text-sm">
+                                        <li key={item} className="flex items-start gap-2 text-base">
                                             <CheckCircle2 className="w-4 h-4 opacity-50 mt-0.5 shrink-0" />
                                             {item}
                                         </li>
@@ -206,10 +206,10 @@ function RecommendationCard({ rec, index }: { readonly rec: Recommendation; read
                             {/* Resources */}
                             {rec.resources && rec.resources.length > 0 && (
                                 <div>
-                                    <p className="text-xs font-bold uppercase tracking-wider opacity-60 mb-2">Tài liệu tham khảo</p>
+                                    <p className="text-sm font-bold uppercase tracking-wider opacity-60 mb-2">Tài liệu tham khảo</p>
                                     <ul className="space-y-1">
                                         {rec.resources.map((res) => (
-                                            <li key={res} className="flex items-center gap-1.5 text-xs opacity-70">
+                                            <li key={res} className="flex items-center gap-1.5 text-sm opacity-70">
                                                 <Bookmark className="w-3.5 h-3.5 shrink-0" />
                                                 {res}
                                             </li>
@@ -237,9 +237,9 @@ export default function InterviewReportPage() {
                 {/* Back Link */}
                 <Link
                     href="/interview/result"
-                    className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-sky-600 transition-colors mb-6"
+                    className="inline-flex items-center gap-2 text-base text-slate-400 dark:text-[#637381] hover:text-[#22c55e] dark:hover:text-[#22c55e] transition-colors mb-6"
                 >
-                    <ArrowLeft className="w-3.5 h-3.5" />
+                    <ArrowLeft className="w-4.5 h-4.5" />
                     Quay lại kết quả
                 </Link>
 
@@ -247,15 +247,15 @@ export default function InterviewReportPage() {
                 <motion.div
                     initial={{ opacity: 0, y: -15 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 mb-6"
+                    className="bg-white dark:bg-[#1C252E] rounded-2xl border border-slate-100 dark:border-white/[0.08] shadow-sm p-6 mb-6"
                 >
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                        <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-sky-500 to-blue-600 flex items-center justify-center shrink-0 shadow-lg shadow-sky-500/20">
+                        <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#22c55e] to-emerald-600 flex items-center justify-center shrink-0 shadow-lg shadow-[#22c55e]/20">
                             <FileText className="w-7 h-7 text-white" />
                         </div>
                         <div className="flex-1">
-                            <h1 className="text-xl font-bold text-sky-900">Báo cáo phỏng vấn</h1>
-                            <p className="text-sm text-slate-500 mt-0.5">
+                            <h1 className="text-2xl font-bold text-[#22c55e] dark:text-white">Báo cáo phỏng vấn</h1>
+                            <p className="text-base text-slate-500 dark:text-[#C4CDD5] mt-0.5">
                                 {report.candidateName} • {report.position} — {report.company}
                             </p>
                         </div>
@@ -268,7 +268,7 @@ export default function InterviewReportPage() {
                             )}
                         >
                             <VerdictIcon className="w-5 h-5" />
-                            <span className="text-sm font-bold">{report.verdictLabel}</span>
+                            <span className="text-base font-bold">{report.verdictLabel}</span>
                         </div>
                     </div>
                 </motion.div>
@@ -278,13 +278,13 @@ export default function InterviewReportPage() {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 }}
-                    className="bg-gradient-to-br from-violet-50 to-fuchsia-50 border border-violet-100 rounded-2xl p-5 mb-6"
+                    className="bg-gradient-to-br from-violet-50 to-fuchsia-50 dark:from-violet-900/15 dark:to-fuchsia-900/10 border border-violet-100 dark:border-violet-800/30 rounded-2xl p-5 mb-6"
                 >
                     <div className="flex items-start gap-3">
                         <BrainCircuit className="w-5 h-5 text-violet-500 mt-0.5 shrink-0" />
                         <div>
-                            <p className="text-sm font-bold text-violet-800 mb-1">Nhận xét tổng hợp của AI</p>
-                            <p className="text-sm text-violet-700 leading-relaxed">{report.aiSummary}</p>
+                            <p className="text-base font-bold text-violet-800 dark:text-violet-400 mb-1">Nhận xét tổng hợp của AI</p>
+                            <p className="text-base text-violet-700 dark:text-violet-400/80 leading-relaxed">{report.aiSummary}</p>
                         </div>
                     </div>
                 </motion.div>
@@ -294,11 +294,11 @@ export default function InterviewReportPage() {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.15 }}
-                    className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 mb-6"
+                    className="bg-white dark:bg-[#1C252E] rounded-2xl border border-slate-100 dark:border-white/[0.08] shadow-sm p-5 mb-6"
                 >
                     <div className="flex items-center gap-2 mb-4">
-                        <Target className="w-5 h-5 text-sky-600" />
-                        <h2 className="text-base font-bold text-sky-900">Năng lực tổng quan</h2>
+                        <Target className="w-5 h-5 text-[#22c55e]" />
+                        <h2 className="text-lg font-bold text-[#22c55e] dark:text-white">Năng lực tổng quan</h2>
                     </div>
                     <div className="space-y-3">
                         {report.skillRadar.map((skill, i) => (
@@ -317,7 +317,7 @@ export default function InterviewReportPage() {
                 <div className="mb-6">
                     <div className="flex items-center gap-2 mb-4">
                         <Star className="w-5 h-5 text-emerald-500" />
-                        <h2 className="text-base font-bold text-sky-900">Điểm mạnh ({report.strengths.length})</h2>
+                        <h2 className="text-lg font-bold text-[#22c55e] dark:text-white">Điểm mạnh ({report.strengths.length})</h2>
                     </div>
                     <div className="space-y-3">
                         {report.strengths.map((s, i) => (
@@ -330,7 +330,7 @@ export default function InterviewReportPage() {
                 <div className="mb-6">
                     <div className="flex items-center gap-2 mb-4">
                         <AlertTriangle className="w-5 h-5 text-amber-500" />
-                        <h2 className="text-base font-bold text-sky-900">Điểm cần cải thiện ({report.weaknesses.length})</h2>
+                        <h2 className="text-lg font-bold text-[#22c55e] dark:text-white">Điểm cần cải thiện ({report.weaknesses.length})</h2>
                     </div>
                     <div className="space-y-3">
                         {report.weaknesses.map((w, i) => (
@@ -342,8 +342,8 @@ export default function InterviewReportPage() {
                 {/* Recommendations Section */}
                 <div className="mb-6">
                     <div className="flex items-center gap-2 mb-4">
-                        <TrendingUp className="w-5 h-5 text-sky-600" />
-                        <h2 className="text-base font-bold text-sky-900">Khuyến nghị ({report.recommendations.length})</h2>
+                        <TrendingUp className="w-5 h-5 text-[#22c55e]" />
+                        <h2 className="text-lg font-bold text-[#22c55e] dark:text-white">Khuyến nghị ({report.recommendations.length})</h2>
                     </div>
                     <div className="space-y-3">
                         {report.recommendations.map((r, i) => (
@@ -360,13 +360,13 @@ export default function InterviewReportPage() {
                     className="flex items-center justify-center gap-3 mt-8"
                 >
                     <Link href="/interview/setup">
-                        <Button variant="ghost" className="rounded-full text-sm gap-1.5 cursor-pointer">
+                        <Button variant="ghost" className="rounded-full text-base gap-1.5 cursor-pointer">
                             <RotateCcw className="w-4 h-4" />
                             Phỏng vấn lại
                         </Button>
                     </Link>
                     <Link href="/interview/result">
-                        <Button className="rounded-full text-sm gap-1.5 bg-sky-600 hover:bg-sky-700 text-white cursor-pointer">
+                        <Button className="rounded-full text-base gap-1.5 bg-[#22c55e] hover:bg-[#22c55e] text-white cursor-pointer">
                             <FileText className="w-4 h-4" />
                             Xem chi tiết rubric
                         </Button>

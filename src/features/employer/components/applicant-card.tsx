@@ -26,9 +26,9 @@ interface ApplicantCardProps {
 export function ApplicantCard({ applicant, onSelect }: ApplicantCardProps) {
     // ... (keep score and status config logic)
     const getScoreColor = (score: number) => {
-        if (score >= 80) return "text-green-600 bg-green-50 border-green-200 ring-green-500/20";
-        if (score >= 50) return "text-amber-600 bg-amber-50 border-amber-200 ring-amber-500/20";
-        return "text-red-600 bg-red-50 border-red-200 ring-red-500/20";
+        if (score >= 80) return "text-green-600 bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700/40 ring-green-500/20";
+        if (score >= 50) return "text-amber-600 bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-700/40 ring-amber-500/20";
+        return "text-red-600 bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-700/40 ring-red-500/20";
     };
 
     const scoreColorClass = getScoreColor(applicant.aiAnalysis.matchScore);
@@ -36,7 +36,7 @@ export function ApplicantCard({ applicant, onSelect }: ApplicantCardProps) {
     const getStatusConfig = (status: string) => {
         switch (status) {
             case ApplicationStage.APPLIED:
-                return { label: "Mới nộp", color: "bg-blue-100 text-blue-700" };
+                return { label: "Mới nộp", color: "bg-[#22c55e]/15 text-[#22c55e]" };
             case ApplicationStage.SCREENING:
                 return { label: "Đang duyệt", color: "bg-purple-100 text-purple-700" };
             case ApplicationStage.INTERVIEW:
@@ -46,9 +46,9 @@ export function ApplicantCard({ applicant, onSelect }: ApplicantCardProps) {
             case ApplicationStage.HIRED:
                 return { label: "Đã tuyển", color: "bg-green-100 text-green-700" };
             case ApplicationStage.REJECTED:
-                return { label: "Từ chối", color: "bg-slate-100 text-slate-500" };
+                return { label: "Từ chối", color: "bg-[rgba(145,158,171,0.15)] dark:bg-white/[0.08] text-[#637381] dark:text-[#919EAB]" };
             default:
-                return { label: status, color: "bg-slate-100 text-slate-700" };
+                return { label: status, color: "bg-[rgba(145,158,171,0.15)] dark:bg-white/[0.08] text-[#637381] dark:text-[#919EAB]" };
         }
     };
 
@@ -59,26 +59,26 @@ export function ApplicantCard({ applicant, onSelect }: ApplicantCardProps) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             onClick={() => onSelect(applicant)}
-            className="group relative bg-white rounded-2xl border border-slate-200 p-5 hover:shadow-lg hover:border-sky-200 transition-all duration-300 cursor-pointer"
+            className="group relative bg-white dark:bg-[#1C252E] rounded-2xl border border-[rgba(145,158,171,0.16)] dark:border-white/[0.08] p-5 hover:shadow-lg hover:border-[#22c55e]/30 dark:hover:border-[#22c55e]/30 transition-all duration-300 cursor-pointer"
         >
             <div className="flex items-start justify-between mb-4">
                 {/* User Info */}
                 <div className="flex gap-4">
-                    <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center overflow-hidden border border-slate-100">
+                    <div className="w-12 h-12 rounded-full bg-[rgba(145,158,171,0.1)] dark:bg-white/[0.06] flex items-center justify-center overflow-hidden border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08]">
                         {applicant.avatarUrl ? (
                             <img src={applicant.avatarUrl} alt={applicant.name} className="w-full h-full object-cover" />
                         ) : (
-                            <span className="text-lg font-bold text-slate-400">{applicant.name.charAt(0)}</span>
+                            <span className="text-lg font-bold text-[#919EAB]">{applicant.name.charAt(0)}</span>
                         )}
                     </div>
                     <div>
-                        <h3 className="font-bold text-slate-900 group-hover:text-sky-700 transition-colors">
+                        <h3 className="font-bold text-[#1C252E] dark:text-white group-hover:text-[#22c55e] transition-colors">
                             {applicant.name}
                         </h3>
-                        <p className="text-sm text-slate-500 font-medium">
+                        <p className="text-sm text-[#637381] dark:text-[#919EAB] font-medium">
                             {applicant.currentTitle}
                         </p>
-                        <p className="text-xs text-slate-400 mt-1">
+                        <p className="text-xs text-[#919EAB] mt-1">
                             {applicant.experienceYears} năm kinh nghiệm
                         </p>
                     </div>
@@ -92,9 +92,9 @@ export function ApplicantCard({ applicant, onSelect }: ApplicantCardProps) {
             </div>
 
             {/* AI Summary */}
-            <div className="mb-4 bg-slate-50 rounded-xl p-3 border border-slate-100">
-                <p className="text-xs text-slate-600 line-clamp-2 italic">
-                    <span className="font-semibold text-sky-600 not-italic mr-1">AI nhận xét:</span>
+            <div className="mb-4 bg-[rgba(145,158,171,0.06)] dark:bg-white/[0.04] rounded-xl p-3 border border-[rgba(145,158,171,0.1)] dark:border-white/[0.06]">
+                <p className="text-xs text-[#637381] dark:text-[#919EAB] line-clamp-2 italic">
+                    <span className="font-semibold text-[#22c55e] not-italic mr-1">AI nhận xét:</span>
                     "{applicant.aiAnalysis.summary}"
                 </p>
             </div>
@@ -102,18 +102,18 @@ export function ApplicantCard({ applicant, onSelect }: ApplicantCardProps) {
             {/* Tags / Skills */}
             <div className="flex flex-wrap gap-2 mb-4">
                 {applicant.skills.slice(0, 3).map(skill => (
-                    <span key={skill} className="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded-md font-medium">
+                    <span key={skill} className="px-2 py-1 bg-[rgba(145,158,171,0.1)] dark:bg-white/[0.06] text-[#637381] dark:text-[#919EAB] text-xs rounded-md font-medium">
                         {skill}
                     </span>
                 ))}
                 {applicant.skills.length > 3 && (
-                    <span className="px-2 py-1 bg-slate-50 text-slate-400 text-xs rounded-md">
+                    <span className="px-2 py-1 bg-[rgba(145,158,171,0.06)] dark:bg-white/[0.03] text-[#919EAB] text-xs rounded-md">
                         +{applicant.skills.length - 3}
                     </span>
                 )}
             </div>
 
-            <hr className="border-slate-100 mb-4" />
+            <hr className="border-[rgba(145,158,171,0.12)] dark:border-white/[0.06] mb-4" />
 
             {/* Footer Actions */}
             <div className="flex items-center justify-between">
@@ -122,10 +122,10 @@ export function ApplicantCard({ applicant, onSelect }: ApplicantCardProps) {
                 </Badge>
                 
                 <div className="flex gap-2">
-                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-slate-400 hover:text-sky-600 hover:bg-sky-50">
+                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-[#919EAB] hover:text-[#22c55e] hover:bg-[#22c55e]/10 dark:hover:bg-[#22c55e]/20">
                         <Mail className="w-4 h-4" />
                     </Button>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-slate-400 hover:text-sky-600 hover:bg-sky-50">
+                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-[#919EAB] hover:text-[#22c55e] hover:bg-[#22c55e]/10 dark:hover:bg-[#22c55e]/20">
                         <FileText className="w-4 h-4" />
                     </Button>
                     <Button 
@@ -134,8 +134,7 @@ export function ApplicantCard({ applicant, onSelect }: ApplicantCardProps) {
                             e.stopPropagation();
                             onSelect(applicant);
                         }}
-                        className="rounded-full bg-sky-50 text-sky-600 hover:bg-sky-100 border border-sky-200 h-8 text-xs font-semibold px-4"
-                    >
+                        className="rounded-full bg-[#22c55e]/10 dark:bg-[#22c55e]/20 text-[#22c55e] hover:bg-[#22c55e]/15 dark:hover:bg-[#22c55e]/20 border border-[#22c55e]/30 dark:border-[#22c55e]/30 h-8 text-xs font-semibold px-4">
                         Chi tiết
                     </Button>
                 </div>
@@ -143,3 +142,4 @@ export function ApplicantCard({ applicant, onSelect }: ApplicantCardProps) {
         </motion.div>
     );
 }
+

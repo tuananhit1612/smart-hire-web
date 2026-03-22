@@ -54,14 +54,14 @@ export default function NotificationsPage() {
                     className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8"
                 >
                     <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-xl bg-sky-50 flex items-center justify-center">
-                            <BellRing className="w-6 h-6 text-sky-600" />
+                        <div className="w-12 h-12 rounded-xl bg-[#22c55e]/10 dark:bg-[#22c55e]/20 flex items-center justify-center">
+                            <BellRing className="w-6 h-6 text-[#22c55e] dark:text-[#22c55e]" />
                         </div>
                         <div>
-                            <h1 className="text-2xl font-bold text-sky-900">
+                            <h1 className="text-2xl font-bold text-[#1C252E] dark:text-white">
                                 Thông báo
                             </h1>
-                            <p className="text-base text-slate-500">
+                            <p className="text-base text-[#637381] dark:text-[#919EAB]">
                                 {unreadCount > 0
                                     ? `Bạn có ${unreadCount} thông báo chưa đọc`
                                     : "Tất cả thông báo đã được đọc"}
@@ -74,7 +74,7 @@ export default function NotificationsPage() {
                             variant="ghost"
                             size="sm"
                             onClick={handleMarkAllRead}
-                            className="h-9 text-sm text-sky-600 hover:text-sky-700 hover:bg-sky-50 rounded-full gap-1.5 cursor-pointer"
+                            className="h-9 text-sm text-[#22c55e] hover:text-[#22c55e] hover:bg-[#22c55e]/10 dark:hover:bg-[#22c55e]/20 rounded-full gap-1.5 cursor-pointer"
                         >
                             <CheckCheck className="w-4 h-4" />
                             Đánh dấu tất cả đã đọc
@@ -125,13 +125,13 @@ export default function NotificationsPage() {
                                 animate={{ opacity: 1, scale: 1 }}
                                 className="flex flex-col items-center justify-center py-16 text-center"
                             >
-                                <div className="w-16 h-16 rounded-2xl bg-slate-50 flex items-center justify-center mb-4">
-                                    <Inbox className="w-8 h-8 text-slate-300" />
+                                <div className="w-16 h-16 rounded-2xl bg-[rgba(145,158,171,0.08)] dark:bg-white/[0.04] flex items-center justify-center mb-4">
+                                    <Inbox className="w-8 h-8 text-[#C4CDD5] dark:text-[#637381]" />
                                 </div>
-                                <h3 className="text-base font-semibold text-slate-500 mb-1">
+                                <h3 className="text-base font-semibold text-[#637381] dark:text-[#919EAB] mb-1">
                                     Không có thông báo
                                 </h3>
-                                <p className="text-sm text-slate-400">
+                                <p className="text-sm text-[#919EAB] dark:text-[#637381]">
                                     {filter === "unread"
                                         ? "Bạn đã đọc tất cả thông báo rồi 🎉"
                                         : "Chưa có thông báo nào trong mục này."}
@@ -144,3 +144,4 @@ export default function NotificationsPage() {
         </section>
     );
 }
+
