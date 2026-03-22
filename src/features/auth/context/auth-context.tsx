@@ -1,167 +1,167 @@
 "use client";
 
 /**
- * ═════════════════════════════════════════════════════════
- *  Auth Context & Provider
- *  Provides authentication state to the entire app via
- *  React Context. Persists session in localStorage + cookie
- *  for middleware route guards.
- * ═════════════════════════════════════════════════════════
+ * ═══════════════════════════════════════════════════════════
+ *  AuthContext — Real API Authentication
+ *
+ *  • login(email, password)  → POST /auth/login
+ *  • register(payload)       → POST /auth/register (auto-login)
+ *  • logout()                → clears tokens + session
+ *  • Session restore on mount → validates stored token via /auth/me
+ *  • Tokens stored in localStorage, attached by apiClient interceptor
+ *
+ *  Backend wraps every response in { code, success, message, data }.
+ *  Axios res.data  = wrapper
+ *  Axios res.data.data = actual payload
+ * ═══════════════════════════════════════════════════════════
  */
 
-import {
+import React, {
     createContext,
     useCallback,
     useEffect,
     useMemo,
     useState,
-    type ReactNode,
 } from "react";
-import type { SessionUser, UserRole, AuthStatus, MockUserKey } from "../types/auth-types";
-import { DEFAULT_MOCK_USER, mockUsers } from "../types/mock-session";
+import type {
+    SessionUser,
+    AuthStatus,
+    AuthLoginData,
+    RegisterPayload,
+} from "../types/auth-types";
+import { authApi } from "../api/auth-api";
+import { isApiError } from "@/shared/lib/api-error";
+import { tokenStorage } from "../lib/token-storage";
 
-// ─── Storage Keys ────────────────────────────────────
-const STORAGE_KEY = "smarthire-session";
-const COOKIE_NAME = "smarthire-session";
+// ─── Helpers ─────────────────────────────────────────────
 
-// ─── Cookie Helpers ──────────────────────────────────
-function setCookie(name: string, value: string, days = 7) {
-    const expires = new Date(Date.now() + days * 864e5).toUTCString();
-    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Lax`;
+/** Map the flat backend login/register payload to SessionUser */
+function toSessionUser(d: AuthLoginData): SessionUser {
+    return {
+        id: String(d.userId),
+        name: d.fullName,
+        email: d.email,
+        role: d.role.toLowerCase() as SessionUser["role"],
+        joinedDate: new Date().toISOString(),
+        isFirstLogin: true,
+    };
 }
 
-function deleteCookie(name: string) {
-    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax`;
-}
-
-function getCookie(name: string): string | null {
-    const match = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`));
-    return match ? decodeURIComponent(match[1]) : null;
-}
-
-// ─── Context Value ───────────────────────────────────
+// ─── Context Value ───────────────────────────────────────
 export interface AuthContextValue {
-    /** Current authenticated user (null if logged out) */
     user: SessionUser | null;
-    /** Auth status: loading | authenticated | unauthenticated */
     status: AuthStatus;
-    /** Convenience: user !== null */
     isAuthenticated: boolean;
-    /** Convenience: status === "loading" */
     isLoading: boolean;
-    /** Login with a mock role (simulates API call) */
-    login: (roleKey?: MockUserKey) => Promise<void>;
-    /** Logout and clear session */
+    login: (email: string, password: string) => Promise<void>;
+    register: (data: RegisterPayload) => Promise<void>;
     logout: () => void;
-    /** Switch to a different mock user role */
-    switchRole: (roleKey: MockUserKey) => void;
-    /** Mark the user as having completed onboarding */
     completeOnboarding: () => void;
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null);
 
-// ─── Provider ────────────────────────────────────────
-interface AuthProviderProps {
-    readonly children: ReactNode;
-    /** Override initial mock user (default: candidate) */
-    readonly initialUser?: SessionUser | null;
-}
+// ─── Provider ────────────────────────────────────────────
 
-export function AuthProvider({
-    children,
-    initialUser,
-}: AuthProviderProps) {
+export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<SessionUser | null>(null);
     const [status, setStatus] = useState<AuthStatus>("loading");
 
-    // ─── Restore session from localStorage on mount ──
+    // ── Session restore on mount ─────────────────────────
     useEffect(() => {
-        try {
-            const stored = localStorage.getItem(STORAGE_KEY);
-            if (stored) {
-                const parsed = JSON.parse(stored) as SessionUser;
-                // Verify it has required fields
-                if (parsed && parsed.id && parsed.role && parsed.email) {
-                    setUser(parsed);
-                    setStatus("authenticated");
-                    // Sync cookie in case it was cleared
-                    setCookie(COOKIE_NAME, JSON.stringify({ role: parsed.role, isFirstLogin: parsed.isFirstLogin }));
-                    return;
-                }
-            }
-        } catch {
-            // Corrupted storage — ignore
-            localStorage.removeItem(STORAGE_KEY);
-            deleteCookie(COOKIE_NAME);
+        const token = tokenStorage.getAccessToken();
+        if (!token) {
+            setStatus("unauthenticated");
+            return;
         }
 
-        // No valid session found
-        setUser(null);
-        setStatus("unauthenticated");
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+        // Try to validate the stored token via /auth/me
+        authApi
+            .getMe()
+            .then((res) => {
+                const meData = res.data.data; // { email }
+                // Build a minimal SessionUser from what the backend gives us
+                // If we had a cached user in localStorage we could merge, but
+                // /auth/me currently only returns email.
+                setUser({
+                    id: "",
+                    name: meData.email.split("@")[0], // best-effort name
+                    email: meData.email,
+                    role: "candidate", // will be overridden on next login
+                    joinedDate: new Date().toISOString(),
+                });
+                setStatus("authenticated");
+            })
+            .catch(() => {
+                // Token expired or invalid — clear and mark unauthenticated
+                tokenStorage.clear();
+                setStatus("unauthenticated");
+            });
+    }, []);
 
-    // ─── Persist helpers ─────────────────────────────
-    function persistSession(sessionUser: SessionUser) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(sessionUser));
-        setCookie(COOKIE_NAME, JSON.stringify({ role: sessionUser.role, isFirstLogin: sessionUser.isFirstLogin }));
-    }
-
-    function clearSession() {
-        localStorage.removeItem(STORAGE_KEY);
-        deleteCookie(COOKIE_NAME);
-    }
-
-    // ─── Actions ─────────────────────────────────────
-    const login = useCallback(async (roleKey?: MockUserKey) => {
+    // ── Login ────────────────────────────────────────────
+    const login = useCallback(async (email: string, password: string) => {
         setStatus("loading");
-        // Simulate API call delay
-        await new Promise((r) => setTimeout(r, 800));
-        const mockUser = roleKey ? mockUsers[roleKey] : DEFAULT_MOCK_USER;
-        setUser(mockUser);
-        setStatus("authenticated");
-        persistSession(mockUser);
+        try {
+            const res = await authApi.login(email, password);
+            const payload = res.data.data; // AuthLoginData
+
+            tokenStorage.setTokens(payload.accessToken, payload.refreshToken);
+            setUser(toSessionUser(payload));
+            setStatus("authenticated");
+        } catch (err) {
+            setStatus("unauthenticated");
+            // Re-throw so the form can display the error
+            if (isApiError(err)) throw err;
+            throw new Error("Đã xảy ra lỗi không xác định khi đăng nhập.");
+        }
     }, []);
 
+    // ── Register ─────────────────────────────────────────
+    const register = useCallback(async (data: RegisterPayload) => {
+        setStatus("loading");
+        try {
+            const res = await authApi.register(data);
+            const payload = res.data.data; // AuthLoginData
+
+            tokenStorage.setTokens(payload.accessToken, payload.refreshToken);
+            setUser(toSessionUser(payload));
+            setStatus("authenticated");
+        } catch (err) {
+            setStatus("unauthenticated");
+            if (isApiError(err)) throw err;
+            throw new Error("Đã xảy ra lỗi không xác định khi đăng ký.");
+        }
+    }, []);
+
+    // ── Logout ───────────────────────────────────────────
     const logout = useCallback(() => {
+        tokenStorage.clear();
         setUser(null);
         setStatus("unauthenticated");
-        clearSession();
     }, []);
 
-    const switchRole = useCallback((roleKey: MockUserKey) => {
-        const mockUser = mockUsers[roleKey];
-        setUser(mockUser);
-        setStatus("authenticated");
-        persistSession(mockUser);
-    }, []);
-
+    // ── Complete Onboarding ──────────────────────────────
     const completeOnboarding = useCallback(() => {
-        setUser((currentUser) => {
-            if (!currentUser) return null;
-            const updatedUser = { ...currentUser, isFirstLogin: false };
-            persistSession(updatedUser);
-            return updatedUser;
-        });
+        setUser((prev) => (prev ? { ...prev, isFirstLogin: false } : null));
     }, []);
 
+    // ── Memoised context value ───────────────────────────
     const value = useMemo<AuthContextValue>(
         () => ({
             user,
             status,
-            isAuthenticated: user !== null,
+            isAuthenticated: status === "authenticated",
             isLoading: status === "loading",
             login,
+            register,
             logout,
-            switchRole,
             completeOnboarding,
         }),
-        [user, status, login, logout, switchRole, completeOnboarding]
+        [user, status, login, register, logout, completeOnboarding]
     );
 
     return (
-        <AuthContext.Provider value={value}>
-            {children}
-        </AuthContext.Provider>
+        <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
     );
 }
