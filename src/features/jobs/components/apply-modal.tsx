@@ -146,8 +146,8 @@ export function ApplyModal({ job, isOpen, onClose, onSuccess }: ApplyModalProps)
               <AlreadyAppliedView
                 job={job}
                 onClose={onClose}
-                onWithdraw={() => {
-                  withdrawApplication(job.id);
+                onWithdraw={async () => {
+                  await withdrawApplication(job.id);
                   setModalState("form");
                 }}
               />

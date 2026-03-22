@@ -11,7 +11,8 @@ import {
   XCircle,
   AlertCircle,
   ArrowRight,
-  Trash2
+  Trash2,
+  Loader2
 } from "lucide-react";
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
@@ -73,15 +74,15 @@ function StatusBadge({ status }: { status: ApplicationStatus }) {
 function ApplicationCard({ application }: { application: Application }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [confirmWithdraw, setConfirmWithdraw] = useState(false);
-  const { withdrawApplication } = useApplicationStore();
-  const isLocalApp = application.id.startsWith("local-");
+  const { withdrawApplication, withdrawingJobId, withdrawError, clearWithdrawError } = useApplicationStore();
+  const isWithdrawing = withdrawingJobId === application.jobId;
 
-  const handleWithdraw = () => {
+  const handleWithdraw = async () => {
     if (!confirmWithdraw) {
       setConfirmWithdraw(true);
       return;
     }
-    withdrawApplication(application.jobId);
+    await withdrawApplication(application.jobId);
   };
 
   const currentEvent = useMemo(() =>
@@ -125,22 +126,35 @@ function ApplicationCard({ application }: { application: Application }) {
               </div>
               <div className="shrink-0 flex items-center gap-2">
                 <StatusBadge status={application.status} />
-                {isLocalApp && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleWithdraw();
-                    }}
-                    onBlur={() => setConfirmWithdraw(false)}
-                    className={cn(
-                      "px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 flex items-center gap-1.5",
-                      confirmWithdraw
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleWithdraw();
+                  }}
+                  onBlur={() => setConfirmWithdraw(false)}
+                  disabled={isWithdrawing}
+                  className={cn(
+                    "px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 flex items-center gap-1.5",
+                    isWithdrawing
+                      ? "opacity-60 cursor-not-allowed bg-gray-50 dark:bg-gray-800 text-gray-400 border-gray-200 dark:border-gray-700"
+                      : confirmWithdraw
                         ? "bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-300 dark:border-red-700 hover:bg-red-100"
                         : "bg-white dark:bg-[#1C252E] text-[#637381] dark:text-[#919EAB] border-[rgba(145,158,171,0.2)] dark:border-white/[0.08] hover:text-red-600 hover:border-red-300 hover:bg-red-50"
-                    )}
-                  >
+                  )}
+                >
+                  {isWithdrawing ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
                     <Trash2 className="w-3.5 h-3.5" />
-                    {confirmWithdraw ? "Xác nhận rút?" : "Rút hồ sơ"}
+                  )}
+                  {isWithdrawing ? "Đang rút..." : confirmWithdraw ? "Xác nhận rút?" : "Rút hồ sơ"}
+                </button>
+                {withdrawError && withdrawingJobId === null && (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); clearWithdrawError(); }}
+                    className="text-xs text-red-500 dark:text-red-400 underline hover:no-underline"
+                  >
+                    {withdrawError}
                   </button>
                 )}
               </div>
