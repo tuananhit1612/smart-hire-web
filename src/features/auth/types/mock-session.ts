@@ -16,7 +16,7 @@ export const mockCandidateNew: SessionUser = {
     avatar: "NVS",
     role: "candidate",
     joinedDate: new Date().toISOString().split('T')[0],
-    isFirstLogin: true,
+    isNewUser: true,
 };
 
 /** Mock candidate user (Returning / Has profile) */
@@ -29,7 +29,7 @@ export const mockCandidateReturning: SessionUser = {
     phone: "0901-xxx-xxx",
     location: "TP.HCM",
     joinedDate: "2025-08-12",
-    isFirstLogin: false,
+    isNewUser: false,
 };
 
 /** Mock employer user (First time login / Need to setup company) */
@@ -40,7 +40,7 @@ export const mockEmployerNew: SessionUser = {
     avatar: "TTM",
     role: "employer",
     joinedDate: new Date().toISOString().split('T')[0],
-    isFirstLogin: true,
+    isNewUser: true,
 };
 
 /** Mock employer user (Returning / Configured company) */
@@ -54,7 +54,7 @@ export const mockEmployerReturning: SessionUser = {
     phone: "0912-xxx-xxx",
     location: "Hà Nội",
     joinedDate: "2025-06-20",
-    isFirstLogin: false,
+    isNewUser: false,
 };
 
 /** Mock admin user */
@@ -67,7 +67,7 @@ export const mockAdmin: SessionUser = {
     phone: "0903-xxx-xxx",
     location: "TP.HCM",
     joinedDate: "2025-01-01",
-    isFirstLogin: false,
+    isNewUser: false,
 };
 
 /** All mock users indexed by their MockUserKey for quick lookup */
