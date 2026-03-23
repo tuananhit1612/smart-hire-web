@@ -13,8 +13,8 @@ interface ProfileEditExperienceFormProps {
 }
 
 const EMPTY_EXPERIENCE: Omit<Experience, "id"> = {
-    role: "",
-    company: "",
+    title: "",
+    companyName: "",
     startDate: "",
     endDate: "",
     description: "",
@@ -72,17 +72,17 @@ export function ProfileEditExperienceForm({
                             <Input
                                 label="Vị trí / Chức danh"
                                 placeholder="VD: Lập trình viên Frontend Cao cấp"
-                                value={exp.role}
+                                value={exp.title}
                                 onChange={(e) =>
-                                    updateExperience(exp.id, "role", e.target.value)
+                                    updateExperience(exp.id, "title", e.target.value)
                                 }
                             />
                             <Input
                                 label="Công ty"
                                 placeholder="VD: TechCorp Việt Nam"
-                                value={exp.company}
+                                value={exp.companyName}
                                 onChange={(e) =>
-                                    updateExperience(exp.id, "company", e.target.value)
+                                    updateExperience(exp.id, "companyName", e.target.value)
                                 }
                             />
                         </div>

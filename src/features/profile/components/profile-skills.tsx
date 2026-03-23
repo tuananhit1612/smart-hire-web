@@ -52,16 +52,16 @@ export function ProfileSkills({ skills, onSave }: ProfileSkillsProps) {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.03 * index }}
-              className={`px-4 py-2 rounded-xl text-[14px] font-bold transition-all border shadow-sm ${skill.level === "Expert"
+              className={`px-4 py-2 rounded-xl text-[14px] font-bold transition-all border shadow-sm ${skill.proficiencyLevel === "Expert"
                 ? "bg-[#22C55E]/10 text-[#22C55E] border-[#22C55E]/20"
-                : skill.level === "Advanced"
+                : skill.proficiencyLevel === "Advanced"
                   ? "bg-white dark:bg-[#212B36] text-[#1C252E] dark:text-white border-[rgba(145,158,171,0.2)] dark:border-white/10 hover:border-[#22C55E]/30"
-                  : skill.level === "Intermediate"
+                  : skill.proficiencyLevel === "Intermediate"
                     ? "bg-transparent text-[#637381] dark:text-[#919EAB] border-[rgba(145,158,171,0.32)] dark:border-white/20 hover:border-[#22C55E]/30 text-[13px]"
                     : "bg-transparent text-[#919EAB] dark:text-[#637381] border-transparent text-[13px]"
                 }`}
             >
-              {skill.name}
+              {skill.skillName}
             </motion.span>
           ))}
         </div>

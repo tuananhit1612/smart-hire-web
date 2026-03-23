@@ -13,7 +13,7 @@ interface ProfileEditEducationFormProps {
 }
 
 const EMPTY_EDUCATION: Omit<Education, "id"> = {
-    school: "",
+    institution: "",
     degree: "",
     fieldOfStudy: "",
     startDate: "",
@@ -72,9 +72,9 @@ export function ProfileEditEducationForm({
                             <Input
                                 label="Trường / Đại học"
                                 placeholder="VD: Đại học Bách khoa TP. HCM"
-                                value={edu.school}
+                                value={edu.institution}
                                 onChange={(e) =>
-                                    updateEducation(edu.id, "school", e.target.value)
+                                    updateEducation(edu.id, "institution", e.target.value)
                                 }
                             />
                             <Input

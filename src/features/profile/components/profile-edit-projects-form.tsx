@@ -13,8 +13,7 @@ interface ProfileEditProjectsFormProps {
 }
 
 const EMPTY_PROJECT: Omit<Project, "id" | "technologies"> = {
-  name: "",
-  role: "",
+  projectName: "",
   startDate: "",
   endDate: "",
   description: "",
@@ -89,14 +88,8 @@ export function ProfileEditProjectsForm({
               <Input
                 label="Tên dự án"
                 placeholder="VD: SmartHire AI"
-                value={project.name}
-                onChange={(e) => updateProject(project.id, "name", e.target.value)}
-              />
-              <Input
-                label="Vai trò"
-                placeholder="VD: Trưởng nhóm Frontend"
-                value={project.role}
-                onChange={(e) => updateProject(project.id, "role", e.target.value)}
+                value={project.projectName}
+                onChange={(e) => updateProject(project.id, "projectName", e.target.value)}
               />
             </div>
 
