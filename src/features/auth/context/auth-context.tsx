@@ -30,7 +30,7 @@ import type {
     RegisterPayload,
 } from "../types/auth-types";
 import { authApi } from "../api/auth-api";
-import { isApiError } from "@/shared/lib/api-error";
+import { getErrorMessage } from "@/shared/lib/api-error";
 import { tokenStorage } from "../lib/token-storage";
 
 // ─── Helpers ─────────────────────────────────────────────
@@ -113,9 +113,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             return sessionUser;
         } catch (err) {
             setStatus("unauthenticated");
-            // Re-throw so the form can display the error
-            if (isApiError(err)) throw err;
-            throw new Error("Đã xảy ra lỗi không xác định khi đăng nhập.");
+            throw new Error(getErrorMessage(err, "Đã xảy ra lỗi không xác định khi đăng nhập."));
         }
     }, []);
 
@@ -131,8 +129,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setStatus("authenticated");
         } catch (err) {
             setStatus("unauthenticated");
-            if (isApiError(err)) throw err;
-            throw new Error("Đã xảy ra lỗi không xác định khi đăng ký.");
+            throw new Error(getErrorMessage(err, "Đã xảy ra lỗi không xác định khi đăng ký."));
         }
     }, []);
 
