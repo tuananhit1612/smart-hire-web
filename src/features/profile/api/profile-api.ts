@@ -43,12 +43,12 @@ export const profileApi = {
   updateProfile: (data: UpdateProfilePayload) =>
     apiClient.put<ApiWrapper<CandidateProfileResponse>>(BASE, data),
 
-  /** POST /candidate/profile/avatar — upload avatar (multipart/form-data) */
+  /** POST /users/me/avatar — upload avatar (multipart/form-data) */
   uploadAvatar: (file: File) => {
     const formData = new FormData();
     formData.append("file", file);
     return apiClient.post<ApiWrapper<CandidateProfileResponse>>(
-      `${BASE}/avatar`,
+      "/users/me/avatar",
       formData,
       { headers: { "Content-Type": "multipart/form-data" } }
     );
