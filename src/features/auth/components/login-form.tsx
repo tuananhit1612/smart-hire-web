@@ -3,49 +3,20 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Github, Fingerprint, User, Briefcase, Sparkles, UserCheck, ShieldCheck } from "lucide-react";
+import { Fingerprint, Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { motion } from "framer-motion";
 
 import { Button } from "@/shared/components/ui/button";
 import { useToastHelpers } from "@/shared/components/ui/toast";
 import { useAuth } from "../hooks/use-auth";
-import type { MockUserKey } from "../types/auth-types";
-import { cn } from "@/lib/utils";
-
-const MOCK_OPTIONS = [
-    {
-        id: "candidate-new" as MockUserKey,
-        label: "Ứng viên (Mới)",
-        desc: "Luồng tạo CV / Hoàn thiện hồ sơ lần đầu",
-        icon: Sparkles,
-        role: "candidate"
-    },
-    {
-        id: "candidate-returning" as MockUserKey,
-        label: "Ứng viên (Đã có data)",
-        desc: "Luồng tìm việc / Quản lý việc làm, CV",
-        icon: User,
-        role: "candidate"
-    },
-    {
-        id: "employer-new" as MockUserKey,
-        label: "Nhà tuyển dụng (Mới)",
-        desc: "Luồng setup thông tin công ty lần đầu",
-        icon: ShieldCheck,
-        role: "employer"
-    },
-    {
-        id: "employer-returning" as MockUserKey,
-        label: "Nhà tuyển dụng (Đã có data)",
-        desc: "Luồng quản lý ứng viên, tin tuyển dụng",
-        icon: Briefcase,
-        role: "employer"
-    },
-];
 
 export function LoginForm() {
-    const [selectedRoleKey, setSelectedRoleKey] = useState<MockUserKey>("candidate-returning");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
     const toastHelpers = useToastHelpers();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -53,25 +24,41 @@ export function LoginForm() {
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError(null);
+
+        if (!email.trim() || !password) {
+            setError("Vui lòng nhập email và mật khẩu.");
+            return;
+        }
+
         setIsLoading(true);
-        // Mock login — selectedRoleKey selects user persona, real API needs email+password
-        await login(`${selectedRoleKey}@mock.smarthire.ai`, "mock-password");
-        setIsLoading(false);
+        try {
+            const user = await login(email.trim(), password);
 
-        toastHelpers.success("Chào mừng trở lại!", "Bạn đã đăng nhập thành công giả lập.");
+            toastHelpers.success(
+                "Chào mừng trở lại!",
+                `Xin chào ${user.name}, bạn đã đăng nhập thành công.`
+            );
 
-        const callbackUrl = searchParams.get("callbackUrl");
-        if (callbackUrl) {
-            router.push(callbackUrl);
-        } else {
-            // Role mapping for fallback
-            const role = MOCK_OPTIONS.find(o => o.id === selectedRoleKey)?.role;
-            const redirectMap: Record<string, string> = {
-                candidate: "/jobs",
-                employer: "/employer/dashboard",
-                admin: "/admin/dashboard",
-            };
-            router.push(redirectMap[role || "candidate"] ?? "/jobs");
+            const callbackUrl = searchParams.get("callbackUrl");
+            if (callbackUrl) {
+                router.push(callbackUrl);
+            } else {
+                const redirectMap: Record<string, string> = {
+                    candidate: "/jobs",
+                    employer: "/employer/dashboard",
+                    admin: "/admin/dashboard",
+                };
+                router.push(redirectMap[user.role] ?? "/jobs");
+            }
+        } catch (err: unknown) {
+            const msg =
+                err instanceof Error
+                    ? err.message
+                    : "Đã có lỗi xảy ra. Vui lòng thử lại.";
+            setError(msg);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -93,55 +80,76 @@ export function LoginForm() {
                     <Fingerprint className="w-7 h-7 text-white" />
                 </div>
                 <h1 className="text-2xl font-bold tracking-tight text-[#1C252E] dark:text-white">
-                    Simulate Login
+                    Đăng nhập
                 </h1>
                 <p className="text-[#637381] dark:text-[#C4CDD5] text-sm">
-                    Chọn một tài khoản mock dưới đây để trải nghiệm các luồng.
+                    Nhập email và mật khẩu để tiếp tục.
                 </p>
             </motion.div>
 
             <form onSubmit={handleLogin} className="space-y-4">
+                {/* Error */}
+                {error && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="px-4 py-3 rounded-xl text-sm font-medium bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400 border border-red-200 dark:border-red-500/20"
+                    >
+                        {error}
+                    </motion.div>
+                )}
 
-                <motion.div variants={itemVariants} className="grid grid-cols-1 gap-3">
-                    {MOCK_OPTIONS.map((option) => {
-                        const Icon = option.icon;
-                        const isSelected = selectedRoleKey === option.id;
-                        return (
-                            <div
-                                key={option.id}
-                                onClick={() => setSelectedRoleKey(option.id)}
-                                className={cn(
-                                    "relative flex items-center p-4 border rounded-xl cursor-pointer transition-all",
-                                    isSelected
-                                        ? "border-[#22c55e] bg-[#22c55e]/5 shadow-sm"
-                                        : "border-[rgba(145,158,171,0.2)] dark:border-[rgba(145,158,171,0.12)] hover:bg-[rgba(145,158,171,0.04)]"
-                                )}
-                            >
-                                <div className={cn(
-                                    "flex items-center justify-center w-10 h-10 rounded-full mr-4 transition-colors",
-                                    isSelected
-                                        ? "bg-[#22c55e]/20 text-[#22c55e]"
-                                        : "bg-[rgba(145,158,171,0.08)] text-[#637381] dark:text-[#919EAB]"
-                                )}>
-                                    <Icon className="w-5 h-5" />
-                                </div>
-                                <div className="flex-1">
-                                    <h3 className={cn("text-sm font-bold", isSelected ? "text-[#22c55e]" : "text-[#1C252E] dark:text-white")}>
-                                        {option.label}
-                                    </h3>
-                                    <p className="text-xs text-[#919EAB] mt-0.5">
-                                        {option.desc}
-                                    </p>
-                                </div>
-                                <div className={cn(
-                                    "w-5 h-5 rounded-full border-2 flex items-center justify-center ml-2",
-                                    isSelected ? "border-[#22c55e]" : "border-[rgba(145,158,171,0.32)]"
-                                )}>
-                                    {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-[#22c55e]" />}
-                                </div>
-                            </div>
-                        );
-                    })}
+                {/* Email */}
+                <motion.div variants={itemVariants} className="space-y-1.5">
+                    <label htmlFor="email" className="text-sm font-semibold text-[#1C252E] dark:text-white">
+                        Email
+                    </label>
+                    <div className="relative">
+                        <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-[#919EAB]" />
+                        <input
+                            id="email"
+                            type="email"
+                            autoComplete="email"
+                            placeholder="you@example.com"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="w-full h-12 pl-11 pr-4 rounded-xl border border-[rgba(145,158,171,0.2)] dark:border-[rgba(145,158,171,0.12)] bg-transparent text-sm text-[#1C252E] dark:text-white placeholder:text-[#919EAB] focus:border-[#22c55e] focus:ring-1 focus:ring-[#22c55e] outline-none transition-all"
+                        />
+                    </div>
+                </motion.div>
+
+                {/* Password */}
+                <motion.div variants={itemVariants} className="space-y-1.5">
+                    <div className="flex items-center justify-between">
+                        <label htmlFor="password" className="text-sm font-semibold text-[#1C252E] dark:text-white">
+                            Mật khẩu
+                        </label>
+                        <Link
+                            href="/forgot-password"
+                            className="text-xs font-semibold text-[#22C55E] hover:text-[#16A34A] transition-colors"
+                        >
+                            Quên mật khẩu?
+                        </Link>
+                    </div>
+                    <div className="relative">
+                        <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-[#919EAB]" />
+                        <input
+                            id="password"
+                            type={showPassword ? "text" : "password"}
+                            autoComplete="current-password"
+                            placeholder="••••••••"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="w-full h-12 pl-11 pr-11 rounded-xl border border-[rgba(145,158,171,0.2)] dark:border-[rgba(145,158,171,0.12)] bg-transparent text-sm text-[#1C252E] dark:text-white placeholder:text-[#919EAB] focus:border-[#22c55e] focus:ring-1 focus:ring-[#22c55e] outline-none transition-all"
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#919EAB] hover:text-[#637381] transition-colors"
+                        >
+                            {showPassword ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
+                        </button>
+                    </div>
                 </motion.div>
 
                 {/* Submit */}
@@ -152,7 +160,7 @@ export function LoginForm() {
                         isLoading={isLoading}
                         variant="primary"
                     >
-                        Đăng nhập bằng Mock
+                        Đăng nhập
                     </Button>
                 </motion.div>
 
@@ -171,11 +179,12 @@ export function LoginForm() {
                 {/* Register link */}
                 <motion.div variants={itemVariants}>
                     <p className="text-center text-sm text-[#637381] dark:text-[#C4CDD5]">
+                        Chưa có tài khoản?{" "}
                         <Link
                             href="/register"
                             className="font-semibold text-[#22C55E] hover:text-[#16A34A] transition-colors"
                         >
-                            Đăng ký tài khoản
+                            Đăng ký ngay
                         </Link>
                     </p>
                 </motion.div>

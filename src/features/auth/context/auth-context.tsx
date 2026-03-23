@@ -74,6 +74,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setStatus("unauthenticated");
             return;
         }
+    }
 
         // Try to validate the stored token via /auth/me
         authApi
