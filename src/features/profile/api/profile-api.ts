@@ -43,6 +43,17 @@ export const profileApi = {
   updateProfile: (data: UpdateProfilePayload) =>
     apiClient.put<ApiWrapper<CandidateProfileResponse>>(BASE, data),
 
+  /** POST /users/me/avatar — upload avatar (multipart/form-data) */
+  uploadAvatar: (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    return apiClient.post<ApiWrapper<CandidateProfileResponse>>(
+      "/users/me/avatar",
+      formData,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
+  },
+
   // ─── Education CRUD ────────────────────────────────────
 
   /** GET /candidate/profile/educations */

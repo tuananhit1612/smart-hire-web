@@ -33,6 +33,9 @@ interface ProfileStore {
 
   /** Save current profile to API */
   saveProfile: () => Promise<void>;
+
+  /** Upload avatar image and update avatarUrl */
+  uploadAvatar: (file: File) => Promise<void>;
 }
 
 export const useProfileStore = create<ProfileStore>((set, get) => ({
@@ -113,6 +116,24 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
         err instanceof Error ? err.message : "Không thể lưu hồ sơ.";
       set({ isLoading: false, error: message });
       throw err; // re-throw so callers can show toast
+    }
+  },
+
+  uploadAvatar: async (file: File) => {
+    set({ isLoading: true, error: null });
+    try {
+      const res = await profileApi.uploadAvatar(file);
+      const updated = mapProfileFromApi(res.data.data);
+
+      set((state) => ({
+        profile: { ...state.profile, avatarUrl: updated.avatarUrl },
+        isLoading: false,
+      }));
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "Không thể tải ảnh đại diện.";
+      set({ isLoading: false, error: message });
+      throw err;
     }
   },
 }));
