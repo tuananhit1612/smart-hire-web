@@ -40,10 +40,10 @@ export const authApi = {
     /**
      * Reset password using the token from the email link.
      */
-    resetPassword: (token: string, password: string) =>
+    resetPassword: (token: string, newPassword: string) =>
         apiClient.post<AuthMessageResponse>("/auth/reset-password", {
             token,
-            password,
+            newPassword,
         }),
 
     /**
