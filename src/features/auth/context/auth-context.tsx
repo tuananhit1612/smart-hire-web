@@ -43,7 +43,7 @@ function toSessionUser(d: AuthLoginData): SessionUser {
         email: d.email,
         role: d.role.toLowerCase() as SessionUser["role"],
         joinedDate: new Date().toISOString(),
-        isFirstLogin: true,
+        isNewUser: true,
     };
 }
 
@@ -53,7 +53,7 @@ export interface AuthContextValue {
     status: AuthStatus;
     isAuthenticated: boolean;
     isLoading: boolean;
-    login: (email: string, password: string) => Promise<void>;
+    login: (email: string, password: string) => Promise<SessionUser>;
     register: (data: RegisterPayload) => Promise<void>;
     logout: () => void;
     completeOnboarding: () => void;
@@ -100,15 +100,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     // ── Login ────────────────────────────────────────────
-    const login = useCallback(async (email: string, password: string) => {
+    const login = useCallback(async (email: string, password: string): Promise<SessionUser> => {
         setStatus("loading");
         try {
             const res = await authApi.login(email, password);
             const payload = res.data.data; // AuthLoginData
 
             tokenStorage.setTokens(payload.accessToken, payload.refreshToken);
-            setUser(toSessionUser(payload));
+            const sessionUser = toSessionUser(payload);
+            setUser(sessionUser);
             setStatus("authenticated");
+            return sessionUser;
         } catch (err) {
             setStatus("unauthenticated");
             // Re-throw so the form can display the error
@@ -143,7 +145,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // ── Complete Onboarding ──────────────────────────────
     const completeOnboarding = useCallback(() => {
-        setUser((prev) => (prev ? { ...prev, isFirstLogin: false } : null));
+        setUser((prev) => (prev ? { ...prev, isNewUser: false } : null));
     }, []);
 
     // ── Memoised context value ───────────────────────────

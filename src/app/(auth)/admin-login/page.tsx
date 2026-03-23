@@ -34,12 +34,17 @@ function AdminLoginForm() {
 
     const onSubmit = async (data: LoginSchema) => {
         setIsLoading(true);
-        await login("admin");
-        setIsLoading(false);
-        toast.success("Xin chào, Admin!", "Đăng nhập quản trị thành công.");
+        try {
+            await login(data.email, data.password);
+            toast.success("Xin chào, Admin!", "Đăng nhập quản trị thành công.");
 
-        const callbackUrl = searchParams.get("callbackUrl");
-        router.push(callbackUrl || "/admin/dashboard");
+            const callbackUrl = searchParams.get("callbackUrl");
+            router.push(callbackUrl || "/admin/dashboard");
+        } catch (err) {
+            toast.error("Đăng nhập thất bại", err instanceof Error ? err.message : String(err));
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const itemVariants = {

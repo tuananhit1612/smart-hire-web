@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mail, MapPin, Phone, Linkedin, Github, Globe, Twitter, CheckCircle2, Camera, X, Upload } from "lucide-react";
+import { Mail, MapPin, Phone, Linkedin, Github, Globe, Twitter, CheckCircle2, Camera, X, Upload, Loader2 } from "lucide-react";
 import { CandidateProfile, SocialLink } from "../types/profile";
 import { useProfileStore } from "../stores/profile-store";
 
@@ -19,11 +19,14 @@ const socialIcons: Record<SocialLink["platform"], React.ElementType> = {
 };
 
 export function ProfileHeader({ profile }: ProfileHeaderProps) {
-  const { updateProfile } = useProfileStore();
+  const { uploadAvatar } = useProfileStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const selectedFileRef = useRef<File | null>(null);
   const [isHoveringAvatar, setIsHoveringAvatar] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   const handleAvatarClick = () => {
     fileInputRef.current?.click();
@@ -40,14 +43,30 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
     if (file.size > 5 * 1024 * 1024) return;
 
     const url = URL.createObjectURL(file);
+    selectedFileRef.current = file;
     setPreviewUrl(url);
     setShowPreview(true);
+    setUploadError(null);
   };
 
-  const handleConfirmAvatar = () => {
-    if (previewUrl) {
-      updateProfile({ avatarUrl: previewUrl });
+  const handleConfirmAvatar = async () => {
+    const file = selectedFileRef.current;
+    if (!file) return;
+
+    setIsUploading(true);
+    setUploadError(null);
+    try {
+      await uploadAvatar(file);
+      // Success — clean up preview
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      setPreviewUrl(null);
       setShowPreview(false);
+      selectedFileRef.current = null;
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    } catch {
+      setUploadError("Không thể tải ảnh. Vui lòng thử lại.");
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -57,6 +76,8 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
     }
     setPreviewUrl(null);
     setShowPreview(false);
+    setUploadError(null);
+    selectedFileRef.current = null;
     // Reset file input
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
@@ -241,20 +262,31 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
                 </div>
               </div>
 
+              {/* Upload error message */}
+              {uploadError && (
+                <p className="text-sm text-red-500 text-center mb-4">{uploadError}</p>
+              )}
+
               {/* Actions */}
               <div className="flex gap-3">
                 <button
                   onClick={handleCancelAvatar}
-                  className="flex-1 h-12 px-4 text-[14px] font-bold rounded-xl border border-[rgba(145,158,171,0.32)] text-[#1C252E] dark:text-white hover:bg-[rgba(145,158,171,0.08)] transition-all"
+                  disabled={isUploading}
+                  className="flex-1 h-12 px-4 text-[14px] font-bold rounded-xl border border-[rgba(145,158,171,0.32)] text-[#1C252E] dark:text-white hover:bg-[rgba(145,158,171,0.08)] transition-all disabled:opacity-50"
                 >
                   Hủy
                 </button>
                 <button
                   onClick={handleConfirmAvatar}
-                  className="flex-1 h-12 px-4 text-[14px] font-bold rounded-xl bg-[#1C252E] dark:bg-white text-white dark:text-[#1C252E] hover:bg-[#1C252E]/90 dark:hover:bg-white/90 transition-all inline-flex items-center justify-center gap-2"
+                  disabled={isUploading}
+                  className="flex-1 h-12 px-4 text-[14px] font-bold rounded-xl bg-[#1C252E] dark:bg-white text-white dark:text-[#1C252E] hover:bg-[#1C252E]/90 dark:hover:bg-white/90 transition-all inline-flex items-center justify-center gap-2 disabled:opacity-50"
                 >
-                  <Upload className="w-4 h-4" />
-                  Cập nhật
+                  {isUploading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Upload className="w-4 h-4" />
+                  )}
+                  {isUploading ? "Đang tải..." : "Cập nhật"}
                 </button>
               </div>
             </motion.div>

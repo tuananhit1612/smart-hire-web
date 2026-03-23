@@ -1,125 +1,161 @@
 /**
  * ═══════════════════════════════════════════════════════════
  *  Profile API Types
- *  Response / request shapes for /candidate/profile endpoints
- *  aligned with BE Swagger.
+ *  Types matching 1:1 with backend API responses and payloads.
+ *  Keep these in sync with the Swagger/OpenAPI spec.
  * ═══════════════════════════════════════════════════════════
  */
 
-// ─── Enums (from BE) ─────────────────────────────────────
-export type Gender = "MALE" | "FEMALE" | "OTHER";
-export type JobLevel =
-    | "INTERN"
-    | "FRESHER"
-    | "JUNIOR"
-    | "MIDDLE"
-    | "SENIOR"
-    | "LEAD"
-    | "MANAGER"
-    | "DIRECTOR";
+// ─── API Wrapper (backend envelope) ──────────────────────
 
-// ─── Profile Response (GET /candidate/profile) ──────────
+/**
+ * Standard backend response shape.
+ * Axios res.data  = ApiWrapper<T>
+ * Axios res.data.data = T (actual payload)
+ */
+export interface ApiWrapper<T> {
+  success: boolean;
+  code: string;
+  data: T;
+  message: string;
+}
+
+// ─── Profile ─────────────────────────────────────────────
+
 export interface CandidateProfileResponse {
-    id: number;
-    userId: number;
-    fullName: string;
-    email: string;
-    phone?: string;
-    avatarUrl?: string;
-    headline?: string;
-    summary?: string;
-    dateOfBirth?: string;
-    gender?: Gender;
-    address?: string;
-    city?: string;
-    yearsOfExperience?: number;
-    jobLevel?: JobLevel;
-    createdAt: string;
-    updatedAt: string;
+  id: number;
+  fullName: string;
+  lastName?: string;
+  headline?: string;
+  title: string;
+  email: string;
+  phone?: string;
+  address?: string;
+  country?: string;
+  state?: string;
+  city?: string;
+  gender?: string;
+  linkedIn?: string;
+  website?: string;
+  avatarUrl?: string;
+  summary?: string;
+  yearsOfExperience?: number;
+  expectedSalary?: string;
 }
 
-// ─── Profile Create / Update Payload ────────────────────
-export interface ProfilePayload {
-    headline?: string;
-    summary?: string;
-    dateOfBirth?: string;
-    gender?: Gender;
-    address?: string;
-    city?: string;
-    yearsOfExperience?: number;
-    jobLevel?: JobLevel;
+export interface UpdateProfilePayload {
+  fullName?: string;
+  lastName?: string;
+  headline?: string;
+  title?: string;
+  phone?: string;
+  address?: string;
+  country?: string;
+  state?: string;
+  city?: string;
+  gender?: string;
+  linkedIn?: string;
+  website?: string;
+  avatarUrl?: string;
+  summary?: string;
+  yearsOfExperience?: number;
+  expectedSalary?: string;
 }
 
-// ─── Education ──────────────────────────────────────────
+// ─── Education ───────────────────────────────────────────
+
 export interface EducationResponse {
-    id: number;
-    school: string;
-    degree: string;
-    fieldOfStudy: string;
-    startDate: string;
-    endDate?: string;
-    description?: string;
+  id: number;
+  degree: string;
+  institution: string;
+  gpa?: number;
+  fieldOfStudy: string;
+  startDate: string;
+  endDate: string;
+  logoUrl?: string;
 }
 
-export interface EducationPayload {
-    school: string;
-    degree: string;
-    fieldOfStudy: string;
-    startDate: string;
-    endDate?: string;
-    description?: string;
+export interface CreateEducationPayload {
+  degree: string;
+  institution: string;
+  gpa?: number;
+  fieldOfStudy: string;
+  startDate: string;
+  endDate: string;
 }
 
-// ─── Experience ─────────────────────────────────────────
+export type UpdateEducationPayload = Partial<CreateEducationPayload>;
+
+// ─── Experience ──────────────────────────────────────────
+
 export interface ExperienceResponse {
-    id: number;
-    company: string;
-    position: string;
-    startDate: string;
-    endDate?: string;
-    description?: string;
-    location?: string;
+  id: number;
+  title: string;
+  companyName: string;
+  isCurrent?: boolean;
+  startDate: string;
+  endDate?: string;
+  description: string;
+  location?: string;
 }
 
-export interface ExperiencePayload {
-    company: string;
-    position: string;
-    startDate: string;
-    endDate?: string;
-    description?: string;
-    location?: string;
+export interface CreateExperiencePayload {
+  title: string;
+  companyName: string;
+  isCurrent?: boolean;
+  startDate: string;
+  endDate?: string;
+  description: string;
+  location?: string;
 }
 
-// ─── Project ────────────────────────────────────────────
+export type UpdateExperiencePayload = Partial<CreateExperiencePayload>;
+
+// ─── Project ─────────────────────────────────────────────
+
 export interface ProjectResponse {
-    id: number;
-    name: string;
-    role: string;
-    startDate: string;
-    endDate?: string;
-    description?: string;
-    technologies?: string;
-    projectUrl?: string;
+  id: number;
+  projectName: string;
+  startDate: string;
+  endDate?: string;
+  description: string;
+  technologies: string; // comma-separated in API
+  link?: string;
 }
 
-export interface ProjectPayload {
-    name: string;
-    role: string;
-    startDate: string;
-    endDate?: string;
-    description?: string;
-    technologies?: string;
-    projectUrl?: string;
+export interface CreateProjectPayload {
+  projectName: string;
+  startDate: string;
+  endDate?: string;
+  description: string;
+  technologies: string; // comma-separated
+  link?: string;
 }
 
-// ─── Skill ──────────────────────────────────────────────
+export type UpdateProjectPayload = Partial<CreateProjectPayload>;
+
+// ─── Skill ───────────────────────────────────────────────
+
 export interface SkillResponse {
-    id: number;
-    name: string;
-    level?: string;
+  id: number;
+  skillName: string;
+  proficiencyLevel?: string; // "EXPERT", "ADVANCED", "INTERMEDIATE", "BEGINNER"
 }
 
-export interface SkillPayload {
-    name: string;
-    level?: string;
+export interface CreateSkillPayload {
+  skillName: string;
+  proficiencyLevel?: string;
+}
+
+export type UpdateSkillPayload = Partial<CreateSkillPayload>;
+
+// ─── CV File ─────────────────────────────────────────────
+
+export interface CvFileResponse {
+  id: number;
+  fileName: string;
+  fileUrl: string;
+  fileSize?: number;
+  isPrimary: boolean;
+  uploadedAt: string;
 }

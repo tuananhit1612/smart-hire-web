@@ -52,7 +52,7 @@ export function ProfileEducation({ educations, onSave }: ProfileEducationProps) 
               >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-4 mb-2">
                   <div>
-                    <h3 className="text-lg font-bold text-[#1C252E] dark:text-white">{edu.school}</h3>
+                    <h3 className="text-lg font-bold text-[#1C252E] dark:text-white">{edu.institution}</h3>
                     <p className="text-[15px] font-bold text-[#22c55e] mt-0.5">{edu.degree}</p>
                   </div>
                   <div className="text-[13px] font-semibold tracking-wide text-[#919EAB] dark:text-[#637381] shrink-0 mt-1 sm:mt-0 uppercase">
