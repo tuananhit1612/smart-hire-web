@@ -16,16 +16,20 @@ import { cn } from "@/shared/utils/cn";
 
 export function ProfileEditForm() {
   const router = useRouter();
-  const { profile, setProfile } = useProfileStore();
+  const { profile, setProfile, saveProfile } = useProfileStore();
   const [activeTab, setActiveTab] = React.useState<"general" | "skills" | "experience" | "education" | "projects" | "certificates" | "languages">("general");
   const [isSaving, setIsSaving] = React.useState(false);
 
   const handleSave = async () => {
     setIsSaving(true);
-    // Simulate API call (data is already in Zustand store)
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setIsSaving(false);
-    router.push("/profile");
+    try {
+      await saveProfile();
+      router.push("/profile");
+    } catch {
+      // Error state is set in the store — UI can show a toast
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const tabs = [

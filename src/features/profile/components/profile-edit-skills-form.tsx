@@ -19,15 +19,15 @@ export function ProfileEditSkillsForm({
   onChange,
 }: ProfileEditSkillsFormProps) {
   const [newSkillName, setNewSkillName] = React.useState("");
-  const [newSkillLevel, setNewSkillLevel] = React.useState<Skill["level"]>("Intermediate");
+  const [newSkillLevel, setNewSkillLevel] = React.useState<Skill["proficiencyLevel"]>("Intermediate");
 
   const handleAddSkill = () => {
     if (!newSkillName.trim()) return;
 
     const newSkill: Skill = {
       id: `new-${Date.now()}`,
-      name: newSkillName.trim(),
-      level: newSkillLevel,
+      skillName: newSkillName.trim(),
+      proficiencyLevel: newSkillLevel,
     };
 
     onChange([...skills, newSkill]);
@@ -101,16 +101,16 @@ export function ProfileEditSkillsForm({
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.5 }}
                 className={`group flex items-center gap-2 pl-3 pr-2 py-1.5 rounded-full border text-sm transition-all ${
-                  skill.level === "Expert"
+                  skill.proficiencyLevel === "Expert"
                     ? "border-purple-500/30 bg-purple-500/10 text-purple-200"
                     : "border-border bg-card text-foreground"
                 }`}
               >
-                <span className="font-medium">{skill.name}</span>
+                <span className="font-medium">{skill.skillName}</span>
                 <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
-                    skill.level === "Expert" ? "bg-purple-500/20 text-purple-300" : "bg-muted text-muted-foreground"
+                    skill.proficiencyLevel === "Expert" ? "bg-purple-500/20 text-purple-300" : "bg-muted text-muted-foreground"
                 }`}>
-                  {skill.level === "Beginner" ? "Cơ bản" : skill.level === "Intermediate" ? "Trung bình" : skill.level === "Advanced" ? "Nâng cao" : "Chuyên gia"}
+                  {skill.proficiencyLevel === "Beginner" ? "Cơ bản" : skill.proficiencyLevel === "Intermediate" ? "Trung bình" : skill.proficiencyLevel === "Advanced" ? "Nâng cao" : "Chuyên gia"}
                 </span>
                 <button
                   onClick={() => handleRemoveSkill(skill.id)}

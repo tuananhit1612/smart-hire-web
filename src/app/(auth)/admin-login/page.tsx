@@ -34,7 +34,7 @@ function AdminLoginForm() {
 
     const onSubmit = async (data: LoginSchema) => {
         setIsLoading(true);
-        await login("admin");
+        await login(data.email, data.password);
         setIsLoading(false);
         toast.success("Xin chào, Admin!", "Đăng nhập quản trị thành công.");
 

@@ -54,7 +54,8 @@ export function LoginForm() {
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-        await login(selectedRoleKey);
+        // Mock login — selectedRoleKey selects user persona, real API needs email+password
+        await login(`${selectedRoleKey}@mock.smarthire.ai`, "mock-password");
         setIsLoading(false);
 
         toastHelpers.success("Chào mừng trở lại!", "Bạn đã đăng nhập thành công giả lập.");

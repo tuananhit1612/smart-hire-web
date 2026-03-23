@@ -16,8 +16,8 @@ interface ProfileEditExperienceProps {
 }
 
 const EMPTY_EXPERIENCE: Omit<Experience, "id"> = {
-    role: "",
-    company: "",
+    title: "",
+    companyName: "",
     startDate: "",
     endDate: "",
     description: "",
@@ -57,7 +57,7 @@ export function ProfileEditExperience({
 
     const handleSave = () => {
         const validExperiences = experiences.filter(
-            (e) => e.role.trim() && e.company.trim()
+            (e) => e.title.trim() && e.companyName.trim()
         );
         onSave(validExperiences);
         onOpenChange(false);
@@ -99,17 +99,17 @@ export function ProfileEditExperience({
                                     <Input
                                         label="Role / Title"
                                         placeholder="e.g. Senior Frontend Developer"
-                                        value={exp.role}
+                                        value={exp.title}
                                         onChange={(e) =>
-                                            updateExperience(exp.id, "role", e.target.value)
+                                            updateExperience(exp.id, "title", e.target.value)
                                         }
                                     />
                                     <Input
                                         label="Company"
                                         placeholder="e.g. TechCorp"
-                                        value={exp.company}
+                                        value={exp.companyName}
                                         onChange={(e) =>
-                                            updateExperience(exp.id, "company", e.target.value)
+                                            updateExperience(exp.id, "companyName", e.target.value)
                                         }
                                     />
                                 </div>

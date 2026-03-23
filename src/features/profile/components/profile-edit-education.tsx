@@ -16,7 +16,7 @@ interface ProfileEditEducationProps {
 }
 
 const EMPTY_EDUCATION: Omit<Education, "id"> = {
-    school: "",
+    institution: "",
     degree: "",
     fieldOfStudy: "",
     startDate: "",
@@ -57,7 +57,7 @@ export function ProfileEditEducation({
 
     const handleSave = () => {
         const validEducations = educations.filter(
-            (e) => e.school.trim() && e.degree.trim()
+            (e) => e.institution.trim() && e.degree.trim()
         );
         onSave(validEducations);
         onOpenChange(false);
@@ -99,9 +99,9 @@ export function ProfileEditEducation({
                                     <Input
                                         label="School / University"
                                         placeholder="e.g. Stanford University"
-                                        value={edu.school}
+                                        value={edu.institution}
                                         onChange={(e) =>
-                                            updateEducation(edu.id, "school", e.target.value)
+                                            updateEducation(edu.id, "institution", e.target.value)
                                         }
                                     />
                                     <Input

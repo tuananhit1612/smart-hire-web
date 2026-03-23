@@ -26,9 +26,8 @@ export function ProfileProjects({ projects }: ProfileProjectsProps) {
             <div className="flex justify-between items-start gap-4 mb-3">
               <div>
                 <h3 className="font-bold text-lg text-[#1C252E] dark:text-white group-hover/card:text-purple-500 transition-colors line-clamp-1">
-                  {project.name}
+                  {project.projectName}
                 </h3>
-                <p className="text-[14px] font-bold text-[#637381] dark:text-[#919EAB] mt-1">{project.role}</p>
               </div>
               {project.link && (
                 <a
