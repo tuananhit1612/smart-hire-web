@@ -15,7 +15,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { applicationApi } from "../api/application-api";
-import { isApiError } from "@/shared/lib/api-error";
+import { getErrorMessage } from "@/shared/lib/api-error";
 
 // ─── State Interface ─────────────────────────────────────
 interface ApplicationState {
@@ -83,9 +83,7 @@ export const useApplicationStore = create<ApplicationState>()(
             withdrawingJobId: null,
           });
         } catch (error) {
-          const message = isApiError(error)
-            ? error.message
-            : "Đã xảy ra lỗi khi rút đơn ứng tuyển.";
+          const message = getErrorMessage(error, "Đã xảy ra lỗi khi rút đơn ứng tuyển.");
 
           set({ withdrawingJobId: null, withdrawError: message });
         }
