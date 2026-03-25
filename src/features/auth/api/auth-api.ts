@@ -40,7 +40,7 @@ export const authApi = {
      *       You rarely need to call this directly.
      */
     refresh: (refreshToken: string) =>
-        apiClient.post<AuthLoginResponse>("/auth/refresh", { refreshToken }),
+        apiClient.post<AuthLoginResponse>("/auth/refresh-token", { refreshToken }),
 
     /**
      * Request a password-reset email.
@@ -76,7 +76,7 @@ export const authApi = {
      * Requires the current password for verification.
      */
     changePassword: (data: ChangePasswordPayload) =>
-        apiClient.put<AuthMessageResponse>("/auth/me/password", data),
+        apiClient.post<AuthMessageResponse>("/auth/change-password", data),
 
     /**
      * Upload a new avatar image.
@@ -85,7 +85,7 @@ export const authApi = {
     uploadAvatar: (file: File) => {
         const formData = new FormData();
         formData.append("file", file);
-        return apiClient.post<string>("/auth/me/avatar", formData, {
+        return apiClient.post<string>("/users/me/avatar", formData, {
             headers: { "Content-Type": "multipart/form-data" },
         });
     },
