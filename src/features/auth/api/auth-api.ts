@@ -12,7 +12,10 @@ import type {
     AuthLoginResponse,
     AuthMeResponse,
     AuthMessageResponse,
+    ChangePasswordPayload,
     RegisterPayload,
+    UpdateProfilePayload,
+    UserResponse,
 } from "../types/auth-types";
 
 export const authApi = {
@@ -29,6 +32,15 @@ export const authApi = {
      */
     register: (data: RegisterPayload) =>
         apiClient.post<AuthLoginResponse>("/auth/register", data),
+
+    /**
+     * Refresh the access token using a valid refresh token.
+     * Returns new tokens + user info.
+     * NOTE: This is called internally by the api-client interceptor.
+     *       You rarely need to call this directly.
+     */
+    refresh: (refreshToken: string) =>
+        apiClient.post<AuthLoginResponse>("/auth/refresh", { refreshToken }),
 
     /**
      * Request a password-reset email.
@@ -51,4 +63,30 @@ export const authApi = {
      * Used on app mount to revalidate a persisted session.
      */
     getMe: () => apiClient.get<AuthMeResponse>("/auth/me"),
+
+    /**
+     * Update current user's profile (fullName, phone, avatarUrl).
+     * Returns the updated UserData object.
+     */
+    updateMe: (data: UpdateProfilePayload) =>
+        apiClient.put<UserResponse>("/auth/me", data),
+
+    /**
+     * Change current user's password.
+     * Requires the current password for verification.
+     */
+    changePassword: (data: ChangePasswordPayload) =>
+        apiClient.put<AuthMessageResponse>("/auth/me/password", data),
+
+    /**
+     * Upload a new avatar image.
+     * Returns the new avatar URL.
+     */
+    uploadAvatar: (file: File) => {
+        const formData = new FormData();
+        formData.append("file", file);
+        return apiClient.post<string>("/auth/me/avatar", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+        });
+    },
 };
