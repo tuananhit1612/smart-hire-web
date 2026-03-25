@@ -2,9 +2,9 @@
  * ═══════════════════════════════════════════════════════════
  *  Application API — Endpoint wrappers for job applications
  *
- *  POST   /applications        → apply
- *  GET    /applications/me     → list my applications
- *  DELETE /applications/{id}   → withdraw
+ *  POST   /applications/apply  → apply
+ *  GET    /applications/me     → list my applications (flat)
+ *  DELETE /applications/{id}   → withdraw (hard delete)
  * ═══════════════════════════════════════════════════════════
  */
 
@@ -17,22 +17,25 @@ export interface ApplyPayload {
 }
 
 // ─── Response Types ───────────────────────────────────────
-export interface StageHistoryDto {
-  stage: string;
-  enteredAt: string;
-  note?: string;
-}
-
-export interface ApplicationResponse {
+/** Matches BE ApplicationResponse (returned by POST /apply) */
+export interface ApplyResponse {
   id: number;
   jobId: number;
-  jobTitle: string;
   candidateProfileId: number;
   cvFileId: number;
   stage: string;
   appliedAt: string;
+}
+
+/** Matches BE ApplicationTrackingResponse (returned by GET /me) */
+export interface ApplicationTrackingDto {
+  id: number;
+  jobId: number;
+  jobTitle: string;
+  companyName: string;
+  currentStage: string;
+  appliedAt: string;
   updatedAt: string;
-  stageHistory: StageHistoryDto[];
 }
 
 // ─── API Methods ─────────────────────────────────────────
@@ -41,13 +44,13 @@ export const applicationApi = {
    * Submit a new application for a job.
    */
   apply: (data: ApplyPayload) =>
-    apiClient.post<ApplicationResponse>("/applications", data),
+    apiClient.post<ApplyResponse>("/applications/apply", data),
 
   /**
-   * List all applications for the current authenticated user.
+   * List all applications for the current authenticated user (flat list).
    */
   listMine: () =>
-    apiClient.get<ApplicationResponse[]>("/applications/me"),
+    apiClient.get<ApplicationTrackingDto[]>("/applications/me"),
 
   /**
    * Withdraw (delete) an application by its application ID.

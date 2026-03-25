@@ -16,7 +16,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import {
   applicationApi,
-  type ApplicationResponse,
+  type ApplyResponse,
   type ApplyPayload,
 } from "../api/application-api";
 import { getErrorMessage } from "@/shared/lib/api-error";
@@ -36,7 +36,7 @@ interface ApplicationState {
   withdrawError: string | null;
 
   // Actions
-  applyToJob: (payload: ApplyPayload) => Promise<ApplicationResponse>;
+  applyToJob: (payload: ApplyPayload) => Promise<ApplyResponse>;
   withdrawApplication: (jobId: string) => Promise<void>;
   fetchMyApplications: () => Promise<void>;
   hasApplied: (jobId: string) => boolean;
