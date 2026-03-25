@@ -43,7 +43,7 @@ export interface ApiWrapper<T = undefined> {
     data: T;
 }
 
-/** The `data` payload returned by POST /auth/login and POST /auth/register */
+/** The `data` payload returned by POST /auth/login, /auth/register, /auth/refresh */
 export interface AuthLoginData {
     accessToken: string;
     refreshToken: string;
@@ -54,18 +54,33 @@ export interface AuthLoginData {
     role: string;                  // "CANDIDATE" | "EMPLOYER" | etc.
 }
 
-/** Full Axios-level response type for login / register */
+/** Full Axios-level response type for login / register / refresh */
 export type AuthLoginResponse = ApiWrapper<AuthLoginData>;
 
-/** The `data` payload returned by GET /auth/me */
+/** The backend user object returned by GET /auth/me and PUT /auth/me */
+export interface UserData {
+    id: number;
+    email: string;
+    fullName: string;
+    phone: string | null;
+    role: string;
+    avatarUrl: string | null;
+    active: boolean;
+    createdAt: string;
+}
+
+/** Full Axios-level response type for /auth/me (GET & PUT) */
+export type UserResponse = ApiWrapper<UserData>;
+
+/** The `data` payload returned by GET /auth/me (legacy slim version) */
 export interface AuthMeData {
     email: string;
 }
 
-/** Full Axios-level response type for /auth/me */
+/** Full Axios-level response type for /auth/me (legacy slim) */
 export type AuthMeResponse = ApiWrapper<AuthMeData>;
 
-/** Response for endpoints that return only a message (forgot-password, etc.) */
+/** Response for endpoints that return only a message (forgot-password, change-password, etc.) */
 export type AuthMessageResponse = ApiWrapper<undefined>;
 
 /** Request payload for POST /auth/register */
@@ -74,4 +89,17 @@ export interface RegisterPayload {
     email: string;
     password: string;
     role: UserRole;
+}
+
+/** Request payload for PUT /auth/me */
+export interface UpdateProfilePayload {
+    fullName?: string;
+    phone?: string;
+    avatarUrl?: string;
+}
+
+/** Request payload for PUT /auth/me/password */
+export interface ChangePasswordPayload {
+    currentPassword: string;
+    newPassword: string;
 }
