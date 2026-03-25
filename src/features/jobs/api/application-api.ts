@@ -2,8 +2,11 @@
  * ═══════════════════════════════════════════════════════════
  *  Application API — Endpoint wrappers for job applications
  *
- *  FE021: `list` and `getDetail` are now fully wired to the
- *  real backend. `withdraw` was already wired previously.
+ *  POST   /applications/apply  → apply
+ *  GET    /applications        → list (paginated, for tracking page)
+ *  GET    /applications/me     → list my applications (flat)
+ *  GET    /applications/{id}   → get detail with stage history
+ *  DELETE /applications/{id}   → withdraw (hard delete)
  * ═══════════════════════════════════════════════════════════
  */
 
@@ -54,30 +57,55 @@ export interface ApplicationDetailResponse {
   history: ApplicationHistoryResponse[];
 }
 
-// ─── Legacy / request types ──────────────────────────────
+// ─── Request Types ────────────────────────────────────────
 export interface ApplyPayload {
-  jobId: string;
-  cvId?: string;
-  coverLetter?: string;
+  jobId: number;
+  cvFileId: number;
 }
 
-export interface ApplicationResponse {
-  id: string;
-  jobId: string;
-  status: string;
+// ─── Response Types ───────────────────────────────────────
+/** Matches BE ApplicationResponse (returned by POST /apply) */
+export interface ApplyResponse {
+  id: number;
+  jobId: number;
+  candidateProfileId: number;
+  cvFileId: number;
+  stage: string;
   appliedAt: string;
+}
+
+/** Matches BE ApplicationTrackingResponse (returned by GET /me) */
+export interface ApplicationTrackingDto {
+  id: number;
+  jobId: number;
+  jobTitle: string;
+  companyName: string;
+  currentStage: string;
+  appliedAt: string;
+  updatedAt: string;
 }
 
 // ─── API Methods ─────────────────────────────────────────
 export const applicationApi = {
   /**
-   * List all applications for the current authenticated user.
-   * Returns a Spring-paginated page of ApplicationTrackingResponse.
+   * Submit a new application for a job.
+   */
+  apply: (data: ApplyPayload) =>
+    apiClient.post<ApplyResponse>("/applications/apply", data),
+
+  /**
+   * List all applications for the current authenticated user (paginated).
    */
   list: (page = 0, size = 50) =>
     apiClient.get<SpringPage<ApplicationTrackingResponse>>(
       `/applications?page=${page}&size=${size}`
     ),
+
+  /**
+   * List all applications for the current authenticated user (flat list).
+   */
+  listMine: () =>
+    apiClient.get<ApplicationTrackingDto[]>("/applications/me"),
 
   /**
    * Get full detail (including stage history) for a single application.
@@ -86,14 +114,9 @@ export const applicationApi = {
     apiClient.get<ApplicationDetailResponse>(`/applications/${id}`),
 
   /**
-   * Withdraw an application for a specific job.
+   * Withdraw (delete) an application by its application ID.
+   * @param applicationId — The application entity ID
    */
-  withdraw: (jobId: string) =>
-    apiClient.delete<void>(`/applications/${jobId}`),
-
-  /**
-   * Submit a new application for a job.
-   */
-  apply: (data: ApplyPayload) =>
-    apiClient.post<ApplicationResponse>("/applications", data),
+  withdraw: (applicationId: number) =>
+    apiClient.delete<void>(`/applications/${applicationId}`),
 };
