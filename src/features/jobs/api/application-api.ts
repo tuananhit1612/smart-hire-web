@@ -2,47 +2,60 @@
  * ═══════════════════════════════════════════════════════════
  *  Application API — Endpoint wrappers for job applications
  *
- *  Only `withdraw` is wired to the store in this PR.
- *  `apply` and `list` are stubs for future migration.
+ *  POST   /applications/apply  → apply
+ *  GET    /applications/me     → list my applications (flat)
+ *  DELETE /applications/{id}   → withdraw (hard delete)
  * ═══════════════════════════════════════════════════════════
  */
 
 import { apiClient } from "@/shared/lib/api-client";
 
-// ─── Types ───────────────────────────────────────────────
+// ─── Request Types ────────────────────────────────────────
 export interface ApplyPayload {
-  jobId: string;
-  cvId?: string;
-  coverLetter?: string;
+  jobId: number;
+  cvFileId: number;
 }
 
-export interface ApplicationResponse {
-  id: string;
-  jobId: string;
-  status: string;
+// ─── Response Types ───────────────────────────────────────
+/** Matches BE ApplicationResponse (returned by POST /apply) */
+export interface ApplyResponse {
+  id: number;
+  jobId: number;
+  candidateProfileId: number;
+  cvFileId: number;
+  stage: string;
   appliedAt: string;
+}
+
+/** Matches BE ApplicationTrackingResponse (returned by GET /me) */
+export interface ApplicationTrackingDto {
+  id: number;
+  jobId: number;
+  jobTitle: string;
+  companyName: string;
+  currentStage: string;
+  appliedAt: string;
+  updatedAt: string;
 }
 
 // ─── API Methods ─────────────────────────────────────────
 export const applicationApi = {
   /**
-   * Withdraw an application for a specific job.
-   * @param jobId — The job ID to withdraw from
-   */
-  withdraw: (jobId: string) =>
-    apiClient.delete<void>(`/applications/${jobId}`),
-
-  /**
    * Submit a new application for a job.
-   * (Stub — will be wired in a future PR)
    */
   apply: (data: ApplyPayload) =>
-    apiClient.post<ApplicationResponse>("/applications", data),
+    apiClient.post<ApplyResponse>("/applications/apply", data),
 
   /**
-   * List all applications for the current user.
-   * (Stub — will be wired in a future PR)
+   * List all applications for the current authenticated user (flat list).
    */
-  list: () =>
-    apiClient.get<ApplicationResponse[]>("/applications"),
+  listMine: () =>
+    apiClient.get<ApplicationTrackingDto[]>("/applications/me"),
+
+  /**
+   * Withdraw (delete) an application by its application ID.
+   * @param applicationId — The application entity ID
+   */
+  withdraw: (applicationId: number) =>
+    apiClient.delete<void>(`/applications/${applicationId}`),
 };
