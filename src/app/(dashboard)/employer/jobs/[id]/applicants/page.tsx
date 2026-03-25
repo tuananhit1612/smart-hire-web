@@ -1,12 +1,12 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
-import { mockEmployerApplicants, EmployerApplicant } from "@/features/employer/types/mock-applicants";
+import { useState } from "react";
+import type { EmployerApplicant } from "@/features/employer/types/mock-applicants";
+import { useApplicants } from "@/features/employer/hooks/use-applicants";
 import { ApplicantList } from "@/features/employer/components/applicant-list";
 import { ApplicantsFilter } from "@/features/employer/components/applicants-filter";
 import { ApplicantDrawer } from "@/features/employer/components/applicant-drawer";
-import { Button } from "@/shared/components/ui/button";
-import { ArrowLeft, Users, Sparkles } from "lucide-react";
+import { ArrowLeft, Users, Sparkles, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
@@ -32,34 +32,10 @@ export default function EmployerApplicantsPage({ params }: { params: { id: strin
         setTimeout(() => setSelectedApplicant(null), 300);
     };
 
-    const filteredApplicants = useMemo(() => {
-        let result = [...mockEmployerApplicants];
-
-        // 1. Filter
-        if (searchQuery) {
-            const lowerQuery = searchQuery.toLowerCase();
-            result = result.filter(app =>
-                app.name.toLowerCase().includes(lowerQuery) ||
-                app.skills.some(skill => skill.toLowerCase().includes(lowerQuery))
-            );
-        }
-
-        // 2. Sort
-        result.sort((a, b) => {
-            if (sortBy === "score-desc") {
-                return b.aiAnalysis.matchScore - a.aiAnalysis.matchScore;
-            }
-            if (sortBy === "score-asc") {
-                return a.aiAnalysis.matchScore - b.aiAnalysis.matchScore;
-            }
-            if (sortBy === "date-desc") {
-                return new Date(b.appliedAt).getTime() - new Date(a.appliedAt).getTime();
-            }
-            return 0;
-        });
-
-        return result;
-    }, [searchQuery, sortBy]);
+    const { applicants: filteredApplicants, isLoading, refetch } = useApplicants(
+        params.id,
+        { search: searchQuery, sortBy }
+    );
 
     return (
         <div className="w-full bg-[#F4F6F8] dark:bg-[#141A21] pt-6 pb-12">
@@ -98,14 +74,14 @@ export default function EmployerApplicantsPage({ params }: { params: { id: strin
                                 <div>
                                     <p className="text-xs font-semibold text-[#919EAB] uppercase tracking-wider">Top Match</p>
                                     <p className="text-lg font-bold text-[#1C252E] dark:text-white">
-                                        {Math.max(...mockEmployerApplicants.map(a => a.aiAnalysis.matchScore))}%
+                                        {filteredApplicants.length > 0 ? Math.max(...filteredApplicants.map(a => a.aiAnalysis.matchScore)) : 0}%
                                     </p>
                                 </div>
                                 <div className="w-px h-8 bg-[rgba(145,158,171,0.15)] dark:bg-white/[0.08]" />
                                 <div>
                                     <p className="text-xs font-semibold text-[#919EAB] uppercase tracking-wider">Trung bình</p>
                                     <p className="text-lg font-bold text-[#1C252E] dark:text-white">
-                                        {Math.round(mockEmployerApplicants.reduce((acc, curr) => acc + curr.aiAnalysis.matchScore, 0) / mockEmployerApplicants.length)}%
+                                        {filteredApplicants.length > 0 ? Math.round(filteredApplicants.reduce((acc, curr) => acc + curr.aiAnalysis.matchScore, 0) / filteredApplicants.length) : 0}%
                                     </p>
                                 </div>
                             </div>
@@ -122,16 +98,25 @@ export default function EmployerApplicantsPage({ params }: { params: { id: strin
                 />
 
                 {/* List */}
-                <ApplicantList
-                    applicants={filteredApplicants}
-                    onSelectApplicant={handleSelectApplicant}
-                />
+                {isLoading ? (
+                    <div className="flex items-center justify-center py-20">
+                        <Loader2 className="w-8 h-8 animate-spin text-[#22c55e]" />
+                        <span className="ml-3 text-[#637381] dark:text-[#919EAB]">Đang tải danh sách ứng viên...</span>
+                    </div>
+                ) : (
+                    <ApplicantList
+                        applicants={filteredApplicants}
+                        onSelectApplicant={handleSelectApplicant}
+                    />
+                )}
 
                 {/* Detail Drawer */}
                 <ApplicantDrawer
                     applicant={selectedApplicant}
                     isOpen={isDrawerOpen}
                     onClose={handleCloseDrawer}
+                    jobId={params.id}
+                    onApplicantUpdated={refetch}
                 />
             </div>
         </div>

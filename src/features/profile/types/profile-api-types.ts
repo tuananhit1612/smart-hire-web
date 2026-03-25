@@ -6,19 +6,9 @@
  * ═══════════════════════════════════════════════════════════
  */
 
-// ─── API Wrapper (backend envelope) ──────────────────────
+// ─── API Wrapper (re-export from shared) ─────────────────
 
-/**
- * Standard backend response shape.
- * Axios res.data  = ApiWrapper<T>
- * Axios res.data.data = T (actual payload)
- */
-export interface ApiWrapper<T> {
-  success: boolean;
-  code: string;
-  data: T;
-  message: string;
-}
+export type { ApiWrapper } from "@/shared/types/api";
 
 // ─── Profile ─────────────────────────────────────────────
 
