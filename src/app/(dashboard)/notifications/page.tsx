@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { BellRing, CheckCheck, Inbox } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
@@ -9,19 +9,14 @@ import {
     NotificationFilters,
     NotificationFilter,
 } from "@/features/notifications/components/notification-filters";
-import { mockNotifications, Notification } from "@/features/notifications/types/mock-notifications";
+import { useNotificationStore } from "@/features/notifications/stores/notification-store";
 import { RealtimeEventTrigger } from "@/features/notifications/components/realtime-event-trigger";
+import { useState } from "react";
 
 export default function NotificationsPage() {
-    const [notifications, setNotifications] = useState<Notification[]>(
-        () => [...mockNotifications]
-    );
+    const { notifications, unreadCount, markAsRead, markAllAsRead } =
+        useNotificationStore();
     const [filter, setFilter] = useState<NotificationFilter>("all");
-
-    const unreadCount = useMemo(
-        () => notifications.filter((n) => !n.isRead).length,
-        [notifications]
-    );
 
     const filteredNotifications = useMemo(() => {
         switch (filter) {
@@ -33,16 +28,6 @@ export default function NotificationsPage() {
                 return notifications;
         }
     }, [notifications, filter]);
-
-    const handleMarkRead = (id: string) => {
-        setNotifications((prev) =>
-            prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
-        );
-    };
-
-    const handleMarkAllRead = () => {
-        setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
-    };
 
     return (
         <section className="relative z-10 pt-6 pb-8 md:pt-8 md:pb-12">
@@ -73,7 +58,7 @@ export default function NotificationsPage() {
                         <Button
                             variant="ghost"
                             size="sm"
-                            onClick={handleMarkAllRead}
+                            onClick={markAllAsRead}
                             className="h-9 text-sm text-[#22c55e] hover:text-[#22c55e] hover:bg-[#22c55e]/10 dark:hover:bg-[#22c55e]/20 rounded-full gap-1.5 cursor-pointer"
                         >
                             <CheckCheck className="w-4 h-4" />
@@ -114,7 +99,7 @@ export default function NotificationsPage() {
                                 <NotificationCard
                                     key={notification.id}
                                     notification={notification}
-                                    onMarkRead={handleMarkRead}
+                                    onMarkRead={markAsRead}
                                     index={index}
                                 />
                             ))
@@ -144,4 +129,3 @@ export default function NotificationsPage() {
         </section>
     );
 }
-

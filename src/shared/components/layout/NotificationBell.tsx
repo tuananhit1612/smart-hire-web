@@ -3,14 +3,15 @@
 import Link from "next/link";
 import { Bell } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
-import { mockNotifications } from "@/features/notifications/types/mock-notifications";
+import { useNotificationStore } from "@/features/notifications/stores/notification-store";
 
 /**
- * Notification bell icon with unread count badge.
- * Reads unread count from mock data (will be replaced by real store later).
+ * Notification bell icon with unread count badge and connection status.
+ * Reads unread count from Zustand notification store (fed by WebSocket).
  */
 export function NotificationBell() {
-    const unreadCount = mockNotifications.filter((n) => !n.isRead).length;
+    const unreadCount = useNotificationStore((s) => s.unreadCount);
+    const connectionStatus = useNotificationStore((s) => s.connectionStatus);
 
     return (
         <Link
@@ -37,7 +38,23 @@ export function NotificationBell() {
                     {unreadCount > 9 ? "9+" : unreadCount}
                 </span>
             )}
+
+            {/* Connection status dot */}
+            <span
+                className={cn(
+                    "absolute bottom-0.5 right-0.5 w-2 h-2 rounded-full ring-2 ring-white dark:ring-[#1C252E] pointer-events-none transition-colors duration-300",
+                    connectionStatus === "connected" && "bg-emerald-400",
+                    connectionStatus === "reconnecting" && "bg-amber-400 animate-pulse",
+                    connectionStatus === "disconnected" && "bg-gray-400"
+                )}
+                title={
+                    connectionStatus === "connected"
+                        ? "Đã kết nối realtime"
+                        : connectionStatus === "reconnecting"
+                        ? "Đang kết nối lại..."
+                        : "Mất kết nối"
+                }
+            />
         </Link>
     );
 }
-

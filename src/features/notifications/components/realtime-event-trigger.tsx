@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Zap, Briefcase, Calendar, BrainCircuit, Sparkles, Bell } from "lucide-react";
+import { Zap, Briefcase, Calendar, BrainCircuit, Sparkles, Bell, Wifi, WifiOff } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { useToastHelpers } from "@/shared/components/ui/toast";
 import { cn } from "@/shared/utils/cn";
+import { useNotificationStore } from "@/features/notifications/stores/notification-store";
 
 interface MockEvent {
     readonly label: string;
@@ -53,9 +54,36 @@ const MOCK_EVENTS: MockEvent[] = [
     },
 ];
 
+const STATUS_CONFIG = {
+    connected: {
+        icon: Wifi,
+        label: "Đã kết nối",
+        dot: "bg-emerald-400",
+        text: "text-emerald-600 dark:text-emerald-400",
+        bg: "bg-emerald-50 dark:bg-emerald-900/20",
+    },
+    reconnecting: {
+        icon: Wifi,
+        label: "Đang kết nối lại...",
+        dot: "bg-amber-400 animate-pulse",
+        text: "text-amber-600 dark:text-amber-400",
+        bg: "bg-amber-50 dark:bg-amber-900/20",
+    },
+    disconnected: {
+        icon: WifiOff,
+        label: "Mất kết nối",
+        dot: "bg-gray-400",
+        text: "text-gray-500 dark:text-gray-400",
+        bg: "bg-gray-50 dark:bg-gray-800/30",
+    },
+} as const;
+
 export function RealtimeEventTrigger() {
     const toast = useToastHelpers();
     const [lastFired, setLastFired] = useState<string | null>(null);
+    const connectionStatus = useNotificationStore((s) => s.connectionStatus);
+    const statusConfig = STATUS_CONFIG[connectionStatus];
+    const StatusIcon = statusConfig.icon;
 
     const handleFire = (event: MockEvent) => {
         event.fire(toast);
@@ -65,17 +93,31 @@ export function RealtimeEventTrigger() {
 
     return (
         <div className="bg-white dark:bg-[#1C252E] rounded-2xl border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] shadow-sm p-5">
-            <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-violet-500 to-fuchsia-500 flex items-center justify-center">
-                    <Zap className="w-4 h-4 text-white" />
+            <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-violet-500 to-fuchsia-500 flex items-center justify-center">
+                        <Zap className="w-4 h-4 text-white" />
+                    </div>
+                    <div>
+                        <h3 className="text-sm font-bold text-[#1C252E] dark:text-white">
+                            Mô phỏng Realtime Events
+                        </h3>
+                        <p className="text-xs text-[#919EAB] dark:text-[#637381]">
+                            Bấm nút để kích hoạt toast notification
+                        </p>
+                    </div>
                 </div>
-                <div>
-                    <h3 className="text-sm font-bold text-[#1C252E] dark:text-white">
-                        Mô phỏng Realtime Events
-                    </h3>
-                    <p className="text-xs text-[#919EAB] dark:text-[#637381]">
-                        Bấm nút để kích hoạt toast notification
-                    </p>
+
+                {/* Connection status badge */}
+                <div
+                    className={cn(
+                        "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium",
+                        statusConfig.bg, statusConfig.text
+                    )}
+                >
+                    <span className={cn("w-1.5 h-1.5 rounded-full", statusConfig.dot)} />
+                    <StatusIcon className="w-3 h-3" />
+                    <span className="hidden sm:inline">{statusConfig.label}</span>
                 </div>
             </div>
 
@@ -119,4 +161,3 @@ export function RealtimeEventTrigger() {
         </div>
     );
 }
-
