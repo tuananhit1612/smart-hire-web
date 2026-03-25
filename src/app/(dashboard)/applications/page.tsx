@@ -6,13 +6,8 @@ import {
   MapPin,
   Briefcase,
   Calendar,
-  Clock,
   CheckCircle2,
-  XCircle,
-  AlertCircle,
-  ArrowRight,
-  Trash2,
-  Loader2
+  ArrowRight
 } from "lucide-react";
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
@@ -21,10 +16,10 @@ import { Input } from "@/shared/components/ui/input";
 import {
   mockApplications,
   Application,
-  ApplicationTimelineEvent
 } from "@/features/jobs/types/mock-applications";
 import { ApplicationStatus, ApplicationStage } from "@/shared/types/application";
 import { cn } from "@/shared/lib/utils";
+import { WithdrawConfirmModal } from "@/features/jobs/components/withdraw-confirm-modal";
 
 // --- Design Standards Constants (per DESIGN_STANDARD.md) ---
 // Primary: Sky Blue
@@ -71,19 +66,17 @@ function StatusBadge({ status }: { status: ApplicationStatus }) {
   );
 }
 
-function ApplicationCard({ application }: { application: Application }) {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [confirmWithdraw, setConfirmWithdraw] = useState(false);
-  const { withdrawApplication, withdrawingJobId, withdrawError, clearWithdrawError } = useApplicationStore();
-  const isWithdrawing = withdrawingJobId === application.jobId;
+// Only local-applied jobs (from the store) can be withdrawn by candidate
+const WITHDRAWABLE_STAGES = new Set([ApplicationStage.APPLIED, ApplicationStage.SCREENING]);
 
-  const handleWithdraw = async () => {
-    if (!confirmWithdraw) {
-      setConfirmWithdraw(true);
-      return;
-    }
-    await withdrawApplication(application.jobId);
-  };
+interface ApplicationCardProps {
+  application: Application;
+  onWithdraw?: () => void;
+  isLocalApplication?: boolean;
+}
+
+function ApplicationCard({ application, onWithdraw, isLocalApplication = false }: ApplicationCardProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const currentEvent = useMemo(() =>
     application.timeline.find(e => !e.isCompleted) ||
@@ -124,37 +117,19 @@ function ApplicationCard({ application }: { application: Application }) {
                   {application.job.company}
                 </p>
               </div>
-              <div className="shrink-0 flex items-center gap-2">
+              <div className="shrink-0 flex items-center gap-3">
                 <StatusBadge status={application.status} />
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleWithdraw();
-                  }}
-                  onBlur={() => setConfirmWithdraw(false)}
-                  disabled={isWithdrawing}
-                  className={cn(
-                    "px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 flex items-center gap-1.5",
-                    isWithdrawing
-                      ? "opacity-60 cursor-not-allowed bg-gray-50 dark:bg-gray-800 text-gray-400 border-gray-200 dark:border-gray-700"
-                      : confirmWithdraw
-                        ? "bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-300 dark:border-red-700 hover:bg-red-100"
-                        : "bg-white dark:bg-[#1C252E] text-[#637381] dark:text-[#919EAB] border-[rgba(145,158,171,0.2)] dark:border-white/[0.08] hover:text-red-600 hover:border-red-300 hover:bg-red-50"
-                  )}
-                >
-                  {isWithdrawing ? (
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  ) : (
-                    <Trash2 className="w-3.5 h-3.5" />
-                  )}
-                  {isWithdrawing ? "Đang rút..." : confirmWithdraw ? "Xác nhận rút?" : "Rút hồ sơ"}
-                </button>
-                {withdrawError && withdrawingJobId === null && (
+                {/* Withdraw button — only for local applications in early stages */}
+                {isLocalApplication && WITHDRAWABLE_STAGES.has(application.status as ApplicationStage) && onWithdraw && (
                   <button
-                    onClick={(e) => { e.stopPropagation(); clearWithdrawError(); }}
-                    className="text-xs text-red-500 dark:text-red-400 underline hover:no-underline"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      onWithdraw();
+                    }}
+                    className="text-xs font-semibold text-red-500 hover:text-red-600 border border-red-200 hover:border-red-400 dark:border-red-500/30 dark:hover:border-red-500/60 px-3 py-1.5 rounded-full transition-colors hover:bg-red-50 dark:hover:bg-red-500/10"
                   >
-                    {withdrawError}
+                    Rút hồ sơ
                   </button>
                 )}
               </div>
@@ -249,14 +224,15 @@ function ApplicationCard({ application }: { application: Application }) {
 import { useApplicationStore } from "@/features/jobs/stores/application-store";
 import { mockJobs } from "@/features/jobs/types/mock-jobs";
 
-// ... previous imports
-
 export default function ApplicationsPage() {
   const [activeTab, setActiveTab] = useState<"active" | "archived">("active");
   const [searchQuery, setSearchQuery] = useState("");
 
+  // Withdraw modal state
+  const [withdrawTarget, setWithdrawTarget] = useState<{ jobId: string; jobTitle: string } | null>(null);
+
   // Get local state from store
-  const { appliedJobIds, applicationDates } = useApplicationStore();
+  const { appliedJobIds, applicationDates, withdrawApplication } = useApplicationStore();
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -358,11 +334,31 @@ export default function ApplicationsPage() {
           </div>
         </div>
 
+        {/* Withdraw Confirm Modal */}
+        <WithdrawConfirmModal
+          isOpen={!!withdrawTarget}
+          jobTitle={withdrawTarget?.jobTitle ?? ""}
+          onCancel={() => setWithdrawTarget(null)}
+          onConfirm={() => {
+            if (withdrawTarget) {
+              withdrawApplication(withdrawTarget.jobId);
+              setWithdrawTarget(null);
+            }
+          }}
+        />
+
         <div className="space-y-6">
           <AnimatePresence mode="popLayout">
             {filteredApplications.length > 0 ? (
               filteredApplications.map((app) => (
-                <ApplicationCard key={app.id} application={app} />
+                <ApplicationCard
+                  key={app.id}
+                  application={app}
+                  isLocalApplication={app.id.startsWith("local-")}
+                  onWithdraw={() =>
+                    setWithdrawTarget({ jobId: app.jobId, jobTitle: app.job.title })
+                  }
+                />
               ))
             ) : (
               <div className="text-center py-24 bg-[rgba(145,158,171,0.04)] dark:bg-white/[0.02] rounded-3xl border border-dashed border-[rgba(145,158,171,0.2)] dark:border-white/[0.08]">
