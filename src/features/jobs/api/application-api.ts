@@ -2,47 +2,57 @@
  * ═══════════════════════════════════════════════════════════
  *  Application API — Endpoint wrappers for job applications
  *
- *  Only `withdraw` is wired to the store in this PR.
- *  `apply` and `list` are stubs for future migration.
+ *  POST   /applications        → apply
+ *  GET    /applications/me     → list my applications
+ *  DELETE /applications/{id}   → withdraw
  * ═══════════════════════════════════════════════════════════
  */
 
 import { apiClient } from "@/shared/lib/api-client";
 
-// ─── Types ───────────────────────────────────────────────
+// ─── Request Types ────────────────────────────────────────
 export interface ApplyPayload {
-  jobId: string;
-  cvId?: string;
-  coverLetter?: string;
+  jobId: number;
+  cvFileId: number;
+}
+
+// ─── Response Types ───────────────────────────────────────
+export interface StageHistoryDto {
+  stage: string;
+  enteredAt: string;
+  note?: string;
 }
 
 export interface ApplicationResponse {
-  id: string;
-  jobId: string;
-  status: string;
+  id: number;
+  jobId: number;
+  jobTitle: string;
+  candidateProfileId: number;
+  cvFileId: number;
+  stage: string;
   appliedAt: string;
+  updatedAt: string;
+  stageHistory: StageHistoryDto[];
 }
 
 // ─── API Methods ─────────────────────────────────────────
 export const applicationApi = {
   /**
-   * Withdraw an application for a specific job.
-   * @param jobId — The job ID to withdraw from
-   */
-  withdraw: (jobId: string) =>
-    apiClient.delete<void>(`/applications/${jobId}`),
-
-  /**
    * Submit a new application for a job.
-   * (Stub — will be wired in a future PR)
    */
   apply: (data: ApplyPayload) =>
     apiClient.post<ApplicationResponse>("/applications", data),
 
   /**
-   * List all applications for the current user.
-   * (Stub — will be wired in a future PR)
+   * List all applications for the current authenticated user.
    */
-  list: () =>
-    apiClient.get<ApplicationResponse[]>("/applications"),
+  listMine: () =>
+    apiClient.get<ApplicationResponse[]>("/applications/me"),
+
+  /**
+   * Withdraw (delete) an application by its application ID.
+   * @param applicationId — The application entity ID
+   */
+  withdraw: (applicationId: number) =>
+    apiClient.delete<void>(`/applications/${applicationId}`),
 };

@@ -5,16 +5,20 @@
  *  Application Store — Zustand store for job applications
  *
  *  Tracks which jobs the user has applied to and manages
- *  the withdraw flow via real backend API calls.
+ *  apply / withdraw flows via real backend API calls.
  *
- *  `withdrawingJobId` and `withdrawError` are excluded from
- *  persist — they reset to defaults on page reload.
+ *  Transient UI state (`submittingJobId`, `withdrawingJobId`,
+ *  errors) is excluded from persist — they reset on reload.
  * ═══════════════════════════════════════════════════════════
  */
 
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { applicationApi } from "../api/application-api";
+import {
+  applicationApi,
+  type ApplicationResponse,
+  type ApplyPayload,
+} from "../api/application-api";
 import { getErrorMessage } from "@/shared/lib/api-error";
 
 // ─── State Interface ─────────────────────────────────────
@@ -22,18 +26,22 @@ interface ApplicationState {
   // Persisted state
   appliedJobIds: string[];
   applicationDates: Record<string, string>;
+  /** Maps jobId → applicationId (needed for withdraw) */
+  applicationIdMap: Record<string, number>;
 
   // Transient state (NOT persisted)
-  /** The job ID currently being withdrawn, or null if idle */
+  submittingJobId: string | null;
+  submitError: string | null;
   withdrawingJobId: string | null;
-  /** Error message from the last failed withdraw, or null */
   withdrawError: string | null;
 
   // Actions
-  applyToJob: (jobId: string) => void;
+  applyToJob: (payload: ApplyPayload) => Promise<ApplicationResponse>;
   withdrawApplication: (jobId: string) => Promise<void>;
+  fetchMyApplications: () => Promise<void>;
   hasApplied: (jobId: string) => boolean;
   getApplicationDate: (jobId: string) => string | null;
+  clearSubmitError: () => void;
   clearWithdrawError: () => void;
 }
 
@@ -44,22 +52,56 @@ export const useApplicationStore = create<ApplicationState>()(
       // ─── Persisted defaults ────────────────────────
       appliedJobIds: [],
       applicationDates: {},
+      applicationIdMap: {},
 
       // ─── Transient defaults ────────────────────────
+      submittingJobId: null,
+      submitError: null,
       withdrawingJobId: null,
       withdrawError: null,
 
-      // ─── Apply (local-only for now) ────────────────
-      applyToJob: (jobId: string) => {
-        const { appliedJobIds, applicationDates } = get();
-        if (!appliedJobIds.includes(jobId)) {
-          set({
-            appliedJobIds: [...appliedJobIds, jobId],
-            applicationDates: {
-              ...applicationDates,
-              [jobId]: new Date().toISOString(),
-            },
-          });
+      // ─── Apply (async — calls real API) ─────────────
+      applyToJob: async (payload: ApplyPayload) => {
+        const jobIdStr = String(payload.jobId);
+
+        // Prevent double-submit
+        if (get().submittingJobId) {
+          throw new Error("Already submitting");
+        }
+
+        set({ submittingJobId: jobIdStr, submitError: null });
+
+        try {
+          const response = await applicationApi.apply(payload);
+          const app = response.data;
+
+          // Success — update local state
+          const { appliedJobIds, applicationDates, applicationIdMap } = get();
+          if (!appliedJobIds.includes(jobIdStr)) {
+            set({
+              appliedJobIds: [...appliedJobIds, jobIdStr],
+              applicationDates: {
+                ...applicationDates,
+                [jobIdStr]: app.appliedAt,
+              },
+              applicationIdMap: {
+                ...applicationIdMap,
+                [jobIdStr]: app.id,
+              },
+              submittingJobId: null,
+            });
+          } else {
+            set({ submittingJobId: null });
+          }
+
+          return app;
+        } catch (error) {
+          const message = getErrorMessage(
+            error,
+            "Đã xảy ra lỗi khi gửi hồ sơ ứng tuyển."
+          );
+          set({ submittingJobId: null, submitError: message });
+          throw error;
         }
       },
 
@@ -68,24 +110,58 @@ export const useApplicationStore = create<ApplicationState>()(
         // Prevent double-clicking
         if (get().withdrawingJobId) return;
 
+        const applicationId = get().applicationIdMap[jobId];
+        if (!applicationId) {
+          set({ withdrawError: "Không tìm thấy đơn ứng tuyển." });
+          return;
+        }
+
         set({ withdrawingJobId: jobId, withdrawError: null });
 
         try {
-          await applicationApi.withdraw(jobId);
+          await applicationApi.withdraw(applicationId);
 
           // Success — remove from local state
-          const { appliedJobIds, applicationDates } = get();
+          const { appliedJobIds, applicationDates, applicationIdMap } = get();
           const newDates = { ...applicationDates };
+          const newIdMap = { ...applicationIdMap };
           delete newDates[jobId];
+          delete newIdMap[jobId];
           set({
             appliedJobIds: appliedJobIds.filter((id) => id !== jobId),
             applicationDates: newDates,
+            applicationIdMap: newIdMap,
             withdrawingJobId: null,
           });
         } catch (error) {
-          const message = getErrorMessage(error, "Đã xảy ra lỗi khi rút đơn ứng tuyển.");
-
+          const message = getErrorMessage(
+            error,
+            "Đã xảy ra lỗi khi rút đơn ứng tuyển."
+          );
           set({ withdrawingJobId: null, withdrawError: message });
+        }
+      },
+
+      // ─── Fetch my applications from backend ─────────
+      fetchMyApplications: async () => {
+        try {
+          const response = await applicationApi.listMine();
+          const apps = response.data;
+
+          const appliedJobIds: string[] = [];
+          const applicationDates: Record<string, string> = {};
+          const applicationIdMap: Record<string, number> = {};
+
+          for (const app of apps) {
+            const jobIdStr = String(app.jobId);
+            appliedJobIds.push(jobIdStr);
+            applicationDates[jobIdStr] = app.appliedAt;
+            applicationIdMap[jobIdStr] = app.id;
+          }
+
+          set({ appliedJobIds, applicationDates, applicationIdMap });
+        } catch {
+          // Silently fail — local cache still valid
         }
       },
 
@@ -98,16 +174,21 @@ export const useApplicationStore = create<ApplicationState>()(
         return get().applicationDates[jobId] || null;
       },
 
+      clearSubmitError: () => {
+        set({ submitError: null });
+      },
+
       clearWithdrawError: () => {
         set({ withdrawError: null });
       },
     }),
     {
       name: "smarthire-applications",
-      // Only persist the data fields — transient UI state resets on reload
+      // Only persist data fields — transient UI state resets on reload
       partialize: (state) => ({
         appliedJobIds: state.appliedJobIds,
         applicationDates: state.applicationDates,
+        applicationIdMap: state.applicationIdMap,
       }),
     }
   )
