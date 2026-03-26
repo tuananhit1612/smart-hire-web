@@ -59,6 +59,13 @@ export const authApi = {
         }),
 
     /**
+     * Verify user's email using the token sent via email link.
+     * Called when user clicks /verify-email?token=xxx
+     */
+    verifyEmail: (token: string) =>
+        apiClient.post<AuthMessageResponse>("/auth/verify-email", { token }),
+
+    /**
      * Fetch current user profile using stored access token.
      * Used on app mount to revalidate a persisted session.
      */
