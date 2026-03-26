@@ -14,114 +14,11 @@ import {
 import Link from "next/link";
 import { Button } from "@/shared/components/ui/button";
 import { cn } from "@/shared/utils/cn";
-import { mockInterviewQuestions, InterviewQuestion } from "@/features/interview/types/mock-questions";
+import { mockInterviewQuestions } from "@/features/interview/types/mock-questions";
+import { ChatBubble, TypingIndicator } from "@/features/interview/components/ChatBubble";
+import type { ChatMessage, InterviewQuestion } from "@/features/interview/types/interview-ui-types";
+import { useCreateInterview } from "@/features/interview/hooks/useInterviewService";
 
-// ─── Types ───────────────────────────────────────────
-interface ChatMessage {
-    id: string;
-    role: "ai" | "user";
-    content: string;
-    timestamp: Date;
-    category?: InterviewQuestion["category"];
-}
-
-// ─── Category Badge ──────────────────────────────────
-const CATEGORY_LABELS: Record<InterviewQuestion["category"], { label: string; color: string }> = {
-    introduction: { label: "Giới thiệu", color: "bg-[#22c55e]/10 dark:bg-[#22c55e]/20 text-[#22c55e]" },
-    technical: { label: "Kỹ thuật", color: "bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400" },
-    behavioral: { label: "Hành vi", color: "bg-[#FFAB00]/10 dark:bg-[#FFAB00]/20 text-[#FFAB00]" },
-    situational: { label: "Tình huống", color: "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400" },
-    closing: { label: "Kết thúc", color: "bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400" },
-};
-
-// ─── Typing Indicator ────────────────────────────────
-function TypingIndicator() {
-    return (
-        <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="flex items-end gap-2.5 max-w-[85%]"
-        >
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#22c55e] to-[#10b981] flex items-center justify-center shrink-0 shadow-sm">
-                <BrainCircuit className="w-5 h-5 text-white" />
-            </div>
-            <div className="bg-white dark:bg-[#1C252E] border border-slate-100 dark:border-white/[0.08] rounded-2xl rounded-bl-md px-5 py-4 shadow-sm">
-                <div className="flex items-center gap-1.5">
-                    <motion.span
-                        animate={{ opacity: [0.3, 1, 0.3] }}
-                        transition={{ duration: 1.2, repeat: Infinity, delay: 0 }}
-                        className="w-2.5 h-2.5 rounded-full bg-[#22c55e]"
-                    />
-                    <motion.span
-                        animate={{ opacity: [0.3, 1, 0.3] }}
-                        transition={{ duration: 1.2, repeat: Infinity, delay: 0.2 }}
-                        className="w-2.5 h-2.5 rounded-full bg-[#22c55e]"
-                    />
-                    <motion.span
-                        animate={{ opacity: [0.3, 1, 0.3] }}
-                        transition={{ duration: 1.2, repeat: Infinity, delay: 0.4 }}
-                        className="w-2.5 h-2.5 rounded-full bg-[#22c55e]"
-                    />
-                </div>
-            </div>
-        </motion.div>
-    );
-}
-
-// ─── Chat Bubble ─────────────────────────────────────
-function ChatBubble({ message }: { readonly message: ChatMessage }) {
-    const isAI = message.role === "ai";
-
-    return (
-        <motion.div
-            initial={{ opacity: 0, y: 15, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            className={cn("flex items-end gap-3 max-w-[85%]", !isAI && "ml-auto flex-row-reverse")}
-        >
-            {/* Avatar */}
-            {isAI && (
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#22c55e] to-[#10b981] flex items-center justify-center shrink-0 shadow-sm">
-                    <BrainCircuit className="w-5 h-5 text-white" />
-                </div>
-            )}
-
-            <div className="space-y-1.5">
-                {/* Category Badge */}
-                {isAI && message.category && (
-                    <span
-                        className={cn(
-                            "inline-block px-3 py-1 rounded-full text-sm font-semibold",
-                            CATEGORY_LABELS[message.category].color
-                        )}
-                    >
-                        {CATEGORY_LABELS[message.category].label}
-                    </span>
-                )}
-
-                {/* Bubble */}
-                <div
-                    className={cn(
-                        "px-5 py-4 text-lg leading-relaxed",
-                        isAI
-                            ? "bg-white dark:bg-[#1C252E] border border-[rgba(145,158,171,0.12)] rounded-2xl rounded-bl-md shadow-sm text-[#1C252E] dark:text-white"
-                            : "bg-[#22c55e] text-white rounded-2xl rounded-br-md shadow-lg shadow-[#22c55e]500/20"
-                    )}
-                >
-                    {message.content}
-                </div>
-
-                {/* Time */}
-                <p className={cn("text-sm text-slate-300 dark:text-[#637381] px-1 mt-1", !isAI && "text-right")}>
-                    {message.timestamp.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })}
-                </p>
-            </div>
-        </motion.div>
-    );
-}
-
-// ─── Main Page ───────────────────────────────────────
 export default function InterviewSessionPage() {
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [input, setInput] = useState("");
@@ -131,6 +28,8 @@ export default function InterviewSessionPage() {
     const [showHint, setShowHint] = useState(false);
     const chatEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLTextAreaElement>(null);
+    const { mutate: createInterview } = useCreateInterview();
+    const hasCreatedRef = useRef(false);
 
     const currentQuestion = useMemo(
         () => mockInterviewQuestions[currentQIndex] ?? null,
@@ -146,6 +45,28 @@ export default function InterviewSessionPage() {
     useEffect(() => {
         chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages, isTyping]);
+
+    // Create interview record in backend on mount
+    useEffect(() => {
+        if (hasCreatedRef.current) return;
+        hasCreatedRef.current = true;
+
+        const params = new URLSearchParams(window.location.search);
+        const cvId = params.get("cv");
+        const jobId = params.get("job");
+
+        if (cvId && jobId) {
+            createInterview({
+                applicationId: Number(jobId) || 1,
+                roomName: `AI Interview - CV:${cvId} Job:${jobId}`,
+                scheduledAt: new Date().toISOString(),
+                durationMinutes: 30,
+                note: `AI mock interview session. CV: ${cvId}, Job: ${jobId}`,
+            }).catch(() => {
+                // Silently fail — interview can proceed even without backend record
+            });
+        }
+    }, [createInterview]);
 
     // Push AI question as a chat message with typing delay
     const pushAIQuestion = useCallback(
@@ -185,7 +106,6 @@ export default function InterviewSessionPage() {
         const trimmed = input.trim();
         if (!trimmed || isTyping || isComplete) return;
 
-        // Add user message
         setMessages((prev) => [
             ...prev,
             {
@@ -197,13 +117,11 @@ export default function InterviewSessionPage() {
         ]);
         setInput("");
 
-        // Move to next question
         const nextIndex = currentQIndex + 1;
         if (nextIndex < mockInterviewQuestions.length) {
             setCurrentQIndex(nextIndex);
             pushAIQuestion(mockInterviewQuestions[nextIndex]);
         } else {
-            // Interview complete
             setIsTyping(true);
             setTimeout(() => {
                 setMessages((prev) => [
@@ -239,7 +157,7 @@ export default function InterviewSessionPage() {
                         <div className="flex items-center gap-3">
                             <Link
                                 href="/interview/setup"
-                                className="w-10 h-10 rounded-full bg-[#rgba(145,158,171,0.04)] dark:bg-white/[0.06] hover:bg-[rgba(145,158,171,0.08)] dark:hover:bg-white/[0.1] flex items-center justify-center transition-colors"
+                                className="w-10 h-10 rounded-full bg-slate-50 dark:bg-white/[0.06] hover:bg-slate-100 dark:hover:bg-white/[0.1] flex items-center justify-center transition-colors"
                             >
                                 <ArrowLeft className="w-5 h-5 text-[#637381] dark:text-[#C4CDD5]" />
                             </Link>
@@ -306,20 +224,15 @@ export default function InterviewSessionPage() {
                             </p>
                             <div className="flex gap-2">
                                 <Link href="/interview/setup">
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        className="rounded-full text-base px-5 py-2 cursor-pointer"
-                                    >
+                                    <Button variant="ghost" size="sm" className="rounded-full text-base px-5 py-2 cursor-pointer">
                                         Phỏng vấn lại
                                     </Button>
                                 </Link>
-                                <Button
-                                    size="sm"
-                                    className="rounded-full text-base px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer"
-                                >
-                                    Xem đánh giá AI
-                                </Button>
+                                <Link href="/interview/result">
+                                    <Button size="sm" className="rounded-full text-base px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer">
+                                        Xem đánh giá AI
+                                    </Button>
+                                </Link>
                             </div>
                         </motion.div>
                     )}
@@ -350,7 +263,6 @@ export default function InterviewSessionPage() {
                 <div className="mx-auto max-w-3xl px-4 sm:px-6 py-4">
                     {!isComplete ? (
                         <div className="flex items-end gap-3">
-                            {/* Hint Toggle */}
                             {currentQuestion?.hint && (
                                 <button
                                     onClick={() => setShowHint(!showHint)}
@@ -366,7 +278,6 @@ export default function InterviewSessionPage() {
                                 </button>
                             )}
 
-                            {/* Textarea */}
                             <div className="flex-1 relative">
                                 <textarea
                                     ref={inputRef}
@@ -391,14 +302,13 @@ export default function InterviewSessionPage() {
                                     }}
                                 />
 
-                                {/* Send Button */}
                                 <button
                                     onClick={handleSend}
                                     disabled={!input.trim() || isTyping}
                                     className={cn(
                                         "absolute right-2.5 bottom-2 w-10 h-10 rounded-full flex items-center justify-center transition-all cursor-pointer",
                                         input.trim() && !isTyping
-                                            ? "bg-[#22c55e] text-white shadow-md shadow-[#22c55e]500/20 hover:bg-[#16a34a] hover:scale-105"
+                                            ? "bg-[#22c55e] text-white shadow-md shadow-[#22c55e]/20 hover:bg-[#16a34a] hover:scale-105"
                                             : "bg-[rgba(145,158,171,0.12)] dark:bg-white/[0.06] text-[#637381] dark:text-[#919EAB] cursor-not-allowed"
                                     )}
                                 >
