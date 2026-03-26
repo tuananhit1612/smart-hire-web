@@ -74,16 +74,8 @@ export interface ApplyResponse {
   appliedAt: string;
 }
 
-/** Matches BE ApplicationTrackingResponse (returned by GET /me) */
-export interface ApplicationTrackingDto {
-  id: number;
-  jobId: number;
-  jobTitle: string;
-  companyName: string;
-  currentStage: string;
-  appliedAt: string;
-  updatedAt: string;
-}
+/** @deprecated Use ApplicationTrackingResponse instead — identical shape */
+export type ApplicationTrackingDto = ApplicationTrackingResponse;
 
 // ─── API Methods ─────────────────────────────────────────
 export const applicationApi = {
