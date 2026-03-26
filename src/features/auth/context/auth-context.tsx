@@ -40,6 +40,8 @@ import { tokenStorage } from "../lib/token-storage";
 
 // ─── Helpers ─────────────────────────────────────────────
 
+const SESSION_COOKIE_NAME = "smarthire-session";
+
 /** Map the flat backend login/register payload to SessionUser */
 function toSessionUser(d: AuthLoginData): SessionUser {
     return {
@@ -64,6 +66,20 @@ function userDataToSession(d: UserData): SessionUser {
         joinedDate: d.createdAt,
         isNewUser: false,
     };
+}
+
+/** Set a cookie the Next.js edge middleware can read to gate routes */
+function setSessionCookie(user: SessionUser) {
+    if (typeof document === "undefined") return;
+    const value = encodeURIComponent(
+        JSON.stringify({ role: user.role, isNewUser: user.isNewUser ?? false })
+    );
+    document.cookie = `${SESSION_COOKIE_NAME}=${value}; path=/; SameSite=Lax; max-age=${60 * 60 * 24 * 7}`;
+}
+
+function clearSessionCookie() {
+    if (typeof document === "undefined") return;
+    document.cookie = `${SESSION_COOKIE_NAME}=; path=/; SameSite=Lax; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
 }
 
 // ─── Context Value ───────────────────────────────────────
@@ -104,22 +120,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
                 // Try the rich UserData shape first, fall back to slim { email }
                 if ("id" in meData && "fullName" in meData) {
-                    setUser(userDataToSession(meData as unknown as UserData));
+                    const sessionUser = userDataToSession(meData as unknown as UserData);
+                    setUser(sessionUser);
+                    setSessionCookie(sessionUser);
                 } else {
                     // Legacy slim response — best-effort
-                    setUser({
+                    const sessionUser: SessionUser = {
                         id: "",
                         name: meData.email.split("@")[0],
                         email: meData.email,
                         role: "candidate",
                         joinedDate: new Date().toISOString(),
-                    });
+                    };
+                    setUser(sessionUser);
+                    setSessionCookie(sessionUser);
                 }
                 setStatus("authenticated");
             })
             .catch(() => {
                 // Token expired or invalid — clear and mark unauthenticated
                 tokenStorage.clearTokens();
+                clearSessionCookie();
                 setStatus("unauthenticated");
             });
     }, []);
@@ -134,6 +155,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             tokenStorage.setTokens(payload.accessToken, payload.refreshToken);
             const sessionUser = toSessionUser(payload);
             setUser(sessionUser);
+            setSessionCookie(sessionUser);
             setStatus("authenticated");
             return sessionUser;
         } catch (err) {
@@ -150,7 +172,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             const payload = res.data.data; // AuthLoginData
 
             tokenStorage.setTokens(payload.accessToken, payload.refreshToken);
-            setUser(toSessionUser(payload));
+            const sessionUser = toSessionUser(payload);
+            setUser(sessionUser);
+            setSessionCookie(sessionUser);
             setStatus("authenticated");
         } catch (err) {
             setStatus("unauthenticated");
@@ -161,13 +185,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // ── Logout ───────────────────────────────────────────
     const logout = useCallback(() => {
         tokenStorage.clearTokens();
+        clearSessionCookie();
         setUser(null);
         setStatus("unauthenticated");
     }, []);
 
     // ── Complete Onboarding ──────────────────────────────
     const completeOnboarding = useCallback(() => {
-        setUser((prev) => (prev ? { ...prev, isNewUser: false } : null));
+        setUser((prev) => {
+            if (!prev) return null;
+            const updated = { ...prev, isNewUser: false };
+            setSessionCookie(updated);
+            return updated;
+        });
     }, []);
 
     // ── Update Profile ───────────────────────────────────

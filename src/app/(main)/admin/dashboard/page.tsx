@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
     Users,
@@ -18,9 +19,12 @@ import {
     BarChart3,
     Globe,
     Server,
+    Loader2,
 } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
 import { fmtNumber } from "@/shared/utils/format";
+import { adminDashboardApi } from "@/features/admin/api/admin-dashboard-api";
+import type { AdminDashboardResponse } from "@/features/admin/types/admin-dashboard-types";
 
 // ─── Stat Cards ──────────────────────────────────────
 interface AdminStat {
@@ -33,13 +37,26 @@ interface AdminStat {
     bg: string;
 }
 
-const adminStats: AdminStat[] = [
-    { label: "Tổng người dùng", value: "12,485", change: "+324", trend: "up", icon: Users, color: "text-[#22c55e]", bg: "bg-[#22c55e]/10" },
-    { label: "Nhà tuyển dụng", value: "486", change: "+18", trend: "up", icon: Building2, color: "text-violet-600", bg: "bg-violet-50" },
-    { label: "Tin tuyển dụng", value: "1,842", change: "+67", trend: "up", icon: Briefcase, color: "text-emerald-600", bg: "bg-emerald-50" },
-    { label: "CV đã tạo", value: "8,294", change: "+412", trend: "up", icon: FileText, color: "text-amber-600", bg: "bg-amber-50" },
-    { label: "Phỏng vấn AI", value: "3,156", change: "+89", trend: "up", icon: ShieldCheck, color: "text-rose-600", bg: "bg-rose-50" },
-    { label: "Báo cáo vi phạm", value: "23", change: "-5", trend: "down", icon: AlertTriangle, color: "text-orange-600", bg: "bg-orange-50" },
+/** Build stat cards from live API data */
+function buildStats(d: AdminDashboardResponse): AdminStat[] {
+    return [
+        { label: "Tổng người dùng", value: fmtNumber(d.totalUsers), change: `+${fmtNumber(d.activeUsers)} active`, trend: "up", icon: Users, color: "text-[#22c55e]", bg: "bg-[#22c55e]/10" },
+        { label: "Nhà tuyển dụng", value: fmtNumber(d.totalCompanies), change: `${fmtNumber(d.totalHrUsers)} HR`, trend: "up", icon: Building2, color: "text-violet-600", bg: "bg-violet-50" },
+        { label: "Tin tuyển dụng", value: fmtNumber(d.totalJobs), change: `${fmtNumber(d.openJobs)} đang mở`, trend: "up", icon: Briefcase, color: "text-emerald-600", bg: "bg-emerald-50" },
+        { label: "Ứng viên", value: fmtNumber(d.totalCandidates), change: `${fmtNumber(d.inactiveUsers)} inactive`, trend: "up", icon: FileText, color: "text-amber-600", bg: "bg-amber-50" },
+        { label: "Đơn ứng tuyển", value: fmtNumber(d.totalApplications), change: `${(d.hireRate * 100).toFixed(1)}% hired`, trend: "up", icon: ShieldCheck, color: "text-rose-600", bg: "bg-rose-50" },
+        { label: "Tỷ lệ từ chối", value: `${(d.rejectRate * 100).toFixed(1)}%`, change: `${fmtNumber(d.closedJobs)} jobs closed`, trend: d.rejectRate > 0.5 ? "down" : "up", icon: AlertTriangle, color: "text-orange-600", bg: "bg-orange-50" },
+    ];
+}
+
+/** Fallback hardcoded cards (shown while loading / on error) */
+const fallbackStats: AdminStat[] = [
+    { label: "Tổng người dùng", value: "—", change: "—", trend: "up", icon: Users, color: "text-[#22c55e]", bg: "bg-[#22c55e]/10" },
+    { label: "Nhà tuyển dụng", value: "—", change: "—", trend: "up", icon: Building2, color: "text-violet-600", bg: "bg-violet-50" },
+    { label: "Tin tuyển dụng", value: "—", change: "—", trend: "up", icon: Briefcase, color: "text-emerald-600", bg: "bg-emerald-50" },
+    { label: "Ứng viên", value: "—", change: "—", trend: "up", icon: FileText, color: "text-amber-600", bg: "bg-amber-50" },
+    { label: "Đơn ứng tuyển", value: "—", change: "—", trend: "up", icon: ShieldCheck, color: "text-rose-600", bg: "bg-rose-50" },
+    { label: "Tỷ lệ từ chối", value: "—", change: "—", trend: "up", icon: AlertTriangle, color: "text-orange-600", bg: "bg-orange-50" },
 ];
 
 // ─── System Health ───────────────────────────────────
@@ -142,8 +159,85 @@ const URGENCY_COLOR: Record<string, string> = {
     low: "bg-[#22c55e]/15 text-[#22c55e]",
 };
 
+// ─── Stage Funnel ────────────────────────────────────
+function StageFunnel({ data }: { readonly data: AdminDashboardResponse }) {
+    if (!data.stageFunnel || data.stageFunnel.length === 0) return null;
+    const maxCount = Math.max(...data.stageFunnel.map((s) => s.count));
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.55 }}
+            className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 mb-8"
+        >
+            <div className="flex items-center gap-2 mb-4">
+                <BarChart3 className="w-5 h-5 text-[#22c55e]" />
+                <h3 className="text-sm font-bold text-[#1C252E]">Phễu tuyển dụng</h3>
+                <span className="ml-auto text-xs text-slate-400">
+                    Hire rate: {(data.hireRate * 100).toFixed(1)}%
+                </span>
+            </div>
+            <div className="space-y-2.5">
+                {data.stageFunnel.map((item, i) => (
+                    <motion.div
+                        key={item.stage}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.55 + i * 0.06 }}
+                        className="flex items-center gap-3"
+                    >
+                        <span className="text-xs font-medium text-slate-600 w-24 truncate">{item.stage}</span>
+                        <div className="flex-1 h-6 bg-slate-50 rounded-full overflow-hidden">
+                            <motion.div
+                                initial={{ width: 0 }}
+                                animate={{ width: `${maxCount > 0 ? (item.count / maxCount) * 100 : 0}%` }}
+                                transition={{ duration: 0.6, delay: 0.55 + i * 0.08 }}
+                                className="h-full rounded-full bg-gradient-to-r from-[#22c55e] to-[#10b981]"
+                            />
+                        </div>
+                        <span className="text-xs font-bold text-[#1C252E] w-10 text-right">{fmtNumber(item.count)}</span>
+                        <span className="text-[10px] text-slate-400 w-12 text-right">{item.percentage.toFixed(1)}%</span>
+                    </motion.div>
+                ))}
+            </div>
+        </motion.div>
+    );
+}
+
 // ─── Main Page ───────────────────────────────────────
 export default function AdminDashboardPage() {
+    const [data, setData] = useState<AdminDashboardResponse | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        let cancelled = false;
+
+        async function fetchDashboard() {
+            try {
+                setLoading(true);
+                setError(null);
+                const res = await adminDashboardApi.getOverview();
+                if (!cancelled && res.data?.success) {
+                    setData(res.data.data);
+                }
+            } catch (err) {
+                if (!cancelled) {
+                    console.error("[AdminDashboard] fetch error:", err);
+                    setError("Không thể tải dữ liệu dashboard.");
+                }
+            } finally {
+                if (!cancelled) setLoading(false);
+            }
+        }
+
+        fetchDashboard();
+        return () => { cancelled = true; };
+    }, []);
+
+    const adminStats = data ? buildStats(data) : fallbackStats;
+
     return (
         <section className="relative z-10 pt-24 pb-12 md:pt-28">
             <div className="mx-auto max-w-6xl px-4 sm:px-6">
@@ -156,8 +250,17 @@ export default function AdminDashboardPage() {
                     <div className="flex items-center gap-2">
                         <ShieldCheck className="w-6 h-6 text-[#22c55e]" />
                         <h1 className="text-2xl font-bold text-[#1C252E]">Admin Dashboard</h1>
+                        {loading && <Loader2 className="w-4 h-4 text-slate-400 animate-spin ml-2" />}
                     </div>
-                    <p className="text-sm text-slate-500 mt-1">Tổng quan hệ thống — Tháng 2, 2026</p>
+                    <p className="text-sm text-slate-500 mt-1">
+                        Tổng quan hệ thống — {new Date().toLocaleDateString("vi-VN", { month: "long", year: "numeric" })}
+                    </p>
+                    {error && (
+                        <div className="mt-2 text-xs text-rose-600 bg-rose-50 px-3 py-1.5 rounded-lg inline-flex items-center gap-1.5">
+                            <AlertTriangle className="w-3.5 h-3.5" />
+                            {error}
+                        </div>
+                    )}
                 </motion.div>
 
                 {/* Stat Cards — 6 cards in 2 rows */}
@@ -190,6 +293,9 @@ export default function AdminDashboardPage() {
                         );
                     })}
                 </div>
+
+                {/* Stage Funnel — from real API data */}
+                {data && <StageFunnel data={data} />}
 
                 {/* Middle Row: System Health + User Growth + Pending Actions */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
@@ -354,4 +460,3 @@ export default function AdminDashboardPage() {
         </section>
     );
 }
-
