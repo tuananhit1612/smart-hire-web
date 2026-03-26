@@ -1,16 +1,22 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
 import { Bell } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
-import { mockNotifications } from "@/features/notifications/types/mock-notifications";
+import { useNotificationStore } from "@/features/notifications/stores/notification-store";
 
 /**
  * Notification bell icon with unread count badge.
- * Reads unread count from mock data (will be replaced by real store later).
+ * Reads unread count from the central notification store.
  */
 export function NotificationBell() {
-    const unreadCount = mockNotifications.filter((n) => !n.isRead).length;
+    const { unreadCount, fetchNotifications } = useNotificationStore();
+
+    // Fetch notifications on mount so badge count is always fresh
+    useEffect(() => {
+        fetchNotifications();
+    }, [fetchNotifications]);
 
     return (
         <Link
@@ -40,4 +46,3 @@ export function NotificationBell() {
         </Link>
     );
 }
-
