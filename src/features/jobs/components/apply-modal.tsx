@@ -103,11 +103,15 @@ export function ApplyModal({ job, isOpen, onClose, onSuccess }: ApplyModalProps)
   const handleSubmit = async () => {
     if (!selectedCV) return;
     setModalState("submitting");
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    // Mark as applied
-    applyToJob(job.id);
-    setModalState("success");
+    try {
+      await applyToJob({
+        jobId: Number(job.id),
+        cvFileId: Number(selectedCV),
+      });
+      setModalState("success");
+    } catch {
+      setModalState("form");
+    }
   };
 
   // Handle close after success

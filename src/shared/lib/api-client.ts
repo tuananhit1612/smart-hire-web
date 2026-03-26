@@ -2,7 +2,7 @@
  * ═══════════════════════════════════════════════════════════
  *  Axios API Client — Central HTTP instance
  *
- *  • Auth: Reads JWT from `smarthire-auth-token` cookie
+ *  • Auth: Reads JWT from localStorage via tokenStorage
  *  • Request:  Attaches Bearer token + JSON Content-Type
  *  • Response: Unwraps data, normalizes errors to ApiError
  *  • 401:      Clears session, redirects to /login
@@ -11,29 +11,15 @@
 
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios";
 import { ApiError } from "./api-error";
+import { tokenStorage } from "@/features/auth/lib/token-storage";
 
 // ─── Constants ───────────────────────────────────────────
-const AUTH_COOKIE_NAME = "smarthire-auth-token";
 const SESSION_STORAGE_KEY = "smarthire-session";
-const SESSION_COOKIE_NAME = "smarthire-session";
-
-// ─── Cookie Helper ───────────────────────────────────────
-function getCookie(name: string): string | null {
-  if (typeof document === "undefined") return null; // SSR guard
-  const match = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`));
-  return match ? decodeURIComponent(match[1]) : null;
-}
-
-function deleteCookie(name: string) {
-  if (typeof document === "undefined") return;
-  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax`;
-}
 
 // ─── Axios Instance ──────────────────────────────────────
 export const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL ?? "/api",
   timeout: 15_000,
-  withCredentials: true, // send cookies cross-origin
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -43,7 +29,7 @@ export const apiClient = axios.create({
 // ─── Request Interceptor ─────────────────────────────────
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = getCookie(AUTH_COOKIE_NAME);
+    const token = tokenStorage.getAccessToken();
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -78,8 +64,7 @@ apiClient.interceptors.response.use(
       // Clear all auth state
       if (typeof window !== "undefined") {
         localStorage.removeItem(SESSION_STORAGE_KEY);
-        deleteCookie(SESSION_COOKIE_NAME);
-        deleteCookie(AUTH_COOKIE_NAME);
+        tokenStorage.clearTokens();
         window.location.href = "/login";
       }
       return Promise.reject(

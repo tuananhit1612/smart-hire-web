@@ -35,6 +35,8 @@ import { tokenStorage } from "../lib/token-storage";
 
 // ─── Helpers ─────────────────────────────────────────────
 
+const SESSION_COOKIE_NAME = "smarthire-session";
+
 /** Map the flat backend login/register payload to SessionUser */
 function toSessionUser(d: AuthLoginData): SessionUser {
     return {
@@ -45,6 +47,20 @@ function toSessionUser(d: AuthLoginData): SessionUser {
         joinedDate: new Date().toISOString(),
         isNewUser: true,
     };
+}
+
+/** Set a cookie the Next.js edge middleware can read to gate routes */
+function setSessionCookie(user: SessionUser) {
+    if (typeof document === "undefined") return;
+    const value = encodeURIComponent(
+        JSON.stringify({ role: user.role, isNewUser: user.isNewUser ?? false })
+    );
+    document.cookie = `${SESSION_COOKIE_NAME}=${value}; path=/; SameSite=Lax; max-age=${60 * 60 * 24 * 7}`;
+}
+
+function clearSessionCookie() {
+    if (typeof document === "undefined") return;
+    document.cookie = `${SESSION_COOKIE_NAME}=; path=/; SameSite=Lax; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
 }
 
 // ─── Context Value ───────────────────────────────────────
@@ -83,18 +99,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 // Build a minimal SessionUser from what the backend gives us
                 // If we had a cached user in localStorage we could merge, but
                 // /auth/me currently only returns email.
-                setUser({
+                const restoredUser: SessionUser = {
                     id: "",
                     name: meData.email.split("@")[0], // best-effort name
                     email: meData.email,
                     role: "candidate", // will be overridden on next login
                     joinedDate: new Date().toISOString(),
-                });
+                };
+                setUser(restoredUser);
+                setSessionCookie(restoredUser);
                 setStatus("authenticated");
             })
             .catch(() => {
                 // Token expired or invalid — clear and mark unauthenticated
                 tokenStorage.clear();
+                clearSessionCookie();
                 setStatus("unauthenticated");
             });
     }, []);
@@ -109,6 +128,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             tokenStorage.setTokens(payload.accessToken, payload.refreshToken);
             const sessionUser = toSessionUser(payload);
             setUser(sessionUser);
+            setSessionCookie(sessionUser);
             setStatus("authenticated");
             return sessionUser;
         } catch (err) {
@@ -125,7 +145,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             const payload = res.data.data; // AuthLoginData
 
             tokenStorage.setTokens(payload.accessToken, payload.refreshToken);
-            setUser(toSessionUser(payload));
+            const sessionUser = toSessionUser(payload);
+            setUser(sessionUser);
+            setSessionCookie(sessionUser);
             setStatus("authenticated");
         } catch (err) {
             setStatus("unauthenticated");
@@ -136,13 +158,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // ── Logout ───────────────────────────────────────────
     const logout = useCallback(() => {
         tokenStorage.clear();
+        clearSessionCookie();
         setUser(null);
         setStatus("unauthenticated");
     }, []);
 
     // ── Complete Onboarding ──────────────────────────────
     const completeOnboarding = useCallback(() => {
-        setUser((prev) => (prev ? { ...prev, isNewUser: false } : null));
+        setUser((prev) => {
+            if (!prev) return null;
+            const updated = { ...prev, isNewUser: false };
+            setSessionCookie(updated);
+            return updated;
+        });
     }, []);
 
     // ── Memoised context value ───────────────────────────
