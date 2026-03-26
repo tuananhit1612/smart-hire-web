@@ -40,7 +40,7 @@ export function ApplyModal({ job, isOpen, onClose, onSuccess }: ApplyModalProps)
   const [modalState, setModalState] = useState<ModalState>("form");
   const hasInitializedRef = useRef(false);
 
-  const { applyToJob, hasApplied, withdrawApplication } = useApplicationStore();
+  const { applyToJob, hasApplied, withdrawApplication, submitError, clearSubmitError } = useApplicationStore();
 
   // Check for selected CV from URL params (returning from preview page)
   // Only run once when modal opens
@@ -103,6 +103,8 @@ export function ApplyModal({ job, isOpen, onClose, onSuccess }: ApplyModalProps)
   const handleSubmit = async () => {
     if (!selectedCV) return;
     setModalState("submitting");
+    clearSubmitError();
+
     try {
       await applyToJob({
         jobId: Number(job.id),
@@ -110,6 +112,7 @@ export function ApplyModal({ job, isOpen, onClose, onSuccess }: ApplyModalProps)
       });
       setModalState("success");
     } catch {
+      // submitError is already set in the store
       setModalState("form");
     }
   };
@@ -165,6 +168,7 @@ export function ApplyModal({ job, isOpen, onClose, onSuccess }: ApplyModalProps)
                 selectedCV={selectedCV}
                 coverLetter={coverLetter}
                 isSubmitting={modalState === "submitting"}
+                submitError={submitError}
                 onCoverLetterChange={setCoverLetter}
                 onSelectCV={setSelectedCV}
                 onViewCV={handleViewCV}
@@ -546,6 +550,7 @@ interface FormViewProps {
   selectedCV: string;
   coverLetter: string;
   isSubmitting: boolean;
+  submitError: string | null;
   onCoverLetterChange: (value: string) => void;
   onSelectCV: (cvId: string) => void;
   onViewCV: (cv: CVVersion) => void;
@@ -559,6 +564,7 @@ function FormView({
   selectedCV,
   coverLetter,
   isSubmitting,
+  submitError,
   onCoverLetterChange,
   onSelectCV,
   onViewCV,
@@ -660,6 +666,11 @@ function FormView({
               </span>
             )}
           </div>
+          {submitError && (
+            <div className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 px-3 py-2 rounded-lg">
+              {submitError}
+            </div>
+          )}
           <div className="flex gap-3">
             <Button
               variant="outline"

@@ -7,6 +7,8 @@
  *  • login(email, password)  → POST /auth/login
  *  • register(payload)       → POST /auth/register (auto-login)
  *  • logout()                → clears tokens + session
+ *  • updateProfile(data)     → PUT /auth/me
+ *  • changePassword(data)    → PUT /auth/me/password
  *  • Session restore on mount → validates stored token via /auth/me
  *  • Tokens stored in localStorage, attached by apiClient interceptor
  *
@@ -28,6 +30,9 @@ import type {
     AuthStatus,
     AuthLoginData,
     RegisterPayload,
+    UpdateProfilePayload,
+    ChangePasswordPayload,
+    UserData,
 } from "../types/auth-types";
 import { authApi } from "../api/auth-api";
 import { getErrorMessage } from "@/shared/lib/api-error";
@@ -46,6 +51,20 @@ function toSessionUser(d: AuthLoginData): SessionUser {
         role: d.role.toLowerCase() as SessionUser["role"],
         joinedDate: new Date().toISOString(),
         isNewUser: true,
+    };
+}
+
+/** Map the richer UserData (from GET /auth/me) to SessionUser */
+function userDataToSession(d: UserData): SessionUser {
+    return {
+        id: String(d.id),
+        name: d.fullName,
+        email: d.email,
+        role: d.role.toLowerCase() as SessionUser["role"],
+        avatar: d.avatarUrl ?? undefined,
+        phone: d.phone ?? undefined,
+        joinedDate: d.createdAt,
+        isNewUser: false,
     };
 }
 
@@ -73,6 +92,8 @@ export interface AuthContextValue {
     register: (data: RegisterPayload) => Promise<void>;
     logout: () => void;
     completeOnboarding: () => void;
+    updateProfile: (data: UpdateProfilePayload) => Promise<void>;
+    changePassword: (data: ChangePasswordPayload) => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null);
@@ -95,24 +116,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         authApi
             .getMe()
             .then((res) => {
-                const meData = res.data.data; // { email }
-                // Build a minimal SessionUser from what the backend gives us
-                // If we had a cached user in localStorage we could merge, but
-                // /auth/me currently only returns email.
-                const restoredUser: SessionUser = {
-                    id: "",
-                    name: meData.email.split("@")[0], // best-effort name
-                    email: meData.email,
-                    role: "candidate", // will be overridden on next login
-                    joinedDate: new Date().toISOString(),
-                };
-                setUser(restoredUser);
-                setSessionCookie(restoredUser);
+                const meData = res.data.data;
+
+                // Try the rich UserData shape first, fall back to slim { email }
+                if ("id" in meData && "fullName" in meData) {
+                    const sessionUser = userDataToSession(meData as unknown as UserData);
+                    setUser(sessionUser);
+                    setSessionCookie(sessionUser);
+                } else {
+                    // Legacy slim response — best-effort
+                    const sessionUser: SessionUser = {
+                        id: "",
+                        name: meData.email.split("@")[0],
+                        email: meData.email,
+                        role: "candidate",
+                        joinedDate: new Date().toISOString(),
+                    };
+                    setUser(sessionUser);
+                    setSessionCookie(sessionUser);
+                }
                 setStatus("authenticated");
             })
             .catch(() => {
                 // Token expired or invalid — clear and mark unauthenticated
-                tokenStorage.clear();
+                tokenStorage.clearTokens();
                 clearSessionCookie();
                 setStatus("unauthenticated");
             });
@@ -157,7 +184,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // ── Logout ───────────────────────────────────────────
     const logout = useCallback(() => {
-        tokenStorage.clear();
+        tokenStorage.clearTokens();
         clearSessionCookie();
         setUser(null);
         setStatus("unauthenticated");
@@ -173,6 +200,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         });
     }, []);
 
+    // ── Update Profile ───────────────────────────────────
+    const updateProfile = useCallback(async (data: UpdateProfilePayload) => {
+        try {
+            const res = await authApi.updateMe(data);
+            const updated = res.data.data;
+            setUser(userDataToSession(updated));
+        } catch (err) {
+            throw new Error(getErrorMessage(err, "Không thể cập nhật hồ sơ."));
+        }
+    }, []);
+
+    // ── Change Password ──────────────────────────────────
+    const changePassword = useCallback(async (data: ChangePasswordPayload) => {
+        try {
+            await authApi.changePassword(data);
+        } catch (err) {
+            throw new Error(getErrorMessage(err, "Không thể đổi mật khẩu."));
+        }
+    }, []);
+
     // ── Memoised context value ───────────────────────────
     const value = useMemo<AuthContextValue>(
         () => ({
@@ -184,8 +231,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             register,
             logout,
             completeOnboarding,
+            updateProfile,
+            changePassword,
         }),
-        [user, status, login, register, logout, completeOnboarding]
+        [user, status, login, register, logout, completeOnboarding, updateProfile, changePassword]
     );
 
     return (

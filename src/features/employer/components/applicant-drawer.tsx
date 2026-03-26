@@ -1,4 +1,5 @@
 import { AIAnalysis, EmployerApplicant } from "../types/mock-applicants";
+import { employerApplicantApi } from "../api/employer-api";
 import { Button } from "@/shared/components/ui/button";
 import { Badge } from "@/shared/components/ui/badge";
 import { ScoreBreakdown } from "./score-breakdown";
@@ -28,18 +29,27 @@ interface ApplicantDrawerProps {
     applicant: EmployerApplicant | null;
     isOpen: boolean;
     onClose: () => void;
+    jobId: string;
+    onApplicantUpdated?: () => void;
 }
 
-export function ApplicantDrawer({ applicant, isOpen, onClose }: ApplicantDrawerProps) {
+export function ApplicantDrawer({ applicant, isOpen, onClose, jobId, onApplicantUpdated }: ApplicantDrawerProps) {
     const [activeTab, setActiveTab] = useState<"overview" | "notes">("overview");
     const [isAnalyzing, setIsAnalyzing] = useState(false);
 
     const handleReAnalyze = () => {
+        if (!applicant) return;
         setIsAnalyzing(true);
-        // Simulate API call
-        setTimeout(() => {
-            setIsAnalyzing(false);
-        }, 2500);
+        employerApplicantApi.reAnalyze(jobId, applicant.id)
+            .then(() => {
+                onApplicantUpdated?.();
+            })
+            .catch(() => {
+                // Silently fail — UI already shows skeleton during loading
+            })
+            .finally(() => {
+                setIsAnalyzing(false);
+            });
     };
 
     if (!applicant) return null;

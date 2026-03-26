@@ -3,9 +3,11 @@
  *  Axios API Client — Central HTTP instance
  *
  *  • Auth: Reads JWT from localStorage via tokenStorage
+ *  • Auth: Reads JWT from tokenStorage (localStorage)
  *  • Request:  Attaches Bearer token + JSON Content-Type
  *  • Response: Unwraps data, normalizes errors to ApiError
- *  • 401:      Clears session, redirects to /login
+ *  • 401:      Attempts silent refresh via /auth/refresh
+ *             → if refresh fails, clears session + redirect
  * ═══════════════════════════════════════════════════════════
  */
 
@@ -20,6 +22,7 @@ const SESSION_STORAGE_KEY = "smarthire-session";
 export const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL ?? "/api",
   timeout: 15_000,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -38,13 +41,45 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+// ─── Refresh Token Logic ─────────────────────────────────
+
+/**
+ * Prevents multiple concurrent refresh calls.
+ * When a refresh is in-flight, subsequent 401s queue up
+ * and resolve/reject together once the refresh completes.
+ */
+let isRefreshing = false;
+let failedQueue: {
+  resolve: (token: string) => void;
+  reject: (err: unknown) => void;
+}[] = [];
+
+function processQueue(error: unknown, token: string | null) {
+  failedQueue.forEach((p) => {
+    if (error) {
+      p.reject(error);
+    } else {
+      p.resolve(token!);
+    }
+  });
+  failedQueue = [];
+}
+
+function clearSessionAndRedirect() {
+  tokenStorage.clearTokens();
+  if (typeof window !== "undefined") {
+    localStorage.removeItem(SESSION_STORAGE_KEY);
+    window.location.href = "/login";
+  }
+}
+
 // ─── Response Interceptor ────────────────────────────────
 apiClient.interceptors.response.use(
-  // Success — unwrap response.data
+  // Success — pass through
   (response) => response,
 
-  // Error — normalize into ApiError
-  (error: AxiosError<{ message?: string; errors?: Record<string, string[]> }>) => {
+  // Error — normalize into ApiError, attempt refresh on 401
+  async (error: AxiosError<{ message?: string; errors?: Record<string, string[]> }>) => {
     // Network / timeout error (no response from server)
     if (!error.response) {
       return Promise.reject(
@@ -58,28 +93,87 @@ apiClient.interceptors.response.use(
 
     const { status, data } = error.response;
     const serverMessage = data?.message;
+    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
-    // 401 — Unauthorized → clear session, redirect to login
-    if (status === 401) {
-      // Clear all auth state
-      if (typeof window !== "undefined") {
-        localStorage.removeItem(SESSION_STORAGE_KEY);
-        tokenStorage.clearTokens();
-        window.location.href = "/login";
+    // ── 401 — Attempt token refresh ──────────────────────
+    if (status === 401 && !originalRequest._retry) {
+      // Don't attempt refresh for auth endpoints themselves
+      const url = originalRequest.url ?? "";
+      if (url.includes("/auth/login") || url.includes("/auth/register") || url.includes("/auth/refresh")) {
+        return Promise.reject(
+          new ApiError("UNAUTHORIZED", 401, serverMessage ?? "Thông tin đăng nhập không chính xác.")
+        );
       }
-      return Promise.reject(
-        new ApiError("UNAUTHORIZED", 401, serverMessage ?? "Phiên đăng nhập đã hết hạn.")
-      );
+
+      if (isRefreshing) {
+        // Another refresh is already in-flight — queue this request
+        return new Promise<string>((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        })
+          .then((newToken) => {
+            originalRequest.headers.Authorization = `Bearer ${newToken}`;
+            return apiClient(originalRequest);
+          })
+          .catch((err) => Promise.reject(err));
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      const refreshToken = tokenStorage.getRefreshToken();
+      if (!refreshToken) {
+        isRefreshing = false;
+        processQueue(new Error("No refresh token"), null);
+        clearSessionAndRedirect();
+        return Promise.reject(
+          new ApiError("UNAUTHORIZED", 401, "Phiên đăng nhập đã hết hạn.")
+        );
+      }
+
+      try {
+        // Call refresh endpoint directly with axios (not apiClient)
+        // to avoid the interceptor loop
+        const refreshRes = await axios.post(
+          `${apiClient.defaults.baseURL}/auth/refresh`,
+          { refreshToken },
+          { headers: { "Content-Type": "application/json" } }
+        );
+
+        const newAccessToken = refreshRes.data?.data?.accessToken;
+        const newRefreshToken = refreshRes.data?.data?.refreshToken;
+
+        if (!newAccessToken) {
+          throw new Error("Invalid refresh response");
+        }
+
+        // Store new tokens
+        tokenStorage.setTokens(newAccessToken, newRefreshToken ?? refreshToken);
+
+        // Resolve all queued requests with the new token
+        processQueue(null, newAccessToken);
+
+        // Retry original request
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        return apiClient(originalRequest);
+      } catch (refreshError) {
+        processQueue(refreshError, null);
+        clearSessionAndRedirect();
+        return Promise.reject(
+          new ApiError("UNAUTHORIZED", 401, "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.")
+        );
+      } finally {
+        isRefreshing = false;
+      }
     }
 
-    // 403 — Forbidden
+    // ── 403 — Forbidden ──────────────────────────────────
     if (status === 403) {
       return Promise.reject(
         new ApiError("FORBIDDEN", 403, serverMessage ?? "Bạn không có quyền thực hiện thao tác này.")
       );
     }
 
-    // 422 — Validation errors
+    // ── 422 — Validation errors ──────────────────────────
     if (status === 422) {
       return Promise.reject(
         new ApiError(
@@ -91,14 +185,14 @@ apiClient.interceptors.response.use(
       );
     }
 
-    // 404 — Not Found
+    // ── 404 — Not Found ──────────────────────────────────
     if (status === 404) {
       return Promise.reject(
         new ApiError("NOT_FOUND", 404, serverMessage ?? "Không tìm thấy dữ liệu.")
       );
     }
 
-    // 5xx — Server error
+    // ── 5xx — Server error ───────────────────────────────
     if (status >= 500) {
       return Promise.reject(
         new ApiError(
@@ -109,7 +203,7 @@ apiClient.interceptors.response.use(
       );
     }
 
-    // Other errors — generic
+    // ── Other errors — generic ───────────────────────────
     return Promise.reject(
       new ApiError(
         "UNKNOWN_ERROR",
