@@ -7,7 +7,9 @@ import {
   Briefcase,
   Calendar,
   CheckCircle2,
-  ArrowRight
+  ArrowRight,
+  Trash2,
+  Loader2
 } from "lucide-react";
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
@@ -17,15 +19,12 @@ import {
   mockApplications,
   Application,
 } from "@/features/jobs/types/mock-applications";
+import { ApplicationTrackingResponse } from "@/features/jobs/api/application-api";
 import { ApplicationStatus, ApplicationStage } from "@/shared/types/application";
 import { cn } from "@/shared/lib/utils";
-import { WithdrawConfirmModal } from "@/features/jobs/components/withdraw-confirm-modal";
+import { useApplicationStore } from "@/features/jobs/stores/application-store";
 
-// --- Design Standards Constants (per DESIGN_STANDARD.md) ---
-// Primary: Sky Blue
-// Accent: Growth Green (used for success/active states)
-// Background: strictly white / slate-50
-
+// ─── Design Constants ─────────────────────────────────────────────────────────
 const ACTIVE_STAGES = new Set([
   ApplicationStage.APPLIED,
   ApplicationStage.SCREENING,
@@ -33,8 +32,66 @@ const ACTIVE_STAGES = new Set([
   ApplicationStage.OFFER,
 ]);
 
-// --- Components ---
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
+/** Map a backend ApplicationTrackingResponse to the view Application type used by ApplicationCard */
+function toViewApplication(raw: ApplicationTrackingResponse): Application {
+  const appliedAt = raw.appliedAt ?? new Date().toISOString();
+
+  // Build a minimal 1-entry timeline from what the tracking endpoint gives us.
+  // A richer timeline can be loaded on-demand from /applications/{id}.
+  const timeline: ApplicationTimelineEvent[] = [
+    {
+      id: `evt-${raw.id}-applied`,
+      stage: "APPLIED" as ApplicationStatus,
+      title: "Đã nộp hồ sơ",
+      date: appliedAt,
+      isCompleted: true,
+    },
+  ];
+
+  if (raw.currentStage !== "APPLIED") {
+    const stageLabels: Record<string, string> = {
+      SCREENING: "Đang xét duyệt",
+      INTERVIEW: "Phỏng vấn",
+      OFFER: "Đề nghị nhận việc",
+      HIRED: "Đã nhận việc",
+      REJECTED: "Từ chối",
+    };
+    timeline.push({
+      id: `evt-${raw.id}-current`,
+      stage: raw.currentStage as ApplicationStatus,
+      title: stageLabels[raw.currentStage] ?? raw.currentStage,
+      date: raw.updatedAt ?? appliedAt,
+      isCompleted: true,
+    });
+  }
+
+  return {
+    id: String(raw.id),
+    jobId: String(raw.jobId),
+    // Synthesise a minimal Job object from the tracking fields
+    job: {
+      id: String(raw.jobId),
+      title: raw.jobTitle,
+      company: raw.companyName,
+      // Placeholders — the real job detail page is linked via /jobs/{id}
+      location: "",
+      type: "",
+      logoUrl: "",
+      salary: "",
+      description: "",
+      tags: [],
+      postedAt: appliedAt,
+    } as unknown as Application["job"],
+    status: raw.currentStage as ApplicationStatus,
+    appliedAt,
+    lastUpdated: raw.updatedAt ?? appliedAt,
+    timeline,
+  };
+}
+
+// ─── StatusBadge ─────────────────────────────────────────────────────────────
 function StatusBadge({ status }: { status: ApplicationStatus }) {
   const config = useMemo(() => {
     switch (status) {
@@ -45,7 +102,7 @@ function StatusBadge({ status }: { status: ApplicationStatus }) {
       case ApplicationStage.INTERVIEW:
         return { color: "text-amber-700", bg: "bg-amber-50", border: "border-amber-200", label: "Phỏng vấn" };
       case ApplicationStage.OFFER:
-        return { color: "text-green-700", bg: "bg-green-50", border: "border-green-200", label: "Đề nghị nhận việc" }; // Growth Green
+        return { color: "text-green-700", bg: "bg-green-50", border: "border-green-200", label: "Đề nghị nhận việc" };
       case ApplicationStage.HIRED:
         return { color: "text-emerald-700", bg: "bg-emerald-50", border: "border-emerald-200", label: "Đã nhận việc" };
       case ApplicationStage.REJECTED:
@@ -66,16 +123,28 @@ function StatusBadge({ status }: { status: ApplicationStatus }) {
   );
 }
 
-// Only local-applied jobs (from the store) can be withdrawn by candidate
-const WITHDRAWABLE_STAGES = new Set([ApplicationStage.APPLIED, ApplicationStage.SCREENING]);
-
-interface ApplicationCardProps {
-  application: Application;
-  onWithdraw?: () => void;
-  isLocalApplication?: boolean;
+// ─── Skeleton Card ─────────────────────────────────────────────────────────
+function SkeletonCard() {
+  return (
+    <div className="bg-white dark:bg-[#1C252E] border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] rounded-2xl p-6 animate-pulse">
+      <div className="flex gap-6">
+        <div className="w-16 h-16 rounded-xl bg-slate-200 dark:bg-slate-700 shrink-0" />
+        <div className="flex-1 space-y-3">
+          <div className="h-5 bg-slate-200 dark:bg-slate-700 rounded-full w-2/5" />
+          <div className="h-4 bg-slate-100 dark:bg-slate-800 rounded-full w-1/4" />
+          <div className="flex gap-4 mt-4">
+            <div className="h-3 bg-slate-100 dark:bg-slate-800 rounded-full w-24" />
+            <div className="h-3 bg-slate-100 dark:bg-slate-800 rounded-full w-20" />
+          </div>
+        </div>
+        <div className="h-7 w-28 bg-slate-200 dark:bg-slate-700 rounded-full shrink-0" />
+      </div>
+    </div>
+  );
 }
 
-function ApplicationCard({ application, onWithdraw, isLocalApplication = false }: ApplicationCardProps) {
+// ─── ApplicationCard ──────────────────────────────────────────────────────────
+function ApplicationCard({ application }: { application: Application }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const currentEvent = useMemo(() =>
@@ -83,24 +152,32 @@ function ApplicationCard({ application, onWithdraw, isLocalApplication = false }
     application.timeline[application.timeline.length - 1],
     [application.timeline]);
 
+  const hasLocation = Boolean(application.job.location);
+  const hasType = Boolean(application.job.type);
+
   return (
     <motion.div
       layout
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      // Card Design: Rounded-2xl, Shadow-xl shadow-[#22c55e]/20, Border Sky-100
       className="group bg-white dark:bg-[#1C252E] border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-[#22c55e]/20 hover:border-[#22c55e]/30 dark:hover:border-[#22c55e]/30 transition-all duration-300 transform hover:-translate-y-1"
     >
       <div className="p-6">
         <div className="flex flex-col md:flex-row gap-6">
-          {/* Logo Container */}
+          {/* Logo / Initials placeholder */}
           <div className="shrink-0">
             <div className="w-16 h-16 rounded-xl border border-[rgba(145,158,171,0.1)] dark:border-white/[0.06] bg-white dark:bg-[#1C252E] p-2 flex items-center justify-center shadow-sm">
-              <img
-                src={application.job.logoUrl}
-                alt={application.job.company}
-                className="max-w-full max-h-full object-contain"
-              />
+              {application.job.logoUrl ? (
+                <img
+                  src={application.job.logoUrl}
+                  alt={application.job.company}
+                  className="max-w-full max-h-full object-contain"
+                />
+              ) : (
+                <span className="text-2xl font-bold text-[#22c55e]">
+                  {application.job.company?.[0]?.toUpperCase() ?? "?"}
+                </span>
+              )}
             </div>
           </div>
 
@@ -108,7 +185,6 @@ function ApplicationCard({ application, onWithdraw, isLocalApplication = false }
             <div className="flex flex-col md:flex-row justify-between gap-4 mb-3">
               <div>
                 <Link href={`/jobs/${application.job.id}`} className="block">
-                  {/* Primary Color: Text Sky 900 */}
                   <h3 className="text-xl font-bold text-[#1C252E] dark:text-white group-hover:text-[#22c55e] dark:group-hover:text-[#22c55e] transition-colors">
                     {application.job.title}
                   </h3>
@@ -119,42 +195,32 @@ function ApplicationCard({ application, onWithdraw, isLocalApplication = false }
               </div>
               <div className="shrink-0 flex items-center gap-3">
                 <StatusBadge status={application.status} />
-                {/* Withdraw button — only for local applications in early stages */}
-                {isLocalApplication && WITHDRAWABLE_STAGES.has(application.status as ApplicationStage) && onWithdraw && (
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      onWithdraw();
-                    }}
-                    className="text-xs font-semibold text-red-500 hover:text-red-600 border border-red-200 hover:border-red-400 dark:border-red-500/30 dark:hover:border-red-500/60 px-3 py-1.5 rounded-full transition-colors hover:bg-red-50 dark:hover:bg-red-500/10"
-                  >
-                    Rút hồ sơ
-                  </button>
-                )}
               </div>
             </div>
 
-            {/* Meta */}
+            {/* Meta — only show if data is available */}
             <div className="flex flex-wrap gap-4 text-sm text-[#637381] dark:text-[#919EAB] mb-6">
-              <div className="flex items-center gap-1.5">
-                <MapPin className="w-4 h-4 text-[#22c55e]" />
-                {application.job.location}
-              </div>
-              <div className="flex items-center gap-1.5">
-                <Briefcase className="w-4 h-4 text-[#22c55e]" />
-                {application.job.type}
-              </div>
+              {hasLocation && (
+                <div className="flex items-center gap-1.5">
+                  <MapPin className="w-4 h-4 text-[#22c55e]" />
+                  {application.job.location}
+                </div>
+              )}
+              {hasType && (
+                <div className="flex items-center gap-1.5">
+                  <Briefcase className="w-4 h-4 text-[#22c55e]" />
+                  {application.job.type}
+                </div>
+              )}
               <div className="flex items-center gap-1.5">
                 <Calendar className="w-4 h-4 text-[#22c55e]" />
-                {new Date(application.appliedAt).toLocaleDateString('vi-VN')}
+                {new Date(application.appliedAt).toLocaleDateString("vi-VN")}
               </div>
             </div>
 
-            {/* Micro-interaction: Hover/Click area with explicit feedback */}
+            {/* Progress row */}
             <div
               onClick={() => setIsExpanded(!isExpanded)}
-              // Interaction: Cursor pointer
               className="bg-[rgba(145,158,171,0.06)] dark:bg-white/[0.04] rounded-xl p-4 border border-[rgba(145,158,171,0.1)] dark:border-white/[0.06] cursor-pointer hover:bg-[#22c55e]/10 dark:hover:bg-[#22c55e]/20 hover:border-[rgba(145,158,171,0.12)] dark:hover:border-[#22c55e]/30 transition-colors"
             >
               <div className="flex items-center justify-between mb-2">
@@ -166,15 +232,13 @@ function ApplicationCard({ application, onWithdraw, isLocalApplication = false }
                   <ArrowRight className={cn("w-3 h-3 transition-transform duration-300", isExpanded && "rotate-90")} />
                 </span>
               </div>
-
               <div className="flex items-center gap-3">
-                {/* Icon using Growth Green for active/success feeling */}
                 <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                 <span className="font-semibold text-[#637381] dark:text-[#C4CDD5] text-sm">
                   {currentEvent?.title}
                 </span>
                 <span className="text-sm text-[#919EAB]">
-                  • {currentEvent?.description || (currentEvent?.date && new Date(currentEvent.date).toLocaleDateString('vi-VN'))}
+                  • {currentEvent?.description || (currentEvent?.date && new Date(currentEvent.date).toLocaleDateString("vi-VN"))}
                 </span>
               </div>
             </div>
@@ -188,9 +252,7 @@ function ApplicationCard({ application, onWithdraw, isLocalApplication = false }
                   className="overflow-hidden"
                 >
                   <div className="pt-6 pl-2 space-y-6 relative">
-                    {/* Time line connector */}
                     <div className="absolute left-[19px] top-8 bottom-4 w-0.5 bg-[rgba(145,158,171,0.15)] dark:bg-white/[0.08]" />
-
                     {application.timeline.map((event) => (
                       <div key={event.id} className="relative flex gap-4">
                         <div className={cn(
@@ -199,13 +261,17 @@ function ApplicationCard({ application, onWithdraw, isLocalApplication = false }
                             ? "border-green-500 text-green-500"
                             : "border-[rgba(145,158,171,0.2)] dark:border-white/[0.1] text-[#C4CDD5] dark:text-[#637381]"
                         )}>
-                          {event.isCompleted ? <CheckCircle2 className="w-5 h-5" /> : <div className="w-2 h-2 rounded-full bg-[rgba(145,158,171,0.3)] dark:bg-white/[0.15]" />}
+                          {event.isCompleted
+                            ? <CheckCircle2 className="w-5 h-5" />
+                            : <div className="w-2 h-2 rounded-full bg-[rgba(145,158,171,0.3)] dark:bg-white/[0.15]" />}
                         </div>
                         <div className="flex-1 pt-2">
                           <h5 className={cn("font-semibold", event.isCompleted ? "text-[#1C252E] dark:text-white" : "text-[#919EAB]")}>
                             {event.title}
                           </h5>
-                          {event.description && <p className="text-sm text-[#637381] dark:text-[#919EAB] mt-1">{event.description}</p>}
+                          {event.description && (
+                            <p className="text-sm text-[#637381] dark:text-[#919EAB] mt-1">{event.description}</p>
+                          )}
                         </div>
                       </div>
                     ))}
@@ -213,7 +279,6 @@ function ApplicationCard({ application, onWithdraw, isLocalApplication = false }
                 </motion.div>
               )}
             </AnimatePresence>
-
           </div>
         </div>
       </div>
@@ -221,81 +286,87 @@ function ApplicationCard({ application, onWithdraw, isLocalApplication = false }
   );
 }
 
-import { useApplicationStore } from "@/features/jobs/stores/application-store";
-import { mockJobs } from "@/features/jobs/types/mock-jobs";
-
+// ─── Page ─────────────────────────────────────────────────────────────────────
 export default function ApplicationsPage() {
   const [activeTab, setActiveTab] = useState<"active" | "archived">("active");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Withdraw modal state
-  const [withdrawTarget, setWithdrawTarget] = useState<{ jobId: string; jobTitle: string } | null>(null);
+  const {
+    serverApplications,
+    isLoadingApplications,
+    applicationsError,
+    fetchApplications,
+    appliedJobIds,
+    applicationDates,
+  } = useApplicationStore();
 
-  // Get local state from store
-  const { appliedJobIds, applicationDates, withdrawApplication } = useApplicationStore();
-  const [isMounted, setIsMounted] = useState(false);
-
+  // Fetch real data from the backend on mount
   useEffect(() => {
-    setIsMounted(true);
+    fetchApplications();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const allApplications = useMemo(() => {
-    if (!isMounted) return mockApplications;
+  /**
+   * allApplications builds the final list combining:
+   *   1. Real server data (preferred when available)
+   *   2. Fallback: locally-applied job IDs merged with mockApplications
+   *      — used when the fetch fails (e.g. user not logged in)
+   */
+  const allApplications = useMemo((): Application[] => {
+    // If we have server data, use it exclusively
+    if (serverApplications.length > 0) {
+      return serverApplications.map(toViewApplication);
+    }
 
-    // 1. Convert local Applied Job IDs to Application objects
-    const userApplications = appliedJobIds.map(jobId => {
-      const job = mockJobs.find(j => j.id === jobId);
-      if (!job) return null;
+    // Fallback: merge locally applied jobs + mock data
+    const userApplications = appliedJobIds
+      .map(jobId => {
+        const appliedAt = applicationDates[jobId] || new Date().toISOString();
+        const mockJob = mockApplications.find(a => a.jobId === jobId)?.job;
+        if (!mockJob) return null;
 
-      const appliedAt = applicationDates[jobId] || new Date().toISOString();
+        const app: Application = {
+          id: `local-${jobId}`,
+          jobId,
+          job: mockJob,
+          status: "APPLIED" as ApplicationStatus,
+          appliedAt,
+          lastUpdated: appliedAt,
+          timeline: [
+            {
+              id: `evt-${jobId}-1`,
+              stage: "APPLIED" as ApplicationStatus,
+              title: "Đã nộp hồ sơ",
+              date: appliedAt,
+              isCompleted: true,
+            },
+          ],
+        };
+        return app;
+      })
+      .filter((a): a is Application => a !== null);
 
-      // Create a dynamic application object for locally applied jobs
-      const newApp: Application = {
-        id: `local-${jobId}`,
-        jobId: job.id,
-        job: job,
-        status: "APPLIED" as ApplicationStatus,
-        appliedAt: appliedAt,
-        lastUpdated: appliedAt,
-        timeline: [
-          {
-            id: `evt-${jobId}-1`,
-            stage: "APPLIED" as ApplicationStatus,
-            title: "Đã nộp hồ sơ",
-            date: appliedAt,
-            isCompleted: true
-          }
-        ],
-        notes: "Ứng tuyển gần đây"
-      };
-      return newApp;
-    }).filter((app): app is Application => app !== null);
-
-    // 2. Merge with mock applications
-    // Filter out mock apps if they are already in userApplications (by job ID) to avoid duplicates if we had overlapping IDs
-    const userJobIds = new Set(userApplications.map(app => app.jobId));
-    const nonDuplicateMocks = mockApplications.filter(app => !userJobIds.has(app.jobId));
-
+    const userJobIds = new Set(userApplications.map(a => a.jobId));
+    const nonDuplicateMocks = [...mockApplications].filter(a => !userJobIds.has(a.jobId));
     return [...userApplications, ...nonDuplicateMocks];
-  }, [appliedJobIds, applicationDates, isMounted]);
+  }, [serverApplications, appliedJobIds, applicationDates]);
 
   const filteredApplications = useMemo(() => {
     const query = searchQuery.toLowerCase().trim();
     return allApplications.filter(app => {
       const isActive = ACTIVE_STAGES.has(app.status as ApplicationStage);
-      const matchesTab = activeTab === "active" ? isActive : !isActive;
-      if (!matchesTab) return false;
-      return !query || app.job.title.toLowerCase().includes(query) || app.job.company.toLowerCase().includes(query);
+      if (activeTab === "active" ? !isActive : isActive) return false;
+      return !query
+        || app.job.title?.toLowerCase().includes(query)
+        || app.job.company?.toLowerCase().includes(query);
     });
   }, [activeTab, searchQuery, allApplications]);
 
   return (
-    // Background: Transparent to show ParticleBackground, but Content Z-Index > 0 to sit ABOVE particles
     <div className="w-full bg-transparent font-sans pt-6 pb-12 relative z-10">
       <div className="container mx-auto px-4 max-w-5xl">
 
         <div className="mb-10 text-center md:text-left">
-          {/* Typography: Be Vietnam Pro (font-sans) */}
           <h1 className="text-4xl font-bold text-[#1C252E] dark:text-white mb-3 tracking-tight">
             Hồ sơ ứng tuyển
           </h1>
@@ -304,8 +375,8 @@ export default function ApplicationsPage() {
           </p>
         </div>
 
+        {/* Sticky toolbar */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-8 sticky top-20 z-30 bg-white/90 dark:bg-[#1C252E]/90 backdrop-blur-xl py-4 rounded-2xl border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] shadow-sm px-6">
-          {/* Tabs */}
           <div className="flex p-1 bg-[rgba(145,158,171,0.1)] dark:bg-white/[0.06] rounded-full w-full md:w-auto">
             {(["active", "archived"] as const).map((tab) => (
               <button
@@ -334,52 +405,49 @@ export default function ApplicationsPage() {
           </div>
         </div>
 
-        {/* Withdraw Confirm Modal */}
-        <WithdrawConfirmModal
-          isOpen={!!withdrawTarget}
-          jobTitle={withdrawTarget?.jobTitle ?? ""}
-          onCancel={() => setWithdrawTarget(null)}
-          onConfirm={() => {
-            if (withdrawTarget) {
-              withdrawApplication(withdrawTarget.jobId);
-              setWithdrawTarget(null);
-            }
-          }}
-        />
+        {/* Error banner (non-blocking) */}
+        {applicationsError && serverApplications.length === 0 && (
+          <div className="mb-6 px-4 py-3 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 text-amber-700 dark:text-amber-300 text-sm">
+            ⚠ Không thể tải dữ liệu từ máy chủ — đang hiển thị dữ liệu mẫu.
+            {" "}
+            <span className="opacity-60 text-xs">({applicationsError})</span>
+          </div>
+        )}
 
+        {/* Card list */}
         <div className="space-y-6">
-          <AnimatePresence mode="popLayout">
-            {filteredApplications.length > 0 ? (
-              filteredApplications.map((app) => (
-                <ApplicationCard
-                  key={app.id}
-                  application={app}
-                  isLocalApplication={app.id.startsWith("local-")}
-                  onWithdraw={() =>
-                    setWithdrawTarget({ jobId: app.jobId, jobTitle: app.job.title })
-                  }
-                />
-              ))
-            ) : (
-              <div className="text-center py-24 bg-[rgba(145,158,171,0.04)] dark:bg-white/[0.02] rounded-3xl border border-dashed border-[rgba(145,158,171,0.2)] dark:border-white/[0.08]">
-                <div className="w-20 h-20 bg-white dark:bg-[#1C252E] rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
-                  <Briefcase className="w-10 h-10 text-[#22c55e]" />
+          {isLoadingApplications ? (
+            // Skeleton loaders while fetching
+            <div className="space-y-6">
+              {[1, 2, 3].map(i => <SkeletonCard key={i} />)}
+            </div>
+          ) : (
+            <AnimatePresence mode="popLayout">
+              {filteredApplications.length > 0 ? (
+                filteredApplications.map((app) => (
+                  <ApplicationCard key={app.id} application={app} />
+                ))
+              ) : (
+                <div className="text-center py-24 bg-[rgba(145,158,171,0.04)] dark:bg-white/[0.02] rounded-3xl border border-dashed border-[rgba(145,158,171,0.2)] dark:border-white/[0.08]">
+                  <div className="w-20 h-20 bg-white dark:bg-[#1C252E] rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
+                    <Briefcase className="w-10 h-10 text-[#22c55e]" />
+                  </div>
+                  <h3 className="text-xl font-bold text-[#1C252E] dark:text-white mb-2">Chưa có hồ sơ nào</h3>
+                  <p className="text-[#637381] dark:text-[#919EAB] mb-8 max-w-sm mx-auto">
+                    Hãy bắt đầu hành trình mới bằng việc tìm kiếm công việc phù hợp.
+                  </p>
+                  <Link href="/jobs">
+                    <Button className="bg-green-500 hover:bg-green-600 text-white rounded-full px-8 h-12 text-base font-semibold shadow-lg shadow-green-500/20 hover:scale-105 transition-transform">
+                      Tìm việc ngay
+                    </Button>
+                  </Link>
                 </div>
-                <h3 className="text-xl font-bold text-[#1C252E] dark:text-white mb-2">Chưa có hồ sơ nào</h3>
-                <p className="text-[#637381] dark:text-[#919EAB] mb-8 max-w-sm mx-auto">Hãy bắt đầu hành trình mới bằng việc tìm kiếm công việc phù hợp.</p>
-                <Link href="/jobs">
-                  {/* Button: Primary Gradient Blue or Solid Green. Using Green for Action */}
-                  <Button className="bg-green-500 hover:bg-green-600 text-white rounded-full px-8 h-12 text-base font-semibold shadow-lg shadow-green-500/20 hover:scale-105 transition-transform">
-                    Tìm việc ngay
-                  </Button>
-                </Link>
-              </div>
-            )}
-          </AnimatePresence>
+              )}
+            </AnimatePresence>
+          )}
         </div>
 
       </div>
     </div>
   );
 }
-
