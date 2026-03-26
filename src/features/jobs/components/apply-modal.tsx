@@ -14,7 +14,8 @@ import {
   AlertTriangle,
   Briefcase,
   PartyPopper,
-  ArrowRight
+  ArrowRight,
+  Trash2
 } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { Job } from "@/features/jobs/types/job";
@@ -39,7 +40,7 @@ export function ApplyModal({ job, isOpen, onClose, onSuccess }: ApplyModalProps)
   const [modalState, setModalState] = useState<ModalState>("form");
   const hasInitializedRef = useRef(false);
 
-  const { applyToJob, hasApplied } = useApplicationStore();
+  const { applyToJob, hasApplied, withdrawApplication, submitError, clearSubmitError } = useApplicationStore();
 
   // Check for selected CV from URL params (returning from preview page)
   // Only run once when modal opens
@@ -102,11 +103,18 @@ export function ApplyModal({ job, isOpen, onClose, onSuccess }: ApplyModalProps)
   const handleSubmit = async () => {
     if (!selectedCV) return;
     setModalState("submitting");
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    // Mark as applied
-    applyToJob(job.id);
-    setModalState("success");
+    clearSubmitError();
+
+    try {
+      await applyToJob({
+        jobId: Number(job.id),
+        cvFileId: Number(selectedCV),
+      });
+      setModalState("success");
+    } catch {
+      // submitError is already set in the store
+      setModalState("form");
+    }
   };
 
   // Handle close after success
@@ -142,7 +150,14 @@ export function ApplyModal({ job, isOpen, onClose, onSuccess }: ApplyModalProps)
               <SuccessView job={job} onClose={handleCloseAfterSuccess} />
             )}
             {modalState === "already-applied" && (
-              <AlreadyAppliedView job={job} onClose={onClose} />
+              <AlreadyAppliedView
+                job={job}
+                onClose={onClose}
+                onWithdraw={async () => {
+                  await withdrawApplication(job.id);
+                  setModalState("form");
+                }}
+              />
             )}
             {modalState === "job-closed" && (
               <JobClosedView job={job} onClose={onClose} />
@@ -153,6 +168,7 @@ export function ApplyModal({ job, isOpen, onClose, onSuccess }: ApplyModalProps)
                 selectedCV={selectedCV}
                 coverLetter={coverLetter}
                 isSubmitting={modalState === "submitting"}
+                submitError={submitError}
                 onCoverLetterChange={setCoverLetter}
                 onSelectCV={setSelectedCV}
                 onViewCV={handleViewCV}
@@ -304,9 +320,10 @@ function SuccessView({ job, onClose }: { job: Job; onClose: () => void }) {
 }
 
 // ==================== Already Applied View ====================
-function AlreadyAppliedView({ job, onClose }: { job: Job; onClose: () => void }) {
+function AlreadyAppliedView({ job, onClose, onWithdraw }: { job: Job; onClose: () => void; onWithdraw: () => void }) {
   const { getApplicationDate } = useApplicationStore();
   const appliedDate = getApplicationDate(job.id);
+  const [confirmWithdraw, setConfirmWithdraw] = useState(false);
 
   return (
     <div className="flex flex-col items-center justify-center p-8 min-h-[400px] text-center">
@@ -389,6 +406,40 @@ function AlreadyAppliedView({ job, onClose }: { job: Job; onClose: () => void })
           Tìm việc khác
           <ArrowRight className="w-4 h-4 ml-2" />
         </Button>
+      </motion.div>
+
+      {/* Withdraw action */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+        className="mt-2"
+      >
+        {!confirmWithdraw ? (
+          <button
+            onClick={() => setConfirmWithdraw(true)}
+            className="text-xs text-slate-400 dark:text-slate-500 hover:text-red-500 dark:hover:text-red-400 transition-colors flex items-center gap-1 mx-auto"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+            Rút hồ sơ & ứng tuyển lại
+          </button>
+        ) : (
+          <div className="flex items-center justify-center gap-2">
+            <span className="text-xs text-red-500">Bạn chắc chứ?</span>
+            <button
+              onClick={onWithdraw}
+              className="text-xs font-semibold text-red-600 hover:text-red-700 underline"
+            >
+              Xác nhận
+            </button>
+            <button
+              onClick={() => setConfirmWithdraw(false)}
+              className="text-xs text-slate-400 hover:text-slate-600"
+            >
+              Huỷ
+            </button>
+          </div>
+        )}
       </motion.div>
     </div>
   );
@@ -499,6 +550,7 @@ interface FormViewProps {
   selectedCV: string;
   coverLetter: string;
   isSubmitting: boolean;
+  submitError: string | null;
   onCoverLetterChange: (value: string) => void;
   onSelectCV: (cvId: string) => void;
   onViewCV: (cv: CVVersion) => void;
@@ -512,6 +564,7 @@ function FormView({
   selectedCV,
   coverLetter,
   isSubmitting,
+  submitError,
   onCoverLetterChange,
   onSelectCV,
   onViewCV,
@@ -613,6 +666,11 @@ function FormView({
               </span>
             )}
           </div>
+          {submitError && (
+            <div className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 px-3 py-2 rounded-lg">
+              {submitError}
+            </div>
+          )}
           <div className="flex gap-3">
             <Button
               variant="outline"

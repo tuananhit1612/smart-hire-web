@@ -38,7 +38,7 @@ const ROLE_ROUTES: Record<string, string> = {
 // Auth pages — if already logged in, redirect to dashboard
 const AUTH_PAGES = ["/login", "/register", "/forgot-password", "/reset-password"];
 
-function getSessionFromCookie(request: NextRequest): { role: string; isFirstLogin?: boolean } | null {
+function getSessionFromCookie(request: NextRequest): { role: string; isNewUser?: boolean } | null {
     const cookie = request.cookies.get(COOKIE_NAME);
     if (!cookie?.value) return null;
 
@@ -71,7 +71,7 @@ export function middleware(request: NextRequest) {
     if (AUTH_PAGES.some((p) => pathname.startsWith(p))) {
         if (isLoggedIn) {
             // Check if onboarding needed first
-            if (session!.isFirstLogin) {
+            if (session!.isNewUser) {
                 const onboardingRoute = session!.role === "employer" ? "/employer/onboarding" : "/dashboard/onboarding";
                 return NextResponse.redirect(new URL(onboardingRoute, request.url));
             }
@@ -92,7 +92,7 @@ export function middleware(request: NextRequest) {
     }
 
     // ─── 3. Enforce Onboarding for First Time Login ──────────
-    if (isLoggedIn && session!.isFirstLogin) {
+    if (isLoggedIn && session!.isNewUser) {
         const isOnEmployerOnboarding = pathname.startsWith("/employer/onboarding");
         const isOnCandidateOnboarding = pathname.startsWith("/dashboard/onboarding");
 

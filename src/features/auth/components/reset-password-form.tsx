@@ -9,12 +9,20 @@ import { motion, AnimatePresence } from "framer-motion";
 
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
+import { useToastHelpers } from "@/shared/components/ui/toast";
 import { resetPasswordSchema, type ResetPasswordSchema } from "../schemas/reset-password-schema";
+import { authApi } from "../api/auth-api";
+import { isApiError } from "@/shared/lib/api-error";
 
-export function ResetPasswordForm() {
+interface ResetPasswordFormProps {
+    token: string;
+}
+
+export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     const [isLoading, setIsLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
     const router = useRouter();
+    const toastHelpers = useToastHelpers();
 
     const {
         register,
@@ -26,13 +34,20 @@ export function ResetPasswordForm() {
 
     const onSubmit = async (data: ResetPasswordSchema) => {
         setIsLoading(true);
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        setIsLoading(false);
-        setIsSuccess(true);
-
-        setTimeout(() => {
-            router.push("/login");
-        }, 3000);
+        try {
+            await authApi.resetPassword(token, data.password);
+            setIsSuccess(true);
+            setTimeout(() => {
+                router.push("/login");
+            }, 3000);
+        } catch (error) {
+            const message = isApiError(error)
+                ? error.message
+                : "Đã có lỗi xảy ra. Vui lòng thử lại sau.";
+            toastHelpers.error("Không thể đặt lại mật khẩu", message);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const itemVariants = {

@@ -153,11 +153,12 @@ export function LoginForm() {
                 {/* Register link */}
                 <motion.div variants={itemVariants}>
                     <p className="text-center text-sm text-[#637381] dark:text-[#C4CDD5]">
+                        Chưa có tài khoản?{" "}
                         <Link
                             href="/register"
                             className="font-semibold text-[#22C55E] hover:text-[#16A34A] transition-colors"
                         >
-                            Đăng ký tài khoản
+                            Đăng ký ngay
                         </Link>
                     </p>
                 </motion.div>

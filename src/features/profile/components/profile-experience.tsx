@@ -52,8 +52,8 @@ export function ProfileExperience({ experiences, onSave }: ProfileExperienceProp
               >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-4 mb-2">
                   <div>
-                    <h3 className="text-lg font-bold text-[#1C252E] dark:text-white">{exp.role}</h3>
-                    <p className="text-[15px] font-bold text-[#22C55E] mt-0.5">{exp.company}</p>
+                    <h3 className="text-lg font-bold text-[#1C252E] dark:text-white">{exp.title}</h3>
+                    <p className="text-[15px] font-bold text-[#22C55E] mt-0.5">{exp.companyName}</p>
                   </div>
                   <div className="text-[13px] font-semibold tracking-wide text-[#919EAB] dark:text-[#637381] shrink-0 mt-1 sm:mt-0 uppercase">
                     {exp.startDate} — {exp.endDate || "Hiện tại"}

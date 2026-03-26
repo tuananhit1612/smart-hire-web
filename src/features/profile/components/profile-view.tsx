@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useProfileStore } from "../stores/profile-store";
 import { ProfileHeader } from "./profile-header";
@@ -37,8 +37,13 @@ const tabContentVariants = {
 };
 
 export function ProfileView() {
-  const { profile } = useProfileStore();
+  const { profile, fetchProfile } = useProfileStore();
   const [activeTab, setActiveTab] = useState<TabId>("personal");
+
+  // Hydrate from API on mount — keeps mock as fallback
+  useEffect(() => {
+    fetchProfile();
+  }, [fetchProfile]);
 
   return (
     <div className="w-full max-w-[1080px] mx-auto px-4 md:px-6 lg:px-8 pb-12">
