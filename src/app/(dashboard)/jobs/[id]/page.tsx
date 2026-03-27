@@ -32,8 +32,8 @@ export default function JobDetailPage() {
       setLoading(true);
       setError(null);
       try {
-        const res = await jobApi.getDetail(Number(id));
-        setJob(mapJobResponseToJob(res));
+        const jobDto = await jobApi.getDetail(Number(id));
+        setJob(mapJobResponseToJob(jobDto));
       } catch {
         setError("Không tìm thấy công việc này hoặc đã xảy ra lỗi.");
       } finally {
