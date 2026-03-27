@@ -25,6 +25,7 @@ import { Button } from "@/shared/components/ui/button";
 import { AnimatedCounter, StatCard } from "./ui/premium-effects";
 import { CoverUploadModal } from "./CoverUploadModal";
 import { CompanyInfoEditor } from "./CompanyInfoEditor";
+import { useCompanyStore } from "../stores/company-store";
 
 interface CompanyHeaderProps {
     company: Company;
@@ -33,6 +34,7 @@ interface CompanyHeaderProps {
 }
 
 export function CompanyHeaderPremium({ company, onUpdate, editable = true }: CompanyHeaderProps) {
+    const { uploadLogo } = useCompanyStore();
     const [isQuickEdit, setIsQuickEdit] = React.useState(false);
     const [showCoverModal, setShowCoverModal] = React.useState(false);
     const [showInfoEditor, setShowInfoEditor] = React.useState(false);
@@ -63,8 +65,10 @@ export function CompanyHeaderPremium({ company, onUpdate, editable = true }: Com
         }
     };
 
-    const handleLogoChange = (urlOrFile: string | File | null) => {
-        if (typeof urlOrFile === "string") {
+    const handleLogoChange = async (urlOrFile: string | File | null) => {
+        if (urlOrFile instanceof File) {
+            await uploadLogo(urlOrFile);
+        } else if (typeof urlOrFile === "string") {
             onUpdate?.({ logoUrl: urlOrFile });
         }
     };
