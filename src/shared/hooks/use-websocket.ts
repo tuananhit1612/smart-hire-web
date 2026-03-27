@@ -48,9 +48,11 @@ export function useWebSocket(options: UseWebSocketOptions = {}) {
     client.onConnect = () => {
       console.info("[WebSocket] Connected as user:", user.id);
 
-      // Subscribe to personal notification queue
+      // Subscribe to personal notification queue.
+      // Spring's user destination prefix handles routing to the
+      // correct user based on the authenticated principal from CONNECT.
       client.subscribe(
-        `/user/${user.id}/queue/notifications`,
+        "/user/queue/notifications",
         (message: IMessage) => {
           try {
             const event: RealtimeEvent = JSON.parse(message.body);
