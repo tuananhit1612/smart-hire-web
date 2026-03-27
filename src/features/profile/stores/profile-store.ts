@@ -123,17 +123,17 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
       }
 
       // Fetch sub-sections in parallel
-      const [eduRes, expRes, projRes, skillRes] = await Promise.all([
+      const results = await Promise.allSettled([
         profileApi.getEducations(),
         profileApi.getExperiences(),
         profileApi.getProjects(),
         profileApi.getSkills(),
       ]);
 
-      const educations = (eduRes.data.data ?? []).map(mapEducationFromApi);
-      const experiences = (expRes.data.data ?? []).map(mapExperienceFromApi);
-      const projects = (projRes.data.data ?? []).map(mapProjectFromApi);
-      const skills = (skillRes.data.data ?? []).map(mapSkillFromApi);
+      const educations = results[0].status === "fulfilled" ? (results[0].value.data.data ?? []).map(mapEducationFromApi) : [];
+      const experiences = results[1].status === "fulfilled" ? (results[1].value.data.data ?? []).map(mapExperienceFromApi) : [];
+      const projects = results[2].status === "fulfilled" ? (results[2].value.data.data ?? []).map(mapProjectFromApi) : [];
+      const skills = results[3].status === "fulfilled" ? (results[3].value.data.data ?? []).map(mapSkillFromApi) : [];
 
       set((state) => ({
         profile: {

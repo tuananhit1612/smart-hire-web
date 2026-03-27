@@ -96,8 +96,8 @@ export function ProfileView() {
           animate="visible"
           exit="exit"
         >
-          {activeTab === "personal" && <ProfileTabPersonal profile={profile} />}
-          {activeTab === "job-preference" && <ProfileTabJobPreference jobPreference={profile.jobPreference} />}
+          {activeTab === "personal" && <ProfileTabPersonal />}
+          {activeTab === "job-preference" && <ProfileTabJobPreference />}
           {activeTab === "experiences" && <ProfileTabExperience experiences={profile.experiences} educations={profile.educations} />}
           {activeTab === "questions" && <ProfileTabQuestions questions={profile.aiQuestions} />}
         </motion.div>

@@ -1,12 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CandidateProfile } from "../types/profile";
+import { useProfileStore } from "../stores/profile-store";
 import { FormField, FormSelect, SaveButton, SectionCard } from "./profile-form-fields";
-
-interface Props {
-    profile: CandidateProfile;
-}
 
 const stagger = {
     hidden: {},
@@ -18,7 +14,13 @@ const fadeUp = {
     visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] as const } },
 };
 
-export function ProfileTabPersonal({ profile }: Props) {
+export function ProfileTabPersonal() {
+    const { profile, setProfile } = useProfileStore();
+
+    const update = (field: string, value: string) => {
+        setProfile({ ...profile, [field]: value });
+    };
+
     return (
         <motion.div
             className="space-y-6"
@@ -33,16 +35,31 @@ export function ProfileTabPersonal({ profile }: Props) {
                         Thông tin cá nhân
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        <FormField label="Họ" value={profile.fullName.split(" ").slice(0, -1).join(" ")} />
-                        <FormField label="Tên" value={profile.lastName || profile.fullName.split(" ").pop()} />
-                        <FormField label="Số điện thoại" value={profile.phone} type="tel" />
-                        <FormField label="Email" value={profile.email} type="email" />
-                        <FormField label="LinkedIn" value={profile.linkedIn} />
-                        <FormField label="Website cá nhân" value={profile.website} />
-                        <FormSelect label="Quốc gia" value={profile.country} options={["Việt Nam", "United States", "Japan", "Singapore", "South Korea", "Australia"]} />
-                        <FormField label="Bang / Tỉnh" value={profile.state} />
-                        <FormField label="Thành phố" value={profile.city} />
-                        <FormSelect label="Giới tính" value={profile.gender} options={["Nam", "Nữ", "Khác", "Không muốn tiết lộ"]} />
+                        <FormField
+                            label="Họ"
+                            value={profile.fullName.split(" ").slice(0, -1).join(" ")}
+                            onChange={(v) => {
+                                const lastName = profile.fullName.split(" ").pop() || "";
+                                update("fullName", v ? `${v} ${lastName}` : lastName);
+                            }}
+                        />
+                        <FormField
+                            label="Tên"
+                            value={profile.lastName || profile.fullName.split(" ").pop()}
+                            onChange={(v) => {
+                                const firstParts = profile.fullName.split(" ").slice(0, -1).join(" ");
+                                update("fullName", firstParts ? `${firstParts} ${v}` : v);
+                                update("lastName", v);
+                            }}
+                        />
+                        <FormField label="Số điện thoại" value={profile.phone} type="tel" onChange={(v) => update("phone", v)} />
+                        <FormField label="Email" value={profile.email} type="email" onChange={(v) => update("email", v)} />
+                        <FormField label="LinkedIn" value={profile.linkedIn} onChange={(v) => update("linkedIn", v)} />
+                        <FormField label="Website cá nhân" value={profile.website} onChange={(v) => update("website", v)} />
+                        <FormSelect label="Quốc gia" value={profile.country} options={["Việt Nam", "United States", "Japan", "Singapore", "South Korea", "Australia"]} onChange={(v) => update("country", v)} />
+                        <FormField label="Bang / Tỉnh" value={profile.state} onChange={(v) => update("state", v)} />
+                        <FormField label="Thành phố" value={profile.city} onChange={(v) => update("city", v)} />
+                        <FormSelect label="Giới tính" value={profile.gender} options={["Nam", "Nữ", "Khác", "Không muốn tiết lộ"]} onChange={(v) => update("gender", v)} />
                     </div>
                 </SectionCard>
             </motion.div>
@@ -58,7 +75,6 @@ export function ProfileTabPersonal({ profile }: Props) {
                         <FormSelect label="Bạn có khuyết tật không?" value={profile.equalOpportunity?.disability} options={["Không", "Có", "Không muốn tiết lộ"]} />
                         <FormSelect label="Tình trạng cựu chiến binh" value={profile.equalOpportunity?.veteranStatus} options={["Không", "Có", "Không muốn tiết lộ"]} />
                         <FormSelect label="Dân tộc" value={profile.equalOpportunity?.ethnicity} options={["Kinh", "Hoa", "Khmer", "Khác", "Không muốn tiết lộ"]} />
-                        <FormSelect label="Xu hướng tình dục" value={profile.equalOpportunity?.sexualOrientation} options={["Không muốn tiết lộ", "Dị tính", "Đồng tính", "Song tính", "Khác"]} />
                     </div>
                 </SectionCard>
             </motion.div>
