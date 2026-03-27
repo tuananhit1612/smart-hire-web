@@ -82,7 +82,7 @@ export const jobApi = {
       query.set("salaryMax", String(params.salaryMax));
 
     const qs = query.toString();
-    const url = `/jobs/public${qs ? \`?${qs}\` : ""}`;
+    const url = qs ? `/jobs/public?${qs}` : '/jobs/public';
     const res = await apiClient.get<ApiResponseWrapper<JobResponseDto[]>>(url);
     return res.data.data;
   },
