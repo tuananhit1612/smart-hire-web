@@ -1,19 +1,19 @@
 // Job Types for SmartHire HR Job Management
 
-export type JobType = 'full-time' | 'part-time' | 'contract' | 'internship';
-export type JobLevel = 'junior' | 'middle' | 'senior' | 'lead' | 'manager';
+export type JobType = 'FULL_TIME' | 'PART_TIME' | 'CONTRACT' | 'INTERNSHIP';
+export type JobLevel = 'INTERN' | 'JUNIOR' | 'MID' | 'SENIOR' | 'LEAD' | 'MANAGER';
 export type JobRemote = 'onsite' | 'hybrid' | 'remote';
-export type JobStatus = 'draft' | 'open' | 'paused' | 'closed';
+export type JobStatus = 'DRAFT' | 'OPEN' | 'CLOSED'; // Removed 'paused'
 export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'expert';
 
 export interface Skill {
-    id: string;
+    id?: string;
     name: string;
     level?: SkillLevel;
 }
 
 export interface Job {
-    id: string;
+    id: string; // Keep as string for Frontend store compat, mapped to internal Number ID.
     companyId: string;
     title: string;
     department: string;
@@ -39,18 +39,19 @@ export interface Job {
 
 // Constants for dropdowns
 export const JOB_TYPES: Record<JobType, string> = {
-    'full-time': 'Toàn thời gian',
-    'part-time': 'Bán thời gian',
-    'contract': 'Hợp đồng',
-    'internship': 'Thực tập',
+    'FULL_TIME': 'Toàn thời gian',
+    'PART_TIME': 'Bán thời gian',
+    'CONTRACT': 'Hợp đồng',
+    'INTERNSHIP': 'Thực tập',
 };
 
 export const JOB_LEVELS: Record<JobLevel, string> = {
-    'junior': 'Junior (0-2 năm)',
-    'middle': 'Middle (2-4 năm)',
-    'senior': 'Senior (4-7 năm)',
-    'lead': 'Tech Lead (7+ năm)',
-    'manager': 'Manager',
+    'INTERN': 'Thực tập sinh (Intern)',
+    'JUNIOR': 'Junior (0-2 năm)',
+    'MID': 'Middle (2-4 năm)',
+    'SENIOR': 'Senior (4-7 năm)',
+    'LEAD': 'Tech Lead (7+ năm)',
+    'MANAGER': 'Manager',
 };
 
 export const JOB_REMOTES: Record<JobRemote, string> = {
@@ -60,10 +61,9 @@ export const JOB_REMOTES: Record<JobRemote, string> = {
 };
 
 export const JOB_STATUSES: Record<JobStatus, { label: string; color: string }> = {
-    'draft': { label: 'Bản nháp', color: 'amber' },
-    'open': { label: 'Đang tuyển', color: 'green' },
-    'paused': { label: 'Tạm dừng', color: 'slate' },
-    'closed': { label: 'Đã đóng', color: 'red' },
+    'DRAFT': { label: 'Bản nháp', color: 'amber' },
+    'OPEN': { label: 'Đang tuyển', color: 'green' },
+    'CLOSED': { label: 'Đã đóng', color: 'slate' },
 };
 
 export const SKILL_LEVELS: Record<SkillLevel, string> = {
@@ -92,8 +92,8 @@ export const DEFAULT_JOB: Omit<Job, 'id' | 'createdAt' | 'updatedAt'> = {
     companyId: '',
     title: '',
     department: 'Engineering',
-    type: 'full-time',
-    level: 'middle',
+    type: 'FULL_TIME',
+    level: 'MID',
     location: '',
     remote: 'hybrid',
     salaryCurrency: 'VND',
@@ -101,7 +101,7 @@ export const DEFAULT_JOB: Omit<Job, 'id' | 'createdAt' | 'updatedAt'> = {
     requirements: '',
     mustHaveSkills: [],
     niceToHaveSkills: [],
-    status: 'draft',
+    status: 'DRAFT',
     applicantCount: 0,
     viewCount: 0,
 };

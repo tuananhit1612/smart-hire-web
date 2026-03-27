@@ -43,7 +43,7 @@ function StatusBadge({ status }: { status: Job["status"] }) {
                 }`}
         >
             <span
-                className={`w-2 h-2 rounded-full ${status === "open" ? "bg-green-500 animate-pulse" : `bg-${config.color}-500`
+                className={`w-2 h-2 rounded-full ${status === "OPEN" ? "bg-green-500 animate-pulse" : `bg-${config.color}-500`
                     }`}
             />
             {config.label}
@@ -69,10 +69,10 @@ function ActionMenu({ job, onClose }: { job: Job; onClose: () => void }) {
     };
 
     const handleToggleStatus = () => {
-        const wasPaused = job.status === "paused";
+        const wasDraft = job.status === "DRAFT";
         toggleJobStatus(job.id);
         toast.success(
-            wasPaused ? "Đã mở lại tin tuyển dụng" : "Đã tạm dừng tin tuyển dụng",
+            wasDraft ? "Đã mở lại tin tuyển dụng" : "Đã chuyển về bản nháp",
             job.title,
             { label: "Hoàn tác", onClick: () => toggleJobStatus(job.id) }
         );
@@ -95,8 +95,8 @@ function ActionMenu({ job, onClose }: { job: Job; onClose: () => void }) {
         onClose();
     };
 
-    const toggleLabel = job.status === "open" ? "Tạm dừng" : job.status === "paused" ? "Mở lại" : "Mở tin";
-    const toggleIcon = job.status === "open" ? ToggleLeft : ToggleRight;
+    const toggleLabel = job.status === "OPEN" ? "Tạm dừng" : "Mở tin";
+    const toggleIcon = job.status === "OPEN" ? ToggleLeft : ToggleRight;
 
     const actions = [
         { icon: Eye, label: "Xem preview", onClick: handlePreview },
