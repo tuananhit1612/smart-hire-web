@@ -40,19 +40,20 @@ export function useFileUpload() {
                     status: validation.isValid ? 'uploading' : 'error',
                     progress: 0,
                     errorMessage: validation.error,
+                    rawFile: file,
                 };
             });
 
-            // Simulate upload for valid files
+            // Simulate progress then real upload for valid files
             filesToAdd
                 .filter((f) => f.status === 'uploading')
-                .forEach((f) => simulateUpload(f.id, f.name));
+                .forEach((f) => simulateUpload(f.id, f.name, f.rawFile));
 
             return [...prev, ...filesToAdd];
         });
     }, []);
 
-    const simulateUpload = useCallback((fileId: string, fileName: string) => {
+    const simulateUpload = useCallback((fileId: string, fileName: string, rawFile?: File) => {
         let progress = 0;
         const interval = setInterval(() => {
             progress += Math.random() * 30;
@@ -70,26 +71,29 @@ export function useFileUpload() {
                     )
                 );
 
-                // Phase 2: Async validation with cleanup tracking
-                const timeoutId = setTimeout(() => {
+                // Phase 2: Async validation with cleanup tracking + Real API call
+                const timeoutId = setTimeout(async () => {
                     validationTimeouts.current.delete(fileId);
 
-                    setFiles((prev) =>
-                        prev.map((f) => {
-                            if (f.id !== fileId) return f;
+                    // Fake virus/mime scan
+                    const nameLower = fileName.toLowerCase();
+                    if (nameLower.startsWith('virus') || nameLower.startsWith('malware') || /\.(exe|bat|sh)$/i.test(fileName)) {
+                        setFiles((prev) => prev.map((f) => f.id === fileId ? { ...f, status: 'error' as const, errorMessage: 'File không hợp lệ hoặc chứa mã độc' } : f));
+                        return;
+                    }
 
-                            // Simulate validation failure for test files
-                            const nameLower = fileName.toLowerCase();
-                            if (nameLower.startsWith('virus') || nameLower.startsWith('malware')) {
-                                return { ...f, status: 'error' as const, errorMessage: 'File chứa mã độc' };
-                            }
-                            if (/\.(exe|bat|sh)$/i.test(fileName)) {
-                                return { ...f, status: 'error' as const, errorMessage: 'Định dạng file không được hỗ trợ' };
-                            }
-
-                            return { ...f, status: 'success' as const };
-                        })
-                    );
+                    // Real API Upload
+                    if (rawFile) {
+                        try {
+                            const { useCvFileStore } = await import('@/features/cv/stores/cv-file-store');
+                            await useCvFileStore.getState().uploadCvFile(rawFile);
+                            setFiles((prev) => prev.map((f) => f.id === fileId ? { ...f, status: 'success' as const } : f));
+                        } catch (err: any) {
+                            setFiles((prev) => prev.map((f) => f.id === fileId ? { ...f, status: 'error' as const, errorMessage: err.message || 'Lỗi khi tải lên máy chủ' } : f));
+                        }
+                    } else {
+                        setFiles((prev) => prev.map((f) => f.id === fileId ? { ...f, status: 'success' as const } : f));
+                    }
                 }, 800);
 
                 validationTimeouts.current.set(fileId, timeoutId);
