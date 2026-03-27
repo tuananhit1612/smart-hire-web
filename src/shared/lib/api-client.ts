@@ -2,6 +2,7 @@
  * ═══════════════════════════════════════════════════════════
  *  Axios API Client — Central HTTP instance
  *
+ *  • Auth: Reads JWT from localStorage via tokenStorage
  *  • Auth: Reads JWT from tokenStorage (localStorage)
  *  • Request:  Attaches Bearer token + JSON Content-Type
  *  • Response: Unwraps data, normalizes errors to ApiError
