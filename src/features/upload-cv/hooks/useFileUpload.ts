@@ -1,12 +1,23 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { CVFile, MAX_FILES } from '../types';
 import { validateFile } from '../utils/fileValidation';
 
 export function useFileUpload() {
     const [files, setFiles] = useState<CVFile[]>([]);
     const [isDragging, setIsDragging] = useState(false);
+
+    // Track pending validation timeouts for cleanup on unmount / removeFile
+    const validationTimeouts = useRef<Map<string, NodeJS.Timeout>>(new Map());
+
+    // Cleanup all pending timeouts on unmount
+    useEffect(() => {
+        return () => {
+            validationTimeouts.current.forEach((t) => clearTimeout(t));
+            validationTimeouts.current.clear();
+        };
+    }, []);
 
     const generateId = () => `cv-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
@@ -35,13 +46,13 @@ export function useFileUpload() {
             // Simulate upload for valid files
             filesToAdd
                 .filter((f) => f.status === 'uploading')
-                .forEach((f) => simulateUpload(f.id));
+                .forEach((f) => simulateUpload(f.id, f.name));
 
             return [...prev, ...filesToAdd];
         });
     }, []);
 
-    const simulateUpload = useCallback((fileId: string) => {
+    const simulateUpload = useCallback((fileId: string, fileName: string) => {
         let progress = 0;
         const interval = setInterval(() => {
             progress += Math.random() * 30;
@@ -50,13 +61,38 @@ export function useFileUpload() {
                 progress = 100;
                 clearInterval(interval);
 
+                // Phase 1: Enter validating state (async check simulation)
                 setFiles((prev) =>
                     prev.map((f) =>
                         f.id === fileId
-                            ? { ...f, progress: 100, status: 'success' }
+                            ? { ...f, progress: 100, status: 'validating' as const }
                             : f
                     )
                 );
+
+                // Phase 2: Async validation with cleanup tracking
+                const timeoutId = setTimeout(() => {
+                    validationTimeouts.current.delete(fileId);
+
+                    setFiles((prev) =>
+                        prev.map((f) => {
+                            if (f.id !== fileId) return f;
+
+                            // Simulate validation failure for test files
+                            const nameLower = fileName.toLowerCase();
+                            if (nameLower.startsWith('virus') || nameLower.startsWith('malware')) {
+                                return { ...f, status: 'error' as const, errorMessage: 'File chứa mã độc' };
+                            }
+                            if (/\.(exe|bat|sh)$/i.test(fileName)) {
+                                return { ...f, status: 'error' as const, errorMessage: 'Định dạng file không được hỗ trợ' };
+                            }
+
+                            return { ...f, status: 'success' as const };
+                        })
+                    );
+                }, 800);
+
+                validationTimeouts.current.set(fileId, timeoutId);
             } else {
                 setFiles((prev) =>
                     prev.map((f) =>
@@ -68,10 +104,19 @@ export function useFileUpload() {
     }, []);
 
     const removeFile = useCallback((fileId: string) => {
+        // Clear any pending validation timeout for this file
+        const timeout = validationTimeouts.current.get(fileId);
+        if (timeout) {
+            clearTimeout(timeout);
+            validationTimeouts.current.delete(fileId);
+        }
         setFiles((prev) => prev.filter((f) => f.id !== fileId));
     }, []);
 
     const clearAll = useCallback(() => {
+        // Clear all pending validation timeouts
+        validationTimeouts.current.forEach((t) => clearTimeout(t));
+        validationTimeouts.current.clear();
         setFiles([]);
     }, []);
 
@@ -110,6 +155,7 @@ export function useFileUpload() {
         files,
         isDragging,
         isUploading: files.some((f) => f.status === 'uploading'),
+        isValidating: files.some((f) => f.status === 'validating'),
         addFiles,
         removeFile,
         clearAll,

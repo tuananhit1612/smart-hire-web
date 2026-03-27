@@ -9,11 +9,15 @@ import { motion, AnimatePresence } from "framer-motion";
 
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
+import { useToastHelpers } from "@/shared/components/ui/toast";
 import { forgotPasswordSchema, type ForgotPasswordSchema } from "../schemas/forgot-password-schema";
+import { authApi } from "../api/auth-api";
+import { isApiError } from "@/shared/lib/api-error";
 
 export function ForgotPasswordForm() {
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const toastHelpers = useToastHelpers();
 
     const {
         register,
@@ -25,9 +29,17 @@ export function ForgotPasswordForm() {
 
     const onSubmit = async (data: ForgotPasswordSchema) => {
         setIsLoading(true);
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-        setIsLoading(false);
-        setIsSubmitted(true);
+        try {
+            await authApi.forgotPassword(data.email);
+            setIsSubmitted(true);
+        } catch (error) {
+            const message = isApiError(error)
+                ? error.message
+                : "Đã có lỗi xảy ra. Vui lòng thử lại sau.";
+            toastHelpers.error("Không thể gửi email", message);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const itemVariants = {

@@ -1,4 +1,5 @@
 import { CVData, CVSection } from '../../types/types';
+import type { TemplateProps } from './template-props';
 import { ModernTechTemplate } from './ModernTechTemplate';
 import { MinimalCleanTemplate } from './MinimalCleanTemplate';
 import { ProfessionalSalesTemplate } from './ProfessionalSalesTemplate';
@@ -38,7 +39,7 @@ const ALL_SECTIONS: CVSection[] = [
 // Registry: template component + manifest
 // ---------------------------------------------------------------------------
 export interface TemplateEntry {
-    component: React.ComponentType<{ data: CVData }>;
+    component: React.ComponentType<TemplateProps>;
     manifest: TemplateManifest;
 }
 
@@ -139,7 +140,7 @@ export const TEMPLATE_REGISTRY: Record<string, TemplateEntry> = {
 // ---------------------------------------------------------------------------
 
 /** Flat component map — drop-in replacement for the old TEMPLATE_COMPONENTS */
-export const TEMPLATE_COMPONENTS: Record<string, React.ComponentType<{ data: CVData }>> =
+export const TEMPLATE_COMPONENTS: Record<string, React.ComponentType<TemplateProps>> =
     Object.fromEntries(
         Object.entries(TEMPLATE_REGISTRY).map(([id, entry]) => [id, entry.component]),
     );

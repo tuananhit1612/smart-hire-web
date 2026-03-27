@@ -28,7 +28,7 @@ function calculateSkillMatch(job: Job, profile: CandidateProfile): { score: numb
     return { score: 0, matchedSkills: [] };
   }
 
-  const profileSkillNames = profile.skills.map((s) => s.name.toLowerCase());
+  const profileSkillNames = profile.skills.map((s) => s.skillName.toLowerCase());
   const matchedSkills = job.skills.filter((skill) =>
     profileSkillNames.includes(skill.toLowerCase())
   );

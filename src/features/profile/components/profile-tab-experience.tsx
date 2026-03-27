@@ -99,8 +99,8 @@ export function ProfileTabExperience({ experiences, educations }: Props) {
                                 {experiences.map((exp) => (
                                     <TimelineItem
                                         key={exp.id}
-                                        title={exp.role}
-                                        subtitle={exp.company}
+                                        title={exp.title}
+                                        subtitle={exp.companyName}
                                         dateRange={`${exp.startDate} — ${exp.endDate || "Hiện tại"}`}
                                         description={exp.description}
                                         accentColor="#22C55E"
@@ -128,7 +128,7 @@ export function ProfileTabExperience({ experiences, educations }: Props) {
                                 {educations.map((edu) => (
                                     <TimelineItem
                                         key={edu.id}
-                                        title={edu.school}
+                                        title={edu.institution}
                                         subtitle={`${edu.degree} — ${edu.fieldOfStudy}`}
                                         dateRange={`${edu.startDate} — ${edu.endDate || "Hiện tại"}`}
                                         accentColor="#FFAB00"
