@@ -53,11 +53,14 @@ export const EditableText = React.memo(function EditableText({
 
     // Keep latest onChange in a ref so we never stale-close over it
     const onChangeRef = useRef(onChange);
-    onChangeRef.current = onChange;
 
     // Keep latest value in a ref for blur comparison
     const valueRef = useRef(value);
-    valueRef.current = value;
+
+    useEffect(() => {
+        onChangeRef.current = onChange;
+        valueRef.current = value;
+    }, [onChange, value]);
 
     // Determine which HTML tag to render
     const Tag = (as ?? (multiline ? "div" : "span")) as React.ElementType;
