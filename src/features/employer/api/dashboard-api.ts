@@ -9,6 +9,7 @@
  */
 
 import { apiClient } from "@/shared/lib/api-client";
+import type { ApiWrapper } from "@/shared/types/api";
 
 // ─── Types (mirrors backend DTOs) ────────────────────
 
@@ -64,30 +65,22 @@ export interface JobDashboardStats {
     rejectRate: number;
 }
 
-// ─── API wrapper type ────────────────────────────────
-interface ApiResponse<T> {
-    success: boolean;
-    code: string;
-    message?: string;
-    data: T;
-}
-
 // ─── API Methods ─────────────────────────────────────
 
-/** Fetch aggregated HR dashboard overview */
-export async function fetchHrDashboardOverview(): Promise<HrDashboardOverview> {
-    const { data } = await apiClient.get<ApiResponse<HrDashboardOverview>>(
-        "/dashboard/hr/overview"
-    );
-    return data.data;
-}
+export const dashboardApi = {
+    /** Fetch aggregated HR dashboard overview */
+    getOverview: async (): Promise<HrDashboardOverview> => {
+        const { data } = await apiClient.get<ApiWrapper<HrDashboardOverview>>(
+            "/dashboard/hr/overview"
+        );
+        return data.data;
+    },
 
-/** Fetch per-job dashboard stats */
-export async function fetchJobDashboardStats(
-    jobId: number
-): Promise<JobDashboardStats> {
-    const { data } = await apiClient.get<ApiResponse<JobDashboardStats>>(
-        `/dashboard/hr/jobs/${jobId}/stats`
-    );
-    return data.data;
-}
+    /** Fetch per-job dashboard stats */
+    getJobStats: async (jobId: number): Promise<JobDashboardStats> => {
+        const { data } = await apiClient.get<ApiWrapper<JobDashboardStats>>(
+            `/dashboard/hr/jobs/${jobId}/stats`
+        );
+        return data.data;
+    },
+};
