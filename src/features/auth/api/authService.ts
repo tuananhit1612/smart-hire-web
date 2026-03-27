@@ -62,7 +62,7 @@ export const authService = {
             name: resp.fullName,
             role: resp.role.toLowerCase() as any, // "candidate" | "employer"
             avatar: "", // Can add later
-            isFirstLogin,
+            isNewUser: isFirstLogin,
             joinedDate: new Date().toISOString(),
         };
     }
