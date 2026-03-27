@@ -42,6 +42,7 @@ import { JobPreviewPanel } from "./JobPreviewPanel";
 import { ApplicantPanel } from "./ApplicantPanel";
 import { Job, JOB_TYPES, JOB_STATUSES, JOB_LEVELS, JobStatus, JobType, DEPARTMENTS } from "../types/job";
 import { FloatingElements, BentoItem } from "../../hr-company/components/ui/premium-effects";
+import { Pagination } from "@/shared/components/ui/pagination";
 import { useToastHelpers } from "@/shared/components/ui/toast";
 
 type SortOption = "newest" | "oldest" | "applicants" | "views";
@@ -559,6 +560,9 @@ export function JobListView() {
     const jobs = getFilteredJobs();
     const stats = getJobStats();
 
+    const [currentPage, setCurrentPage] = React.useState(1);
+    const ITEMS_PER_PAGE = 9;
+
     // Filter by search + sort
     const filteredJobs = React.useMemo(() => {
         let result = jobs;
@@ -581,6 +585,18 @@ export function JobListView() {
             }
         });
     }, [jobs, searchValue, sortBy]);
+
+    // Reset pagination when filters change
+    React.useEffect(() => {
+        setCurrentPage(1);
+    }, [searchValue, filters, sortBy]);
+
+    // Calculate pagination
+    const totalPages = Math.ceil(filteredJobs.length / ITEMS_PER_PAGE);
+    const paginatedJobs = filteredJobs.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE
+    );
 
     return (
         <div className="relative bg-gradient-to-br from-[rgba(145,158,171,0.04)] via-white to-green-50/30 dark:from-[#141A21] dark:via-[#141A21] dark:to-[#141A21] -m-6 px-6 pb-16">
@@ -748,10 +764,21 @@ export function JobListView() {
 
                 {/* Jobs Grid */}
                 {filteredJobs.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                        {filteredJobs.map((job, index) => (
-                            <JobCard key={job.id} job={job} index={index} onViewApplicants={(j) => setApplicantJob(j)} />
-                        ))}
+                    <div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                            {paginatedJobs.map((job, index) => (
+                                <JobCard key={job.id} job={job} index={index} onViewApplicants={(j) => setApplicantJob(j)} />
+                            ))}
+                        </div>
+                        {totalPages > 1 && (
+                            <div className="mt-10 flex justify-center">
+                                <Pagination
+                                    currentPage={currentPage}
+                                    totalPages={totalPages}
+                                    onPageChange={setCurrentPage}
+                                />
+                            </div>
+                        )}
                     </div>
                 ) : (
                     <motion.div
