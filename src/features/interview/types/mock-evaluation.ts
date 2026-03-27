@@ -28,4 +28,12 @@ export interface InterviewResult {
     readonly evaluations: AnswerEvaluation[];
 }
 
-export const mockInterviewResult: InterviewResult = {} as InterviewResult;
+export const mockInterviewResult: InterviewResult = {
+    id: "",
+    completedAt: "",
+    totalScore: 0,
+    maxScore: 100,
+    grade: "C",
+    summary: "",
+    evaluations: [],
+};

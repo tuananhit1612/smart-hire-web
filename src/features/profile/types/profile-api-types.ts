@@ -118,39 +118,6 @@ export interface CreateProjectPayload {
   startDate: string;
   endDate?: string;
   description: string;
-  technologies: string; // export interface CvFileResponse {
-  id: number;
-  fileName: string;
-  fileType: "PDF" | "DOC" | "DOCX";
-  fileSize: number;
-  source: "UPLOAD" | "BUILDER";
-  isPrimary: boolean;
-  createdAt: string;
-  downloadUrl: string;
-}?: string;
-  description: string;
-  location?: string;
-}
-
-export type UpdateExperiencePayload = Partial<CreateExperiencePayload>;
-
-// ─── Project ─────────────────────────────────────────────
-
-export interface ProjectResponse {
-  id: number;
-  projectName: string;
-  startDate: string;
-  endDate?: string;
-  description: string;
-  technologies: string; // comma-separated in API
-  link?: string;
-}
-
-export interface CreateProjectPayload {
-  projectName: string;
-  startDate: string;
-  endDate?: string;
-  description: string;
   technologies: string; // comma-separated
   link?: string;
 }
@@ -175,14 +142,14 @@ export type UpdateSkillPayload = Partial<CreateSkillPayload>;
 // ─── CV File ─────────────────────────────────────────────
 
 export type CvFileType = "PDF" | "DOCX";
-export type CvSource = "UPLOADED" | "GENERATED";
+export type CvSource = "UPLOAD" | "BUILDER";
 
 export interface CvFileResponse {
   id: number;
   fileName: string;
-  fileType: "PDF" | "DOC" | "DOCX";
+  fileType: CvFileType;
   fileSize: number;
-  source: "UPLOAD" | "BUILDER";
+  source: CvSource;
   isPrimary: boolean;
   createdAt: string;
   downloadUrl: string;

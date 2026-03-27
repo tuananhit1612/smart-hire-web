@@ -46,4 +46,19 @@ export interface InterviewReport {
     readonly aiSummary: string;
 }
 
-export const mockInterviewReport: InterviewReport = {} as InterviewReport;
+export const mockInterviewReport: InterviewReport = {
+    id: "",
+    candidateName: "",
+    position: "",
+    company: "",
+    completedAt: "",
+    overallScore: 0,
+    maxScore: 100,
+    verdict: "conditional",
+    verdictLabel: "",
+    skillRadar: [],
+    strengths: [],
+    weaknesses: [],
+    recommendations: [],
+    aiSummary: "",
+};
