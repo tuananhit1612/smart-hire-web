@@ -20,8 +20,11 @@ import {
     Globe,
     Server,
     Loader2,
+    Download,
 } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
+import { downloadBlob } from "@/shared/utils/download-file";
+import { useToastHelpers } from "@/shared/components/ui/toast";
 import { fmtNumber } from "@/shared/utils/format";
 import { adminDashboardApi } from "@/features/admin/api/admin-dashboard-api";
 import type { AdminDashboardResponse } from "@/features/admin/types/admin-dashboard-types";
@@ -211,6 +214,38 @@ export default function AdminDashboardPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
+    const [exportingApps, setExportingApps] = useState(false);
+    const [exportingJobs, setExportingJobs] = useState(false);
+    const toast = useToastHelpers();
+
+    const handleExportApps = async () => {
+        try {
+            setExportingApps(true);
+            const { data: blob } = await adminDashboardApi.exportApplicationsCsv();
+            const filename = `admin_applications_${new Date().toISOString().slice(0, 10)}.csv`;
+            downloadBlob(blob, filename);
+            toast.success("Đã xuất báo cáo CSV Ứng viên toàn hệ thống thành công!", "Tệp tải xuống nằm trong thư mục Downloads.");
+        } catch (err) {
+            toast.error("Xuất báo cáo thất bại", "Vui lòng kiểm tra lại kết nối hoặc phân quyền.");
+        } finally {
+            setExportingApps(false);
+        }
+    };
+
+    const handleExportJobs = async () => {
+        try {
+            setExportingJobs(true);
+            const { data: blob } = await adminDashboardApi.exportJobsCsv();
+            const filename = `admin_jobs_${new Date().toISOString().slice(0, 10)}.csv`;
+            downloadBlob(blob, filename);
+            toast.success("Đã xuất báo cáo CSV Việc làm toàn hệ thống thành công!", "Tệp tải xuống nằm trong thư mục Downloads.");
+        } catch (err) {
+            toast.error("Xuất báo cáo thất bại", "Vui lòng kiểm tra lại kết nối hoặc phân quyền.");
+        } finally {
+            setExportingJobs(false);
+        }
+    };
+
     useEffect(() => {
         let cancelled = false;
 
@@ -245,22 +280,45 @@ export default function AdminDashboardPage() {
                 <motion.div
                     initial={{ opacity: 0, y: -15 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="mb-8"
+                    className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4"
                 >
-                    <div className="flex items-center gap-2">
-                        <ShieldCheck className="w-6 h-6 text-[#22c55e]" />
-                        <h1 className="text-2xl font-bold text-[#1C252E]">Admin Dashboard</h1>
-                        {loading && <Loader2 className="w-4 h-4 text-slate-400 animate-spin ml-2" />}
-                    </div>
-                    <p className="text-sm text-slate-500 mt-1">
-                        Tổng quan hệ thống — {new Date().toLocaleDateString("vi-VN", { month: "long", year: "numeric" })}
-                    </p>
-                    {error && (
-                        <div className="mt-2 text-xs text-rose-600 bg-rose-50 px-3 py-1.5 rounded-lg inline-flex items-center gap-1.5">
-                            <AlertTriangle className="w-3.5 h-3.5" />
-                            {error}
+                    <div>
+                        <div className="flex items-center gap-2">
+                            <ShieldCheck className="w-6 h-6 text-[#22c55e]" />
+                            <h1 className="text-2xl font-bold text-[#1C252E]">Admin Dashboard</h1>
+                            {loading && <Loader2 className="w-4 h-4 text-slate-400 animate-spin ml-2" />}
                         </div>
-                    )}
+                        <p className="text-sm text-slate-500 mt-1">
+                            Tổng quan hệ thống — {new Date().toLocaleDateString("vi-VN", { month: "long", year: "numeric" })}
+                        </p>
+                        {error && (
+                            <div className="mt-2 text-xs text-rose-600 bg-rose-50 px-3 py-1.5 rounded-lg inline-flex items-center gap-1.5">
+                                <AlertTriangle className="w-3.5 h-3.5" />
+                                {error}
+                            </div>
+                        )}
+                    </div>
+                    
+                    <div className="flex gap-2">
+                        <button
+                            onClick={handleExportApps}
+                            disabled={exportingApps}
+                            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white border border-slate-200 text-xs font-semibold text-slate-700 transition-all hover:bg-slate-50 hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                            title="Xuất CSV toàn bộ Ứng viên"
+                        >
+                            {exportingApps ? <Loader2 className="w-4 h-4 animate-spin text-slate-400" /> : <Download className="w-4 h-4 text-violet-600" />}
+                            <span className="hidden sm:inline">Xuất CSV Ứng viên</span>
+                        </button>
+                        <button
+                            onClick={handleExportJobs}
+                            disabled={exportingJobs}
+                            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white border border-slate-200 text-xs font-semibold text-slate-700 transition-all hover:bg-slate-50 hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                            title="Xuất CSV toàn bộ Việc làm"
+                        >
+                            {exportingJobs ? <Loader2 className="w-4 h-4 animate-spin text-slate-400" /> : <Download className="w-4 h-4 text-emerald-600" />}
+                            <span className="hidden sm:inline">Xuất CSV Việc làm</span>
+                        </button>
+                    </div>
                 </motion.div>
 
                 {/* Stat Cards — 6 cards in 2 rows */}

@@ -133,9 +133,12 @@ export const profileApi = {
     apiClient.get<ApiWrapper<CvFileResponse[]>>(`${BASE}/cv-files`),
 
   /** POST /candidate/profile/cv-files — upload (multipart/form-data) */
-  uploadCvFile: (file: File) => {
+  uploadCvFile: (file: File, isPrimary?: boolean) => {
     const formData = new FormData();
     formData.append("file", file);
+    if (isPrimary !== undefined) {
+        formData.append("isPrimary", String(isPrimary));
+    }
     return apiClient.post<ApiWrapper<CvFileResponse>>(`${BASE}/cv-files`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
@@ -143,11 +146,11 @@ export const profileApi = {
 
   /** DELETE /candidate/profile/cv-files/:id */
   deleteCvFile: (id: number) =>
-    apiClient.delete(`${BASE}/cv-files/${id}`),
+    apiClient.delete<ApiWrapper<void>>(`${BASE}/cv-files/${id}`),
 
   /** PUT /candidate/profile/cv-files/:id/primary */
   setCvFilePrimary: (id: number) =>
-    apiClient.put(`${BASE}/cv-files/${id}/primary`),
+    apiClient.put<ApiWrapper<CvFileResponse>>(`${BASE}/cv-files/${id}/primary`),
 
   /** GET /candidate/profile/cv-files/:id/download */
   downloadCvFile: (id: number) =>
