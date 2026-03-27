@@ -1,11 +1,11 @@
 "use client";
 
 import { useRef, useState } from "react";
-import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mail, MapPin, Phone, Linkedin, Github, Globe, Twitter, CheckCircle2, Camera, X, Upload, Loader2 } from "lucide-react";
 import { CandidateProfile, SocialLink } from "../types/profile";
 import { useProfileStore } from "../stores/profile-store";
+import { useAuth } from "@/features/auth/hooks/use-auth";
 
 interface ProfileHeaderProps {
   profile: CandidateProfile;
@@ -20,6 +20,7 @@ const socialIcons: Record<SocialLink["platform"], React.ElementType> = {
 
 export function ProfileHeader({ profile }: ProfileHeaderProps) {
   const { uploadAvatar } = useProfileStore();
+  const { user } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const selectedFileRef = useRef<File | null>(null);
   const [isHoveringAvatar, setIsHoveringAvatar] = useState(false);
@@ -111,15 +112,14 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
               >
                 <div className="h-28 w-28 md:h-32 md:w-32 rounded-2xl border-4 border-white dark:border-[#1C252E] overflow-hidden shadow-lg bg-white dark:bg-[#1C252E] relative">
                   {profile.avatarUrl ? (
-                    <Image
-                      src={profile.avatarUrl}
-                      alt={profile.fullName}
-                      fill
-                      className="object-cover"
+                    <img
+                      src={profile.avatarUrl.startsWith("http") ? profile.avatarUrl : `${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api").replace("/api", "")}/uploads/${profile.avatarUrl}`}
+                      alt={profile.fullName || user?.name || "Avatar"}
+                      className="w-full h-full object-cover"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-4xl font-extrabold text-[#22C55E] bg-gradient-to-br from-[#22C55E]/10 to-transparent">
-                      {profile.fullName.charAt(0)}
+                      {(profile.fullName || user?.name || "U").charAt(0).toUpperCase()}
                     </div>
                   )}
 
@@ -159,23 +159,23 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
               <div>
                 <div className="flex items-center gap-2">
                   <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[#1C252E] dark:text-white">
-                    {profile.fullName}
+                    {profile.fullName || user?.name || "Người dùng ẩn danh"}
                   </h1>
                   <CheckCircle2 className="w-6 h-6 text-[#22C55E] fill-[#22C55E]/20 shrink-0" />
                 </div>
                 <p className="text-base font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#22C55E] to-[#10B981] mt-0.5 inline-block">
-                  {profile.title}
+                  {profile.title || "Ứng viên"}
                 </p>
               </div>
 
               {/* Contact Info */}
               <div className="flex flex-wrap items-center gap-y-3 gap-x-5 mt-4 text-[14px] font-medium text-[#637381] dark:text-[#C4CDD5]">
-                {profile.email && (
+                {(profile.email || user?.email) && (
                   <span className="flex items-center gap-2 hover:text-[#22C55E] transition-colors cursor-pointer">
                     <div className="w-8 h-8 rounded-lg bg-[rgba(145,158,171,0.04)] dark:bg-[rgba(145,158,171,0.08)] flex items-center justify-center">
                       <Mail className="w-4 h-4 text-[#1C252E] dark:text-white" />
                     </div>
-                    {profile.email}
+                    {profile.email || user?.email}
                   </span>
                 )}
                 {profile.phone && (
