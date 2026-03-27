@@ -76,6 +76,7 @@ export const dashboardApi = {
         return data.data;
     },
 
+<<<<<<< feature/FE030-refactor-api-client-service-layer
     /** Fetch per-job dashboard stats */
     getJobStats: async (jobId: number): Promise<JobDashboardStats> => {
         const { data } = await apiClient.get<ApiWrapper<JobDashboardStats>>(
@@ -84,3 +85,32 @@ export const dashboardApi = {
         return data.data;
     },
 };
+=======
+/** Fetch per-job dashboard stats */
+export async function fetchJobDashboardStats(
+    jobId: number
+): Promise<JobDashboardStats> {
+    const { data } = await apiClient.get<ApiResponse<JobDashboardStats>>(
+        `/dashboard/hr/jobs/${jobId}/stats`
+    );
+    return data.data;
+}
+
+/** Export HR Jobs as CSV */
+export async function exportHrJobsCsv(): Promise<Blob> {
+    const { data } = await apiClient.get<Blob>(
+        "/dashboard/reports/jobs/csv",
+        { responseType: "blob" }
+    );
+    return data;
+}
+
+/** Export HR Applications as CSV */
+export async function exportHrApplicationsCsv(): Promise<Blob> {
+    const { data } = await apiClient.get<Blob>(
+        "/dashboard/reports/applications/csv",
+        { responseType: "blob" }
+    );
+    return data;
+}
+>>>>>>> develop

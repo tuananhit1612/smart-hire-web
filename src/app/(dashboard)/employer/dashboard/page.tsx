@@ -1,5 +1,4 @@
-"use client";
-
+import { useState } from "react";
 import { motion } from "framer-motion";
 import {
     Users,
@@ -19,8 +18,11 @@ import {
     AlertCircle,
     CheckCircle2,
     XCircle,
+    Download,
 } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
+import { downloadBlob } from "@/shared/utils/download-file";
+import { useToastHelpers } from "@/shared/components/ui/toast";
 import FunnelByStage, {
     type FunnelStage,
     defaultFunnelStages,
@@ -34,6 +36,10 @@ import type {
     WeeklyTrendItem,
     TopJobItem,
     RecentActivityItem,
+} from "@/features/employer/api/dashboard-api";
+import {
+    exportHrApplicationsCsv,
+    exportHrJobsCsv,
 } from "@/features/employer/api/dashboard-api";
 
 // ─── Animation Presets ───────────────────────────────
@@ -182,6 +188,37 @@ function MiniBar({ values, colors }: { readonly values: number[]; readonly color
 // ─── Main Page ───────────────────────────────────────
 export default function HRDashboardPage() {
     const { data: overview, isLoading, error, refetch } = useDashboardOverview();
+    const [exportingApps, setExportingApps] = useState(false);
+    const [exportingJobs, setExportingJobs] = useState(false);
+    const toast = useToastHelpers();
+
+    const handleExportApps = async () => {
+        try {
+            setExportingApps(true);
+            const blob = await exportHrApplicationsCsv();
+            const filename = `hr_applications_${new Date().toISOString().slice(0, 10)}.csv`;
+            downloadBlob(blob, filename);
+            toast.success("Đã xuất báo cáo CSV Ứng viên thành công!", "Tệp tải xuống nằm trong thư mục Downloads.");
+        } catch (err) {
+            toast.error("Xuất báo cáo thất bại", "Vui lòng thử lại sau.");
+        } finally {
+            setExportingApps(false);
+        }
+    };
+
+    const handleExportJobs = async () => {
+        try {
+            setExportingJobs(true);
+            const blob = await exportHrJobsCsv();
+            const filename = `hr_jobs_${new Date().toISOString().slice(0, 10)}.csv`;
+            downloadBlob(blob, filename);
+            toast.success("Đã xuất báo cáo CSV Tin tuyển dụng thành công!", "Tệp tải xuống nằm trong thư mục Downloads.");
+        } catch (err) {
+            toast.error("Xuất báo cáo thất bại", "Vui lòng thử lại sau.");
+        } finally {
+            setExportingJobs(false);
+        }
+    };
 
     const today = new Date();
     const dateStr = today.toLocaleDateString("vi-VN", {
@@ -224,12 +261,32 @@ export default function HRDashboardPage() {
                                 {dateStr} — Tổng quan tuyển dụng của bạn hôm nay
                             </p>
                         </div>
-                        <div className="flex items-center gap-3 ml-[52px] md:ml-0">
-                            <div className="px-4 py-2 rounded-full bg-[rgba(145,158,171,0.04)] dark:bg-[rgba(145,158,171,0.08)] border border-[rgba(145,158,171,0.12)] text-xs font-medium text-[#637381] dark:text-[#919EAB] flex items-center gap-2">
-                                <CalendarDays className="w-3.5 h-3.5" />
-                                Tháng {today.getMonth() + 1}, {today.getFullYear()}
+                            <div className="flex flex-col sm:flex-row items-center gap-3 ml-[52px] md:ml-0 mt-4 md:mt-0">
+                                <div className="px-4 py-2 rounded-full bg-[rgba(145,158,171,0.04)] dark:bg-[rgba(145,158,171,0.08)] border border-[rgba(145,158,171,0.12)] text-xs font-medium text-[#637381] dark:text-[#919EAB] flex items-center gap-2">
+                                    <CalendarDays className="w-3.5 h-3.5" />
+                                    Tháng {today.getMonth() + 1}, {today.getFullYear()}
+                                </div>
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={handleExportApps}
+                                        disabled={exportingApps}
+                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/70 hover:bg-white dark:bg-white/10 dark:hover:bg-white/20 border border-[rgba(145,158,171,0.2)] text-xs font-semibold text-[#1C252E] dark:text-white transition-all hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                                        title="Xuất CSV Ứng viên"
+                                    >
+                                        {exportingApps ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5 text-violet-600" />}
+                                        <span className="hidden sm:inline">CSV Ứng viên</span>
+                                    </button>
+                                    <button
+                                        onClick={handleExportJobs}
+                                        disabled={exportingJobs}
+                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/70 hover:bg-white dark:bg-white/10 dark:hover:bg-white/20 border border-[rgba(145,158,171,0.2)] text-xs font-semibold text-[#1C252E] dark:text-white transition-all hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                                        title="Xuất CSV Tin tuyển dụng"
+                                    >
+                                        {exportingJobs ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5 text-emerald-600" />}
+                                        <span className="hidden sm:inline">CSV Việc làm</span>
+                                    </button>
+                                </div>
                             </div>
-                        </div>
                     </div>
                 </motion.div>
 

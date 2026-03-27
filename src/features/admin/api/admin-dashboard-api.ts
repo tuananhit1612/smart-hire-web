@@ -17,4 +17,12 @@ export const adminDashboardApi = {
   /** GET /admin/dashboard/overview */
   getOverview: () =>
     apiClient.get<ApiWrapper<AdminDashboardResponse>>(`${BASE}/overview`),
+
+  /** GET /admin/reports/jobs/csv */
+  exportJobsCsv: () =>
+    apiClient.get<Blob>("/admin/reports/jobs/csv", { responseType: "blob" }),
+
+  /** GET /admin/reports/applications/csv */
+  exportApplicationsCsv: () =>
+    apiClient.get<Blob>("/admin/reports/applications/csv", { responseType: "blob" }),
 };
