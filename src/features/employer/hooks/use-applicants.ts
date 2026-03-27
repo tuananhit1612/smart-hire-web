@@ -12,10 +12,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { employerApplicantApi } from "../api/employer-api";
-import {
-  mockEmployerApplicants,
-  type EmployerApplicant,
-} from "../types/mock-applicants";
+import type { EmployerApplicant } from "../types/mock-applicants";
 
 // ─── Params ──────────────────────────────────────────────
 
@@ -33,40 +30,7 @@ interface UseApplicantsReturn {
   refetch: () => void;
 }
 
-// ─── Client-side fallback sort/filter ────────────────────
 
-function applyClientFilters(
-  data: readonly EmployerApplicant[],
-  search: string,
-  sortBy: string
-): EmployerApplicant[] {
-  let result = [...data];
-
-  // Filter
-  if (search) {
-    const lowerQuery = search.toLowerCase();
-    result = result.filter(
-      (app) =>
-        app.name.toLowerCase().includes(lowerQuery) ||
-        app.skills.some((skill) => skill.toLowerCase().includes(lowerQuery))
-    );
-  }
-
-  // Sort
-  result.sort((a, b) => {
-    if (sortBy === "score-desc")
-      return b.aiAnalysis.matchScore - a.aiAnalysis.matchScore;
-    if (sortBy === "score-asc")
-      return a.aiAnalysis.matchScore - b.aiAnalysis.matchScore;
-    if (sortBy === "date-desc")
-      return (
-        new Date(b.appliedAt).getTime() - new Date(a.appliedAt).getTime()
-      );
-    return 0;
-  });
-
-  return result;
-}
 
 // ─── Hook ────────────────────────────────────────────────
 
@@ -98,19 +62,11 @@ export function useApplicants(
         });
 
         if (!cancelled) {
-          setData(response.data.data);
+          setData(response.data.data.data || []);
         }
-      } catch {
-        // Graceful fallback to mock data while backend is not deployed
+      } catch (err: any) {
         if (!cancelled) {
-          const filtered = applyClientFilters(
-            mockEmployerApplicants,
-            params.search,
-            params.sortBy
-          );
-          setData(filtered);
-          // Don't surface error to the user; mock data is transparent
-          setError(null);
+          setError(err.message || "Failed to load applicants");
         }
       } finally {
         if (!cancelled) {

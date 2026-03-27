@@ -36,6 +36,32 @@ interface ApplicantDrawerProps {
 export function ApplicantDrawer({ applicant, isOpen, onClose, jobId, onApplicantUpdated }: ApplicantDrawerProps) {
     const [activeTab, setActiveTab] = useState<"overview" | "notes">("overview");
     const [isAnalyzing, setIsAnalyzing] = useState(false);
+    const [noteText, setNoteText] = useState("");
+    const [isSavingNote, setIsSavingNote] = useState(false);
+    const [isUpdatingStage, setIsUpdatingStage] = useState(false);
+
+    const handleUpdateStage = async (newStage: string) => {
+        if (!applicant) return;
+        setIsUpdatingStage(true);
+        try {
+            await employerApplicantApi.updateStage(jobId, applicant.id, { stage: newStage });
+            onApplicantUpdated?.();
+        } finally {
+            setIsUpdatingStage(false);
+        }
+    };
+
+    const handleAddNote = async () => {
+        if (!applicant || !noteText.trim()) return;
+        setIsSavingNote(true);
+        try {
+            await employerApplicantApi.addNote(jobId, applicant.id, noteText);
+            setNoteText("");
+            onApplicantUpdated?.();
+        } finally {
+            setIsSavingNote(false);
+        }
+    };
 
     const handleReAnalyze = () => {
         if (!applicant) return;
@@ -245,11 +271,19 @@ export function ApplicantDrawer({ applicant, isOpen, onClose, jobId, onApplicant
                                     <div className="bg-white dark:bg-[#1C252E] p-4 rounded-xl border border-[rgba(145,158,171,0.16)] dark:border-white/[0.08] shadow-sm">
                                         <textarea 
                                             placeholder="Thêm ghi chú nội bộ..." 
+                                            value={noteText}
+                                            onChange={(e) => setNoteText(e.target.value)}
                                             className="w-full text-sm resize-none border-0 focus:ring-0 p-0 placeholder:text-[#919EAB] min-h-[80px] bg-transparent text-[#1C252E] dark:text-white"
                                         />
                                         <div className="flex justify-end mt-2 pt-2 border-t border-[rgba(145,158,171,0.12)] dark:border-white/[0.08]">
-                                            <Button size="sm" className="h-8 bg-[#22c55e] hover:bg-[#22c55e] text-white rounded-full">
-                                                <Send className="w-3.5 h-3.5 mr-1" /> Lưu
+                                            <Button 
+                                                size="sm" 
+                                                className="h-8 bg-[#22c55e] hover:bg-[#22c55e] text-white rounded-full"
+                                                onClick={handleAddNote}
+                                                disabled={isSavingNote || !noteText.trim()}
+                                            >
+                                                {isSavingNote ? <Loader2 className="w-3.5 h-3.5 mr-1 animate-spin" /> : <Send className="w-3.5 h-3.5 mr-1" />}
+                                                Lưu
                                             </Button>
                                         </div>
                                     </div>
@@ -284,12 +318,16 @@ export function ApplicantDrawer({ applicant, isOpen, onClose, jobId, onApplicant
                             <Button 
                                 variant="outline" 
                                 className="flex-1 rounded-full border-red-200 dark:border-red-800/40 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 hover:border-red-300"
+                                onClick={() => handleUpdateStage("REJECTED")}
+                                disabled={isUpdatingStage || applicant.status === "REJECTED"}
                             >
                                 <XCircle className="w-4 h-4 mr-2" />
                                 Loại hồ sơ
                             </Button>
                             <Button 
                                 className="flex-1 rounded-full bg-green-600 hover:bg-green-700 text-white shadow-lg shadow-green-600/20"
+                                onClick={() => handleUpdateStage("INTERVIEW")}
+                                disabled={isUpdatingStage || applicant.status === "INTERVIEW" || applicant.status === "OFFER" || applicant.status === "HIRED"}
                             >
                                 <CheckCircle2 className="w-4 h-4 mr-2" />
                                 Duyệt vòng sau

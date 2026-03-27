@@ -1,4 +1,4 @@
-export type UserRole = "candidate" | "employer" | "admin";
+export type UserRole = "candidate" | "employer" | "admin" | "HR" | "CANDIDATE" | "ADMIN";
 
 /** @deprecated Mock-based auth has been replaced by real API */
 export type MockUserKey = "candidate-new" | "candidate-returning" | "employer-new" | "employer-returning" | "admin";
