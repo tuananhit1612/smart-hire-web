@@ -13,14 +13,10 @@ import { profileApi } from "@/features/profile/api/profile-api";
 import { useAuth } from "@/features/auth/hooks/use-auth";
 import { apiClient } from "@/shared/lib/api-client";
 import type {
-  CreateEducationPayload,
-  UpdateEducationPayload,
-  CreateExperiencePayload,
-  UpdateExperiencePayload,
-  CreateProjectPayload,
-  UpdateProjectPayload,
-  CreateSkillPayload,
-  UpdateSkillPayload,
+  EducationPayload,
+  ExperiencePayload,
+  ProjectPayload,
+  SkillPayload,
 } from "@/features/profile/types/profile-api-types";
 import {
   mapProfileFromApi,
@@ -53,23 +49,23 @@ interface ProfileStore {
   uploadAvatar: (file: File) => Promise<void>;
 
   // Education Actions
-  addEducation: (data: CreateEducationPayload) => Promise<void>;
-  updateEducation: (id: string, data: UpdateEducationPayload) => Promise<void>;
+  addEducation: (data: EducationPayload) => Promise<void>;
+  updateEducation: (id: string, data: Partial<EducationPayload>) => Promise<void>;
   deleteEducation: (id: string) => Promise<void>;
 
   // Experience Actions
-  addExperience: (data: CreateExperiencePayload) => Promise<void>;
-  updateExperience: (id: string, data: UpdateExperiencePayload) => Promise<void>;
+  addExperience: (data: ExperiencePayload) => Promise<void>;
+  updateExperience: (id: string, data: Partial<ExperiencePayload>) => Promise<void>;
   deleteExperience: (id: string) => Promise<void>;
 
   // Project Actions
-  addProject: (data: CreateProjectPayload) => Promise<void>;
-  updateProject: (id: string, data: UpdateProjectPayload) => Promise<void>;
+  addProject: (data: ProjectPayload) => Promise<void>;
+  updateProject: (id: string, data: Partial<ProjectPayload>) => Promise<void>;
   deleteProject: (id: string) => Promise<void>;
 
   // Skill Actions
-  addSkill: (data: CreateSkillPayload) => Promise<void>;
-  updateSkill: (id: string, data: UpdateSkillPayload) => Promise<void>;
+  addSkill: (data: SkillPayload) => Promise<void>;
+  updateSkill: (id: string, data: Partial<SkillPayload>) => Promise<void>;
   deleteSkill: (id: string) => Promise<void>;
 }
 

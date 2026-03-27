@@ -1,188 +1,141 @@
 /**
  * ═══════════════════════════════════════════════════════════
- *  Profile API Types
- *  Types matching 1:1 with backend API responses and payloads.
- *  Keep these in sync with the Swagger/OpenAPI spec.
+ *  Profile API Types — Synchronized with Backend DTOs
  * ═══════════════════════════════════════════════════════════
  */
 
-// ─── API Wrapper (re-export from shared) ─────────────────
+import { ApiWrapper } from "@/shared/types/api";
 
-export type { ApiWrapper } from "@/shared/types/api";
+// ─── Enums Reference ─────────────────────────────────────
 
-// ─── Profile ─────────────────────────────────────────────
+export type Gender = "MALE" | "FEMALE" | "OTHER";
+export type JobLevel = "INTERN" | "JUNIOR" | "MIDDLE" | "SENIOR" | "LEAD" | "MANAGER" | "DIRECTOR";
+export type ProficiencyLevel = "BEGINNER" | "INTERMEDIATE" | "ADVANCED" | "EXPERT";
+export type CvFileType = "PDF" | "DOCX";
+export type CvSource = "UPLOADED" | "BUILT";
+
+// ─── Candidate Profile ───────────────────────────────────
 
 export interface CandidateProfileResponse {
   id: number;
+  userId: number;
   fullName: string;
-  lastName?: string;
-  headline?: string;
-  title: string;
   email: string;
-  phone?: string;
-  address?: string;
-  country?: string;
-  state?: string;
-  city?: string;
-  gender?: string;
-  linkedIn?: string;
-  website?: string;
-  avatarUrl?: string;
-  summary?: string;
-  yearsOfExperience?: number;
-  expectedSalary?: string;
+  phone: string | null;
+  avatarUrl: string | null;
+  headline: string | null;
+  summary: string | null;
+  dateOfBirth: string | null; // ISO Date "1995-01-15"
+  gender: Gender | null;
+  address: string | null;
+  city: string | null;
+  yearsOfExperience: number | null;
+  jobLevel: JobLevel | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
-export interface UpdateProfilePayload {
-  fullName?: string;
-  lastName?: string;
+export interface ProfilePayload {
   headline?: string;
-  title?: string;
-  phone?: string;
-  address?: string;
-  country?: string;
-  state?: string;
-  city?: string;
-  gender?: string;
-  linkedIn?: string;
-  website?: string;
-  avatarUrl?: string;
   summary?: string;
+  dateOfBirth?: string;
+  gender?: Gender;
+  address?: string;
+  city?: string;
   yearsOfExperience?: number;
-  expectedSalary?: string;
+  jobLevel?: JobLevel;
+  phone?: string;
 }
 
 // ─── Education ───────────────────────────────────────────
 
 export interface EducationResponse {
   id: number;
-  degree: string;
   institution: string;
-  gpa?: number;
-  fieldOfStudy: string;
-  startDate: string;
-  endDate: string;
-  logoUrl?: string;
+  degree: string | null;
+  fieldOfStudy: string | null;
+  startDate: string | null;
+  endDate: string | null;
+  gpa: number | null;
+  description: string | null;
+  logoUrl?: string | null;
 }
 
-export interface CreateEducationPayload {
-  degree: string;
+export interface EducationPayload {
   institution: string;
+  degree?: string;
+  fieldOfStudy?: string;
+  startDate?: string;
+  endDate?: string;
   gpa?: number;
-  fieldOfStudy: string;
-  startDate: string;
-  endDate: string;
+  description?: string;
 }
-
-export type UpdateEducationPayload = Partial<CreateEducationPayload>;
 
 // ─── Experience ──────────────────────────────────────────
 
 export interface ExperienceResponse {
   id: number;
-  title: string;
   companyName: string;
-  isCurrent?: boolean;
-  startDate: string;
-  endDate?: string;
-  description: string;
-  location?: string;
+  title: string;
+  startDate: string | null;
+  endDate: string | null;
+  isCurrent: boolean;
+  description: string | null;
+  location: string | null;
 }
 
-export interface CreateExperiencePayload {
-  title: string;
+export interface ExperiencePayload {
   companyName: string;
-  isCurrent?: boolean;
-  startDate: string;
+  title: string;
+  startDate?: string;
   endDate?: string;
-  description: string;
+  isCurrent?: boolean;
+  description?: string;
   location?: string;
 }
-
-export type UpdateExperiencePayload = Partial<CreateExperiencePayload>;
 
 // ─── Project ─────────────────────────────────────────────
 
 export interface ProjectResponse {
   id: number;
   projectName: string;
-  startDate: string;
+  description: string | null;
+  technologies: string | null; // comma-separated
+  startDate: string | null;
+  endDate: string | null;
+  link: string | null;
+}
+
+export interface ProjectPayload {
+  projectName: string;
+  description?: string;
+  technologies?: string;
+  startDate?: string;
   endDate?: string;
-  description: string;
-  technologies: string; // comma-separated in API
   link?: string;
 }
-
-export interface CreateProjectPayload {
-  projectName: string;
-  startDate: string;
-  endDate?: string;
-  description: string;
-  technologies: string; // export interface CvFileResponse {
-  id: number;
-  fileName: string;
-  fileType: "PDF" | "DOC" | "DOCX";
-  fileSize: number;
-  source: "UPLOAD" | "BUILDER";
-  isPrimary: boolean;
-  createdAt: string;
-  downloadUrl: string;
-}?: string;
-  description: string;
-  location?: string;
-}
-
-export type UpdateExperiencePayload = Partial<CreateExperiencePayload>;
-
-// ─── Project ─────────────────────────────────────────────
-
-export interface ProjectResponse {
-  id: number;
-  projectName: string;
-  startDate: string;
-  endDate?: string;
-  description: string;
-  technologies: string; // comma-separated in API
-  link?: string;
-}
-
-export interface CreateProjectPayload {
-  projectName: string;
-  startDate: string;
-  endDate?: string;
-  description: string;
-  technologies: string; // comma-separated
-  link?: string;
-}
-
-export type UpdateProjectPayload = Partial<CreateProjectPayload>;
 
 // ─── Skill ───────────────────────────────────────────────
 
 export interface SkillResponse {
   id: number;
   skillName: string;
-  proficiencyLevel?: string; // "EXPERT", "ADVANCED", "INTERMEDIATE", "BEGINNER"
+  proficiencyLevel: ProficiencyLevel | null;
 }
 
-export interface CreateSkillPayload {
+export interface SkillPayload {
   skillName: string;
-  proficiencyLevel?: string;
+  proficiencyLevel: ProficiencyLevel;
 }
 
-export type UpdateSkillPayload = Partial<CreateSkillPayload>;
-
-// ─── CV File ─────────────────────────────────────────────
-
-export type CvFileType = "PDF" | "DOCX";
-export type CvSource = "UPLOADED" | "GENERATED";
+// ─── CV Files ─────────────────────────────────────────────
 
 export interface CvFileResponse {
   id: number;
   fileName: string;
-  fileType: "PDF" | "DOC" | "DOCX";
+  fileType: CvFileType;
   fileSize: number;
-  source: "UPLOAD" | "BUILDER";
+  source: CvSource;
   isPrimary: boolean;
   createdAt: string;
   downloadUrl: string;

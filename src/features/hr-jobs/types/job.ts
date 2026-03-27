@@ -1,7 +1,7 @@
 // Job Types for SmartHire HR Job Management
 
 export type JobType = 'FULL_TIME' | 'PART_TIME' | 'CONTRACT' | 'INTERNSHIP';
-export type JobLevel = 'INTERN' | 'JUNIOR' | 'MID' | 'SENIOR' | 'LEAD' | 'MANAGER';
+export type JobLevel = 'INTERN' | 'JUNIOR' | 'MIDDLE' | 'SENIOR' | 'LEAD' | 'MANAGER';
 export type JobRemote = 'onsite' | 'hybrid' | 'remote';
 export type JobStatus = 'DRAFT' | 'OPEN' | 'CLOSED'; // Removed 'paused'
 export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'expert';
@@ -48,7 +48,7 @@ export const JOB_TYPES: Record<JobType, string> = {
 export const JOB_LEVELS: Record<JobLevel, string> = {
     'INTERN': 'Thực tập sinh (Intern)',
     'JUNIOR': 'Junior (0-2 năm)',
-    'MID': 'Middle (2-4 năm)',
+    'MIDDLE': 'Middle (2-4 năm)',
     'SENIOR': 'Senior (4-7 năm)',
     'LEAD': 'Tech Lead (7+ năm)',
     'MANAGER': 'Manager',
@@ -93,7 +93,7 @@ export const DEFAULT_JOB: Omit<Job, 'id' | 'createdAt' | 'updatedAt'> = {
     title: '',
     department: 'Engineering',
     type: 'FULL_TIME',
-    level: 'MID',
+    level: 'MIDDLE',
     location: '',
     remote: 'hybrid',
     salaryCurrency: 'VND',

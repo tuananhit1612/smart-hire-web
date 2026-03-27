@@ -21,7 +21,7 @@ export interface AdminUserResponse {
   phone: string | null;
   avatarUrl: string | null;
   role: "CANDIDATE" | "HR" | "ADMIN";
-  enabled: boolean;
+  active: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -31,7 +31,7 @@ export interface AdminUserListParams {
   size?: number;
   keyword?: string;
   role?: string;
-  enabled?: boolean;
+  active?: boolean;
 }
 
 // ─── API Methods ─────────────────────────────────────────
@@ -61,10 +61,9 @@ export const adminUserApi = {
   /**
    * Enable or disable a user account.
    */
-  updateStatus: async (id: number, enabled: boolean) => {
+  toggleActive: async (id: number) => {
     const { data } = await apiClient.patch<ApiWrapper<AdminUserResponse>>(
-      `/admin/users/${id}/status`,
-      { enabled }
+      `/admin/users/${id}/toggle-active`
     );
     return data.data;
   },
