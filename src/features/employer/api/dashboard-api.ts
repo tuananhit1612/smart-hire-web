@@ -91,3 +91,21 @@ export async function fetchJobDashboardStats(
     );
     return data.data;
 }
+
+/** Export HR Jobs as CSV */
+export async function exportHrJobsCsv(): Promise<Blob> {
+    const { data } = await apiClient.get<Blob>(
+        "/dashboard/reports/jobs/csv",
+        { responseType: "blob" }
+    );
+    return data;
+}
+
+/** Export HR Applications as CSV */
+export async function exportHrApplicationsCsv(): Promise<Blob> {
+    const { data } = await apiClient.get<Blob>(
+        "/dashboard/reports/applications/csv",
+        { responseType: "blob" }
+    );
+    return data;
+}
