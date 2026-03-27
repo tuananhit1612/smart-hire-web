@@ -26,14 +26,14 @@ export const jobApi = {
       });
     }
     return apiClient.get<ApiWrapper<PageResponse<JobResponse>>>(
-      "/public/jobs",
+      "/jobs/public",
       { params: cleanParams }
     );
   },
 
   /**
-   * GET /public/jobs/{id} — Public job detail
+   * GET /jobs/public/{id} — Public job detail
    */
   getPublicJobById: (id: number | string) =>
-    apiClient.get<ApiWrapper<JobResponse>>(`/public/jobs/${id}`),
+    apiClient.get<ApiWrapper<JobResponse>>(`/jobs/public/${id}`),
 };
