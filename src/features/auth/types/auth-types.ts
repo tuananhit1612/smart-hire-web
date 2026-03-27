@@ -22,6 +22,7 @@ export interface SessionUser {
     joinedDate: string;
     /** True when the user just registered and hasn't completed onboarding */
     isNewUser?: boolean;
+    isFirstLogin?: boolean;
 }
 
 export type AuthStatus = "authenticated" | "unauthenticated" | "loading";
