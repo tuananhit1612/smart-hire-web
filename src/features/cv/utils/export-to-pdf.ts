@@ -1,5 +1,5 @@
 // @ts-ignore
-import { toPng } from 'html-to-image';
+import { toJpeg } from 'html-to-image';
 // @ts-ignore
 import jsPDF from 'jspdf';
 import { getTemplateManifest } from '../components/cv-templates';
@@ -21,12 +21,14 @@ export interface ExportOptions {
     pixelRatio?: number;
     /** Progress callback — receives a stage label + percentage (0–100) */
     onProgress?: (stage: string, percent: number) => void;
+    /** If true, returns the PDF Blob instead of triggering browser download */
+    returnBlob?: boolean;
 }
 
 export const exportToPDF = async (
     elementIdOrOptions: string | ExportOptions,
     fileNameLegacy: string = 'cv-document.pdf',
-): Promise<boolean> => {
+): Promise<Blob | boolean> => {
     // Support both legacy (elementId, fileName) and new options-object signatures
     const opts: ExportOptions =
         typeof elementIdOrOptions === 'string'
@@ -37,8 +39,8 @@ export const exportToPDF = async (
         elementId,
         fileName = 'cv-document.pdf',
         templateId,
-        quality = 1.0,
-        pixelRatio = 3,
+        quality = 0.85,
+        pixelRatio = 2,
         onProgress,
     } = opts;
 
@@ -86,9 +88,9 @@ export const exportToPDF = async (
         // 3. Wait for fonts / images to settle
         await new Promise(resolve => setTimeout(resolve, 500));
 
-        // 4. Capture to PNG via html-to-image
+        // 4. Capture to JPEG via html-to-image to keep file size small (e.g. < 2MB)
         onProgress?.('Đang chụp ảnh CV...', 40);
-        const dataUrl = await toPng(clone, {
+        const dataUrl = await toJpeg(clone, {
             quality,
             pixelRatio,
             backgroundColor: '#ffffff',
@@ -110,22 +112,28 @@ export const exportToPDF = async (
         let yOffset = 0;
 
         // First page
-        pdf.addImage(dataUrl, 'PNG', 0, yOffset, pageWidthMm, imgHeight);
+        pdf.addImage(dataUrl, 'JPEG', 0, yOffset, pageWidthMm, imgHeight);
         heightLeft -= pageHeightMm;
 
         // Additional pages (if CV is taller than one page)
         while (heightLeft > 0) {
             yOffset = -(imgHeight - heightLeft);
             pdf.addPage();
-            pdf.addImage(dataUrl, 'PNG', 0, yOffset, pageWidthMm, imgHeight);
+            pdf.addImage(dataUrl, 'JPEG', 0, yOffset, pageWidthMm, imgHeight);
             heightLeft -= pageHeightMm;
         }
 
-        onProgress?.('Đang lưu file...', 90);
-        pdf.save(fileName);
-        onProgress?.('Hoàn tất!', 100);
-        console.log('[PDF Export] Success ✓');
-        return true;
+        if (opts.returnBlob) {
+            onProgress?.('Đang tạo dữ liệu tải lên...', 90);
+            const blob = pdf.output('blob');
+            onProgress?.('Hoàn tất!', 100);
+            return blob;
+        } else {
+            onProgress?.('Đang tải file xuống...', 90);
+            pdf.save(fileName);
+            onProgress?.('Hoàn tất!', 100);
+            return true;
+        }
     } catch (error) {
         console.error('[PDF Export] Failed:', error);
         return false;

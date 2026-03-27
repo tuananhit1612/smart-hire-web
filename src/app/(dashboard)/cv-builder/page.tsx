@@ -23,6 +23,7 @@ function CVBuilderContent() {
         autosaveStatus,
         lastSaved,
         handleSave,
+        handleFillProfileData,
     } = useCVData();
 
     /** Save data + navigate to /cv-preview */
@@ -53,6 +54,7 @@ function CVBuilderContent() {
             }
             onSave={handleSave}
             onPreview={handleGoToPreview}
+            onAutoFill={handleFillProfileData}
             isSaving={isSaving}
             headerActions={
                 <AutosaveIndicator status={autosaveStatus} lastSaved={lastSaved} />

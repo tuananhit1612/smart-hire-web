@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import {
-    fetchHrDashboardOverview,
+    dashboardApi,
     type HrDashboardOverview,
 } from "@/features/employer/api/dashboard-api";
 
@@ -26,7 +26,7 @@ export function useDashboardOverview(): UseDashboardOverviewReturn {
         setIsLoading(true);
         setError(null);
         try {
-            const result = await fetchHrDashboardOverview();
+            const result = await dashboardApi.getOverview();
             setData(result);
         } catch (err: unknown) {
             const msg =

@@ -8,19 +8,8 @@
  */
 
 import { apiClient } from "@/shared/lib/api-client";
+import type { ApiWrapper } from "@/shared/types/api";
 import type { JobResponse } from "../types/job-api-types";
-
-// ─── BE DTO mirrors ──────────────────────────────────────
-
-
-
-/** Wraps BE ApiResponse<T> structure */
-interface ApiResponseWrapper<T> {
-  success: boolean;
-  code: string;
-  message?: string;
-  data: T;
-}
 
 // ─── Search Params ────────────────────────────────────────
 export interface JobSearchParams {
@@ -51,7 +40,7 @@ export const jobApi = {
 
     const qs = query.toString();
     const url = qs ? `/jobs/public?${qs}` : '/jobs/public';
-    const res = await apiClient.get<ApiResponseWrapper<JobResponse[]>>(url);
+    const res = await apiClient.get<ApiWrapper<JobResponse[]>>(url);
     return res.data.data;
   },
 
@@ -59,7 +48,7 @@ export const jobApi = {
    * Get a single job by ID (public endpoint).
    */
   getDetail: async (id: number): Promise<JobResponse> => {
-    const res = await apiClient.get<ApiResponseWrapper<JobResponse>>(
+    const res = await apiClient.get<ApiWrapper<JobResponse>>(
       `/jobs/public/${id}`
     );
     return res.data.data;

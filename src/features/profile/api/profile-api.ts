@@ -43,14 +43,17 @@ export const profileApi = {
   updateProfile: (data: UpdateProfilePayload) =>
     apiClient.put<ApiWrapper<CandidateProfileResponse>>(BASE, data),
 
+  /** PUT /users/me — update root user identity (name, phone) */
+  updateUserIdentity: (data: { fullName?: string; phone?: string }) =>
+    apiClient.put<ApiWrapper<any>>(`/users/me`, data),
+
   /** POST /users/me/avatar — upload avatar (multipart/form-data) */
   uploadAvatar: (file: File) => {
     const formData = new FormData();
     formData.append("file", file);
     return apiClient.post<ApiWrapper<CandidateProfileResponse>>(
       "/users/me/avatar",
-      formData,
-      { headers: { "Content-Type": "multipart/form-data" } }
+      formData
     );
   },
 
@@ -133,15 +136,15 @@ export const profileApi = {
     apiClient.get<ApiWrapper<CvFileResponse[]>>(`${BASE}/cv-files`),
 
   /** POST /candidate/profile/cv-files — upload (multipart/form-data) */
-  uploadCvFile: (file: File, isPrimary?: boolean) => {
+  uploadCvFile: (file: File, isPrimary?: boolean, source: "UPLOAD" | "BUILDER" = "UPLOAD") => {
     const formData = new FormData();
     formData.append("file", file);
+    if (source) formData.append("source", source);
     if (isPrimary !== undefined) {
         formData.append("isPrimary", String(isPrimary));
     }
-    return apiClient.post<ApiWrapper<CvFileResponse>>(`${BASE}/cv-files`, formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+    // Let Axios automatically detect FormData and set Content-Type with boundary!
+    return apiClient.post<ApiWrapper<CvFileResponse>>(`${BASE}/cv-files`, formData);
   },
 
   /** DELETE /candidate/profile/cv-files/:id */
