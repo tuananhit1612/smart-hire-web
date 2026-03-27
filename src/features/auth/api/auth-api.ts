@@ -59,6 +59,12 @@ export const authApi = {
         }),
 
     /**
+     * Verify if a reset password token is valid and not expired.
+     */
+    verifyResetToken: (token: string) =>
+        apiClient.get<AuthMessageResponse>(`/auth/verify-reset-token?token=${token}`),
+
+    /**
      * Fetch current user profile using stored access token.
      * Used on app mount to revalidate a persisted session.
      */

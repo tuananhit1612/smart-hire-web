@@ -7,6 +7,7 @@ import { useToast } from "@/shared/components/ui/toast";
 interface UsePDFExportReturn {
     isExporting: boolean;
     handleExportFromModal: (elementId: string, fileName: string) => Promise<void>;
+    exportToBlob: (elementId: string, fileName: string) => Promise<File | null>;
 }
 
 export function usePDFExport(): UsePDFExportReturn {
@@ -27,8 +28,26 @@ export function usePDFExport(): UsePDFExportReturn {
         }
     };
 
+    const exportToBlob = async (elementId: string, fileName: string): Promise<File | null> => {
+        setIsExporting(true);
+        try {
+            const blob = await exportToPDF({ elementId, fileName, returnBlob: true });
+            if (blob instanceof Blob) {
+                return new File([blob], fileName, { type: 'application/pdf' });
+            }
+            return null;
+        } catch (error) {
+            console.error("Lỗi khi tạo File PDF:", error);
+            addToast("Không thể tạo PDF để tải lên", "error");
+            return null;
+        } finally {
+            setIsExporting(false);
+        }
+    };
+
     return {
         isExporting,
         handleExportFromModal,
+        exportToBlob,
     };
 }

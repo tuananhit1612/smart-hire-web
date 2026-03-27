@@ -11,15 +11,7 @@
  */
 
 import { apiClient } from "@/shared/lib/api-client";
-
-// ─── Shared spring pageable shape ────────────────────────
-export interface SpringPage<T> {
-  content: T[];
-  totalElements: number;
-  totalPages: number;
-  number: number; // 0-based current page index
-  size: number;
-}
+import type { PageResponse } from "@/shared/types/api";
 
 // ─── BE DTO mirrors ──────────────────────────────────────
 
@@ -97,7 +89,7 @@ export const applicationApi = {
    * List all applications for the current authenticated user (paginated).
    */
   list: (page = 0, size = 50) =>
-    apiClient.get<SpringPage<ApplicationTrackingResponse>>(
+    apiClient.get<PageResponse<ApplicationTrackingResponse>>(
       `/applications?page=${page}&size=${size}`
     ),
 

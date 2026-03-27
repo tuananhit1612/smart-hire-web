@@ -5,13 +5,7 @@
  * ═══════════════════════════════════════════════════════════
  */
 
-/** Standard backend response wrapper (same shape as ApiWrapper in profile) */
-export interface ApiWrapper<T> {
-  success: boolean;
-  code: string;
-  data: T;
-  message: string;
-}
+export type { ApiWrapper } from "@/shared/types/api";
 
 /** A single stage in the recruitment funnel */
 export interface StageFunnelItem {
