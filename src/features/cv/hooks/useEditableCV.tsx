@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useRef, useEffect } from "react";
 import { CVData } from "../types/types";
 import { EditableText } from "../components/inline-edit/EditableText";
 
@@ -33,10 +33,12 @@ export function useEditableCV({ data, editable, onDataChange }: UseEditableCVOpt
 
     // ── Stable refs to avoid re-creating callbacks on every render ──
     const dataRef = useRef(data);
-    dataRef.current = data;
-
     const onDataChangeRef = useRef(onDataChange);
-    onDataChangeRef.current = onDataChange;
+
+    useEffect(() => {
+        dataRef.current = data;
+        onDataChangeRef.current = onDataChange;
+    }, [data, onDataChange]);
 
     /* ── Deep patch helper (stable identity) ──────────────── */
     const patch = useCallback(
