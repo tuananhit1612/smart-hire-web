@@ -6,6 +6,7 @@ import { Plus, Trash2, Briefcase } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { Experience } from "../types/profile";
+import { useProfileStore } from "../stores/profile-store";
 
 interface ProfileEditExperienceFormProps {
     experiences: Experience[];
@@ -25,6 +26,8 @@ export function ProfileEditExperienceForm({
     onChange,
 }: ProfileEditExperienceFormProps) {
 
+    const { deleteExperience } = useProfileStore();
+
     const addExperience = () => {
         const newExperience: Experience = {
             ...EMPTY_EXPERIENCE,
@@ -33,8 +36,17 @@ export function ProfileEditExperienceForm({
         onChange([...experiences, newExperience]);
     };
 
-    const removeExperience = (id: string) => {
-        onChange(experiences.filter((e) => e.id !== id));
+    const removeExperience = async (id: string) => {
+        if (id.startsWith("exp-") || id.startsWith("new-")) {
+            onChange(experiences.filter((e) => e.id !== id));
+            return;
+        }
+
+        try {
+            await deleteExperience(id);
+        } catch (e) {
+            console.error(e);
+        }
     };
 
     const updateExperience = (id: string, field: keyof Experience, value: string) => {

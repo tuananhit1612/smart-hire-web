@@ -25,7 +25,9 @@ export function ProfileEditForm() {
     try {
       await saveProfile();
       router.push("/profile");
-    } catch {
+    } catch (err: any) {
+      console.error("Save Profile Error:", err);
+      alert("Lỗi khi lưu: " + (err.message || "Unknown error"));
       // Error state is set in the store — UI can show a toast
     } finally {
       setIsSaving(false);
@@ -90,10 +92,7 @@ export function ProfileEditForm() {
                 />
               )}
               {activeTab === "skills" && (
-                <ProfileEditSkillsForm
-                  skills={profile.skills}
-                  onChange={(newSkills) => setProfile({ ...profile, skills: newSkills })}
-                />
+                <ProfileEditSkillsForm />
               )}
               {activeTab === "experience" && (
                 <ProfileEditExperienceForm

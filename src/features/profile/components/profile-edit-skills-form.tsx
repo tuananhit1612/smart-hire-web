@@ -5,37 +5,46 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Plus, Sparkles } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
+import { useProfileStore } from "../stores/profile-store";
 import { Skill } from "../types/profile";
-
-interface ProfileEditSkillsFormProps {
-  skills: Skill[];
-  onChange: (newSkills: Skill[]) => void;
-}
+import { Loader2 } from "lucide-react";
 
 const SKILL_LEVELS = ["Beginner", "Intermediate", "Advanced", "Expert"] as const;
 
-export function ProfileEditSkillsForm({
-  skills,
-  onChange,
-}: ProfileEditSkillsFormProps) {
+export function ProfileEditSkillsForm() {
+  const { profile, addSkill, deleteSkill } = useProfileStore();
+  const skills = profile.skills ?? [];
   const [newSkillName, setNewSkillName] = React.useState("");
   const [newSkillLevel, setNewSkillLevel] = React.useState<Skill["proficiencyLevel"]>("Intermediate");
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [deletingId, setDeletingId] = React.useState<string | null>(null);
 
-  const handleAddSkill = () => {
+  const handleAddSkill = async () => {
     if (!newSkillName.trim()) return;
 
-    const newSkill: Skill = {
-      id: `new-${Date.now()}`,
-      skillName: newSkillName.trim(),
-      proficiencyLevel: newSkillLevel,
-    };
-
-    onChange([...skills, newSkill]);
-    setNewSkillName("");
+    setIsLoading(true);
+    try {
+      await addSkill({
+        skillName: newSkillName.trim(),
+        proficiencyLevel: newSkillLevel === "Beginner" ? "BEGINNER" : newSkillLevel === "Intermediate" ? "INTERMEDIATE" : newSkillLevel === "Advanced" ? "ADVANCED" : "EXPERT",
+      });
+      setNewSkillName("");
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleRemoveSkill = (id: string) => {
-    onChange(skills.filter((s) => s.id !== id));
+  const handleRemoveSkill = async (id: string) => {
+    setDeletingId(id);
+    try {
+      await deleteSkill(id);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setDeletingId(null);
+    }
   };
 
   return (
@@ -71,8 +80,8 @@ export function ProfileEditSkillsForm({
               </button>
             ))}
           </div>
-          <Button onClick={handleAddSkill} disabled={!newSkillName.trim()}>
-            Thêm
+          <Button onClick={handleAddSkill} disabled={!newSkillName.trim() || isLoading}>
+            {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Thêm"}
           </Button>
         </div>
       </div>
@@ -114,9 +123,10 @@ export function ProfileEditSkillsForm({
                 </span>
                 <button
                   onClick={() => handleRemoveSkill(skill.id)}
-                  className="p-0.5 rounded-full hover:bg-red-500/20 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100"
+                  disabled={deletingId === skill.id}
+                  className="p-0.5 rounded-full hover:bg-red-500/20 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100 disabled:opacity-50"
                 >
-                  <X className="h-3 w-3" />
+                  {deletingId === skill.id ? <Loader2 className="h-3 w-3 animate-spin text-red-500" /> : <X className="h-3 w-3" />}
                 </button>
               </motion.div>
             ))}

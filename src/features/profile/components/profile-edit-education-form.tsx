@@ -6,6 +6,7 @@ import { Plus, Trash2, GraduationCap } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { Education } from "../types/profile";
+import { useProfileStore } from "../stores/profile-store";
 
 interface ProfileEditEducationFormProps {
     educations: Education[];
@@ -25,6 +26,8 @@ export function ProfileEditEducationForm({
     onChange,
 }: ProfileEditEducationFormProps) {
 
+    const { deleteEducation } = useProfileStore();
+
     const addEducation = () => {
         const newEducation: Education = {
             ...EMPTY_EDUCATION,
@@ -33,8 +36,17 @@ export function ProfileEditEducationForm({
         onChange([...educations, newEducation]);
     };
 
-    const removeEducation = (id: string) => {
-        onChange(educations.filter((e) => e.id !== id));
+    const removeEducation = async (id: string) => {
+        if (id.startsWith("edu-") || id.startsWith("new-")) {
+            onChange(educations.filter((e) => e.id !== id));
+            return;
+        }
+
+        try {
+            await deleteEducation(id);
+        } catch (e) {
+            console.error(e);
+        }
     };
 
     const updateEducation = (id: string, field: keyof Education, value: string) => {

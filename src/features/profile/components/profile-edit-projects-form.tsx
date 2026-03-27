@@ -6,6 +6,7 @@ import { Plus, Trash2, FolderGit2, Link as LinkIcon, Calendar } from "lucide-rea
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { Project } from "../types/profile";
+import { useProfileStore } from "../stores/profile-store";
 
 interface ProfileEditProjectsFormProps {
   projects: Project[];
@@ -25,6 +26,8 @@ export function ProfileEditProjectsForm({
   onChange,
 }: ProfileEditProjectsFormProps) {
 
+  const { deleteProject } = useProfileStore();
+
   const addProject = () => {
     const newProject: Project = {
       ...EMPTY_PROJECT,
@@ -34,8 +37,17 @@ export function ProfileEditProjectsForm({
     onChange([...projects, newProject]);
   };
 
-  const removeProject = (id: string) => {
-    onChange(projects.filter((p) => p.id !== id));
+  const removeProject = async (id: string) => {
+    if (id.startsWith("proj-") || id.startsWith("new-")) {
+      onChange(projects.filter((p) => p.id !== id));
+      return;
+    }
+
+    try {
+      await deleteProject(id);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const updateProject = (id: string, field: keyof Project, value: any) => {
