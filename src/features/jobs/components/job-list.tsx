@@ -5,7 +5,8 @@ import { Job } from "../types/job";
 import { JobCard } from "./job-card";
 import { JobFilter } from "./job-filter";
 import { JobPagination } from "./job-pagination";
-import { jobApi, JobResponseDto, JobSearchParams } from "../api/job-api";
+import { jobApi, JobSearchParams } from "../api/job-api";
+import { JobResponse } from "../types/job-api-types";
 import { useJobFilters } from "../hooks/useJobFilters";
 import { Search, Loader2, AlertTriangle, RefreshCw } from "lucide-react";
 
@@ -60,19 +61,19 @@ function formatSalary(
 }
 
 /** Map API DTO to frontend Job type */
-function toJob(dto: JobResponseDto): Job {
+function toJob(dto: JobResponse): Job {
   return {
     id: String(dto.id),
     title: dto.title,
     company: dto.companyName,
     logoUrl: dto.companyLogoUrl ?? "/images/default-company.png",
-    location: dto.location ?? "",
+    location: dto.city ?? "",
     type: (JOB_TYPE_MAP[dto.jobType] ?? dto.jobType) as Job["type"],
     level: (JOB_LEVEL_MAP[dto.jobLevel] ?? dto.jobLevel) as Job["level"],
-    salary: formatSalary(dto.salaryMin, dto.salaryMax, dto.salaryCurrency),
+    salary: formatSalary(dto.salaryMin, dto.salaryMax, "VND"),
     postedAt: dto.createdAt,
     description: dto.description ?? "",
-    skills: dto.skills?.map((s) => s.skillName) ?? [],
+    skills: [],
     status: dto.status === "CLOSED" ? "closed" : "open",
     deadline: dto.deadline ?? undefined,
   };

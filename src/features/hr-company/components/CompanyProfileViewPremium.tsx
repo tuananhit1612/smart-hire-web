@@ -48,13 +48,18 @@ const COMPANY_HIGHLIGHTS = [
 ];
 
 export function CompanyProfileViewPremium() {
-    const { company, updateField } = useCompanyStore();
+    const { company, updateField, fetchMyCompany, saveCompany } = useCompanyStore();
     const { addToast } = useToast();
 
-    const handleUpdate = (updates: Partial<Company>) => {
+    React.useEffect(() => {
+        fetchMyCompany();
+    }, [fetchMyCompany]);
+
+    const handleUpdate = async (updates: Partial<Company>) => {
         Object.entries(updates).forEach(([key, value]) => {
             updateField(key as keyof Company, value);
         });
+        await saveCompany();
         addToast("Đã cập nhật thông tin!", "success", 2000);
     };
 

@@ -98,7 +98,14 @@ export function ProfileView() {
         >
           {activeTab === "personal" && <ProfileTabPersonal />}
           {activeTab === "job-preference" && <ProfileTabJobPreference />}
-          {activeTab === "experiences" && <ProfileTabExperience experiences={profile.experiences} educations={profile.educations} />}
+          {activeTab === "experiences" && (
+            <ProfileTabExperience 
+                experiences={profile.experiences} 
+                educations={profile.educations} 
+                projects={profile.projects}
+                skills={profile.skills}
+            />
+          )}
           {activeTab === "questions" && <ProfileTabQuestions questions={profile.aiQuestions} />}
         </motion.div>
       </AnimatePresence>

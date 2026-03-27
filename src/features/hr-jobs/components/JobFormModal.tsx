@@ -162,7 +162,7 @@ function SkillTagInput({
                     >
                         {skill.name}
                         <button
-                            onClick={() => onRemove(skill.id)}
+                            onClick={() => onRemove(skill.id!)}
                             className="opacity-70 hover:opacity-100"
                         >
                             <X className="w-3.5 h-3.5" />

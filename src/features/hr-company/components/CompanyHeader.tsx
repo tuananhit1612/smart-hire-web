@@ -17,6 +17,7 @@ import {
 import { Company, COMPANY_SIZES } from "../types/company";
 import { LogoUpload } from "./LogoUpload";
 import { Button } from "@/shared/components/ui/button";
+import { useCompanyStore } from "../stores/company-store";
 
 interface CompanyHeaderProps {
     company: Company;
@@ -25,6 +26,7 @@ interface CompanyHeaderProps {
 }
 
 export function CompanyHeader({ company, onUpdate, editable = true }: CompanyHeaderProps) {
+    const { uploadLogo } = useCompanyStore();
     const [isEditing, setIsEditing] = React.useState(false);
     const [editData, setEditData] = React.useState({
         name: company.name,
@@ -45,6 +47,14 @@ export function CompanyHeader({ company, onUpdate, editable = true }: CompanyHea
             tagline: company.tagline || "",
         });
         setIsEditing(false);
+    };
+
+    const handleLogoChange = async (urlOrFile: string | File | null) => {
+        if (urlOrFile instanceof File) {
+            await uploadLogo(urlOrFile);
+        } else if (typeof urlOrFile === "string") {
+            onUpdate?.({ logoUrl: urlOrFile });
+        }
     };
 
     return (
@@ -89,6 +99,7 @@ export function CompanyHeader({ company, onUpdate, editable = true }: CompanyHea
                             currentLogo={company.logoUrl}
                             size="lg"
                             editable={editable}
+                            onLogoChange={handleLogoChange}
                         />
                     </div>
                 </div>
