@@ -54,7 +54,7 @@ export function RegisterForm({ role, onBack }: RegisterFormProps) {
                 email: data.email,
                 password: data.password,
                 fullName: data.fullName,
-                role: role === "candidate" ? "CANDIDATE" : "HR",
+                role: role === "candidate" ? "candidate" : "employer",
             });
             
             const roleName = role === "candidate" ? "Ứng viên" : "Nhà tuyển dụng";
