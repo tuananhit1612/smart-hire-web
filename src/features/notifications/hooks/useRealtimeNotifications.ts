@@ -1,17 +1,16 @@
+"use client";
+
 /**
  * ═══════════════════════════════════════════════════════════
  *  useRealtimeNotifications — React Hook
  *
- *  Orchestrates WebSocket lifecycle:
- *    1. Connect when user is authenticated
- *    2. Subscribe to /user/queue/notifications
- *    3. On event → add to store + show toast
- *    4. Fetch initial unread count on mount
- *    5. Disconnect on logout / unmount
+ *  Lifecycle:
+ *    1. User authenticated → connectSocket(token)
+ *    2. Connected → subscribe /user/queue/notifications
+ *    3. On event → thêm vào store + hiện toast
+ *    4. Logout / unmount → disconnectSocket
  * ═══════════════════════════════════════════════════════════
  */
-
-"use client";
 
 import { useEffect, useRef, useCallback } from "react";
 import { useAuth } from "@/features/auth/hooks/use-auth";
@@ -25,61 +24,67 @@ import {
 } from "../lib/socket-client";
 import { useNotificationStore } from "../store/useNotificationStore";
 import type { RealtimeEvent, NotificationData } from "../types/notification-types";
+import { EventType } from "../types/notification-types";
 
-// ─── Event → Toast mapping ──────────────────────────────
+// ─── Event → Toast config (pure, no side-effects) ───────
 
-function getToastForEvent(event: RealtimeEvent): {
+interface ToastConfig {
     title: string;
     description: string;
     type: "success" | "info" | "warning" | "error";
-} {
-    switch (event.type) {
-        case "APPLICATION_SUBMITTED":
-            return {
-                title: "Ứng tuyển thành công!",
-                description: `Hồ sơ của bạn đã được gửi cho vị trí "${(event.payload as Record<string, unknown>).jobTitle ?? ""}".`,
-                type: "success",
-            };
-        case "APPLICATION_STAGE_CHANGED": {
-            const p = event.payload as Record<string, unknown>;
-            const toStage = String(p.toStage ?? "");
-            const isRejected = toStage === "REJECTED";
-            return {
-                title: isRejected ? "Cập nhật hồ sơ" : "Hồ sơ được cập nhật!",
-                description: `Vị trí "${p.jobTitle ?? ""}" đã chuyển sang giai đoạn ${toStage}.`,
-                type: isRejected ? "warning" : "info",
-            };
-        }
-        case "AI_MATCHING_COMPLETED":
-            return {
-                title: "AI đã phân tích xong",
-                description: "Kết quả đánh giá độ khớp đã sẵn sàng.",
-                type: "info",
-            };
-        case "AI_CV_PARSED":
-            return {
-                title: "CV đã được phân tích",
-                description: "AI đã trích xuất thông tin từ CV của bạn.",
-                type: "success",
-            };
-        case "AI_CV_REVIEWED":
-            return {
-                title: "AI đã review CV",
-                description: "Nhận xét và gợi ý cải thiện đã sẵn sàng.",
-                type: "info",
-            };
-        default:
-            return {
-                title: "Thông báo mới",
-                description: "Bạn có một thông báo mới.",
-                type: "info",
-            };
-    }
 }
 
-/** Convert a realtime event to a NotificationData for the store */
-function eventToNotification(event: RealtimeEvent): NotificationData {
-    const toast = getToastForEvent(event);
+const EVENT_TOAST_MAP: Record<string, (payload: Record<string, unknown>) => ToastConfig> = {
+    [EventType.APPLICATION_SUBMITTED]: (p) => ({
+        title: "Ứng tuyển thành công!",
+        description: `Hồ sơ của bạn đã được gửi cho vị trí "${p.jobTitle ?? ""}".`,
+        type: "success",
+    }),
+
+    [EventType.APPLICATION_STAGE_CHANGED]: (p) => {
+        const toStage = String(p.toStage ?? "");
+        return {
+            title: toStage === "REJECTED" ? "Cập nhật hồ sơ" : "Hồ sơ được cập nhật!",
+            description: `Vị trí "${p.jobTitle ?? ""}" chuyển sang giai đoạn ${toStage}.`,
+            type: toStage === "REJECTED" ? "warning" : "info",
+        };
+    },
+
+    [EventType.AI_MATCHING_COMPLETED]: () => ({
+        title: "AI phân tích xong",
+        description: "Kết quả đánh giá độ khớp đã sẵn sàng.",
+        type: "info",
+    }),
+
+    [EventType.AI_CV_PARSED]: () => ({
+        title: "CV đã được phân tích",
+        description: "AI đã trích xuất thông tin từ CV của bạn.",
+        type: "success",
+    }),
+
+    [EventType.AI_CV_REVIEWED]: () => ({
+        title: "AI đã review CV",
+        description: "Nhận xét và gợi ý cải thiện đã sẵn sàng.",
+        type: "info",
+    }),
+};
+
+const DEFAULT_TOAST: ToastConfig = {
+    title: "Thông báo mới",
+    description: "Bạn có một thông báo mới.",
+    type: "info",
+};
+
+function resolveToast(event: RealtimeEvent): ToastConfig {
+    const factory = EVENT_TOAST_MAP[event.type];
+    return factory
+        ? factory(event.payload as Record<string, unknown>)
+        : DEFAULT_TOAST;
+}
+
+/** RealtimeEvent → NotificationData cho store */
+function toNotification(event: RealtimeEvent): NotificationData {
+    const toast = resolveToast(event);
     return {
         id: `rt-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
         type: event.type,
@@ -94,7 +99,7 @@ function eventToNotification(event: RealtimeEvent): NotificationData {
 
 // ─── Hook ────────────────────────────────────────────────
 
-export function useRealtimeNotifications() {
+export function useRealtimeNotifications(): void {
     const { user, isAuthenticated } = useAuth();
     const { addToast } = useToast();
     const {
@@ -104,28 +109,27 @@ export function useRealtimeNotifications() {
         reset,
     } = useNotificationStore();
 
-    const unsubRef = useRef<(() => void) | null>(null);
-    const statusUnsubRef = useRef<(() => void) | null>(null);
+    // Refs giữ cleanup functions — tránh stale closure
+    const unsubMessageRef = useRef<(() => void) | null>(null);
+    const unsubStatusRef = useRef<(() => void) | null>(null);
 
+    /** Xử lý mỗi realtime event nhận được */
     const handleEvent = useCallback(
         (body: unknown) => {
             const event = body as RealtimeEvent;
-            console.log("[Realtime] Received event:", event.type, event);
 
-            // 1. Add to notification store
-            const notification = eventToNotification(event);
-            addRealtimeNotification(notification);
+            // 1. Thêm vào store
+            addRealtimeNotification(toNotification(event));
 
-            // 2. Show toast
-            const toastConfig = getToastForEvent(event);
-            addToast(toastConfig.title, toastConfig.type, 5000, toastConfig.description);
+            // 2. Hiện toast
+            const toast = resolveToast(event);
+            addToast(toast.title, toast.type, 5000, toast.description);
         },
-        [addRealtimeNotification, addToast]
+        [addRealtimeNotification, addToast],
     );
 
     useEffect(() => {
         if (!isAuthenticated || !user) {
-            // Not logged in — disconnect & reset
             disconnectSocket();
             reset();
             return;
@@ -134,35 +138,34 @@ export function useRealtimeNotifications() {
         const token = tokenStorage.getAccessToken();
         if (!token) return;
 
-        // 1. Listen for connection status changes
-        statusUnsubRef.current = onStatusChange((status) => {
+        // 1. Lắng nghe status → subscribe khi connected
+        unsubStatusRef.current = onStatusChange((status) => {
             setConnectionStatus(status);
 
-            // When connected, subscribe to user-specific notifications
             if (status === "connected") {
-                // Subscribe to /user/queue/notifications (per-user destination)
-                unsubRef.current?.();
-                unsubRef.current = subscribe(
+                unsubMessageRef.current?.();
+                unsubMessageRef.current = subscribe<RealtimeEvent>(
                     "/user/queue/notifications",
-                    handleEvent
+                    handleEvent,
                 );
             }
         });
 
-        // 2. Connect WebSocket
+        // 2. Kết nối WebSocket
         connectSocket(token);
 
-        // 3. Fetch initial unread count via REST API
+        // 3. Fetch unread count ban đầu qua REST
         fetchUnreadCount();
 
         // Cleanup
         return () => {
-            unsubRef.current?.();
-            unsubRef.current = null;
-            statusUnsubRef.current?.();
-            statusUnsubRef.current = null;
+            unsubMessageRef.current?.();
+            unsubMessageRef.current = null;
+            unsubStatusRef.current?.();
+            unsubStatusRef.current = null;
             disconnectSocket();
         };
+        // Zustand actions are stable refs — safe to exclude
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isAuthenticated, user?.id]);
 }

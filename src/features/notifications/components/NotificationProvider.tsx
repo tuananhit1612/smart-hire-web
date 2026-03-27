@@ -1,17 +1,22 @@
+"use client";
+
 /**
  * ═══════════════════════════════════════════════════════════
- *  NotificationProvider — Mounts the realtime hook
+ *  NotificationProvider
  *
- *  Place this inside AuthProvider + ToastProvider in the
- *  root layout. Only activates WebSocket when authenticated.
+ *  Mount trong root layout (bên trong AuthProvider + ToastProvider).
+ *  Kích hoạt WebSocket khi user authenticated.
  * ═══════════════════════════════════════════════════════════
  */
 
-"use client";
-
+import type { ReactNode } from "react";
 import { useRealtimeNotifications } from "../hooks/useRealtimeNotifications";
 
-export function NotificationProvider({ children }: { children: React.ReactNode }) {
+interface Props {
+    readonly children: ReactNode;
+}
+
+export function NotificationProvider({ children }: Props) {
     useRealtimeNotifications();
     return <>{children}</>;
 }

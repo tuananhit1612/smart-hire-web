@@ -2,12 +2,11 @@
  * ═══════════════════════════════════════════════════════════
  *  WebSocket STOMP Client — Singleton
  *
- *  Connects to Spring Boot backend via SockJS + STOMP.
- *  Features:
- *    • JWT auth on CONNECT (Authorization header)
- *    • Auto-reconnect with exponential backoff
- *    • Connection status tracking
- *    • Type-safe subscribe/unsubscribe
+ *  Kết nối tới Spring Boot backend qua SockJS + STOMP.
+ *    • JWT auth trên CONNECT frame
+ *    • Auto-reconnect (exponential backoff, built-in @stomp/stompjs)
+ *    • Quản lý subscription theo destination
+ *    • Phát connection status cho subscribers
  * ═══════════════════════════════════════════════════════════
  */
 
@@ -15,163 +14,163 @@ import { Client, type IMessage, type StompSubscription } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import type { SocketConnectionStatus } from "../types/notification-types";
 
-// ─── Constants ───────────────────────────────────────────
+// ─── Config ──────────────────────────────────────────────
 
 const WS_BASE_URL =
     process.env.NEXT_PUBLIC_API_URL?.replace(/\/api$/, "") ?? "http://localhost:8080";
 const WS_ENDPOINT = `${WS_BASE_URL}/ws`;
 
-/** Reconnect delay bounds (ms) */
-const RECONNECT_DELAY_MIN = 2_000;
-const RECONNECT_DELAY_MAX = 30_000;
+const RECONNECT_DELAY_MS = 3_000;
+const HEARTBEAT_MS = 10_000;
 
-// ─── Types ───────────────────────────────────────────────
+// ─── Internal types ──────────────────────────────────────
 
 type StatusListener = (status: SocketConnectionStatus) => void;
-type MessageCallback = (body: unknown) => void;
+type MessageCallback<T = unknown> = (body: T) => void;
 
-// ─── Singleton Client ────────────────────────────────────
+// ─── Module-scoped singleton state ───────────────────────
 
-let stompClient: Client | null = null;
-let currentToken: string | null = null;
+let client: Client | null = null;
+let activeToken: string | null = null;
+
 const statusListeners = new Set<StatusListener>();
 const subscriptions = new Map<string, StompSubscription>();
 
-function notifyStatus(status: SocketConnectionStatus) {
+// ─── Helpers ─────────────────────────────────────────────
+
+function broadcast(status: SocketConnectionStatus): void {
     statusListeners.forEach((fn) => fn(status));
 }
 
+function teardownSubscriptions(): void {
+    subscriptions.forEach((sub) => {
+        try {
+            sub.unsubscribe();
+        } catch {
+            // Subscription may already be invalid — safe to ignore
+        }
+    });
+    subscriptions.clear();
+}
+
+// ─── Public API ──────────────────────────────────────────
+
 /**
- * Connect to the WebSocket server with JWT authentication.
- * If already connected with the same token, does nothing.
+ * Mở kết nối STOMP tới backend.
+ * Nếu đang connected với cùng token thì skip.
  */
 export function connectSocket(token: string): void {
-    // Already connected with same token — skip
-    if (stompClient?.connected && currentToken === token) return;
+    if (client?.connected && activeToken === token) return;
 
-    // Disconnect previous connection if exists
     disconnectSocket();
+    activeToken = token;
+    broadcast("connecting");
 
-    currentToken = token;
-    notifyStatus("connecting");
-
-    stompClient = new Client({
-        // Use SockJS as the WebSocket factory (matches backend .withSockJS())
+    client = new Client({
         webSocketFactory: () => new SockJS(WS_ENDPOINT) as WebSocket,
+        connectHeaders: { Authorization: `Bearer ${token}` },
+        reconnectDelay: RECONNECT_DELAY_MS,
+        heartbeatIncoming: HEARTBEAT_MS,
+        heartbeatOutgoing: HEARTBEAT_MS,
 
-        // STOMP CONNECT headers — JWT auth
-        connectHeaders: {
-            Authorization: `Bearer ${token}`,
-        },
-
-        // Reconnect with exponential backoff
-        reconnectDelay: RECONNECT_DELAY_MIN,
-
-        // Heartbeat (ms) — keep connection alive
-        heartbeatIncoming: 10_000,
-        heartbeatOutgoing: 10_000,
-
-        // ── Callbacks ──
         onConnect: () => {
-            console.log("[WebSocket] Connected to", WS_ENDPOINT);
-            notifyStatus("connected");
+            console.info("[WS] ✓ Connected", WS_ENDPOINT);
+            broadcast("connected");
         },
-
         onStompError: (frame) => {
-            console.error("[WebSocket] STOMP error:", frame.headers.message);
-            notifyStatus("error");
+            console.error("[WS] STOMP error:", frame.headers.message);
+            broadcast("error");
         },
-
-        onWebSocketError: (event) => {
-            console.error("[WebSocket] Connection error:", event);
-            notifyStatus("error");
-        },
-
-        onDisconnect: () => {
-            console.log("[WebSocket] Disconnected");
-            notifyStatus("disconnected");
-        },
-
-        onWebSocketClose: () => {
-            notifyStatus("disconnected");
-        },
+        onWebSocketError: () => broadcast("error"),
+        onDisconnect: () => broadcast("disconnected"),
+        onWebSocketClose: () => broadcast("disconnected"),
     });
 
-    stompClient.activate();
+    client.activate();
 }
 
 /**
- * Disconnect from the WebSocket server and clean up all subscriptions.
+ * Đóng kết nối, hủy hết subscriptions, reset state.
  */
 export function disconnectSocket(): void {
-    if (stompClient) {
-        // Unsubscribe all
-        subscriptions.forEach((sub) => {
-            try { sub.unsubscribe(); } catch { /* ignore */ }
-        });
-        subscriptions.clear();
+    if (!client) return;
 
-        try {
-            stompClient.deactivate();
-        } catch { /* ignore */ }
+    teardownSubscriptions();
 
-        stompClient = null;
-        currentToken = null;
-        notifyStatus("disconnected");
+    try {
+        client.deactivate();
+    } catch {
+        // Client may already be deactivated — safe to ignore
     }
+
+    client = null;
+    activeToken = null;
+    broadcast("disconnected");
 }
 
 /**
- * Subscribe to a STOMP destination.
- * Returns an unsubscribe function.
+ * Subscribe tới một STOMP destination.
  *
- * @param destination  e.g. "/user/queue/notifications" or "/topic/jobs/5/applications"
- * @param callback     Called with parsed JSON body on each message
+ * @returns Hàm unsubscribe — gọi khi không cần nhận message nữa
+ *
+ * @example
+ * ```ts
+ * const unsub = subscribe("/user/queue/notifications", (event) => { ... });
+ * // later
+ * unsub();
+ * ```
  */
-export function subscribe(
+export function subscribe<T = unknown>(
     destination: string,
-    callback: MessageCallback
+    callback: MessageCallback<T>,
 ): () => void {
-    if (!stompClient?.connected) {
-        console.warn("[WebSocket] Cannot subscribe — not connected. Destination:", destination);
+    if (!client?.connected) {
+        console.warn("[WS] Cannot subscribe — not connected:", destination);
         return () => {};
     }
 
-    // Avoid duplicate subscriptions
-    if (subscriptions.has(destination)) {
-        subscriptions.get(destination)!.unsubscribe();
-        subscriptions.delete(destination);
+    // Cancel existing subscription to the same destination
+    const existing = subscriptions.get(destination);
+    if (existing) {
+        try {
+            existing.unsubscribe();
+        } catch {
+            // Already invalid — safe to ignore
+        }
     }
 
-    const sub = stompClient.subscribe(destination, (message: IMessage) => {
+    const sub = client.subscribe(destination, (message: IMessage) => {
         try {
-            const body = JSON.parse(message.body);
-            callback(body);
-        } catch (e) {
-            console.error("[WebSocket] Failed to parse message:", e);
+            callback(JSON.parse(message.body) as T);
+        } catch (err) {
+            console.error("[WS] Failed to parse message body:", err);
         }
     });
 
     subscriptions.set(destination, sub);
 
     return () => {
-        try { sub.unsubscribe(); } catch { /* ignore */ }
+        try {
+            sub.unsubscribe();
+        } catch {
+            // Already invalid — safe to ignore
+        }
         subscriptions.delete(destination);
     };
 }
 
 /**
- * Register a connection status listener.
- * Returns an unsubscribe function.
+ * Đăng ký listener cho connection status changes.
+ * @returns Hàm unsubscribe
  */
 export function onStatusChange(listener: StatusListener): () => void {
     statusListeners.add(listener);
-    return () => statusListeners.delete(listener);
+    return () => {
+        statusListeners.delete(listener);
+    };
 }
 
-/**
- * Check if currently connected.
- */
+/** Kiểm tra trạng thái kết nối hiện tại. */
 export function isConnected(): boolean {
-    return stompClient?.connected ?? false;
+    return client?.connected ?? false;
 }

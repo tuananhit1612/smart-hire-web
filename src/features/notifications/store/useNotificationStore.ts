@@ -2,11 +2,8 @@
  * ═══════════════════════════════════════════════════════════
  *  Notification Store — Zustand
  *
- *  Central state for notifications:
- *    • notifications[]        — list from REST API + realtime
- *    • unreadCount            — from API or computed
- *    • connectionStatus       — WebSocket connection status
- *    • Actions: fetch, markRead, markAllRead, addRealtime
+ *  State trung tâm cho notifications (REST + realtime).
+ *  Hỗ trợ optimistic update, dedup realtime events, pagination.
  * ═══════════════════════════════════════════════════════════
  */
 
@@ -20,24 +17,36 @@ import { notificationApi } from "../api/notification-api";
 
 // ─── Helpers ─────────────────────────────────────────────
 
-/** Convert REST API response → UI model */
-function toNotificationData(n: NotificationResponse): NotificationData {
+/** REST API response → UI model */
+function toNotificationData(dto: NotificationResponse): NotificationData {
     return {
-        id: String(n.id),
-        type: n.type,
-        title: n.title,
-        message: n.message,
-        isRead: n.isRead,
-        createdAt: n.createdAt,
-        link: n.link,
-        metadata: n.metadata,
+        id: String(dto.id),
+        type: dto.type,
+        title: dto.title,
+        message: dto.message,
+        isRead: dto.isRead,
+        createdAt: dto.createdAt,
+        link: dto.link,
+        metadata: dto.metadata,
         isRealtime: false,
     };
 }
 
+// ─── Initial state (extract để reset đúng chuẩn) ────────
+
+const INITIAL_STATE = {
+    notifications: [] as NotificationData[],
+    unreadCount: 0,
+    connectionStatus: "disconnected" as SocketConnectionStatus,
+    isLoading: false,
+    hasMore: true,
+    currentPage: 0,
+};
+
 // ─── Store Interface ─────────────────────────────────────
 
-interface NotificationState {
+interface NotificationStore {
+    // State
     notifications: NotificationData[];
     unreadCount: number;
     connectionStatus: SocketConnectionStatus;
@@ -57,97 +66,87 @@ interface NotificationState {
 
 // ─── Store ───────────────────────────────────────────────
 
-export const useNotificationStore = create<NotificationState>((set, get) => ({
-    notifications: [],
-    unreadCount: 0,
-    connectionStatus: "disconnected",
-    isLoading: false,
-    hasMore: true,
-    currentPage: 0,
+export const useNotificationStore = create<NotificationStore>((set, get) => ({
+    ...INITIAL_STATE,
 
-    setConnectionStatus: (status) => set({ connectionStatus: status }),
+    setConnectionStatus: (connectionStatus) => set({ connectionStatus }),
 
     fetchNotifications: async (page = 0) => {
-        const { isLoading } = get();
-        if (isLoading) return;
+        if (get().isLoading) return;
 
         set({ isLoading: true });
-        try {
-            const res = await notificationApi.getNotifications(page, 20);
-            const pageData = res.data.data;
-            const newNotifications = pageData.content.map(toNotificationData);
 
-            set((state) => ({
-                notifications:
-                    page === 0
-                        ? newNotifications
-                        : [...state.notifications, ...newNotifications],
+        try {
+            const { data } = await notificationApi.getNotifications(page, 20);
+            const pageData = data.data;
+            const fetched = pageData.content.map(toNotificationData);
+
+            set((s) => ({
+                notifications: page === 0 ? fetched : [...s.notifications, ...fetched],
                 hasMore: !pageData.last,
                 currentPage: page,
-                isLoading: false,
             }));
-        } catch (error) {
-            console.error("[NotificationStore] Failed to fetch notifications:", error);
+        } catch (err) {
+            console.error("[NotificationStore] fetchNotifications failed:", err);
+        } finally {
             set({ isLoading: false });
         }
     },
 
     fetchUnreadCount: async () => {
         try {
-            const res = await notificationApi.getUnreadCount();
-            set({ unreadCount: res.data.data.unreadCount });
-        } catch (error) {
-            console.error("[NotificationStore] Failed to fetch unread count:", error);
+            const { data } = await notificationApi.getUnreadCount();
+            set({ unreadCount: data.data.unreadCount });
+        } catch (err) {
+            console.error("[NotificationStore] fetchUnreadCount failed:", err);
         }
     },
 
-    markAsRead: async (id: string) => {
+    markAsRead: async (id) => {
+        const target = get().notifications.find((n) => n.id === id);
+        if (!target || target.isRead) return; // Already read — skip
+
         // Optimistic update
-        set((state) => ({
-            notifications: state.notifications.map((n) =>
-                n.id === id ? { ...n, isRead: true } : n
+        set((s) => ({
+            notifications: s.notifications.map((n) =>
+                n.id === id ? { ...n, isRead: true } : n,
             ),
-            unreadCount: Math.max(0, state.unreadCount - 1),
+            unreadCount: Math.max(0, s.unreadCount - 1),
         }));
 
         try {
             await notificationApi.markAsRead(Number(id));
-        } catch (error) {
-            console.error("[NotificationStore] Failed to mark as read:", error);
-            // Revert on error — refetch
-            get().fetchUnreadCount();
+        } catch (err) {
+            console.error("[NotificationStore] markAsRead failed:", err);
+            get().fetchUnreadCount(); // Revert — re-sync from server
         }
     },
 
     markAllAsRead: async () => {
         // Optimistic update
-        set((state) => ({
-            notifications: state.notifications.map((n) => ({ ...n, isRead: true })),
+        set((s) => ({
+            notifications: s.notifications.map((n) => ({ ...n, isRead: true })),
             unreadCount: 0,
         }));
 
         try {
             await notificationApi.markAllAsRead();
-        } catch (error) {
-            console.error("[NotificationStore] Failed to mark all as read:", error);
+        } catch (err) {
+            console.error("[NotificationStore] markAllAsRead failed:", err);
             get().fetchUnreadCount();
         }
     },
 
     addRealtimeNotification: (notification) => {
-        set((state) => ({
-            notifications: [notification, ...state.notifications],
-            unreadCount: state.unreadCount + 1,
+        // Dedup: tránh thêm trùng nếu event đến 2 lần (network retry)
+        const exists = get().notifications.some((n) => n.id === notification.id);
+        if (exists) return;
+
+        set((s) => ({
+            notifications: [notification, ...s.notifications],
+            unreadCount: s.unreadCount + 1,
         }));
     },
 
-    reset: () =>
-        set({
-            notifications: [],
-            unreadCount: 0,
-            connectionStatus: "disconnected",
-            isLoading: false,
-            hasMore: true,
-            currentPage: 0,
-        }),
+    reset: () => set(INITIAL_STATE),
 }));
