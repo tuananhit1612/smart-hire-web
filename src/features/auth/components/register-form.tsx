@@ -19,6 +19,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { useToastHelpers } from "@/shared/components/ui/toast";
+import { useAuth } from "../hooks/use-auth";
 import { registerSchema, type RegisterSchema } from "../schemas/register-schema";
 import type { UserRole } from "../types/auth-types";
 
@@ -33,6 +34,7 @@ export function RegisterForm({ role, onBack }: RegisterFormProps) {
     const [showConfirm, setShowConfirm] = useState(false);
     const router = useRouter();
     const toast = useToastHelpers();
+    const { register: registerAuth } = useAuth();
 
     const {
         register,
@@ -47,15 +49,25 @@ export function RegisterForm({ role, onBack }: RegisterFormProps) {
 
     const onSubmit = async (data: RegisterSchema) => {
         setIsLoading(true);
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        setIsLoading(false);
-
-        const roleName = role === "candidate" ? "Ứng viên" : "Nhà tuyển dụng";
-        toast.success(
-            "Đăng ký thành công!",
-            `Tài khoản ${roleName} đã được tạo. Vui lòng đăng nhập.`
-        );
-        router.push("/login");
+        try {
+            await registerAuth({
+                email: data.email,
+                password: data.password,
+                fullName: data.fullName,
+                role: role === "candidate" ? "CANDIDATE" : "HR",
+            });
+            
+            const roleName = role === "candidate" ? "Ứng viên" : "Nhà tuyển dụng";
+            toast.success(
+                "Đăng ký thành công!",
+                `Tài khoản ${roleName} đã được tạo. Vui lòng đăng nhập.`
+            );
+            router.push("/login");
+        } catch (error: any) {
+            toast.error("Đăng ký thất bại", error.message || "Vui lòng thử lại sau.");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const roleName = role === "candidate" ? "Ứng viên" : "Nhà tuyển dụng";

@@ -3,60 +3,55 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Fingerprint, Eye, EyeOff, Mail, Lock } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { Fingerprint, Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 
 import { Button } from "@/shared/components/ui/button";
+import { Input } from "@/shared/components/ui/input";
 import { useToastHelpers } from "@/shared/components/ui/toast";
 import { useAuth } from "../hooks/use-auth";
+import { cn } from "@/lib/utils";
+
+const loginSchema = z.object({
+    email: z.string().email("Vui lòng nhập địa chỉ email hợp lệ"),
+    password: z.string().min(6, "Mật khẩu phải có ít nhất 6 ký tự"),
+});
 
 export function LoginForm() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-
+    const [showPassword, setShowPassword] = useState(false);
     const toastHelpers = useToastHelpers();
     const router = useRouter();
     const searchParams = useSearchParams();
-    const { login } = useAuth();
+    const { login, user } = useAuth();
 
-    const handleLogin = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setError(null);
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<z.infer<typeof loginSchema>>({
+        resolver: zodResolver(loginSchema),
+    });
 
-        if (!email.trim() || !password) {
-            setError("Vui lòng nhập email và mật khẩu.");
-            return;
-        }
-
+    const onSubmit = async (data: z.infer<typeof loginSchema>) => {
         setIsLoading(true);
         try {
-            const user = await login(email.trim(), password);
-
-            toastHelpers.success(
-                "Chào mừng trở lại!",
-                `Xin chào ${user.name}, bạn đã đăng nhập thành công.`
-            );
+            await login(data.email, data.password);
+            toastHelpers.success("Đăng nhập thành công!", "Chào mừng trở lại SmartHire.");
 
             const callbackUrl = searchParams.get("callbackUrl");
             if (callbackUrl) {
                 router.push(callbackUrl);
             } else {
-                const redirectMap: Record<string, string> = {
-                    candidate: "/jobs",
-                    employer: "/employer/dashboard",
-                    admin: "/admin/dashboard",
-                };
-                router.push(redirectMap[user.role] ?? "/jobs");
+                // If the user state is updated immediately, we still need to wait for context
+                // But the router handles it, or we rely on the returned user details from login()
+                router.push("/"); // Fallback, the header will update
             }
-        } catch (err: unknown) {
-            const msg =
-                err instanceof Error
-                    ? err.message
-                    : "Đã có lỗi xảy ra. Vui lòng thử lại.";
-            setError(msg);
+        } catch (error: any) {
+            toastHelpers.error("Đăng nhập thất bại", error.message || "Vui lòng kiểm tra lại email hoặc mật khẩu.");
         } finally {
             setIsLoading(false);
         }
@@ -66,6 +61,9 @@ export function LoginForm() {
         hidden: { opacity: 0, y: 12 },
         visible: { opacity: 1, y: 0 },
     };
+
+    // Common input classes matching Design System
+    const inputClasses = "h-12 bg-transparent border-[rgba(145,158,171,0.2)] dark:border-[rgba(145,158,171,0.12)] focus:border-[#22C55E] focus:ring-[#22C55E]/10 rounded-xl transition-all text-[#1C252E] dark:text-white placeholder:text-[#919EAB]";
 
     return (
         <motion.div
@@ -80,75 +78,51 @@ export function LoginForm() {
                     <Fingerprint className="w-7 h-7 text-white" />
                 </div>
                 <h1 className="text-2xl font-bold tracking-tight text-[#1C252E] dark:text-white">
-                    Đăng nhập
+                    Đăng nhập hệ thống
                 </h1>
                 <p className="text-[#637381] dark:text-[#C4CDD5] text-sm">
-                    Nhập email và mật khẩu để tiếp tục.
+                    Nhập email và mật khẩu của bạn để tiếp tục.
                 </p>
             </motion.div>
 
-            <form onSubmit={handleLogin} className="space-y-4">
-                {/* Error */}
-                {error && (
-                    <motion.div
-                        initial={{ opacity: 0, y: -8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="px-4 py-3 rounded-xl text-sm font-medium bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400 border border-red-200 dark:border-red-500/20"
-                    >
-                        {error}
-                    </motion.div>
-                )}
-
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 {/* Email */}
-                <motion.div variants={itemVariants} className="space-y-1.5">
-                    <label htmlFor="email" className="text-sm font-semibold text-[#1C252E] dark:text-white">
-                        Email
-                    </label>
-                    <div className="relative">
-                        <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-[#919EAB]" />
-                        <input
-                            id="email"
-                            type="email"
-                            autoComplete="email"
-                            placeholder="you@example.com"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="w-full h-12 pl-11 pr-4 rounded-xl border border-[rgba(145,158,171,0.2)] dark:border-[rgba(145,158,171,0.12)] bg-transparent text-sm text-[#1C252E] dark:text-white placeholder:text-[#919EAB] focus:border-[#22c55e] focus:ring-1 focus:ring-[#22c55e] outline-none transition-all"
-                        />
-                    </div>
+                <motion.div variants={itemVariants}>
+                    <Input
+                        label="Email"
+                        type="email"
+                        placeholder="ten@congty.com"
+                        error={errors.email?.message}
+                        {...register("email")}
+                        className={inputClasses}
+                        startIcon={<Mail className="text-[#919EAB] w-4 h-4" />}
+                    />
                 </motion.div>
 
                 {/* Password */}
-                <motion.div variants={itemVariants} className="space-y-1.5">
-                    <div className="flex items-center justify-between">
-                        <label htmlFor="password" className="text-sm font-semibold text-[#1C252E] dark:text-white">
-                            Mật khẩu
-                        </label>
-                        <Link
-                            href="/forgot-password"
-                            className="text-xs font-semibold text-[#22C55E] hover:text-[#16A34A] transition-colors"
-                        >
-                            Quên mật khẩu?
-                        </Link>
-                    </div>
+                <motion.div variants={itemVariants}>
                     <div className="relative">
-                        <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-[#919EAB]" />
-                        <input
-                            id="password"
+                        <Input
+                            label="Mật khẩu"
                             type={showPassword ? "text" : "password"}
-                            autoComplete="current-password"
                             placeholder="••••••••"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="w-full h-12 pl-11 pr-11 rounded-xl border border-[rgba(145,158,171,0.2)] dark:border-[rgba(145,158,171,0.12)] bg-transparent text-sm text-[#1C252E] dark:text-white placeholder:text-[#919EAB] focus:border-[#22c55e] focus:ring-1 focus:ring-[#22c55e] outline-none transition-all"
+                            error={errors.password?.message}
+                            {...register("password")}
+                            className={`${inputClasses} pr-10`}
+                            startIcon={<Lock className="text-[#919EAB] w-4 h-4" />}
                         />
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#919EAB] hover:text-[#637381] transition-colors"
+                            className="absolute right-3 top-[38px] text-[#919EAB] hover:text-[#637381] dark:hover:text-[#C4CDD5] transition-colors"
                         >
-                            {showPassword ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
+                            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                         </button>
+                    </div>
+                    <div className="flex justify-end mt-1">
+                        <Link href="/forgot-password" className="text-xs text-[#22c55e] hover:text-[#16a34a] font-medium transition-colors">
+                            Quên mật khẩu?
+                        </Link>
                     </div>
                 </motion.div>
 

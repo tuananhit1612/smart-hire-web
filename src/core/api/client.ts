@@ -51,7 +51,9 @@ async function request<T>(
 
     if (!res.ok) {
         const error = await res.json().catch(() => ({ message: res.statusText }));
-        throw new ApiError(res.status, error.message ?? "Unknown error");
+        // BE returns ApiResponse format: { success, code, message }
+        const errorMessage = error.message ?? error.code ?? res.statusText;
+        throw new ApiError(res.status, errorMessage, error.code);
     }
 
     // Handle 204 No Content
@@ -60,11 +62,12 @@ async function request<T>(
     return res.json();
 }
 
-/** Typed API error */
+/** Typed API error with BE error code support */
 export class ApiError extends Error {
     constructor(
         public readonly status: number,
-        message: string
+        message: string,
+        public readonly code?: string
     ) {
         super(message);
         this.name = "ApiError";
