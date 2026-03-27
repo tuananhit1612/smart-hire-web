@@ -8,6 +8,7 @@ export interface CVFile {
     status: 'uploading' | 'success' | 'error' | 'validating';
     progress: number;
     errorMessage?: string;
+    rawFile?: File;
 }
 
 export interface UploadState {

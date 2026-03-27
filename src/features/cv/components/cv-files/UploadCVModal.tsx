@@ -2,18 +2,18 @@
 
 import * as React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Upload, FileText, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
-import { CVFile, CVFileType } from "../../types/cv-file-types";
+import { X, Upload, FileText, CheckCircle, AlertCircle, Loader2, Star } from "lucide-react";
+import { useCvFileStore } from "@/features/cv/stores/cv-file-store";
 
 interface UploadCVModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onUpload: (file: CVFile) => void;
+    onUpload: () => void;
 }
 
 type UploadState = "idle" | "dragging" | "uploading" | "success" | "error";
 
-const ACCEPTED_TYPES: Record<string, CVFileType> = {
+const ACCEPTED_TYPES: Record<string, string> = {
     "application/pdf": "pdf",
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
 };
@@ -25,9 +25,10 @@ function formatFileSize(bytes: number): string {
 }
 
 export function UploadCVModal({ isOpen, onClose, onUpload }: UploadCVModalProps) {
+    const { uploadCvFile } = useCvFileStore();
     const [uploadState, setUploadState] = React.useState<UploadState>("idle");
     const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
-    const [cvName, setCvName] = React.useState("");
+    const [isPrimary, setIsPrimary] = React.useState(true);
     const [error, setError] = React.useState("");
     const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -36,14 +37,14 @@ export function UploadCVModal({ isOpen, onClose, onUpload }: UploadCVModalProps)
             setTimeout(() => {
                 setUploadState("idle");
                 setSelectedFile(null);
-                setCvName("");
+                setIsPrimary(true);
                 setError("");
             }, 300);
         }
     }, [isOpen]);
 
     const validateFile = (file: File): string | null => {
-        if (!ACCEPTED_TYPES[file.type]) {
+        if (!ACCEPTED_TYPES[file.type] && !file.name.toLowerCase().endsWith('.pdf') && !file.name.toLowerCase().endsWith('.docx')) {
             return "Chỉ chấp nhận file PDF hoặc DOCX";
         }
         if (file.size > 10 * 1024 * 1024) {
@@ -61,8 +62,6 @@ export function UploadCVModal({ isOpen, onClose, onUpload }: UploadCVModalProps)
         }
         setError("");
         setSelectedFile(file);
-        const nameWithoutExt = file.name.replace(/\.(pdf|docx?)$/i, "");
-        setCvName(nameWithoutExt);
     };
 
     const handleDragOver = (e: React.DragEvent) => {
@@ -88,49 +87,20 @@ export function UploadCVModal({ isOpen, onClose, onUpload }: UploadCVModalProps)
     };
 
     const handleUpload = async () => {
-        if (!selectedFile || !cvName.trim()) return;
+        if (!selectedFile) return;
 
         setUploadState("uploading");
-        await new Promise((res) => setTimeout(res, 1500));
-
-        const fileType = ACCEPTED_TYPES[selectedFile.type];
-        const now = new Date();
-
-        const newCV: CVFile = {
-            id: `cv-${Date.now()}`,
-            name: cvName.trim(),
-            description: `CV tải lên từ file ${selectedFile.name}`,
-            status: "draft",
-            isDefault: false,
-            currentVersion: {
-                id: `ver-${Date.now()}`,
-                versionNumber: 1,
-                fileName: selectedFile.name,
-                fileSize: selectedFile.size,
-                fileType,
-                uploadedAt: now,
-                note: "Phiên bản đầu tiên",
-            },
-            versions: [
-                {
-                    id: `ver-${Date.now()}`,
-                    versionNumber: 1,
-                    fileName: selectedFile.name,
-                    fileSize: selectedFile.size,
-                    fileType,
-                    uploadedAt: now,
-                    note: "Phiên bản đầu tiên",
-                },
-            ],
-            createdAt: now,
-            updatedAt: now,
-        };
-
-        setUploadState("success");
-        setTimeout(() => {
-            onUpload(newCV);
-            onClose();
-        }, 1200);
+        try {
+            await uploadCvFile(selectedFile, isPrimary);
+            setUploadState("success");
+            setTimeout(() => {
+                onUpload();
+                onClose();
+            }, 1200);
+        } catch (err: any) {
+            setUploadState("error");
+            setError(err.message || "Có lỗi xảy ra khi tải CV lên");
+        }
     };
 
     const isDragging = uploadState === "dragging";
@@ -183,9 +153,9 @@ export function UploadCVModal({ isOpen, onClose, onUpload }: UploadCVModalProps)
                                     className={`
                                         relative border-2 border-dashed rounded-2xl p-8 cursor-pointer text-center transition-all duration-200
                                         ${isDragging
-                                            ? "border-[#22C55E] bg-[#22C55E]/[0.06] dark:bg-[#22C55E]/[0.08]"
+                                            ? "border-green-500 bg-green-500/5 dark:bg-green-500/10"
                                             : hasFile
-                                                ? "border-[#22C55E]/50 bg-[#22C55E]/[0.04] dark:bg-[#22C55E]/[0.06]"
+                                                ? "border-green-500/50 bg-green-500/5 dark:bg-green-500/5"
                                                 : "border-[rgba(145,158,171,0.3)] dark:border-white/[0.12] bg-[rgba(145,158,171,0.04)] dark:bg-white/[0.02] hover:border-[rgba(145,158,171,0.5)] dark:hover:border-white/[0.2] hover:bg-[rgba(145,158,171,0.06)] dark:hover:bg-white/[0.04]"
                                         }
                                     `}
@@ -193,7 +163,7 @@ export function UploadCVModal({ isOpen, onClose, onUpload }: UploadCVModalProps)
                                     <input
                                         ref={fileInputRef}
                                         type="file"
-                                        accept=".pdf,.docx"
+                                        accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                                         onChange={handleInputChange}
                                         className="hidden"
                                     />
@@ -207,14 +177,14 @@ export function UploadCVModal({ isOpen, onClose, onUpload }: UploadCVModalProps)
                                                 exit={{ opacity: 0, y: -10 }}
                                                 className="flex flex-col items-center gap-2"
                                             >
-                                                <div className="w-12 h-12 rounded-xl bg-[#22C55E]/10 dark:bg-[#22C55E]/20 flex items-center justify-center">
-                                                    <FileText className="w-6 h-6 text-[#22C55E]" />
+                                                <div className="w-12 h-12 rounded-xl bg-green-500/10 dark:bg-green-500/20 flex items-center justify-center">
+                                                    <FileText className="w-6 h-6 text-green-500" />
                                                 </div>
                                                 <div>
-                                                    <p className="font-semibold text-[#1C252E] dark:text-white text-sm">{selectedFile!.name}</p>
+                                                    <p className="font-semibold text-[#1C252E] dark:text-white text-sm break-all">{selectedFile!.name}</p>
                                                     <p className="text-xs text-[#637381] dark:text-[#919EAB] mt-0.5">{formatFileSize(selectedFile!.size)}</p>
                                                 </div>
-                                                <p className="text-xs text-[#22C55E] font-medium">Click để đổi file khác</p>
+                                                <p className="text-xs text-green-500 font-medium">Click để đổi file khác</p>
                                             </motion.div>
                                         ) : (
                                             <motion.div
@@ -238,7 +208,6 @@ export function UploadCVModal({ isOpen, onClose, onUpload }: UploadCVModalProps)
                                                         hoặc <span className="text-green-600 dark:text-green-400 font-medium">chọn file</span> từ máy tính
                                                     </p>
                                                 </div>
-                                                <p className="text-xs text-[#919EAB]">PDF, DOCX — tối đa 10MB</p>
                                             </motion.div>
                                         )}
                                     </AnimatePresence>
@@ -259,7 +228,7 @@ export function UploadCVModal({ isOpen, onClose, onUpload }: UploadCVModalProps)
                                     )}
                                 </AnimatePresence>
 
-                                {/* CV Name input */}
+                                {/* Options */}
                                 <AnimatePresence>
                                     {hasFile && (
                                         <motion.div
@@ -268,16 +237,18 @@ export function UploadCVModal({ isOpen, onClose, onUpload }: UploadCVModalProps)
                                             exit={{ opacity: 0, height: 0 }}
                                             className="overflow-hidden"
                                         >
-                                            <label className="block text-sm font-semibold text-[#1C252E] dark:text-white mb-2">
-                                                Tên CV
+                                            <label className="flex items-center gap-3 p-3 rounded-xl border border-[rgba(145,158,171,0.2)] dark:border-white/[0.1] bg-[rgba(145,158,171,0.04)] dark:bg-white/[0.02] cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={isPrimary}
+                                                    onChange={(e) => setIsPrimary(e.target.checked)}
+                                                    className="w-4 h-4 text-green-500 rounded border-[rgba(145,158,171,0.3)] focus:ring-green-500"
+                                                />
+                                                <div className="flex items-center gap-2 text-sm font-medium text-[#1C252E] dark:text-white">
+                                                    <Star className="w-4 h-4 text-amber-500" />
+                                                    Đặt làm CV mặc định
+                                                </div>
                                             </label>
-                                            <input
-                                                type="text"
-                                                value={cvName}
-                                                onChange={(e) => setCvName(e.target.value)}
-                                                placeholder="VD: CV Frontend Developer 2025"
-                                                className="w-full px-4 py-3 rounded-xl border-2 border-[rgba(145,158,171,0.2)] dark:border-white/[0.1] bg-white dark:bg-[#161C24] text-[#1C252E] dark:text-white placeholder:text-[#919EAB] focus:border-green-500 dark:focus:border-green-400 focus:ring-4 focus:ring-green-500/10 outline-none font-medium transition-all"
-                                            />
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
@@ -291,10 +262,10 @@ export function UploadCVModal({ isOpen, onClose, onUpload }: UploadCVModalProps)
                                         Huỷ
                                     </button>
                                     <motion.button
-                                        whileHover={hasFile && cvName.trim() ? { scale: 1.02 } : {}}
-                                        whileTap={hasFile && cvName.trim() ? { scale: 0.98 } : {}}
+                                        whileHover={hasFile ? { scale: 1.02 } : {}}
+                                        whileTap={hasFile ? { scale: 0.98 } : {}}
                                         onClick={handleUpload}
-                                        disabled={!hasFile || !cvName.trim() || uploadState === "uploading" || uploadState === "success"}
+                                        disabled={!hasFile || uploadState === "uploading" || uploadState === "success"}
                                         className="flex-1 h-12 rounded-xl bg-gradient-to-r from-green-600 to-green-500 text-white font-semibold shadow-lg shadow-green-500/25 hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                                     >
                                         <AnimatePresence mode="wait">
@@ -307,7 +278,7 @@ export function UploadCVModal({ isOpen, onClose, onUpload }: UploadCVModalProps)
                                                     className="flex items-center gap-2"
                                                 >
                                                     <Loader2 className="w-4 h-4 animate-spin" />
-                                                    Đang tải lên...
+                                                    Đang tải...
                                                 </motion.span>
                                             ) : uploadState === "success" ? (
                                                 <motion.span
