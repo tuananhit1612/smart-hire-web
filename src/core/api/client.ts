@@ -12,6 +12,7 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "";
 type RequestOptions = Omit<RequestInit, "body"> & {
     body?: unknown;
     params?: Record<string, string>;
+    responseType?: "json" | "blob" | "text";
 };
 
 /**
@@ -20,7 +21,7 @@ type RequestOptions = Omit<RequestInit, "body"> & {
  */
 async function request<T>(
     endpoint: string,
-    { body, params, headers, ...options }: RequestOptions = {}
+    { body, params, headers, responseType, ...options }: RequestOptions = {}
 ): Promise<T> {
     const url = new URL(endpoint, API_BASE || "http://localhost:8080");
 
@@ -58,6 +59,13 @@ async function request<T>(
 
     // Handle 204 No Content
     if (res.status === 204) return undefined as T;
+
+    if (responseType === "blob") {
+        return res.blob() as unknown as T;
+    }
+    if (responseType === "text") {
+        return res.text() as unknown as T;
+    }
 
     return res.json();
 }
