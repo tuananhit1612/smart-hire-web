@@ -10,38 +10,70 @@ import {
     ChevronRight,
 } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
-import { Notification, NotificationType } from "../types/mock-notifications";
+import type { NotificationData } from "../types/notification-types";
 
-const ICON_CONFIG: Record<NotificationType, { icon: typeof Bell; color: string; bg: string }> = {
-    [NotificationType.APPLICATION_STATUS]: {
+/** Icon config by notification type — maps both legacy NotificationType and EventType */
+const ICON_CONFIG: Record<string, { icon: typeof Bell; color: string; bg: string }> = {
+    APPLICATION_STATUS: {
         icon: Briefcase,
         color: "text-[#22c55e] dark:text-[#22c55e]",
         bg: "bg-[#22c55e]/10 dark:bg-[#22c55e]/20",
     },
-    [NotificationType.INTERVIEW_INVITE]: {
+    APPLICATION_SUBMITTED: {
+        icon: Briefcase,
+        color: "text-[#22c55e] dark:text-[#22c55e]",
+        bg: "bg-[#22c55e]/10 dark:bg-[#22c55e]/20",
+    },
+    APPLICATION_STAGE_CHANGED: {
+        icon: Briefcase,
+        color: "text-[#22c55e] dark:text-[#22c55e]",
+        bg: "bg-[#22c55e]/10 dark:bg-[#22c55e]/20",
+    },
+    INTERVIEW_INVITE: {
         icon: Calendar,
         color: "text-emerald-600 dark:text-emerald-400",
         bg: "bg-emerald-50 dark:bg-emerald-900/30",
     },
-    [NotificationType.AI_ANALYSIS]: {
+    AI_ANALYSIS: {
         icon: BrainCircuit,
         color: "text-violet-600 dark:text-violet-400",
         bg: "bg-violet-50 dark:bg-violet-900/30",
     },
-    [NotificationType.JOB_MATCH]: {
+    AI_MATCHING_COMPLETED: {
+        icon: BrainCircuit,
+        color: "text-violet-600 dark:text-violet-400",
+        bg: "bg-violet-50 dark:bg-violet-900/30",
+    },
+    AI_CV_PARSED: {
+        icon: BrainCircuit,
+        color: "text-violet-600 dark:text-violet-400",
+        bg: "bg-violet-50 dark:bg-violet-900/30",
+    },
+    AI_CV_REVIEWED: {
+        icon: BrainCircuit,
+        color: "text-violet-600 dark:text-violet-400",
+        bg: "bg-violet-50 dark:bg-violet-900/30",
+    },
+    JOB_MATCH: {
         icon: Sparkles,
         color: "text-amber-600 dark:text-amber-400",
         bg: "bg-amber-50 dark:bg-amber-900/30",
     },
-    [NotificationType.SYSTEM]: {
+    SYSTEM: {
         icon: Bell,
         color: "text-[#637381] dark:text-[#919EAB]",
         bg: "bg-[rgba(145,158,171,0.08)] dark:bg-white/[0.06]",
     },
 };
 
+const DEFAULT_ICON_CONFIG = {
+    icon: Bell,
+    color: "text-[#637381] dark:text-[#919EAB]",
+    bg: "bg-[rgba(145,158,171,0.08)] dark:bg-white/[0.06]",
+};
+
 interface NotificationCardProps {
-    readonly notification: Notification;
+    readonly notification: NotificationData;
     readonly onMarkRead: (id: string) => void;
     readonly index: number;
 }
@@ -62,7 +94,7 @@ function formatTimeAgo(dateStr: string): string {
 }
 
 export function NotificationCard({ notification, onMarkRead, index }: NotificationCardProps) {
-    const config = ICON_CONFIG[notification.type];
+    const config = ICON_CONFIG[notification.type] ?? DEFAULT_ICON_CONFIG;
     const Icon = config.icon;
 
     return (

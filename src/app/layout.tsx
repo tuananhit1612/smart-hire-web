@@ -28,6 +28,7 @@ const firaCode = Fira_Code({
 });
 
 import { AuthProvider } from "@/features/auth/context/auth-context";
+import { NotificationProvider } from "@/features/notifications/components/NotificationProvider";
 
 export const metadata: Metadata = {
   title: "SmartHire - AI Recruitment Platform",
@@ -55,7 +56,9 @@ export default function RootLayout({
           <ParticleBackground />
           <ToastProvider>
             <AuthProvider>
-              {children}
+              <NotificationProvider>
+                {children}
+              </NotificationProvider>
             </AuthProvider>
           </ToastProvider>
         </ThemeProvider>

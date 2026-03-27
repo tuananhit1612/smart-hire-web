@@ -3,14 +3,14 @@
 import Link from "next/link";
 import { Bell } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
-import { mockNotifications } from "@/features/notifications/types/mock-notifications";
+import { useNotificationStore } from "@/features/notifications/store/useNotificationStore";
 
 /**
  * Notification bell icon with unread count badge.
- * Reads unread count from mock data (will be replaced by real store later).
+ * Reads unread count from the real notification store (Zustand).
  */
 export function NotificationBell() {
-    const unreadCount = mockNotifications.filter((n) => !n.isRead).length;
+    const unreadCount = useNotificationStore((s) => s.unreadCount);
 
     return (
         <Link

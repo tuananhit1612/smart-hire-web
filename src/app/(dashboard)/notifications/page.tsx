@@ -1,27 +1,36 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { BellRing, CheckCheck, Inbox } from "lucide-react";
+import { BellRing, CheckCheck, Inbox, Wifi, WifiOff, Loader2 } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { NotificationCard } from "@/features/notifications/components/notification-card";
 import {
     NotificationFilters,
     NotificationFilter,
 } from "@/features/notifications/components/notification-filters";
-import { mockNotifications, Notification } from "@/features/notifications/types/mock-notifications";
 import { RealtimeEventTrigger } from "@/features/notifications/components/realtime-event-trigger";
+import { useNotificationStore } from "@/features/notifications/store/useNotificationStore";
+import { useState } from "react";
+import { cn } from "@/shared/utils/cn";
 
 export default function NotificationsPage() {
-    const [notifications, setNotifications] = useState<Notification[]>(
-        () => [...mockNotifications]
-    );
+    const {
+        notifications,
+        unreadCount,
+        connectionStatus,
+        isLoading,
+        fetchNotifications,
+        markAsRead,
+        markAllAsRead,
+    } = useNotificationStore();
+
     const [filter, setFilter] = useState<NotificationFilter>("all");
 
-    const unreadCount = useMemo(
-        () => notifications.filter((n) => !n.isRead).length,
-        [notifications]
-    );
+    // Fetch notifications on mount
+    useEffect(() => {
+        fetchNotifications(0);
+    }, [fetchNotifications]);
 
     const filteredNotifications = useMemo(() => {
         switch (filter) {
@@ -33,16 +42,6 @@ export default function NotificationsPage() {
                 return notifications;
         }
     }, [notifications, filter]);
-
-    const handleMarkRead = (id: string) => {
-        setNotifications((prev) =>
-            prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
-        );
-    };
-
-    const handleMarkAllRead = () => {
-        setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
-    };
 
     return (
         <section className="relative z-10 pt-6 pb-8 md:pt-8 md:pb-12">
@@ -61,11 +60,32 @@ export default function NotificationsPage() {
                             <h1 className="text-2xl font-bold text-[#1C252E] dark:text-white">
                                 Thông báo
                             </h1>
-                            <p className="text-base text-[#637381] dark:text-[#919EAB]">
-                                {unreadCount > 0
-                                    ? `Bạn có ${unreadCount} thông báo chưa đọc`
-                                    : "Tất cả thông báo đã được đọc"}
-                            </p>
+                            <div className="flex items-center gap-2">
+                                <p className="text-base text-[#637381] dark:text-[#919EAB]">
+                                    {unreadCount > 0
+                                        ? `Bạn có ${unreadCount} thông báo chưa đọc`
+                                        : "Tất cả thông báo đã được đọc"}
+                                </p>
+                                {/* Connection status indicator */}
+                                <span
+                                    className={cn(
+                                        "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium",
+                                        connectionStatus === "connected"
+                                            ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400"
+                                            : connectionStatus === "connecting"
+                                            ? "bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400"
+                                            : "bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400"
+                                    )}
+                                >
+                                    {connectionStatus === "connected" ? (
+                                        <><Wifi className="w-3 h-3" /> Live</>
+                                    ) : connectionStatus === "connecting" ? (
+                                        <><Loader2 className="w-3 h-3 animate-spin" /> Đang kết nối</>
+                                    ) : (
+                                        <><WifiOff className="w-3 h-3" /> Offline</>
+                                    )}
+                                </span>
+                            </div>
                         </div>
                     </div>
 
@@ -73,7 +93,7 @@ export default function NotificationsPage() {
                         <Button
                             variant="ghost"
                             size="sm"
-                            onClick={handleMarkAllRead}
+                            onClick={markAllAsRead}
                             className="h-9 text-sm text-[#22c55e] hover:text-[#22c55e] hover:bg-[#22c55e]/10 dark:hover:bg-[#22c55e]/20 rounded-full gap-1.5 cursor-pointer"
                         >
                             <CheckCheck className="w-4 h-4" />
@@ -96,7 +116,7 @@ export default function NotificationsPage() {
                     />
                 </motion.div>
 
-                {/* Realtime Event Trigger (Mock) */}
+                {/* Realtime Event Trigger (Demo/Dev) */}
                 <motion.div
                     initial={{ opacity: 0, y: -5 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -106,6 +126,13 @@ export default function NotificationsPage() {
                     <RealtimeEventTrigger />
                 </motion.div>
 
+                {/* Loading */}
+                {isLoading && notifications.length === 0 && (
+                    <div className="flex items-center justify-center py-16">
+                        <Loader2 className="w-8 h-8 text-[#22c55e] animate-spin" />
+                    </div>
+                )}
+
                 {/* Notification List */}
                 <div className="space-y-3">
                     <AnimatePresence mode="popLayout">
@@ -114,7 +141,7 @@ export default function NotificationsPage() {
                                 <NotificationCard
                                     key={notification.id}
                                     notification={notification}
-                                    onMarkRead={handleMarkRead}
+                                    onMarkRead={markAsRead}
                                     index={index}
                                 />
                             ))
@@ -144,4 +171,3 @@ export default function NotificationsPage() {
         </section>
     );
 }
-
