@@ -10,6 +10,8 @@ import { TEMPLATE_COMPONENTS } from "@/features/cv/components/cv-templates";
 import { getMockDataForTemplate } from "@/features/cv/data/mock-data";
 import { usePDFExport } from "@/features/cv/hooks/usePDFExport";
 import { useCVDesign } from "@/features/cv/hooks/useCVDesign";
+import { useCvFileStore } from "@/features/cv/stores/cv-file-store";
+import { useToast } from "@/shared/components/ui/toast";
 import { CVDesignPanel } from "@/features/cv/components/CVDesignPanel";
 import { CVDesignPreviewWrapper } from "@/features/cv/components/CVDesignPreviewWrapper";
 import { CVPageBreakOverlay } from "@/features/cv/components/CVPageBreakOverlay";
@@ -43,7 +45,10 @@ function loadPreviewTemplate(): string {
 function CVPreviewContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const { isExporting, handleExportFromModal } = usePDFExport();
+    const { isExporting, handleExportFromModal, exportToBlob } = usePDFExport();
+    const { uploadCvFile } = useCvFileStore();
+    const { addToast } = useToast();
+    const [isSavingToServer, setIsSavingToServer] = React.useState(false);
 
     // Design tokens (section order, hidden sections, colors, fonts, spacing)
     const design = useCVDesign();
@@ -163,6 +168,26 @@ function CVPreviewContent() {
 
     const fileName = `CV_${cvData.personalInfo.fullName || "Untitled"}.pdf`;
 
+    const handleSaveToServer = async () => {
+        setIsSavingToServer(true);
+        addToast("Đang tạo tệp PDF...", "info");
+        try {
+            const file = await exportToBlob("cv-preview-content", fileName);
+            if (!file) return;
+
+            addToast("Đang tải lên hệ thống...", "info");
+            // Set as primary CV immediately since they just built it? Let's leave it false by default.
+            await uploadCvFile(file, false, "BUILDER");
+            addToast("Lưu CV thành công!", "success", 4000, "Bạn có thể xem CV này ở mục Quản lý CV.");
+            router.push("/cv-files");
+        } catch (error) {
+            console.error("Lưu CV thất bại:", error);
+            // Error is handled by store internally
+        } finally {
+            setIsSavingToServer(false);
+        }
+    };
+
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-[#141A21] flex flex-col">
             {/* ─── Header ─── */}
@@ -232,14 +257,30 @@ function CVPreviewContent() {
                             className="gap-2 border-green-300 text-green-600 hover:bg-green-50 dark:border-green-700 dark:text-green-400"
                         >
                             <Save className="w-4 h-4" />
-                            <span className="hidden sm:inline">Lưu</span>
+                            <span className="hidden sm:inline">Lưu tạm</span>
                         </Button>
                     )}
 
                     <Button
                         size="sm"
+                        onClick={handleSaveToServer}
+                        disabled={isSavingToServer || isExporting}
+                        className="gap-2 bg-purple-500 hover:bg-purple-600 text-white shadow-lg shadow-purple-500/20"
+                    >
+                        {isSavingToServer ? (
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                            <Save className="w-4 h-4" />
+                        )}
+                        <span className="hidden sm:inline">
+                            {isSavingToServer ? "Đang lưu…" : "Lưu vào Hồ sơ"}
+                        </span>
+                    </Button>
+
+                    <Button
+                        size="sm"
                         onClick={() => handleExportFromModal("cv-preview-content", fileName)}
-                        disabled={isExporting}
+                        disabled={isExporting || isSavingToServer}
                         className="gap-2 bg-green-500 hover:bg-green-600 text-white shadow-lg shadow-green-500/20"
                     >
                         {isExporting ? (
