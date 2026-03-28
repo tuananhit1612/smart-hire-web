@@ -12,10 +12,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { employerApplicantApi } from "../api/employer-api";
-import {
-  mockEmployerApplicants,
-  type EmployerApplicant,
-} from "../types/mock-applicants";
+import type { EmployerApplicant } from "../types/mock-applicants";
 
 // ─── Params ──────────────────────────────────────────────
 
@@ -98,19 +95,11 @@ export function useApplicants(
         });
 
         if (!cancelled) {
-          setData(response.data.data);
+          setData(response.data.data.data || []);
         }
-      } catch {
-        // Graceful fallback to mock data while backend is not deployed
+      } catch (err: any) {
         if (!cancelled) {
-          const filtered = applyClientFilters(
-            mockEmployerApplicants,
-            params.search,
-            params.sortBy
-          );
-          setData(filtered);
-          // Don't surface error to the user; mock data is transparent
-          setError(null);
+          setError(err.message || "Failed to load applicants");
         }
       } finally {
         if (!cancelled) {
