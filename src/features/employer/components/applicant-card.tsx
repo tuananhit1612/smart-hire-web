@@ -52,7 +52,7 @@ export function ApplicantCard({ applicant, onSelect }: ApplicantCardProps) {
         }
     };
 
-    const statusConfig = getStatusConfig(applicant.status);
+    const statusConfig = getStatusConfig(applicant.stage);
 
     return (
         <motion.div 
@@ -66,14 +66,14 @@ export function ApplicantCard({ applicant, onSelect }: ApplicantCardProps) {
                 <div className="flex gap-4">
                     <div className="w-12 h-12 rounded-full bg-[rgba(145,158,171,0.1)] dark:bg-white/[0.06] flex items-center justify-center overflow-hidden border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08]">
                         {applicant.avatarUrl ? (
-                            <img src={applicant.avatarUrl} alt={applicant.name} className="w-full h-full object-cover" />
+                            <img src={applicant.avatarUrl} alt={applicant.fullName} className="w-full h-full object-cover" />
                         ) : (
-                            <span className="text-lg font-bold text-[#919EAB]">{applicant.name.charAt(0)}</span>
+                            <span className="text-lg font-bold text-[#919EAB]">{applicant.fullName.charAt(0)}</span>
                         )}
                     </div>
                     <div>
                         <h3 className="font-bold text-[#1C252E] dark:text-white group-hover:text-[#22c55e] transition-colors">
-                            {applicant.name}
+                            {applicant.fullName}
                         </h3>
                         <p className="text-sm text-[#637381] dark:text-[#919EAB] font-medium">
                             {applicant.currentTitle}

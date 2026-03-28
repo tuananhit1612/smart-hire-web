@@ -27,12 +27,12 @@ export interface ActivityLog {
 
 export interface EmployerApplicant {
     readonly id: string;
-    readonly name: string;
+    readonly fullName: string;
     readonly email: string;
     readonly phone: string;
     readonly avatarUrl?: string;
     readonly appliedAt: string;
-    readonly status: ApplicationStatus;
+    readonly stage: ApplicationStage;
     readonly currentTitle: string;
     readonly experienceYears: number;
     readonly skills: string[];

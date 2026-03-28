@@ -114,12 +114,12 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
                   {profile.avatarUrl ? (
                     <img
                       src={profile.avatarUrl.startsWith("http") ? profile.avatarUrl : `${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api").replace("/api", "")}/uploads/${profile.avatarUrl}`}
-                      alt={profile.fullName || user?.name || "Avatar"}
+                      alt={profile.fullName || user?.fullName || "Avatar"}
                       className="w-full h-full object-cover"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-4xl font-extrabold text-[#22C55E] bg-gradient-to-br from-[#22C55E]/10 to-transparent">
-                      {(profile.fullName || user?.name || "U").charAt(0).toUpperCase()}
+                      {(profile.fullName || user?.fullName || "U").charAt(0).toUpperCase()}
                     </div>
                   )}
 
@@ -159,7 +159,7 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
               <div>
                 <div className="flex items-center gap-2">
                   <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[#1C252E] dark:text-white">
-                    {profile.fullName || user?.name || "Người dùng ẩn danh"}
+                    {profile.fullName || user?.fullName || "Người dùng ẩn danh"}
                   </h1>
                   <CheckCircle2 className="w-6 h-6 text-[#22C55E] fill-[#22C55E]/20 shrink-0" />
                 </div>

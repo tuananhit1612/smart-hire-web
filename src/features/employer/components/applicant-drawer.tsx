@@ -79,13 +79,13 @@ export function ApplicantDrawer({ applicant, isOpen, onClose, jobId, onApplicant
                             <div className="flex gap-4">
                                 <div className="w-16 h-16 rounded-full bg-[rgba(145,158,171,0.1)] dark:bg-white/[0.06] flex items-center justify-center overflow-hidden border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] shrink-0">
                                     {applicant.avatarUrl ? (
-                                        <img src={applicant.avatarUrl} alt={applicant.name} className="w-full h-full object-cover" />
+                                        <img src={applicant.avatarUrl} alt={applicant.fullName} className="w-full h-full object-cover" />
                                     ) : (
-                                        <span className="text-2xl font-bold text-[#919EAB]">{applicant.name.charAt(0)}</span>
+                                        <span className="text-2xl font-bold text-[#919EAB]">{applicant.fullName.charAt(0)}</span>
                                     )}
                                 </div>
                                 <div>
-                                    <h2 className="text-xl font-bold text-[#1C252E] dark:text-white">{applicant.name}</h2>
+                                    <h2 className="text-xl font-bold text-[#1C252E] dark:text-white">{applicant.fullName}</h2>
                                     <p className="text-[#637381] dark:text-[#919EAB]">{applicant.currentTitle} • {applicant.experienceYears} năm KN</p>
                                     <div className="flex items-center gap-3 mt-2 text-sm text-[#637381] dark:text-[#919EAB]">
                                         <div className="flex items-center gap-1">
@@ -232,7 +232,7 @@ export function ApplicantDrawer({ applicant, isOpen, onClose, jobId, onApplicant
                                             ))}
                                             <div className="relative">
                                                 <div className="absolute -left-[31px] top-1 w-2.5 h-2.5 rounded-full bg-[#22c55e] border-2 border-white dark:border-[#141A21] ring-2 ring-[#22c55e]/30 dark:ring-[#22c55e]/30" />
-                                                <p className="text-sm font-medium text-[#22c55e] dark:text-[#22c55e]">Hiện tại: {applicant.status}</p>
+                                                <p className="text-sm font-medium text-[#22c55e] dark:text-[#22c55e]">Hiện tại: {applicant.stage}</p>
                                             </div>
                                         </div>
                                     </div>

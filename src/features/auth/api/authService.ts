@@ -1,4 +1,5 @@
-import { api } from "@/core/api";
+import { apiClient } from "@/shared/lib/api-client";
+import type { ApiWrapper } from "@/shared/types/api";
 import type { SessionUser } from "../types/auth-types";
 
 export interface RegisterRequest {
@@ -24,31 +25,24 @@ export interface AuthResponse {
     role: string;
 }
 
-interface ApiResponse<T> {
-    success: boolean;
-    code: string;
-    message?: string;
-    data: T;
-}
-
-const BASE = "/api/auth";
+const BASE = "/auth";
 
 export const authService = {
     /**
      * Register a new user
-     * POST /api/auth/register
+     * POST /auth/register
      */
     register: async (data: RegisterRequest): Promise<AuthResponse> => {
-        const res = await api.post<ApiResponse<AuthResponse>>(`${BASE}/register`, data);
+        const { data: res } = await apiClient.post<ApiWrapper<AuthResponse>>(`${BASE}/register`, data);
         return res.data;
     },
 
     /**
      * Login
-     * POST /api/auth/login
+     * POST /auth/login
      */
     login: async (data: LoginRequest): Promise<AuthResponse> => {
-        const res = await api.post<ApiResponse<AuthResponse>>(`${BASE}/login`, data);
+        const { data: res } = await apiClient.post<ApiWrapper<AuthResponse>>(`${BASE}/login`, data);
         return res.data;
     },
 
@@ -59,9 +53,9 @@ export const authService = {
         return {
             id: resp.userId.toString(),
             email: resp.email,
-            name: resp.fullName,
+            fullName: resp.fullName,
             role: resp.role.toLowerCase() as any, // "candidate" | "employer"
-            avatar: "", // Can add later
+            avatarUrl: "", // Can add later
             isNewUser: isFirstLogin,
             joinedDate: new Date().toISOString(),
         };

@@ -52,9 +52,16 @@ export function RealtimeProvider({
     }
   }, [isAuthenticated, fetchUnreadCount]);
 
-  // Connect WebSocket + handle incoming events with toast
+  // Connect WebSocket + handle incoming events with toast & store update
   useWebSocket({
     onEvent: (event: RealtimeEvent) => {
+      // 1. Handle Notifications specifically
+      if (event.type === EventType.NEW_NOTIFICATION) {
+        const notification = event.payload as any; // NotificationDto
+        useNotificationStore.getState().addRealtimeNotification(notification);
+      }
+
+      // 2. Handle Toasts for all mapped events
       const label = EVENT_LABELS[event.type];
       if (label) {
         const payload = (event.payload ?? {}) as Record<string, unknown>;

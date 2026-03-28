@@ -83,32 +83,22 @@ export const dashboardApi = {
         );
         return data.data;
     },
+
+    /** Export HR Jobs as CSV */
+    exportJobsCsv: async (): Promise<Blob> => {
+        const { data } = await apiClient.get<Blob>(
+            "/dashboard/reports/jobs/csv",
+            { responseType: "blob" }
+        );
+        return data;
+    },
+
+    /** Export HR Applications as CSV */
+    exportApplicationsCsv: async (): Promise<Blob> => {
+        const { data } = await apiClient.get<Blob>(
+            "/dashboard/reports/applications/csv",
+            { responseType: "blob" }
+        );
+        return data;
+    },
 };
-
-/** Fetch per-job dashboard stats */
-export async function fetchJobDashboardStats(
-    jobId: number
-): Promise<JobDashboardStats> {
-    const { data } = await apiClient.get<ApiWrapper<JobDashboardStats>>(
-        `/dashboard/hr/jobs/${jobId}/stats`
-    );
-    return data.data;
-}
-
-/** Export HR Jobs as CSV */
-export async function exportHrJobsCsv(): Promise<Blob> {
-    const { data } = await apiClient.get<Blob>(
-        "/dashboard/reports/jobs/csv",
-        { responseType: "blob" }
-    );
-    return data;
-}
-
-/** Export HR Applications as CSV */
-export async function exportHrApplicationsCsv(): Promise<Blob> {
-    const { data } = await apiClient.get<Blob>(
-        "/dashboard/reports/applications/csv",
-        { responseType: "blob" }
-    );
-    return data;
-}

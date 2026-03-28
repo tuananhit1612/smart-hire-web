@@ -47,7 +47,7 @@ function applyClientFilters(
     const lowerQuery = search.toLowerCase();
     result = result.filter(
       (app) =>
-        app.name.toLowerCase().includes(lowerQuery) ||
+        app.fullName.toLowerCase().includes(lowerQuery) ||
         app.skills.some((skill) => skill.toLowerCase().includes(lowerQuery))
     );
   }

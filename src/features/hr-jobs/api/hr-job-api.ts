@@ -3,7 +3,8 @@ import {
     CreateJobRequest, 
     UpdateJobRequest, 
     ChangeJobStatusRequest, 
-    HrJobResponse 
+    HrJobResponse,
+    HrJobStatus
 } from "../types/hr-job-api-types";
 import { ApiWrapper } from "@/shared/types/api";
 
@@ -34,7 +35,7 @@ export const hrJobApi = {
     },
 
     /** Đổi trạng thái (DRAFT | OPEN | CLOSED) */
-    changeJobStatus: async (id: number, status: string): Promise<HrJobResponse> => {
+    changeJobStatus: async (id: number, status: HrJobStatus): Promise<HrJobResponse> => {
         const payload: ChangeJobStatusRequest = { status };
         const res = await apiClient.patch<ApiWrapper<HrJobResponse>>(`/jobs/${id}/status`, payload);
         return res.data.data;

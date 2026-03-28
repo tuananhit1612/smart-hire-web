@@ -11,6 +11,10 @@ import { apiClient } from "@/shared/lib/api-client";
 import type { ApiWrapper } from "@/shared/types/api";
 import type { JobResponse } from "../types/job-api-types";
 
+// ─── BE DTO mirrors ──────────────────────────────────────
+
+
+
 // ─── Search Params ────────────────────────────────────────
 export interface JobSearchParams {
   keyword?: string;

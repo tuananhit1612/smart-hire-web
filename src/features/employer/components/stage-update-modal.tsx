@@ -31,8 +31,8 @@ type StageId = "applied" | "screening" | "interview" | "offer" | "hired" | "reje
 
 interface StageUpdateCandidate {
     id: string;
-    name: string;
-    avatar: string;
+    fullName: string;
+    avatarUrl: string;
     position: string;
     aiScore: number;
 }
@@ -176,10 +176,10 @@ export function StageUpdateModal({
                                 {/* Candidate Info */}
                                 <div className="flex items-center gap-3 bg-[rgba(145,158,171,0.06)] dark:bg-white/[0.04] rounded-xl p-3">
                                     <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[rgba(145,158,171,0.04)] to-violet-100 dark:from-[rgba(145,158,171,0.04)] dark:to-violet-900/30 flex items-center justify-center text-xs font-bold text-[#22c55e] dark:text-[#22c55e]">
-                                        {candidate.avatar}
+                                        {candidate.avatarUrl}
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <p className="text-sm font-semibold text-[#1C252E] dark:text-white">{candidate.name}</p>
+                                        <p className="text-sm font-semibold text-[#1C252E] dark:text-white">{candidate.fullName}</p>
                                         <p className="text-[11px] text-[#919EAB]">{candidate.position}</p>
                                     </div>
                                     <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#22c55e]/15 dark:bg-[#22c55e]/20 text-[#22c55e] dark:text-[#22c55e] flex items-center gap-0.5">
