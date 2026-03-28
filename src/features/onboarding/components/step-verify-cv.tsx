@@ -1,17 +1,24 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/shared/components/ui/button";
-import { MockCVData } from "./step-activation";
+import { OnboardingCvData } from "../api/onboarding-api";
 import { Input } from "@/shared/components/ui/input";
 
 interface StepVerifyCVProps {
-    cvData: MockCVData;
-    onNext: () => void;
+    cvData: OnboardingCvData;
+    onNext: (data: OnboardingCvData) => void;
     onBack: () => void;
 }
 
 export function StepVerifyCV({ cvData, onNext, onBack }: StepVerifyCVProps) {
+    const [formData, setFormData] = useState<OnboardingCvData>(cvData);
+
+    const handleChange = (field: keyof OnboardingCvData, value: string) => {
+        setFormData((prev) => ({ ...prev, [field]: value }));
+    };
+
     return (
         <motion.div
             initial={{ opacity: 0, scale: 0.95, x: 20 }}
@@ -37,61 +44,101 @@ export function StepVerifyCV({ cvData, onNext, onBack }: StepVerifyCVProps) {
                         <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 absolute -top-2 left-3 bg-white dark:bg-[#1C252E] px-1 z-10">
                             Tên
                         </label>
-                        <Input defaultValue={cvData.firstName} className="h-12 bg-transparent dark:border-[rgba(145,158,171,0.24)] focus-visible:ring-emerald-500" />
+                        <Input 
+                            value={formData.firstName || ""} 
+                            onChange={(e) => handleChange("firstName", e.target.value)}
+                            className="h-12 bg-transparent dark:border-[rgba(145,158,171,0.24)] focus-visible:ring-emerald-500" 
+                        />
                     </div>
                     <div className="space-y-2 relative">
                         <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 absolute -top-2 left-3 bg-white dark:bg-[#1C252E] px-1 z-10">
                             Họ
                         </label>
-                        <Input defaultValue={cvData.lastName} className="h-12 bg-transparent dark:border-[rgba(145,158,171,0.24)] focus-visible:ring-emerald-500" />
+                        <Input 
+                            value={formData.lastName || ""} 
+                            onChange={(e) => handleChange("lastName", e.target.value)}
+                            className="h-12 bg-transparent dark:border-[rgba(145,158,171,0.24)] focus-visible:ring-emerald-500" 
+                        />
                     </div>
                     <div className="space-y-2 relative">
                         <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 absolute -top-2 left-3 bg-white dark:bg-[#1C252E] px-1 z-10">
                             Số điện thoại
                         </label>
-                        <Input defaultValue={cvData.phone} className="h-12 bg-transparent dark:border-[rgba(145,158,171,0.24)] focus-visible:ring-emerald-500 pl-4" />
+                        <Input 
+                            value={formData.phone || ""} 
+                            onChange={(e) => handleChange("phone", e.target.value)}
+                            className="h-12 bg-transparent dark:border-[rgba(145,158,171,0.24)] focus-visible:ring-emerald-500 pl-4" 
+                        />
                     </div>
                     <div className="space-y-2 relative">
                         <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 absolute -top-2 left-3 bg-white dark:bg-[#1C252E] px-1 z-10">
                             Email ứng tuyển
                         </label>
-                        <Input defaultValue={cvData.email} className="h-12 bg-transparent dark:border-[rgba(145,158,171,0.24)] focus-visible:ring-emerald-500" />
+                        <Input 
+                            value={formData.email || ""} 
+                            onChange={(e) => handleChange("email", e.target.value)}
+                            className="h-12 bg-transparent dark:border-[rgba(145,158,171,0.24)] focus-visible:ring-emerald-500" 
+                        />
                     </div>
                     <div className="space-y-2 relative md:col-span-2">
                         <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 absolute -top-2 left-3 bg-white dark:bg-[#1C252E] px-1 z-10">
                             Linkedin
                         </label>
-                        <Input defaultValue={cvData.linkedin} className="h-12 bg-transparent dark:border-[rgba(145,158,171,0.24)] focus-visible:ring-emerald-500" />
+                        <Input 
+                            value={formData.linkedin || ""} 
+                            onChange={(e) => handleChange("linkedin", e.target.value)}
+                            className="h-12 bg-transparent dark:border-[rgba(145,158,171,0.24)] focus-visible:ring-emerald-500" 
+                        />
                     </div>
                     <div className="space-y-2 relative md:col-span-2">
                         <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 absolute -top-2 left-3 bg-white dark:bg-[#1C252E] px-1 z-10">
                             Trang web cá nhân
                         </label>
-                        <Input defaultValue={cvData.website} className="h-12 bg-transparent dark:border-[rgba(145,158,171,0.24)] focus-visible:ring-emerald-500" />
+                        <Input 
+                            value={formData.website || ""} 
+                            onChange={(e) => handleChange("website", e.target.value)}
+                            className="h-12 bg-transparent dark:border-[rgba(145,158,171,0.24)] focus-visible:ring-emerald-500" 
+                        />
                     </div>
                     <div className="space-y-2 relative">
                         <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 absolute -top-2 left-3 bg-white dark:bg-[#1C252E] px-1 z-10">
                             Quốc gia
                         </label>
-                        <Input defaultValue={cvData.country} className="h-12 bg-transparent dark:border-[rgba(145,158,171,0.24)] focus-visible:ring-emerald-500" />
+                        <Input 
+                            value={formData.country || ""} 
+                            onChange={(e) => handleChange("country", e.target.value)}
+                            className="h-12 bg-transparent dark:border-[rgba(145,158,171,0.24)] focus-visible:ring-emerald-500" 
+                        />
                     </div>
                     <div className="space-y-2 relative">
                         <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 absolute -top-2 left-3 bg-white dark:bg-[#1C252E] px-1 z-10">
                             Tiểu bang/vùng
                         </label>
-                        <Input defaultValue={cvData.state} className="h-12 bg-transparent dark:border-[rgba(145,158,171,0.24)] focus-visible:ring-emerald-500" />
+                        <Input 
+                            value={formData.state || ""} 
+                            onChange={(e) => handleChange("state", e.target.value)}
+                            className="h-12 bg-transparent dark:border-[rgba(145,158,171,0.24)] focus-visible:ring-emerald-500" 
+                        />
                     </div>
                     <div className="space-y-2 relative">
                         <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 absolute -top-2 left-3 bg-white dark:bg-[#1C252E] px-1 z-10">
                             Thành phố
                         </label>
-                        <Input defaultValue={cvData.city} className="h-12 bg-transparent dark:border-[rgba(145,158,171,0.24)] focus-visible:ring-emerald-500" />
+                        <Input 
+                            value={formData.city || ""} 
+                            onChange={(e) => handleChange("city", e.target.value)}
+                            className="h-12 bg-transparent dark:border-[rgba(145,158,171,0.24)] focus-visible:ring-emerald-500" 
+                        />
                     </div>
                     <div className="space-y-2 relative">
                         <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 absolute -top-2 left-3 bg-white dark:bg-[#1C252E] px-1 z-10">
                             Giới tính
                         </label>
-                        <Input defaultValue={cvData.gender} className="h-12 bg-transparent dark:border-[rgba(145,158,171,0.24)] focus-visible:ring-emerald-500" />
+                        <Input 
+                            value={formData.gender || ""} 
+                            onChange={(e) => handleChange("gender", e.target.value)}
+                            className="h-12 bg-transparent dark:border-[rgba(145,158,171,0.24)] focus-visible:ring-emerald-500" 
+                        />
                     </div>
                 </div>
             </div>
@@ -106,7 +153,7 @@ export function StepVerifyCV({ cvData, onNext, onBack }: StepVerifyCVProps) {
                     Mặt sau
                 </Button>
                 <Button
-                    onClick={onNext}
+                    onClick={() => onNext(formData)}
                     size="lg"
                     className="rounded-xl px-8 shadow-[0_8px_16px_rgba(118,53,220,0.24)] bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600 text-white font-bold"
                 >

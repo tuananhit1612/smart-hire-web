@@ -24,6 +24,8 @@ export interface SessionUser {
     /** True when the user just registered and hasn't completed onboarding */
     isNewUser?: boolean;
     isFirstLogin?: boolean;
+    /** True when the user has completed the onboarding flow */
+    isOnboarded?: boolean;
 }
 
 export type AuthStatus = "authenticated" | "unauthenticated" | "loading";
@@ -54,6 +56,7 @@ export interface AuthLoginData {
     email: string;
     fullName: string;
     role: string;                  // "CANDIDATE" | "EMPLOYER" | etc.
+    isOnboarded?: boolean;
 }
 
 /** Full Axios-level response type for login / register / refresh */
@@ -69,6 +72,7 @@ export interface UserData {
     role: string;
     avatarUrl: string | null;
     isActive: boolean;
+    isOnboarded: boolean;
     createdAt: string;
     updatedAt: string;
 }

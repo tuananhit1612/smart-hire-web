@@ -31,9 +31,19 @@ export const apiClient = axios.create({
 // ─── Request Interceptor ─────────────────────────────────
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = tokenStorage.getAccessToken();
-    if (token && config.headers) {
-      config.headers.Authorization = `Bearer ${token}`;
+    const requestUrl = config.url ?? "";
+    const isPublicAuthEndpoint =
+      requestUrl.includes("/auth/login") ||
+      requestUrl.includes("/auth/register") ||
+      requestUrl.includes("/auth/refresh-token") ||
+      requestUrl.includes("/auth/forgot-password") ||
+      requestUrl.includes("/auth/reset-password");
+
+    if (!isPublicAuthEndpoint) {
+      const token = tokenStorage.getAccessToken();
+      if (token && config.headers) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
 
     // Safely apply JSON content type only if we are NOT sending FormData
@@ -104,7 +114,7 @@ apiClient.interceptors.response.use(
     if (status === 401 && !originalRequest._retry) {
       // Don't attempt refresh for auth endpoints themselves
       const url = originalRequest.url ?? "";
-      if (url.includes("/auth/login") || url.includes("/auth/register") || url.includes("/auth/refresh")) {
+      if (url.includes("/auth/login") || url.includes("/auth/register") || url.includes("/auth/refresh-token")) {
         return Promise.reject(
           new ApiError("UNAUTHORIZED", 401, serverMessage ?? "Thông tin đăng nhập không chính xác.")
         );
@@ -139,7 +149,7 @@ apiClient.interceptors.response.use(
         // Call refresh endpoint directly with axios (not apiClient)
         // to avoid the interceptor loop
         const refreshRes = await axios.post(
-          `${apiClient.defaults.baseURL}/auth/refresh`,
+          `${apiClient.defaults.baseURL}/auth/refresh-token`,
           { refreshToken },
           { headers: { "Content-Type": "application/json" } }
         );

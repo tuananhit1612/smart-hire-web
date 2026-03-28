@@ -4,11 +4,12 @@ import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { OnboardingLayout } from "@/features/onboarding/components/onboarding-layout";
 import { StepWelcome } from "@/features/onboarding/components/step-welcome";
-import { StepActivation, MockCVData } from "@/features/onboarding/components/step-activation";
+import { StepActivation } from "@/features/onboarding/components/step-activation";
 import { StepRole } from "@/features/onboarding/components/step-role";
 import { StepExperience } from "@/features/onboarding/components/step-experience";
 import { StepVerifyCV } from "@/features/onboarding/components/step-verify-cv";
 import { StepComplete } from "@/features/onboarding/components/step-complete";
+import { OnboardingCvData } from "@/features/onboarding/api/onboarding-api";
 
 export default function OnboardingPage() {
     const [currentStep, setCurrentStep] = useState(0);
@@ -16,7 +17,7 @@ export default function OnboardingPage() {
         activationMethod: null as "ai" | "manual" | null,
         role: null as string | null,
         experience: null as string | null,
-        cvData: null as MockCVData | null,
+        cvData: null as OnboardingCvData | null,
     });
 
     const handleNext = () => setCurrentStep((prev) => prev + 1);
@@ -64,15 +65,17 @@ export default function OnboardingPage() {
                     <StepVerifyCV
                         key="verify"
                         cvData={preferences.cvData}
-                        onNext={() => setCurrentStep(5)}
+                        onNext={(data) => {
+                            setPreferences({ ...preferences, cvData: data });
+                            setCurrentStep(5);
+                        }}
                         onBack={() => setCurrentStep(3)}
                     />
                 )}
                 {currentStep === 5 && (
                     <StepComplete
                         key="complete"
-                        role={preferences.role}
-                        experience={preferences.experience}
+                        preferences={preferences}
                     />
                 )}
             </AnimatePresence>

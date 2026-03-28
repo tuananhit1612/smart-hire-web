@@ -10,7 +10,6 @@
 import { apiClient } from "@/shared/lib/api-client";
 import type {
     AuthLoginResponse,
-    AuthMeResponse,
     AuthMessageResponse,
     ChangePasswordPayload,
     RegisterPayload,
@@ -68,7 +67,7 @@ export const authApi = {
      * Fetch current user profile using stored access token.
      * Used on app mount to revalidate a persisted session.
      */
-    getMe: () => apiClient.get<AuthMeResponse>("/auth/me"),
+    getMe: () => apiClient.get<UserResponse>("/auth/me"),
 
     /**
      * Update current user's profile (fullName, phone, avatarUrl).
@@ -91,7 +90,7 @@ export const authApi = {
     uploadAvatar: (file: File) => {
         const formData = new FormData();
         formData.append("file", file);
-        return apiClient.post<string>("/users/me/avatar", formData, {
+        return apiClient.post<string>("/auth/me/avatar", formData, {
             headers: { "Content-Type": "multipart/form-data" },
         });
     },

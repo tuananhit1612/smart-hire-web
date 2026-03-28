@@ -32,9 +32,25 @@ export interface CandidateProfileResponse {
   dateOfBirth: string | null;       // ISO Date "1995-01-15"
   gender: Gender | null;
   address: string | null;
+  country: string | null;
+  state: string | null;
   city: string | null;
+  linkedinUrl: string | null;
+  personalWebsite: string | null;
   yearsOfExperience: number | null;
   jobLevel: JobLevel | null;
+  jobPreference: {
+    jobTitles: string[];
+    preferredLocations: string[];
+    preferredIndustry: string | null;
+    employmentType: string | null;
+    preferredExperienceLevel: string | null;
+    companySize: string | null;
+    workPreference: string | null;
+    willingToRelocate: boolean | null;
+    availabilityDate: string | null;
+    salary: string | null;
+  } | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -46,9 +62,25 @@ export interface ProfilePayload {
   dateOfBirth?: string;
   gender?: Gender;
   address?: string;
+  country?: string;
+  state?: string;
   city?: string;
+  linkedinUrl?: string;
+  personalWebsite?: string;
   yearsOfExperience?: number;
   jobLevel?: JobLevel;
+  jobPreference?: {
+    jobTitles?: string[];
+    preferredLocations?: string[];
+    preferredIndustry?: string;
+    employmentType?: string;
+    preferredExperienceLevel?: string;
+    companySize?: string;
+    workPreference?: string;
+    willingToRelocate?: boolean;
+    availabilityDate?: string;
+    salary?: string;
+  };
 }
 
 // ─── Education ───────────────────────────────────────────
@@ -107,6 +139,9 @@ export interface ProjectResponse {
   projectName: string;
   description: string | null;
   technologies: string | null;      // comma-separated
+  startDate: string | null;
+  endDate: string | null;
+  link: string | null;
 }
 
 /** Mirrors ProjectRequest.java */
@@ -114,6 +149,9 @@ export interface ProjectPayload {
   projectName: string;
   description?: string;
   technologies?: string;
+  startDate?: string;
+  endDate?: string;
+  link?: string;
 }
 
 // ─── Skill ───────────────────────────────────────────────

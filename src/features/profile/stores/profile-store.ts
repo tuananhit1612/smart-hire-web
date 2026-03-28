@@ -157,23 +157,44 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
       const { profile } = get();
       
       // 1. Save Core User Info (Name, Phone)
-      // The backend expects these in the User entity, not CandidateProfile
-      await apiClient.put("/users/me", {
-        fullName: profile.fullName || "",
-        phone: profile.phone || "",
-      });
+      try {
+        await apiClient.put("/users/me", {
+          fullName: profile.fullName || "",
+          phone: profile.phone || "",
+        });
+        console.log("[saveProfile] ✅ /users/me updated");
+      } catch (userErr) {
+        console.warn("[saveProfile] ⚠️ /users/me failed (non-blocking):", userErr);
+      }
 
       // 2. Save Candidate Profile Info (Headline, Summary, etc.)
       const payload = mapProfileToApi(profile);
+      console.log("[saveProfile] Sending profile payload:", JSON.stringify(payload));
+      console.log("[saveProfile] profile.id =", JSON.stringify(profile.id));
+      
       let res;
       if (!profile.id) {
+        // No profile yet — create new
+        console.log("[saveProfile] → POST createProfile");
         res = await profileApi.createProfile(payload);
       } else {
-        res = await profileApi.updateProfile(payload);
+        // Has profile — try update, fallback to create if 404
+        console.log("[saveProfile] → PUT updateProfile");
+        try {
+          res = await profileApi.updateProfile(payload);
+        } catch (updateErr: any) {
+          if (updateErr?.status === 404) {
+            console.log("[saveProfile] → Update 404, falling back to POST createProfile");
+            res = await profileApi.createProfile(payload);
+          } else {
+            throw updateErr;
+          }
+        }
       }
       const updatedProfile = mapProfileFromApi(res.data.data);
+      console.log("[saveProfile] ✅ Profile saved, id =", updatedProfile.id);
 
-      // 2. Sync Educations
+      // 3. Sync Educations
       const eduPromises = profile.educations.map(async (edu) => {
         const payload = mapEducationToApi(edu);
         if (edu.id.startsWith("edu-") || edu.id.startsWith("new-")) {
@@ -183,7 +204,7 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
         }
       });
 
-      // 3. Sync Experiences
+      // 4. Sync Experiences
       const expPromises = profile.experiences.map(async (exp) => {
         const payload = mapExperienceToApi(exp);
         if (exp.id.startsWith("exp-") || exp.id.startsWith("new-")) {
@@ -193,7 +214,7 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
         }
       });
 
-      // 4. Sync Projects
+      // 5. Sync Projects
       const projPromises = profile.projects.map(async (proj) => {
         const payload = mapProjectToApi(proj);
         if (proj.id.startsWith("proj-") || proj.id.startsWith("new-")) {
@@ -203,7 +224,7 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
         }
       });
 
-      // 5. Sync Skills (since ProfileEditSkillsForm now does it immediately, we don't strictly *need* to do it here, but it's safe to sync everything just in case)
+      // 6. Sync Skills
       const skillPromises = profile.skills.map(async (skill) => {
         const payload = mapSkillToApi(skill);
         if (skill.id.startsWith("skill-") || skill.id.startsWith("new-")) {
@@ -215,12 +236,15 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
 
       // Execute all syncs
       await Promise.all([...eduPromises, ...expPromises, ...projPromises, ...skillPromises]);
+      console.log("[saveProfile] ✅ All sub-sections synced");
 
-      // Re-fetch everything cleanly from the server to get real IDs for newly created items
+      // Re-fetch everything cleanly from the server to get real IDs
       await get().fetchProfile();
+      console.log("[saveProfile] ✅ Re-fetch complete");
       
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Không thể lưu hồ sơ.";
+      console.error("[saveProfile] ❌ Error:", err);
       set({ isLoading: false, error: message });
       throw err; // re-throw so callers can show toast
     }
