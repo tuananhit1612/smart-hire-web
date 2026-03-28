@@ -3,14 +3,18 @@ export interface JobSkillDto {
     skillType: "MUST_HAVE" | "NICE_TO_HAVE";
 }
 
+export type HrJobType = "FULL_TIME" | "PART_TIME" | "CONTRACT" | "INTERNSHIP" | "FREELANCE" | "REMOTE";
+export type HrJobLevel = "INTERN" | "JUNIOR" | "MIDDLE" | "SENIOR" | "LEAD" | "MANAGER" | "DIRECTOR";
+export type HrJobStatus = "DRAFT" | "OPEN" | "CLOSED" | "PAUSED";
+
 export interface CreateJobRequest {
     companyId: number;
     title: string;
     description?: string;
     requirements?: string;
     benefits?: string;
-    jobType: string;             // FULL_TIME | PART_TIME | CONTRACT | INTERNSHIP
-    jobLevel: string;            // INTERN | JUNIOR | MID | SENIOR | LEAD | MANAGER
+    jobType: HrJobType;
+    jobLevel: HrJobLevel;
     location?: string;
     isRemote: boolean;
     salaryMin?: number;
@@ -20,10 +24,10 @@ export interface CreateJobRequest {
     skills: JobSkillDto[];
 }
 
-export interface UpdateJobRequest extends Partial<CreateJobRequest> {}
+export type UpdateJobRequest = Partial<CreateJobRequest>;
 
 export interface ChangeJobStatusRequest {
-    status: string;              // DRAFT | OPEN | CLOSED
+    status: HrJobStatus;
 }
 
 export interface HrJobResponse {
@@ -36,15 +40,15 @@ export interface HrJobResponse {
     description: string | null;
     requirements: string | null;
     benefits: string | null;
-    jobType: string;
-    jobLevel: string;
+    jobType: HrJobType;
+    jobLevel: HrJobLevel;
     location: string | null;
     isRemote: boolean;
     salaryMin: number | null;
     salaryMax: number | null;
     salaryCurrency: string;
     deadline: string | null;
-    status: string;
+    status: HrJobStatus;
     skills: JobSkillDto[];
     createdAt: string;
     updatedAt: string;

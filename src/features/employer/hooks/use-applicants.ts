@@ -30,7 +30,40 @@ interface UseApplicantsReturn {
   refetch: () => void;
 }
 
+// ─── Client-side fallback sort/filter ────────────────────
 
+function applyClientFilters(
+  data: readonly EmployerApplicant[],
+  search: string,
+  sortBy: string
+): EmployerApplicant[] {
+  let result = [...data];
+
+  // Filter
+  if (search) {
+    const lowerQuery = search.toLowerCase();
+    result = result.filter(
+      (app) =>
+        app.fullName.toLowerCase().includes(lowerQuery) ||
+        app.skills.some((skill) => skill.toLowerCase().includes(lowerQuery))
+    );
+  }
+
+  // Sort
+  result.sort((a, b) => {
+    if (sortBy === "score-desc")
+      return b.aiAnalysis.matchScore - a.aiAnalysis.matchScore;
+    if (sortBy === "score-asc")
+      return a.aiAnalysis.matchScore - b.aiAnalysis.matchScore;
+    if (sortBy === "date-desc")
+      return (
+        new Date(b.appliedAt).getTime() - new Date(a.appliedAt).getTime()
+      );
+    return 0;
+  });
+
+  return result;
+}
 
 // ─── Hook ────────────────────────────────────────────────
 

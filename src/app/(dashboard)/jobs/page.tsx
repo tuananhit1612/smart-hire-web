@@ -1,4 +1,5 @@
 import { JobList } from "@/features/jobs/components/job-list";
+import { Suspense } from "react";
 
 export default function JobsPage() {
   return (
@@ -17,7 +18,9 @@ export default function JobsPage() {
       </section>
 
       {/* Main Content */}
-      <JobList />
+      <Suspense fallback={<div>Đang tải việc làm...</div>}>
+        <JobList />
+      </Suspense>
     </div>
   );
 }

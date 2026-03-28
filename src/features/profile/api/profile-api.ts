@@ -7,22 +7,18 @@
  */
 
 import { apiClient } from "@/shared/lib/api-client";
+import { ApiWrapper } from "@/shared/types/api";
 import type {
-  ApiWrapper,
   CandidateProfileResponse,
-  UpdateProfilePayload,
+  ProfilePayload,
   EducationResponse,
-  CreateEducationPayload,
-  UpdateEducationPayload,
+  EducationPayload,
   ExperienceResponse,
-  CreateExperiencePayload,
-  UpdateExperiencePayload,
+  ExperiencePayload,
   ProjectResponse,
-  CreateProjectPayload,
-  UpdateProjectPayload,
+  ProjectPayload,
   SkillResponse,
-  CreateSkillPayload,
-  UpdateSkillPayload,
+  SkillPayload,
   CvFileResponse,
 } from "../types/profile-api-types";
 
@@ -36,12 +32,16 @@ export const profileApi = {
     apiClient.get<ApiWrapper<CandidateProfileResponse>>(BASE),
 
   /** POST /candidate/profile — first-time creation */
-  createProfile: (data: UpdateProfilePayload) =>
+  createProfile: (data: ProfilePayload) =>
     apiClient.post<ApiWrapper<CandidateProfileResponse>>(BASE, data),
 
   /** PUT /candidate/profile — update existing */
-  updateProfile: (data: UpdateProfilePayload) =>
+  updateProfile: (data: ProfilePayload) =>
     apiClient.put<ApiWrapper<CandidateProfileResponse>>(BASE, data),
+
+  /** PUT /users/me — update root user identity (name, phone) */
+  updateUserIdentity: (data: { fullName?: string; phone?: string }) =>
+    apiClient.put<ApiWrapper<any>>(`/users/me`, data),
 
   /** POST /users/me/avatar — upload avatar (multipart/form-data) */
   uploadAvatar: (file: File) => {
@@ -49,8 +49,7 @@ export const profileApi = {
     formData.append("file", file);
     return apiClient.post<ApiWrapper<CandidateProfileResponse>>(
       "/users/me/avatar",
-      formData,
-      { headers: { "Content-Type": "multipart/form-data" } }
+      formData
     );
   },
 
@@ -61,11 +60,11 @@ export const profileApi = {
     apiClient.get<ApiWrapper<EducationResponse[]>>(`${BASE}/educations`),
 
   /** POST /candidate/profile/educations */
-  createEducation: (data: CreateEducationPayload) =>
+  createEducation: (data: EducationPayload) =>
     apiClient.post<ApiWrapper<EducationResponse>>(`${BASE}/educations`, data),
 
   /** PUT /candidate/profile/educations/:id */
-  updateEducation: (id: number, data: UpdateEducationPayload) =>
+  updateEducation: (id: number, data: Partial<EducationPayload>) =>
     apiClient.put<ApiWrapper<EducationResponse>>(`${BASE}/educations/${id}`, data),
 
   /** DELETE /candidate/profile/educations/:id */
@@ -79,11 +78,11 @@ export const profileApi = {
     apiClient.get<ApiWrapper<ExperienceResponse[]>>(`${BASE}/experiences`),
 
   /** POST /candidate/profile/experiences */
-  createExperience: (data: CreateExperiencePayload) =>
+  createExperience: (data: ExperiencePayload) =>
     apiClient.post<ApiWrapper<ExperienceResponse>>(`${BASE}/experiences`, data),
 
   /** PUT /candidate/profile/experiences/:id */
-  updateExperience: (id: number, data: UpdateExperiencePayload) =>
+  updateExperience: (id: number, data: Partial<ExperiencePayload>) =>
     apiClient.put<ApiWrapper<ExperienceResponse>>(`${BASE}/experiences/${id}`, data),
 
   /** DELETE /candidate/profile/experiences/:id */
@@ -97,11 +96,11 @@ export const profileApi = {
     apiClient.get<ApiWrapper<ProjectResponse[]>>(`${BASE}/projects`),
 
   /** POST /candidate/profile/projects */
-  createProject: (data: CreateProjectPayload) =>
+  createProject: (data: ProjectPayload) =>
     apiClient.post<ApiWrapper<ProjectResponse>>(`${BASE}/projects`, data),
 
   /** PUT /candidate/profile/projects/:id */
-  updateProject: (id: number, data: UpdateProjectPayload) =>
+  updateProject: (id: number, data: Partial<ProjectPayload>) =>
     apiClient.put<ApiWrapper<ProjectResponse>>(`${BASE}/projects/${id}`, data),
 
   /** DELETE /candidate/profile/projects/:id */
@@ -115,11 +114,11 @@ export const profileApi = {
     apiClient.get<ApiWrapper<SkillResponse[]>>(`${BASE}/skills`),
 
   /** POST /candidate/profile/skills */
-  createSkill: (data: CreateSkillPayload) =>
+  createSkill: (data: SkillPayload) =>
     apiClient.post<ApiWrapper<SkillResponse>>(`${BASE}/skills`, data),
 
   /** PUT /candidate/profile/skills/:id */
-  updateSkill: (id: number, data: UpdateSkillPayload) =>
+  updateSkill: (id: number, data: Partial<SkillPayload>) =>
     apiClient.put<ApiWrapper<SkillResponse>>(`${BASE}/skills/${id}`, data),
 
   /** DELETE /candidate/profile/skills/:id */
@@ -133,21 +132,24 @@ export const profileApi = {
     apiClient.get<ApiWrapper<CvFileResponse[]>>(`${BASE}/cv-files`),
 
   /** POST /candidate/profile/cv-files — upload (multipart/form-data) */
-  uploadCvFile: (file: File) => {
+  uploadCvFile: (file: File, isPrimary?: boolean, source: "UPLOAD" | "BUILDER" = "UPLOAD") => {
     const formData = new FormData();
     formData.append("file", file);
-    return apiClient.post<ApiWrapper<CvFileResponse>>(`${BASE}/cv-files`, formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+    if (source) formData.append("source", source);
+    if (isPrimary !== undefined) {
+        formData.append("isPrimary", String(isPrimary));
+    }
+    // Let Axios automatically detect FormData and set Content-Type with boundary!
+    return apiClient.post<ApiWrapper<CvFileResponse>>(`${BASE}/cv-files`, formData);
   },
 
   /** DELETE /candidate/profile/cv-files/:id */
   deleteCvFile: (id: number) =>
-    apiClient.delete(`${BASE}/cv-files/${id}`),
+    apiClient.delete<ApiWrapper<void>>(`${BASE}/cv-files/${id}`),
 
   /** PUT /candidate/profile/cv-files/:id/primary */
   setCvFilePrimary: (id: number) =>
-    apiClient.put(`${BASE}/cv-files/${id}/primary`),
+    apiClient.put<ApiWrapper<CvFileResponse>>(`${BASE}/cv-files/${id}/primary`),
 
   /** GET /candidate/profile/cv-files/:id/download */
   downloadCvFile: (id: number) =>

@@ -9,6 +9,7 @@
  */
 
 import { apiClient } from "@/shared/lib/api-client";
+import type { ApiWrapper } from "@/shared/types/api";
 
 // ─── Types (mirrors backend DTOs) ────────────────────
 
@@ -64,48 +65,40 @@ export interface JobDashboardStats {
     rejectRate: number;
 }
 
-// ─── API wrapper type ────────────────────────────────
-interface ApiResponse<T> {
-    success: boolean;
-    code: string;
-    message?: string;
-    data: T;
-}
-
 // ─── API Methods ─────────────────────────────────────
 
-/** Fetch aggregated HR dashboard overview */
-export async function fetchHrDashboardOverview(): Promise<HrDashboardOverview> {
-    const { data } = await apiClient.get<ApiResponse<HrDashboardOverview>>(
-        "/dashboard/hr/overview"
-    );
-    return data.data;
-}
+export const dashboardApi = {
+    /** Fetch aggregated HR dashboard overview */
+    getOverview: async (): Promise<HrDashboardOverview> => {
+        const { data } = await apiClient.get<ApiWrapper<HrDashboardOverview>>(
+            "/dashboard/hr/overview"
+        );
+        return data.data;
+    },
 
-/** Fetch per-job dashboard stats */
-export async function fetchJobDashboardStats(
-    jobId: number
-): Promise<JobDashboardStats> {
-    const { data } = await apiClient.get<ApiResponse<JobDashboardStats>>(
-        `/dashboard/hr/jobs/${jobId}/stats`
-    );
-    return data.data;
-}
+    /** Fetch per-job dashboard stats */
+    getJobStats: async (jobId: number): Promise<JobDashboardStats> => {
+        const { data } = await apiClient.get<ApiWrapper<JobDashboardStats>>(
+            `/dashboard/hr/jobs/${jobId}/stats`
+        );
+        return data.data;
+    },
 
-/** Export HR Jobs as CSV */
-export async function exportHrJobsCsv(): Promise<Blob> {
-    const { data } = await apiClient.get<Blob>(
-        "/dashboard/reports/jobs/csv",
-        { responseType: "blob" }
-    );
-    return data;
-}
+    /** Export HR Jobs as CSV */
+    exportJobsCsv: async (): Promise<Blob> => {
+        const { data } = await apiClient.get<Blob>(
+            "/dashboard/reports/jobs/csv",
+            { responseType: "blob" }
+        );
+        return data;
+    },
 
-/** Export HR Applications as CSV */
-export async function exportHrApplicationsCsv(): Promise<Blob> {
-    const { data } = await apiClient.get<Blob>(
-        "/dashboard/reports/applications/csv",
-        { responseType: "blob" }
-    );
-    return data;
-}
+    /** Export HR Applications as CSV */
+    exportApplicationsCsv: async (): Promise<Blob> => {
+        const { data } = await apiClient.get<Blob>(
+            "/dashboard/reports/applications/csv",
+            { responseType: "blob" }
+        );
+        return data;
+    },
+};

@@ -34,6 +34,8 @@ export const metadata: Metadata = {
   description: "Next-generation hiring platform powered by AI. Connect with top talent and find your dream job.",
 };
 
+import { Suspense } from "react";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -55,7 +57,9 @@ export default function RootLayout({
           <ParticleBackground />
           <ToastProvider>
             <AuthProvider>
-              {children}
+              <Suspense fallback={null}>
+                {children}
+              </Suspense>
             </AuthProvider>
           </ToastProvider>
         </ThemeProvider>

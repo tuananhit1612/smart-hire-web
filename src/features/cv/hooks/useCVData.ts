@@ -9,6 +9,8 @@ import { useToast } from "@/shared/components/ui/toast";
 import { useCVAutoFill } from "@/features/cv/hooks/useCVAutoFill";
 import { useCVHistory } from "@/features/cv/hooks/useCVHistory";
 import { format } from "date-fns";
+import { useProfileStore } from "@/features/profile/stores/profile-store";
+import { mapProfileToCVData } from "@/features/cv/utils/profile-to-cv-mapper";
 
 interface UseCVDataReturn {
     cvData: CVData;
@@ -22,7 +24,7 @@ interface UseCVDataReturn {
     lastSaved: Date;
     hasTemplate: boolean;
     handleSave: () => Promise<void>;
-    handleFillMockData: () => void;
+    handleFillProfileData: () => void;
     handleRestoreVersion: (data: CVData) => void;
     saveSnapshot: (data: CVData, name: string) => void;
 }
@@ -43,11 +45,24 @@ export function useCVData(): UseCVDataReturn {
     const autosaveStatus = "saved" as const;
     const lastSaved = React.useMemo(() => new Date(), []);
 
+    const fetchProfile = useProfileStore((state) => state.fetchProfile);
+    const profile = useProfileStore((state) => state.profile);
+
+    // Fetch profile on initial load if not present
+    React.useEffect(() => {
+        if (!profile || profile.id === "") {
+            fetchProfile().catch(console.error);
+        }
+    }, [profile, fetchProfile]);
+
     // Select Template Component
     const TemplateComponent = TEMPLATE_COMPONENTS[activeTemplateId] || TEMPLATE_COMPONENTS['modern-tech'];
 
     // Get base mock data for specific template
-    const templateMockData = React.useMemo(() => getMockDataForTemplate(activeTemplateId), [activeTemplateId]);
+    const templateMockData = React.useMemo(() => {
+        const mock = getMockDataForTemplate(activeTemplateId);
+        return mock && mock.personalInfo ? mock : DEFAULT_CV_DATA;
+    }, [activeTemplateId]);
 
     // Deep merge display data (Mock + User Input)
     const displayData: CVData = React.useMemo(() => {
@@ -123,11 +138,15 @@ export function useCVData(): UseCVDataReturn {
         }
     };
 
-    // Fill mock data with AI animation
-    const handleFillMockData = () => {
-        const dataToLoad = MOCK_DATA_MAP[activeTemplateId] || MOCK_CV_DATA;
+    // Fill real profile data with AI animation
+    const handleFillProfileData = () => {
+        if (!profile || profile.id === "") {
+            addToast("Chưa có dữ liệu Hồ sơ! Vui lòng cập nhật Hồ sơ trước.", "error");
+            return;
+        }
+        const dataToLoad = mapProfileToCVData(profile);
         fillData(dataToLoad);
-        addToast("AI đang viết CV cho bạn...", "info");
+        addToast("Hệ thống đang đồng bộ dữ liệu vào CV...", "info");
     };
 
     // Restore from version history
@@ -148,7 +167,7 @@ export function useCVData(): UseCVDataReturn {
         lastSaved,
         hasTemplate,
         handleSave,
-        handleFillMockData,
+        handleFillProfileData,
         handleRestoreVersion,
         saveSnapshot,
     };

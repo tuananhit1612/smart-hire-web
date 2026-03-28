@@ -165,11 +165,11 @@ export function Header() {
                                 <div className="relative group">
                                     <button className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-full border border-[rgba(145,158,171,0.2)] hover:border-[#22c55e]/50 hover:bg-[rgba(145,158,171,0.04)] transition-all">
                                         <AvatarInitials 
-                                            initials={user.name ? user.name.charAt(0).toUpperCase() : "U"} 
+                                            initials={user.fullName ? user.fullName.charAt(0).toUpperCase() : "U"} 
                                             size="sm"
                                         />
                                         <span className="text-sm font-medium text-[#1C252E] dark:text-white max-w-[100px] truncate">
-                                            {user.name || "User"}
+                                            {user.fullName || "User"}
                                         </span>
                                         <ChevronDown className="w-4 h-4 text-[#637381] group-hover:text-[#1C252E] dark:group-hover:text-white transition-colors" />
                                     </button>
@@ -278,11 +278,11 @@ export function Header() {
                                     <>
                                         <div className="flex items-center gap-3 mb-4 px-2">
                                             <AvatarInitials 
-                                                initials={user.name ? user.name.charAt(0).toUpperCase() : "U"} 
+                                                initials={user.fullName ? user.fullName.charAt(0).toUpperCase() : "U"} 
                                                 size="md"
                                             />
                                             <div>
-                                                <p className="text-sm font-bold text-[#1C252E] dark:text-white">{user.name || "User"}</p>
+                                                <p className="text-sm font-bold text-[#1C252E] dark:text-white">{user.fullName || "User"}</p>
                                                 <p className="text-xs text-[#637381] dark:text-[#919EAB]">{user.email || "user@example.com"}</p>
                                             </div>
                                         </div>

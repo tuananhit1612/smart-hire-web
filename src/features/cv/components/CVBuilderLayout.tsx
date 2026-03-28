@@ -8,6 +8,7 @@ import {
     Cloud,
     Loader2,
     Eye,
+    Wand2,
 } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { format } from "date-fns";
@@ -23,6 +24,8 @@ interface CVBuilderLayoutProps {
     onSave?: () => void;
     /** Preview / complete handler — navigates to preview page */
     onPreview?: () => void;
+    /** Auto fill from profile handler */
+    onAutoFill?: () => void;
     /** Save state */
     isSaving?: boolean;
     autosaveStatus?: "saved" | "saving" | "unsaved";
@@ -35,6 +38,7 @@ export function CVBuilderLayout({
     headerActions,
     onSave,
     onPreview,
+    onAutoFill,
     isSaving = false,
     autosaveStatus = "saved",
     lastSaved,
@@ -77,6 +81,18 @@ export function CVBuilderLayout({
                 {/* Right: Actions */}
                 <div className="flex items-center gap-2">
                     {headerActions}
+
+                    {onAutoFill && (
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            leftIcon={<Wand2 className="w-4 h-4 text-purple-500" />}
+                            onClick={onAutoFill}
+                            className="text-purple-700 hover:text-purple-800 hover:bg-purple-50 border-purple-200"
+                        >
+                            Tự động điền dữ liệu
+                        </Button>
+                    )}
 
                     {onPreview && (
                         <Button

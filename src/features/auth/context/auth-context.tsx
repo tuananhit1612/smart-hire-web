@@ -46,7 +46,7 @@ const SESSION_COOKIE_NAME = "smarthire-session";
 function toSessionUser(d: AuthLoginData): SessionUser {
     return {
         id: String(d.userId),
-        name: d.fullName,
+        fullName: d.fullName,
         email: d.email,
         role: d.role.toLowerCase() as SessionUser["role"],
         joinedDate: new Date().toISOString(),
@@ -58,10 +58,10 @@ function toSessionUser(d: AuthLoginData): SessionUser {
 function userDataToSession(d: UserData): SessionUser {
     return {
         id: String(d.id),
-        name: d.fullName,
+        fullName: d.fullName,
         email: d.email,
         role: d.role.toLowerCase() as SessionUser["role"],
-        avatar: d.avatarUrl ?? undefined,
+        avatarUrl: d.avatarUrl ?? undefined,
         phone: d.phone ?? undefined,
         joinedDate: d.createdAt,
         isNewUser: false,
@@ -127,7 +127,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     // Legacy slim response — best-effort
                     const sessionUser: SessionUser = {
                         id: "",
-                        name: meData.email.split("@")[0],
+                        fullName: meData.email.split("@")[0],
                         email: meData.email,
                         role: "candidate",
                         joinedDate: new Date().toISOString(),

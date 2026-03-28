@@ -20,7 +20,7 @@ import type { UserRole } from "../types/auth-types";
  * const { user, isAuthenticated, login, logout, switchRole } = useAuth();
  *
  * if (!isAuthenticated) return <LoginPage />;
- * return <div>Welcome, {user.name}!</div>;
+ * return <div>Welcome, {user.fullName}!</div>;
  * ```
  */
 export function useAuth(): AuthContextValue {

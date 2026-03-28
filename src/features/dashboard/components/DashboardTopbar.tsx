@@ -125,7 +125,7 @@ export function DashboardTopbar({ onToggleSidebar }: Props) {
                     className="relative block rounded-xl focus:outline-none focus:ring-2 focus:ring-[#22C55E]/30 focus:ring-offset-2 dark:focus:ring-offset-[#141A21]"
                 >
                     <img
-                        src={user?.avatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=smarthire"}
+                        src={user?.avatarUrl || "https://api.dicebear.com/7.x/avataaars/svg?seed=smarthire"}
                         alt="avatar"
                         className="w-10 h-10 rounded-xl border-2 border-[#22C55E]/20 hover:border-[#22C55E]/50 transition-colors object-cover bg-[#F4F6F8] dark:bg-[#212B36]"
                     />
@@ -139,12 +139,12 @@ export function DashboardTopbar({ onToggleSidebar }: Props) {
                         <div className="px-5 py-5 border-b border-[rgba(145,158,171,0.08)] dark:border-white/[0.04] flex flex-col items-center bg-gradient-to-b from-[rgba(145,158,171,0.03)] to-transparent dark:from-white/[0.02]">
                             <div className="w-16 h-16 rounded-2xl p-[3px] bg-gradient-to-tr from-[#22C55E] to-[#10B981] mb-3 shadow-[0_4px_16px_rgba(34,197,94,0.3)]">
                                 <img
-                                    src={user?.avatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=smarthire"}
+                                    src={user?.avatarUrl || "https://api.dicebear.com/7.x/avataaars/svg?seed=smarthire"}
                                     alt="avatar large"
                                     className="w-full h-full rounded-[13px] border-2 border-white dark:border-[#1C252E] object-cover bg-white"
                                 />
                             </div>
-                            <p className="text-[14px] font-bold text-[#1C252E] dark:text-white">{user?.name || "Người Dùng"}</p>
+                            <p className="text-[14px] font-bold text-[#1C252E] dark:text-white">{user?.fullName || "Người Dùng"}</p>
                             <p className="text-[12px] text-[#919EAB] truncate w-full text-center mt-0.5">{user?.email || "tuananhpc1612@gmail.com"}</p>
                         </div>
 
