@@ -67,9 +67,9 @@ export function CVFileList() {
         if (activeFilter === "primary") {
             result = result.filter((f) => f.isPrimary);
         } else if (activeFilter === "uploaded") {
-            result = result.filter((f) => f.source === "UPLOADED");
+            result = result.filter((f) => f.source === "UPLOAD");
         } else if (activeFilter === "generated") {
-            result = result.filter((f) => f.source === "BUILT");
+            result = result.filter((f) => f.source === "BUILDER");
         }
 
         if (searchQuery) {
@@ -101,8 +101,8 @@ export function CVFileList() {
         return {
             all: files.length,
             primary: files.filter((f) => f.isPrimary).length,
-            uploaded: files.filter((f) => f.source === "UPLOADED").length,
-            generated: files.filter((f) => f.source === "BUILT").length,
+            uploaded: files.filter((f) => f.source === "UPLOAD").length,
+            generated: files.filter((f) => f.source === "BUILDER").length,
         };
     }, [files]);
 

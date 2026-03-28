@@ -1,21 +1,25 @@
 /**
  * ═══════════════════════════════════════════════════════════
- *  Profile API Types — Synchronized with Backend DTOs
+ *  Profile API Types — 1:1 with backend candidate DTOs
+ *
+ *  Source: com.smarthire.backend.features.candidate.dto.*
  * ═══════════════════════════════════════════════════════════
  */
 
-import { ApiWrapper } from "@/shared/types/api";
+import type {
+  Gender,
+  JobLevel,
+  ProficiencyLevel,
+  CvFileType,
+  CvSource,
+} from "@/shared/types/enums";
 
-// ─── Enums Reference ─────────────────────────────────────
-
-export type Gender = "MALE" | "FEMALE" | "OTHER";
-export type JobLevel = "INTERN" | "JUNIOR" | "MIDDLE" | "SENIOR" | "LEAD" | "MANAGER" | "DIRECTOR";
-export type ProficiencyLevel = "BEGINNER" | "INTERMEDIATE" | "ADVANCED" | "EXPERT";
-export type CvFileType = "PDF" | "DOCX";
-export type CvSource = "UPLOADED" | "BUILT";
+// Re-export for convenience
+export type { Gender, JobLevel, ProficiencyLevel, CvFileType, CvSource };
 
 // ─── Candidate Profile ───────────────────────────────────
 
+/** Mirrors CandidateProfileResponse.java */
 export interface CandidateProfileResponse {
   id: number;
   userId: number;
@@ -25,7 +29,7 @@ export interface CandidateProfileResponse {
   avatarUrl: string | null;
   headline: string | null;
   summary: string | null;
-  dateOfBirth: string | null; // ISO Date "1995-01-15"
+  dateOfBirth: string | null;       // ISO Date "1995-01-15"
   gender: Gender | null;
   address: string | null;
   city: string | null;
@@ -35,6 +39,7 @@ export interface CandidateProfileResponse {
   updatedAt: string;
 }
 
+/** Mirrors CandidateProfileRequest.java */
 export interface ProfilePayload {
   headline?: string;
   summary?: string;
@@ -44,11 +49,11 @@ export interface ProfilePayload {
   city?: string;
   yearsOfExperience?: number;
   jobLevel?: JobLevel;
-  phone?: string;
 }
 
 // ─── Education ───────────────────────────────────────────
 
+/** Mirrors EducationResponse.java */
 export interface EducationResponse {
   id: number;
   institution: string;
@@ -58,9 +63,9 @@ export interface EducationResponse {
   endDate: string | null;
   gpa: number | null;
   description: string | null;
-  logoUrl?: string | null;
 }
 
+/** Mirrors EducationRequest.java */
 export interface EducationPayload {
   institution: string;
   degree?: string;
@@ -73,6 +78,7 @@ export interface EducationPayload {
 
 // ─── Experience ──────────────────────────────────────────
 
+/** Mirrors ExperienceResponse.java */
 export interface ExperienceResponse {
   id: number;
   companyName: string;
@@ -81,9 +87,9 @@ export interface ExperienceResponse {
   endDate: string | null;
   isCurrent: boolean;
   description: string | null;
-  location: string | null;
 }
 
+/** Mirrors ExperienceRequest.java */
 export interface ExperiencePayload {
   companyName: string;
   title: string;
@@ -91,45 +97,43 @@ export interface ExperiencePayload {
   endDate?: string;
   isCurrent?: boolean;
   description?: string;
-  location?: string;
 }
 
 // ─── Project ─────────────────────────────────────────────
 
+/** Mirrors ProjectResponse.java */
 export interface ProjectResponse {
   id: number;
   projectName: string;
   description: string | null;
-  technologies: string | null; // comma-separated
-  startDate: string | null;
-  endDate: string | null;
-  link: string | null;
+  technologies: string | null;      // comma-separated
 }
 
+/** Mirrors ProjectRequest.java */
 export interface ProjectPayload {
   projectName: string;
   description?: string;
   technologies?: string;
-  startDate?: string;
-  endDate?: string;
-  link?: string;
 }
 
 // ─── Skill ───────────────────────────────────────────────
 
+/** Mirrors SkillResponse.java */
 export interface SkillResponse {
   id: number;
   skillName: string;
   proficiencyLevel: ProficiencyLevel | null;
 }
 
+/** Mirrors SkillRequest.java */
 export interface SkillPayload {
   skillName: string;
   proficiencyLevel: ProficiencyLevel;
 }
 
-// ─── CV Files ─────────────────────────────────────────────
+// ─── CV Files ────────────────────────────────────────────
 
+/** Mirrors CvFileResponse.java */
 export interface CvFileResponse {
   id: number;
   fileName: string;

@@ -14,14 +14,14 @@ import type { ApiWrapper, PageResponse } from "@/shared/types/api";
 
 // ─── DTO Mirrors ─────────────────────────────────────────
 
+/** Mirrors NotificationResponse.java */
 export interface NotificationResponse {
   id: number;
   type: string;
   title: string;
-  message: string;
-  content?: string;
-  referenceId: number | null;
+  content: string;
   referenceType: string | null;
+  referenceId: number | null;
   isRead: boolean;
   createdAt: string;
 }

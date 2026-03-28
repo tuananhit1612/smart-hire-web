@@ -127,7 +127,7 @@ export function CVFileCard({
                                 {file.fileName}
                             </h3>
                             <p className="text-sm text-green-700/70 dark:text-gray-400 mt-0.5 line-clamp-1">
-                                {file.source === "BUILT" ? "Tạo từ Resume Builder" : "Tải lên"}
+                                {file.source === "BUILDER" ? "Tạo từ Resume Builder" : "Tải lên"}
                             </p>
                         </div>
 

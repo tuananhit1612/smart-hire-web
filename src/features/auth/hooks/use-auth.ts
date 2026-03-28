@@ -39,7 +39,7 @@ export function useAuth(): AuthContextValue {
  *
  * @example
  * ```tsx
- * const canAccess = useHasRole("admin", "employer");
+ * const canAccess = useHasRole("admin", "hr");
  * ```
  */
 export function useHasRole(...roles: UserRole[]): boolean {

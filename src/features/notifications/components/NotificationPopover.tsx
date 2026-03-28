@@ -212,7 +212,7 @@ function NotificationItem({
                     {notification.title}
                 </p>
                 <p className="text-xs text-[#919EAB] dark:text-[#637381] line-clamp-1 mb-1.5">
-                    {notification.message}
+                    {notification.content}
                 </p>
                 <div className="flex items-center justify-between">
                    <span className="text-[10px] text-[#919EAB]">{formatTimeAgo(notification.createdAt)}</span>

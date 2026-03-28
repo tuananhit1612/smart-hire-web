@@ -157,7 +157,7 @@ export function CandidateGuard({ children }: { readonly children: ReactNode }) {
 
 /** Guard for employer-only pages */
 export function EmployerGuard({ children }: { readonly children: ReactNode }) {
-    return <RouteGuard allowedRoles={["employer"]}>{children}</RouteGuard>;
+    return <RouteGuard allowedRoles={["hr"]}>{children}</RouteGuard>;
 }
 
 /** Guard for admin-only pages */
@@ -167,7 +167,7 @@ export function AdminGuard({ children }: { readonly children: ReactNode }) {
 
 /** Guard for employer + admin pages */
 export function EmployerOrAdminGuard({ children }: { readonly children: ReactNode }) {
-    return <RouteGuard allowedRoles={["employer", "admin"]}>{children}</RouteGuard>;
+    return <RouteGuard allowedRoles={["hr", "admin"]}>{children}</RouteGuard>;
 }
 
 /** Guard that only requires authentication (any role) */

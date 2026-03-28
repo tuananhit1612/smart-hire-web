@@ -1,64 +1,57 @@
 /**
  * ═══════════════════════════════════════════════════════════
- *  Job API Types — 1:1 with backend JobResponse & query params
+ *  Job API Types — 1:1 with backend JobResponse.java
+ *
+ *  Source: com.smarthire.backend.features.job.dto.*
  * ═══════════════════════════════════════════════════════════
  */
 
-// ─── Backend Enums ──────────────────────────────────────
+import type { JobType, JobLevel, JobStatus, SkillType } from "@/shared/types/enums";
 
-export type ApiJobType =
-  | "FULL_TIME"
-  | "PART_TIME"
-  | "CONTRACT"
-  | "INTERN"
-  | "FREELANCE"
-  | "REMOTE";
+// Re-export for convenience
+export type { JobType, JobLevel, JobStatus };
 
-export type ApiJobLevel =
-  | "INTERN"
-  | "JUNIOR"
-  | "MIDDLE"
-  | "SENIOR"
-  | "LEAD"
-  | "MANAGER"
-  | "DIRECTOR";
+// ─── Backend DTOs ────────────────────────────────────────
 
-export type ApiJobStatus = "DRAFT" | "OPEN" | "CLOSED" | "PAUSED";
+/** Mirrors JobSkillDto.java */
+export interface JobSkillDto {
+  skillName: string;
+  skillType: SkillType;
+}
 
-// ─── Backend Response ────────────────────────────────────
-
-/** Matches the backend `JobResponse` DTO exactly */
+/** Mirrors JobResponse.java — 1:1 field mapping */
 export interface JobResponse {
   id: number;
+  companyId: number;
+  companyName: string;
+  companyLogoUrl: string | null;
+  createdBy: number;
   title: string;
   description: string;
   requirements: string | null;
   benefits: string | null;
-  jobType: ApiJobType;
-  jobLevel: ApiJobLevel;
-  status: ApiJobStatus;
+  jobType: JobType;
+  jobLevel: JobLevel;
+  location: string | null;
+  isRemote: boolean;
   salaryMin: number | null;
   salaryMax: number | null;
-  city: string | null;
-  address: string | null;
-  deadline: string | null; // ISO date "2025-06-01"
-  companyId: number;
-  companyName: string;
-  companyLogoUrl: string | null;
-  createdByUserId: number;
-  totalApplications: number;
-  createdAt: string; // ISO datetime
-  updatedAt: string; // ISO datetime
+  salaryCurrency: string;
+  deadline: string | null;       // ISO date "2025-06-01"
+  status: JobStatus;
+  skills: JobSkillDto[];
+  createdAt: string;             // ISO datetime
+  updatedAt: string;             // ISO datetime
 }
 
 // ─── Query Params ────────────────────────────────────────
 
-/** GET /public/jobs — query params */
+/** GET /jobs/public — query params */
 export interface JobSearchParams {
-  page?: number;
-  size?: number;
   keyword?: string;
-  city?: string;
-  jobType?: ApiJobType;
-  jobLevel?: ApiJobLevel;
+  location?: string;
+  jobLevel?: JobLevel;
+  jobType?: JobType;
+  salaryMin?: number;
+  salaryMax?: number;
 }

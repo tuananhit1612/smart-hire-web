@@ -27,8 +27,8 @@ const PROTECTED_ROUTES = [
 
 // Routes that require a specific role
 const ROLE_ROUTES: Record<string, string> = {
-    "/employer": "employer",
-    "/hr": "employer",
+    "/employer": "hr",
+    "/hr": "hr",
     "/admin/dashboard": "admin",
     "/admin/users": "admin",
     "/admin/audit-log": "admin",
@@ -53,7 +53,7 @@ function getSessionFromCookie(request: NextRequest): { role: string; isNewUser?:
 
 function getDashboardForRole(role: string): string {
     switch (role) {
-        case "employer":
+        case "hr":
             return "/employer/dashboard";
         case "admin":
             return "/admin/dashboard";
@@ -72,7 +72,7 @@ export function middleware(request: NextRequest) {
         if (isLoggedIn) {
             // Check if onboarding needed first
             if (session!.isNewUser) {
-                const onboardingRoute = session!.role === "employer" ? "/employer/onboarding" : "/dashboard/onboarding";
+                const onboardingRoute = session!.role === "hr" ? "/employer/onboarding" : "/dashboard/onboarding";
                 return NextResponse.redirect(new URL(onboardingRoute, request.url));
             }
             const dashboard = getDashboardForRole(session!.role);
@@ -96,7 +96,7 @@ export function middleware(request: NextRequest) {
         const isOnEmployerOnboarding = pathname.startsWith("/employer/onboarding");
         const isOnCandidateOnboarding = pathname.startsWith("/dashboard/onboarding");
 
-        if (session!.role === "employer") {
+        if (session!.role === "hr") {
             if (!isOnEmployerOnboarding) {
                 return NextResponse.redirect(new URL("/employer/onboarding", request.url));
             }

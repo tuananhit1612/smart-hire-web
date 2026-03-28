@@ -91,7 +91,7 @@ const adminLoginSuccess: AuthSuccess<LoginSuccessData> = {
 
 export const loginSuccess: Record<UserRole, AuthSuccess<LoginSuccessData>> = {
     candidate: candidateLoginSuccess,
-    employer: employerLoginSuccess,
+    hr: employerLoginSuccess,
     admin: adminLoginSuccess,
     CANDIDATE: candidateLoginSuccess,
     HR: employerLoginSuccess,
@@ -158,7 +158,7 @@ export interface RegisterSuccessData {
     requiresVerification: boolean;
 }
 
-export const registerSuccess: Record<"candidate" | "employer", AuthSuccess<RegisterSuccessData>> = {
+export const registerSuccess: Record<"candidate" | "hr", AuthSuccess<RegisterSuccessData>> = {
     candidate: {
         ok: true,
         data: {
@@ -168,7 +168,7 @@ export const registerSuccess: Record<"candidate" | "employer", AuthSuccess<Regis
         },
         message: "Đăng ký thành công! Vui lòng kiểm tra email để xác thực tài khoản.",
     },
-    employer: {
+    hr: {
         ok: true,
         data: {
             user: mockEmployerNew,
@@ -285,7 +285,7 @@ export async function simulateLogin(
     if (lower.startsWith("wrong@")) return loginErrors.invalidCredentials;
     if (lower.includes("admin")) return loginSuccess.admin;
     if (lower.includes("employer") || lower.includes("techcorp") || lower.includes("company"))
-        return loginSuccess.employer;
+        return loginSuccess.hr;
     return loginSuccess.candidate;
 }
 
@@ -297,7 +297,7 @@ export async function simulateLogin(
 export async function simulateRegister(
     email: string,
     _password: string,
-    role: "candidate" | "employer",
+    role: "candidate" | "hr",
 ): Promise<AuthResponse<RegisterSuccessData>> {
     await randomDelay();
 

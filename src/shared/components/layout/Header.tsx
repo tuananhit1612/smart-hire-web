@@ -90,7 +90,7 @@ export function Header() {
         hidden: { y: -100, opacity: 0 },
     };
 
-    const navItems = user?.role === "employer" ? employerLinks : navLinks;
+    const navItems = user?.role === "hr" ? employerLinks : navLinks;
 
     return (
         <motion.header
@@ -177,7 +177,7 @@ export function Header() {
                                     <div className="absolute right-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                                         <div className="w-48 bg-white dark:bg-[#1C252E] rounded-xl shadow-xl border border-[rgba(145,158,171,0.12)] p-2 backdrop-blur-xl">
                                             <Link
-                                                href={user.role === "employer" ? "/employer/dashboard" : "/dashboard"}
+                                                href={user.role === "hr" ? "/employer/dashboard" : "/dashboard"}
                                                 className="block px-4 py-2.5 text-sm font-medium text-[#637381] dark:text-[#919EAB] hover:text-[#1C252E] dark:hover:text-white hover:bg-[rgba(145,158,171,0.04)] dark:hover:bg-[rgba(145,158,171,0.08)] rounded-lg transition-colors"
                                             >
                                                 Bảng điều khiển
@@ -287,7 +287,7 @@ export function Header() {
                                             </div>
                                         </div>
                                         <Link
-                                            href={user.role === "employer" ? "/employer/dashboard" : "/dashboard"}
+                                            href={user.role === "hr" ? "/employer/dashboard" : "/dashboard"}
                                             onClick={() => setMobileMenuOpen(false)}
                                             className="block text-center text-base font-semibold py-2.5 rounded-lg border border-[rgba(145,158,171,0.32)] dark:border-white/20 text-[#1C252E] dark:text-white hover:bg-[rgba(145,158,171,0.08)] dark:hover:bg-white/[0.06] transition-colors"
                                         >

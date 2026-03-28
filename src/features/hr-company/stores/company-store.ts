@@ -38,8 +38,8 @@ export const useCompanyStore = create<CompanyStore>((set, get) => ({
                         location: res.address || '',
                         about: res.description || '',
                         website: res.website || '',
-                        email: res.contactEmail || '',
-                        phone: res.contactPhone || '',
+                        email: '',
+                        phone: '',
                         logoUrl: res.logoUrl || undefined,
                     }
                 });
@@ -63,8 +63,7 @@ export const useCompanyStore = create<CompanyStore>((set, get) => ({
                 industry: company.industry,
                 companySize: company.size,
                 address: company.location,
-                contactEmail: company.email,
-                contactPhone: company.phone,
+                city: company.location,
             };
             if (company.id) {
                 await companyApi.updateCompany(Number(company.id), payload);
