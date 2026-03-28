@@ -99,7 +99,7 @@ export function mapEducationFromApi(res: EducationResponse): Education {
     fieldOfStudy: res.fieldOfStudy || "",
     startDate: res.startDate || "",
     endDate: res.endDate || "",
-    logoUrl: res.logoUrl || undefined,
+    logoUrl: undefined, // Not in backend DTO
   };
 }
 
@@ -112,7 +112,7 @@ export function mapExperienceFromApi(res: ExperienceResponse): Experience {
     startDate: res.startDate || "",
     endDate: res.endDate || undefined,
     description: res.description || "",
-    location: res.location || "",
+    location: "", // Not in backend DTO — FE-only field
   };
 }
 
@@ -120,11 +120,11 @@ export function mapProjectFromApi(res: ProjectResponse): Project {
   return {
     id: toStr(res.id),
     projectName: res.projectName,
-    startDate: res.startDate || "",
-    endDate: res.endDate || "",
+    startDate: "",     // Not in backend DTO — FE-only field
+    endDate: "",       // Not in backend DTO — FE-only field
     description: res.description || "",
     technologies: techStringToArray(res.technologies || ""),
-    link: res.link || "",
+    link: "",          // Not in backend DTO — FE-only field
   };
 }
 
@@ -145,7 +145,6 @@ export function mapProfileToApi(
 ): ProfilePayload {
   return {
     headline: profile.headline,
-    phone: profile.phone || undefined,
     address: profile.location,
     city: profile.city,
     gender: profile.gender as Gender,
@@ -173,18 +172,14 @@ export function mapExperienceToApi(exp: Experience): ExperiencePayload {
     startDate: exp.startDate,
     endDate: exp.endDate,
     description: exp.description,
-    location: exp.location,
   };
 }
 
 export function mapProjectToApi(proj: Project): ProjectPayload {
   return {
     projectName: proj.projectName,
-    startDate: proj.startDate,
-    endDate: proj.endDate,
     description: proj.description,
     technologies: techArrayToString(proj.technologies),
-    link: proj.link,
   };
 }
 

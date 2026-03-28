@@ -110,7 +110,7 @@ export function NotificationCard({ notification, onMarkRead, index }: Notificati
                             : "text-[#637381] dark:text-[#C4CDD5]"
                     )}
                 >
-                    {notification.message}
+                    {notification.content}
                 </p>
                 <span className="block mt-2.5 text-sm text-[#919EAB] dark:text-[#637381]">
                     {formatTimeAgo(notification.createdAt)}

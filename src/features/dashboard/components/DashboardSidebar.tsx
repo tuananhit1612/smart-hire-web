@@ -131,7 +131,7 @@ export function DashboardSidebar({ collapsed, onToggle }: Props) {
     const pathname = usePathname();
     const { user } = useAuth();
 
-    const isEmployer = user?.role === "employer";
+    const isEmployer = user?.role === "hr";
 
     // Pick the right nav sets based on role
     const navGeneral = isEmployer ? NAV_EMPLOYER_GENERAL : NAV_CANDIDATE_GENERAL;

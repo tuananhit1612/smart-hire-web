@@ -1,4 +1,5 @@
-export type UserRole = "candidate" | "employer" | "admin" | "CANDIDATE" | "HR" | "ADMIN";
+/** Mirrors backend Role enum: CANDIDATE | HR | ADMIN (lowercase for FE use) */
+export type UserRole = "candidate" | "hr" | "admin" | "CANDIDATE" | "HR" | "ADMIN";
 
 /** @deprecated Mock-based auth has been replaced by real API */
 export type MockUserKey = "candidate-new" | "candidate-returning" | "employer-new" | "employer-returning" | "admin";
@@ -59,6 +60,7 @@ export interface AuthLoginData {
 export type AuthLoginResponse = ApiWrapper<AuthLoginData>;
 
 /** The backend user object returned by GET /auth/me and PUT /auth/me */
+/** Mirrors UserProfileResponse.java */
 export interface UserData {
     id: number;
     email: string;
@@ -66,8 +68,9 @@ export interface UserData {
     phone: string | null;
     role: string;
     avatarUrl: string | null;
-    active: boolean;
+    isActive: boolean;
     createdAt: string;
+    updatedAt: string;
 }
 
 /** Full Axios-level response type for /auth/me (GET & PUT) */

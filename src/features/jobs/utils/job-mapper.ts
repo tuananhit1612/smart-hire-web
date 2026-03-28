@@ -8,7 +8,8 @@
  */
 
 import type { Job, JobType, JobLevel } from "../types/job";
-import type { JobResponse, ApiJobType, ApiJobLevel } from "../types/job-api-types";
+import type { JobResponse } from "../types/job-api-types";
+import type { JobType as ApiJobType, JobLevel as ApiJobLevel } from "@/shared/types/enums";
 
 // ─── Enum Mappings ──────────────────────────────────────
 
@@ -16,19 +17,16 @@ const JOB_TYPE_MAP: Record<ApiJobType, JobType> = {
   FULL_TIME: "Full-time",
   PART_TIME: "Part-time",
   CONTRACT: "Contract",
-  INTERN: "Internship",
-  FREELANCE: "Freelance",
-  REMOTE: "Remote",
+  INTERNSHIP: "Internship",
 };
 
 const JOB_LEVEL_MAP: Record<ApiJobLevel, JobLevel> = {
   INTERN: "Intern",
   JUNIOR: "Junior",
-  MIDDLE: "Middle",
+  MID: "Middle",
   SENIOR: "Senior",
   LEAD: "Lead",
   MANAGER: "Manager",
-  DIRECTOR: "Manager", // closest match in frontend enum
 };
 
 // ─── Salary Formatter ───────────────────────────────────
@@ -52,13 +50,13 @@ export function mapJobResponseToJob(r: JobResponse): Job {
     title: r.title,
     company: r.companyName,
     logoUrl: r.companyLogoUrl ?? "/images/company-placeholder.png",
-    location: r.city ?? "Việt Nam",
+    location: r.location ?? "Việt Nam",
     type: JOB_TYPE_MAP[r.jobType] ?? "Full-time",
     level: JOB_LEVEL_MAP[r.jobLevel] ?? "Junior",
     salary: formatSalary(r.salaryMin, r.salaryMax),
     postedAt: r.createdAt,
     description: r.description ?? "",
-    skills: [], // Backend doesn't return skills in JobResponse; leave empty
+    skills: r.skills?.map((s) => s.skillName) ?? [],
 
     // Detail-page fields
     fullDescription: r.description ?? undefined,
@@ -75,8 +73,8 @@ export function mapJobResponseToJob(r: JobResponse): Job {
 
     // Location info
     locationInfo: {
-      city: r.city ?? "Việt Nam",
-      address: r.address ?? undefined,
+      city: r.location ?? "Việt Nam",
+      address: undefined,
     },
   };
 }

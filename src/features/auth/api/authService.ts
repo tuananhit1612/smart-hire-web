@@ -54,7 +54,7 @@ export const authService = {
             id: resp.userId.toString(),
             email: resp.email,
             fullName: resp.fullName,
-            role: resp.role.toLowerCase() as any, // "candidate" | "employer"
+            role: resp.role.toLowerCase() as any, // "candidate" | "hr" | "admin"
             avatarUrl: "", // Can add later
             isNewUser: isFirstLogin,
             joinedDate: new Date().toISOString(),
