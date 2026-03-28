@@ -5,11 +5,25 @@
  */
 import type { SessionUser } from "./auth-types";
 
-export const mockCandidateNew: SessionUser = {} as SessionUser;
-export const mockCandidateReturning: SessionUser = {} as SessionUser;
-export const mockEmployerNew: SessionUser = {} as SessionUser;
-export const mockEmployerReturning: SessionUser = {} as SessionUser;
-export const mockAdmin: SessionUser = {} as SessionUser;
+const DEFAULT_SESSION_USER: SessionUser = {
+    id: "",
+    name: "",
+    email: "",
+    role: "candidate",
+    joinedDate: "",
+};
 
-export const mockUsers = {} as any;
-export const DEFAULT_MOCK_USER: SessionUser = {} as SessionUser;
+export const mockCandidateNew: SessionUser = { ...DEFAULT_SESSION_USER };
+export const mockCandidateReturning: SessionUser = { ...DEFAULT_SESSION_USER };
+export const mockEmployerNew: SessionUser = { ...DEFAULT_SESSION_USER, role: "employer" };
+export const mockEmployerReturning: SessionUser = { ...DEFAULT_SESSION_USER, role: "employer" };
+export const mockAdmin: SessionUser = { ...DEFAULT_SESSION_USER, role: "admin" };
+
+export const mockUsers = {
+    "candidate-new": mockCandidateNew,
+    "candidate-returning": mockCandidateReturning,
+    "employer-new": mockEmployerNew,
+    "employer-returning": mockEmployerReturning,
+    admin: mockAdmin,
+};
+export const DEFAULT_MOCK_USER: SessionUser = { ...DEFAULT_SESSION_USER };
