@@ -1,26 +1,136 @@
 "use client";
 
+import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/shared/components/ui/button";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/features/auth/hooks/use-auth";
+import { onboardingApi, OnboardingCvData, CompleteOnboardingPayload } from "../api/onboarding-api";
 
 interface StepCompleteProps {
-    role: string | null;
-    experience: string | null;
+    preferences: {
+        activationMethod: "ai" | "manual" | null;
+        role: string | null;
+        experience: string | null;
+        cvData: OnboardingCvData | null;
+    };
 }
 
-export function StepComplete({ role, experience }: StepCompleteProps) {
+const mapExperience = (label: string | null) => {
+    switch (label) {
+        case "Mới ra trường": return "JUNIOR";
+        case "Trình độ trung cấp": return "MID";
+        case "Cao cấp / Chuyên viên": return "SENIOR";
+        case "Quản lý / Trưởng nhóm": return "MANAGER";
+        default: return "JUNIOR";
+    }
+};
+
+export function StepComplete({ preferences }: StepCompleteProps) {
     const router = useRouter();
-    const { completeOnboarding } = useAuth();
+    const { completeOnboarding: authCompleteOnboarding } = useAuth();
+    const [isSubmitting, setIsSubmitting] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const hasSubmitted = useRef(false);
+
+    const submitData = async () => {
+        setIsSubmitting(true);
+        setError(null);
+        hasSubmitted.current = true;
+        
+        try {
+            // Build verified CV data, converting gender to backend enum
+            let cvData = undefined;
+            if (preferences.activationMethod === "ai" && preferences.cvData) {
+                const raw = preferences.cvData;
+                // Map Vietnamese gender labels to backend enum
+                const genderMap: Record<string, string> = {
+                    "Nam": "MALE", "Nữ": "FEMALE", "Khác": "OTHER",
+                    "MALE": "MALE", "FEMALE": "FEMALE", "OTHER": "OTHER",
+                };
+                cvData = {
+                    ...raw,
+                    gender: genderMap[raw.gender] || raw.gender || "OTHER",
+                };
+            }
+
+            const payload: CompleteOnboardingPayload = {
+                roleId: preferences.role || "Candidate",
+                experienceLevel: mapExperience(preferences.experience),
+                verifiedCvData: cvData,
+            };
+            
+            console.log("[StepComplete] Sending payload:", JSON.stringify(payload, null, 2));
+            
+            await onboardingApi.completeOnboarding(payload);
+            setIsSubmitting(false);
+        } catch (err: any) {
+            console.error("Lỗi khi hoàn tất onboarding:", err);
+            setIsSubmitting(false);
+            setError(err?.message || "Đã xảy ra lỗi khi lưu thông tin. Vui lòng thử lại.");
+        }
+    };
+
+    useEffect(() => {
+        if (!hasSubmitted.current) {
+            submitData();
+        }
+    }, []);
 
     const handleGoToDashboard = () => {
         // Mark onboarding complete in auth context
-        completeOnboarding();
-        // Here we would typically save the user's preferences to the backend
-        router.push("/jobs");
+        authCompleteOnboarding();
+        router.push("/dashboard");
     };
+
+    if (isSubmitting) {
+        return (
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="flex flex-col items-center justify-center w-full max-w-lg mx-auto text-center space-y-6 p-8 min-h-[400px]"
+            >
+                <Loader2 className="w-12 h-12 text-emerald-500 animate-spin" />
+                <div className="space-y-2">
+                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+                        Đang lưu hồ sơ của bạn
+                    </h2>
+                    <p className="text-slate-600 dark:text-slate-400">
+                        Vui lòng đợi vài giây để chúng tôi thiết lập trải nghiệm cá nhân hóa cho bạn...
+                    </p>
+                </div>
+            </motion.div>
+        );
+    }
+
+    if (error) {
+        return (
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="flex flex-col items-center justify-center w-full max-w-lg mx-auto text-center space-y-6 p-8 min-h-[400px]"
+            >
+                <div className="w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+                    <span className="text-2xl">⚠️</span>
+                </div>
+                <div className="space-y-2">
+                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+                        Opps, có lỗi xảy ra!
+                    </h2>
+                    <p className="text-red-500">{error}</p>
+                </div>
+                <Button
+                    onClick={() => {
+                        submitData();
+                    }}
+                    className="mt-4"
+                >
+                    Thử lại
+                </Button>
+            </motion.div>
+        );
+    }
 
     return (
         <motion.div
@@ -44,9 +154,9 @@ export function StepComplete({ role, experience }: StepCompleteProps) {
                 </h2>
                 <p className="text-slate-600 dark:text-slate-400 text-lg">
                     Chúng tôi đã cá nhân hóa trải nghiệm SmartHire cho các vị trí{" "}
-                    <span className="font-semibold text-slate-900 dark:text-white capitalize">{role || "Ứng viên"}</span>
+                    <span className="font-semibold text-slate-900 dark:text-white capitalize">{preferences.role || "Ứng viên"}</span>
                     {" "}với cấp độ{" "}
-                    <span className="font-semibold text-slate-900 dark:text-white">{experience || "Mới bắt đầu"}</span>.
+                    <span className="font-semibold text-slate-900 dark:text-white">{preferences.experience || "Mới bắt đầu"}</span>.
                 </p>
             </div>
 

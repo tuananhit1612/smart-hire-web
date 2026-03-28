@@ -2,12 +2,20 @@
 
 import { Sparkles, ArrowRight, Target } from "lucide-react";
 import Link from "next/link";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/features/auth/context/auth-context";
 
 export function WelcomeCard() {
     const auth = useContext(AuthContext);
-    const userName = auth?.user?.fullName || "Bạn";
+    const [userName, setUserName] = useState("Bạn");
+
+    useEffect(() => {
+        if (auth?.user?.fullName) {
+            setUserName(auth.user.fullName);
+        } else {
+            setUserName("Bạn");
+        }
+    }, [auth?.user?.fullName]);
 
     return (
         <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#22C55E]/[0.06] via-white to-[#10B981]/[0.04] dark:from-[#22C55E]/5 dark:via-[#1C252E] dark:to-[#10B981]/10 p-8 sm:p-10 border border-[#22C55E]/20 dark:border-white/[0.08] shadow-[0_4px_24px_rgba(145,158,171,0.08)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.2)]">

@@ -22,7 +22,6 @@ import { useToastHelpers } from "@/shared/components/ui/toast";
 import { useAuth } from "../hooks/use-auth";
 import { registerSchema, type RegisterSchema } from "../schemas/register-schema";
 import type { UserRole } from "../types/auth-types";
-
 interface RegisterFormProps {
     role: UserRole;
     onBack: () => void;
@@ -64,7 +63,8 @@ export function RegisterForm({ role, onBack }: RegisterFormProps) {
             );
             router.push("/login");
         } catch (error: any) {
-            toast.error("Đăng ký thất bại", error.message || "Vui lòng thử lại sau.");
+            const message = error instanceof Error ? error.message : error?.message || "Vui lòng thử lại sau.";
+            toast.error("Đăng ký thất bại", message);
         } finally {
             setIsLoading(false);
         }

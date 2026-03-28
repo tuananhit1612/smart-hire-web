@@ -32,7 +32,7 @@ export function ProfileTabJobPreference() {
         salary: "",
     };
 
-    const updatePref = (field: string, value: string) => {
+    const updatePref = (field: string, value: string | string[] | boolean) => {
         setProfile({
             ...profile,
             jobPreference: { ...DEFAULT_JOB_PREF, ...profile.jobPreference, [field]: value },
@@ -59,14 +59,14 @@ export function ProfileTabJobPreference() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        <FormField label="Vị trí mong muốn" value={pref?.jobTitles?.join(", ")} placeholder="VD: Frontend Developer, Tech Lead" onChange={(v) => updatePref("jobTitles", v)} />
-                        <FormSelect label="Địa điểm ưa thích" value={pref?.preferredLocations?.[0]} options={["TP. Hồ Chí Minh", "Hà Nội", "Đà Nẵng", "Remote", "Nước ngoài"]} onChange={(v) => updatePref("preferredLocations", v)} />
+                        <FormField label="Vị trí mong muốn" value={Array.isArray(pref?.jobTitles) ? pref.jobTitles.join(", ") : pref?.jobTitles || ""} placeholder="VD: Frontend Developer, Tech Lead" onChange={(v) => updatePref("jobTitles", v.split(",").map(t => t.trim()))} />
+                        <FormSelect label="Địa điểm ưa thích" value={Array.isArray(pref?.preferredLocations) ? pref.preferredLocations[0] : pref?.preferredLocations || ""} options={["TP. Hồ Chí Minh", "Hà Nội", "Đà Nẵng", "Remote", "Nước ngoài"]} onChange={(v) => updatePref("preferredLocations", [v])} />
                         <FormSelect label="Ngành nghề ưa thích" value={pref?.preferredIndustry} options={["Công nghệ thông tin", "Ngân hàng / Tài chính", "Thương mại điện tử", "Giáo dục", "Y tế", "Sản xuất", "Khác"]} onChange={(v) => updatePref("preferredIndustry", v)} />
                         <FormSelect label="Loại hình việc làm" value={pref?.employmentType} options={["Full-time", "Part-time", "Contract", "Freelance", "Internship"]} onChange={(v) => updatePref("employmentType", v)} />
                         <FormSelect label="Cấp bậc kinh nghiệm" value={pref?.preferredExperienceLevel} options={["Intern", "Fresher", "Junior", "Mid-level", "Senior", "Lead", "Manager"]} onChange={(v) => updatePref("preferredExperienceLevel", v)} />
                         <FormSelect label="Quy mô công ty" value={pref?.companySize} options={["1-10", "11-50", "50-200", "200-500", "500-1000", "1000+"]} onChange={(v) => updatePref("companySize", v)} />
                         <FormSelect label="Hình thức làm việc" value={pref?.workPreference || ""} options={["Remote", "Onsite", "Hybrid"]} onChange={(v) => updatePref("workPreference", v)} />
-                        <FormSelect label="Sẵn sàng chuyển nơi ở?" value={pref?.willingToRelocate ? "Có" : "Không"} options={["Có", "Không"]} onChange={(v) => updatePref("willingToRelocate", v)} />
+                        <FormSelect label="Sẵn sàng chuyển nơi ở?" value={pref?.willingToRelocate ? "Có" : "Không"} options={["Có", "Không"]} onChange={(v) => updatePref("willingToRelocate", v === "Có")} />
                         <FormField label="Ngày sẵn sàng" value={pref?.availabilityDate} type="date" onChange={(v) => updatePref("availabilityDate", v)} />
                         <FormField label="Mức lương kỳ vọng" value={pref?.salary} placeholder="VD: 30.000.000 - 50.000.000 VND" onChange={(v) => updatePref("salary", v)} />
                     </div>

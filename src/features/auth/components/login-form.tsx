@@ -39,16 +39,17 @@ export function LoginForm() {
     const onSubmit = async (data: z.infer<typeof loginSchema>) => {
         setIsLoading(true);
         try {
-            await login(data.email, data.password);
+            const sessionUser = await login(data.email, data.password);
             toastHelpers.success("Đăng nhập thành công!", "Chào mừng trở lại SmartHire.");
 
             const callbackUrl = searchParams.get("callbackUrl");
             if (callbackUrl) {
                 router.push(callbackUrl);
+            } else if (sessionUser.role === "candidate" && sessionUser.isOnboarded === false) {
+                // Candidate hasn't completed onboarding yet
+                router.push("/dashboard/onboarding");
             } else {
-                // If the user state is updated immediately, we still need to wait for context
-                // But the router handles it, or we rely on the returned user details from login()
-                router.push("/"); // Fallback, the header will update
+                router.push("/dashboard");
             }
         } catch (error: any) {
             toastHelpers.error("Đăng nhập thất bại", error.message || "Vui lòng kiểm tra lại email hoặc mật khẩu.");
@@ -91,6 +92,7 @@ export function LoginForm() {
                     <Input
                         label="Email"
                         type="email"
+                        value="tta@gmail.com"
                         placeholder="ten@congty.com"
                         error={errors.email?.message}
                         {...register("email")}
@@ -105,6 +107,7 @@ export function LoginForm() {
                         <Input
                             label="Mật khẩu"
                             type={showPassword ? "text" : "password"}
+                            value="Anh@2004"
                             placeholder="••••••••"
                             error={errors.password?.message}
                             {...register("password")}

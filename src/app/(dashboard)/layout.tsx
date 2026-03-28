@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import { DashboardSidebar } from "@/features/dashboard/components/DashboardSidebar";
 import { DashboardTopbar } from "@/features/dashboard/components/DashboardTopbar";
 import { RealtimeProvider } from "@/shared/components/layout/RealtimeProvider";
+import { useAuth } from "@/features/auth/hooks/use-auth";
 import { motion } from "framer-motion";
 
 export default function DashboardLayout({
@@ -12,6 +14,21 @@ export default function DashboardLayout({
     children: React.ReactNode;
 }) {
     const [collapsed, setCollapsed] = useState(false);
+    const { user, isAuthenticated, isLoading } = useAuth();
+    const router = useRouter();
+    const pathname = usePathname();
+
+    // Redirect non-onboarded candidates to onboarding (except if already on onboarding page)
+    useEffect(() => {
+        if (isLoading || !isAuthenticated || !user) return;
+        
+        const isOnOnboarding = pathname?.startsWith("/dashboard/onboarding");
+        const needsOnboarding = user.role === "candidate" && user.isOnboarded === false;
+
+        if (needsOnboarding && !isOnOnboarding) {
+            router.replace("/dashboard/onboarding");
+        }
+    }, [isLoading, isAuthenticated, user, pathname, router]);
 
     return (
         <RealtimeProvider>

@@ -50,7 +50,8 @@ function toSessionUser(d: AuthLoginData): SessionUser {
         email: d.email,
         role: d.role.toLowerCase() as SessionUser["role"],
         joinedDate: new Date().toISOString(),
-        isNewUser: true,
+        isNewUser: !(d.isOnboarded ?? false),
+        isOnboarded: d.isOnboarded ?? false, // Mapped from backend payload
     };
 }
 
@@ -65,6 +66,7 @@ function userDataToSession(d: UserData): SessionUser {
         phone: d.phone ?? undefined,
         joinedDate: d.createdAt,
         isNewUser: false,
+        isOnboarded: d.isOnboarded ?? false,
     };
 }
 
@@ -125,10 +127,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     setSessionCookie(sessionUser);
                 } else {
                     // Legacy slim response — best-effort
+                    const slim = meData as unknown as { email: string };
                     const sessionUser: SessionUser = {
                         id: "",
-                        fullName: meData.email.split("@")[0],
-                        email: meData.email,
+                        fullName: slim.email.split("@")[0],
+                        email: slim.email,
                         role: "candidate",
                         joinedDate: new Date().toISOString(),
                     };
@@ -153,7 +156,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             const payload = res.data.data; // AuthLoginData
 
             tokenStorage.setTokens(payload.accessToken, payload.refreshToken);
-            const sessionUser = toSessionUser(payload);
+
+            // Immediately fetch full profile to get isOnboarded status
+            let sessionUser: SessionUser;
+            try {
+                const meRes = await authApi.getMe();
+                const meData = meRes.data.data;
+                if ("id" in meData && "fullName" in meData) {
+                    sessionUser = userDataToSession(meData as unknown as UserData);
+                } else {
+                    sessionUser = toSessionUser(payload);
+                }
+            } catch {
+                // Fallback if /auth/me fails
+                sessionUser = toSessionUser(payload);
+            }
+
             setUser(sessionUser);
             setSessionCookie(sessionUser);
             setStatus("authenticated");
@@ -194,7 +212,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const completeOnboarding = useCallback(() => {
         setUser((prev) => {
             if (!prev) return null;
-            const updated = { ...prev, isNewUser: false };
+            const updated = { ...prev, isNewUser: false, isOnboarded: true };
             setSessionCookie(updated);
             return updated;
         });

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mail, MapPin, Phone, Linkedin, Github, Globe, Twitter, CheckCircle2, Camera, X, Upload, Loader2 } from "lucide-react";
 import { CandidateProfile, SocialLink } from "../types/profile";
@@ -28,6 +28,11 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const handleAvatarClick = () => {
     fileInputRef.current?.click();
@@ -114,12 +119,12 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
                   {profile.avatarUrl ? (
                     <img
                       src={profile.avatarUrl.startsWith("http") ? profile.avatarUrl : `${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api").replace("/api", "")}/uploads/${profile.avatarUrl}`}
-                      alt={profile.fullName || user?.fullName || "Avatar"}
+                      alt={isMounted ? (profile.fullName || user?.fullName || "Avatar") : "Avatar"}
                       className="w-full h-full object-cover"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-4xl font-extrabold text-[#22C55E] bg-gradient-to-br from-[#22C55E]/10 to-transparent">
-                      {(profile.fullName || user?.fullName || "U").charAt(0).toUpperCase()}
+                      {isMounted ? (profile.fullName || user?.fullName || "U").charAt(0).toUpperCase() : "U"}
                     </div>
                   )}
 
@@ -159,7 +164,7 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
               <div>
                 <div className="flex items-center gap-2">
                   <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[#1C252E] dark:text-white">
-                    {profile.fullName || user?.fullName || "Người dùng ẩn danh"}
+                    {isMounted ? (profile.fullName || user?.fullName || "Người dùng ẩn danh") : "Người dùng ẩn danh"}
                   </h1>
                   <CheckCircle2 className="w-6 h-6 text-[#22C55E] fill-[#22C55E]/20 shrink-0" />
                 </div>
@@ -170,7 +175,7 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
 
               {/* Contact Info */}
               <div className="flex flex-wrap items-center gap-y-3 gap-x-5 mt-4 text-[14px] font-medium text-[#637381] dark:text-[#C4CDD5]">
-                {(profile.email || user?.email) && (
+                {isMounted && (profile.email || user?.email) && (
                   <span className="flex items-center gap-2 hover:text-[#22C55E] transition-colors cursor-pointer">
                     <div className="w-8 h-8 rounded-lg bg-[rgba(145,158,171,0.04)] dark:bg-[rgba(145,158,171,0.08)] flex items-center justify-center">
                       <Mail className="w-4 h-4 text-[#1C252E] dark:text-white" />
