@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { motion } from "framer-motion";
 import {
@@ -30,16 +32,13 @@ import FunnelByStage, {
 import PassRateTable from "@/features/employer/components/pass-rate-table";
 import TopMissingSkills from "@/features/employer/components/top-missing-skills";
 import { useDashboardOverview } from "@/features/employer/hooks/use-dashboard-overview";
-import type {
-    HrDashboardOverview,
-    StageFunnelItem,
-    WeeklyTrendItem,
-    TopJobItem,
-    RecentActivityItem,
-} from "@/features/employer/api/dashboard-api";
 import {
-    exportHrApplicationsCsv,
-    exportHrJobsCsv,
+    dashboardApi,
+    type HrDashboardOverview,
+    type StageFunnelItem,
+    type WeeklyTrendItem,
+    type TopJobItem,
+    type RecentActivityItem,
 } from "@/features/employer/api/dashboard-api";
 
 // ─── Animation Presets ───────────────────────────────
@@ -195,7 +194,7 @@ export default function HRDashboardPage() {
     const handleExportApps = async () => {
         try {
             setExportingApps(true);
-            const blob = await exportHrApplicationsCsv();
+            const blob = await dashboardApi.exportApplicationsCsv();
             const filename = `hr_applications_${new Date().toISOString().slice(0, 10)}.csv`;
             downloadBlob(blob, filename);
             toast.success("Đã xuất báo cáo CSV Ứng viên thành công!", "Tệp tải xuống nằm trong thư mục Downloads.");
@@ -209,7 +208,7 @@ export default function HRDashboardPage() {
     const handleExportJobs = async () => {
         try {
             setExportingJobs(true);
-            const blob = await exportHrJobsCsv();
+            const blob = await dashboardApi.exportJobsCsv();
             const filename = `hr_jobs_${new Date().toISOString().slice(0, 10)}.csv`;
             downloadBlob(blob, filename);
             toast.success("Đã xuất báo cáo CSV Tin tuyển dụng thành công!", "Tệp tải xuống nằm trong thư mục Downloads.");

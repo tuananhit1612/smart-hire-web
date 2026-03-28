@@ -15,16 +15,18 @@
  */
 
 import type {
+  Gender,
   CandidateProfileResponse,
-  UpdateProfilePayload,
+  ProfilePayload,
   EducationResponse,
-  CreateEducationPayload,
+  EducationPayload,
   ExperienceResponse,
-  CreateExperiencePayload,
+  ExperiencePayload,
   ProjectResponse,
-  CreateProjectPayload,
+  ProjectPayload,
   SkillResponse,
-  CreateSkillPayload,
+  SkillPayload,
+  ProficiencyLevel,
 } from "../types/profile-api-types";
 
 import type {
@@ -75,36 +77,29 @@ export function mapProfileFromApi(
   return {
     id: toStr(res.id),
     fullName: res.fullName,
-    lastName: res.lastName,
-    headline: res.headline,
-    title: res.title,
+    headline: res.headline || "",
     email: res.email,
-    phone: res.phone,
-    location: res.address ?? "",
-    country: res.country,
-    state: res.state,
-    city: res.city,
-    gender: res.gender,
-    linkedIn: res.linkedIn,
-    website: res.website,
-    avatarUrl: res.avatarUrl,
-    about: res.summary ?? "",
-    summary: res.summary,
-    yearsOfExperience: res.yearsOfExperience,
-    expectedSalary: res.expectedSalary,
+    phone: res.phone || "",
+    location: res.address || "",
+    city: res.city || "",
+    gender: res.gender || undefined,
+    avatarUrl: res.avatarUrl || undefined,
+    about: res.summary || "",
+    summary: res.summary || undefined,
+    yearsOfExperience: res.yearsOfExperience || undefined,
   };
 }
 
 export function mapEducationFromApi(res: EducationResponse): Education {
   return {
     id: toStr(res.id),
-    degree: res.degree,
+    degree: res.degree || "",
     institution: res.institution,
-    gpa: res.gpa,
-    fieldOfStudy: res.fieldOfStudy,
-    startDate: res.startDate,
-    endDate: res.endDate,
-    logoUrl: res.logoUrl,
+    gpa: res.gpa || undefined,
+    fieldOfStudy: res.fieldOfStudy || "",
+    startDate: res.startDate || "",
+    endDate: res.endDate || "",
+    logoUrl: res.logoUrl || undefined,
   };
 }
 
@@ -114,10 +109,10 @@ export function mapExperienceFromApi(res: ExperienceResponse): Experience {
     title: res.title,
     companyName: res.companyName,
     isCurrent: res.isCurrent ?? !res.endDate,
-    startDate: res.startDate,
-    endDate: res.endDate,
-    description: res.description,
-    location: res.location,
+    startDate: res.startDate || "",
+    endDate: res.endDate || undefined,
+    description: res.description || "",
+    location: res.location || "",
   };
 }
 
@@ -125,11 +120,11 @@ export function mapProjectFromApi(res: ProjectResponse): Project {
   return {
     id: toStr(res.id),
     projectName: res.projectName,
-    startDate: res.startDate,
-    endDate: res.endDate,
-    description: res.description,
-    technologies: techStringToArray(res.technologies),
-    link: res.link,
+    startDate: res.startDate || "",
+    endDate: res.endDate || "",
+    description: res.description || "",
+    technologies: techStringToArray(res.technologies || ""),
+    link: res.link || "",
   };
 }
 
@@ -147,28 +142,19 @@ export function mapSkillFromApi(res: SkillResponse): Skill {
 
 export function mapProfileToApi(
   profile: Partial<CandidateProfile>
-): UpdateProfilePayload {
+): ProfilePayload {
   return {
-    fullName: profile.fullName,
-    lastName: profile.lastName,
     headline: profile.headline,
-    title: profile.title,
-    phone: profile.phone,
+    phone: profile.phone || undefined,
     address: profile.location,
-    country: profile.country,
-    state: profile.state,
     city: profile.city,
-    gender: profile.gender,
-    linkedIn: profile.linkedIn,
-    website: profile.website,
-    avatarUrl: profile.avatarUrl,
-    summary: profile.about || profile.summary,
+    gender: profile.gender as Gender,
+    summary: profile.about || profile.summary || undefined,
     yearsOfExperience: profile.yearsOfExperience,
-    expectedSalary: profile.expectedSalary,
   };
 }
 
-export function mapEducationToApi(edu: Education): CreateEducationPayload {
+export function mapEducationToApi(edu: Education): EducationPayload {
   return {
     degree: edu.degree,
     institution: edu.institution,
@@ -179,7 +165,7 @@ export function mapEducationToApi(edu: Education): CreateEducationPayload {
   };
 }
 
-export function mapExperienceToApi(exp: Experience): CreateExperiencePayload {
+export function mapExperienceToApi(exp: Experience): ExperiencePayload {
   return {
     title: exp.title,
     companyName: exp.companyName,
@@ -191,7 +177,7 @@ export function mapExperienceToApi(exp: Experience): CreateExperiencePayload {
   };
 }
 
-export function mapProjectToApi(proj: Project): CreateProjectPayload {
+export function mapProjectToApi(proj: Project): ProjectPayload {
   return {
     projectName: proj.projectName,
     startDate: proj.startDate,
@@ -202,11 +188,11 @@ export function mapProjectToApi(proj: Project): CreateProjectPayload {
   };
 }
 
-export function mapSkillToApi(skill: Skill): CreateSkillPayload {
+export function mapSkillToApi(skill: Skill): SkillPayload {
   return {
     skillName: skill.skillName,
     proficiencyLevel: skill.proficiencyLevel
-      ? uppercaseLevel(skill.proficiencyLevel)
-      : undefined,
+      ? uppercaseLevel(skill.proficiencyLevel) as ProficiencyLevel
+      : "BEGINNER" as ProficiencyLevel,
   };
 }

@@ -56,37 +56,46 @@ export interface LoginSuccessData {
     expiresIn: number; // seconds
 }
 
+const candidateLoginSuccess: AuthSuccess<LoginSuccessData> = {
+    ok: true,
+    data: {
+        user: mockCandidateReturning,
+        token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.mock_candidate_token",
+        refreshToken: "rt_candidate_mock_refresh_token_abc123",
+        expiresIn: 3600,
+    },
+    message: "Đăng nhập thành công! Chào mừng bạn trở lại.",
+};
+
+const employerLoginSuccess: AuthSuccess<LoginSuccessData> = {
+    ok: true,
+    data: {
+        user: mockEmployerReturning,
+        token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.mock_employer_token",
+        refreshToken: "rt_employer_mock_refresh_token_def456",
+        expiresIn: 3600,
+    },
+    message: "Đăng nhập thành công! Chào mừng nhà tuyển dụng.",
+};
+
+const adminLoginSuccess: AuthSuccess<LoginSuccessData> = {
+    ok: true,
+    data: {
+        user: mockAdmin,
+        token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.mock_admin_token",
+        refreshToken: "rt_admin_mock_refresh_token_ghi789",
+        expiresIn: 7200,
+    },
+    message: "Đăng nhập Admin thành công.",
+};
+
 export const loginSuccess: Record<UserRole, AuthSuccess<LoginSuccessData>> = {
-    candidate: {
-        ok: true,
-        data: {
-            user: mockCandidateReturning,
-            token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.mock_candidate_token",
-            refreshToken: "rt_candidate_mock_refresh_token_abc123",
-            expiresIn: 3600,
-        },
-        message: "Đăng nhập thành công! Chào mừng bạn trở lại.",
-    },
-    employer: {
-        ok: true,
-        data: {
-            user: mockEmployerReturning,
-            token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.mock_employer_token",
-            refreshToken: "rt_employer_mock_refresh_token_def456",
-            expiresIn: 3600,
-        },
-        message: "Đăng nhập thành công! Chào mừng nhà tuyển dụng.",
-    },
-    admin: {
-        ok: true,
-        data: {
-            user: mockAdmin,
-            token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.mock_admin_token",
-            refreshToken: "rt_admin_mock_refresh_token_ghi789",
-            expiresIn: 7200,
-        },
-        message: "Đăng nhập Admin thành công.",
-    },
+    candidate: candidateLoginSuccess,
+    employer: employerLoginSuccess,
+    admin: adminLoginSuccess,
+    CANDIDATE: candidateLoginSuccess,
+    HR: employerLoginSuccess,
+    ADMIN: adminLoginSuccess,
 };
 
 export const loginErrors: Record<string, AuthError> = {

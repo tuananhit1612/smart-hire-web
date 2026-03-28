@@ -1,0 +1,460 @@
+﻿
+> smarthire-app@0.1.0 build
+> next build
+
+node.exe : ΓÜá 
+`eslint` configuration 
+in next.config.ts is 
+no longer supported. 
+See more info here: htt
+ps://nextjs.org/docs/ap
+p/api-reference/cli/nex
+t#next-lint-options
+At line:1 char:1
++ & 
+"D:\nodeJS/node.exe" "D
+:\nodeJS/node_modules/n
+pm/bin/npm-cli.js" ru 
+...
++ ~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~
+    + CategoryInfo     
+         : NotSpecifi  
+  ed: (ΓÜá `eslint`    
+ co...xt-lint-optio    
+ns:String) [], Rem    
+oteException
+    + FullyQualifiedEr 
+   rorId : NativeComm  
+  andError
+ 
+ΓÜá Invalid 
+next.config.ts options 
+detected: 
+ΓÜá     Unrecognized 
+key(s) in object: 
+'eslint'
+ΓÜá See more info 
+here: https://nextjs.or
+g/docs/messages/invalid
+-next-config
+Γû▓ Next.js 16.1.5 (Turbopack)
+- Environments: .env.local
+
+ΓÜá The "middleware" 
+file convention is 
+deprecated. Please use 
+"proxy" instead. Learn 
+more: https://nextjs.or
+g/docs/messages/middlew
+are-to-proxy
+  Creating an optimized production build ...
+
+> Build error occurred
+Error: Turbopack build 
+failed with 3 errors:
+./src/app/(dashboard)/e
+mployer/dashboard/page.
+tsx:1:10
+Ecmascript file had an 
+error
+[0m[31m[1m>[22m[39
+m[90m 1 |[39m 
+[36mimport[39m { 
+useState } 
+[36mfrom[39m [32m"re
+act"[39m[33m;[39m
+ [90m   |[39m        
+  [31m[1m^[22m[39m
+[31m[1m^[22m[39m[31
+m[1m^[22m[39m[31m[
+1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[2
+2m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[39
+m
+ [90m 2 |[39m 
+[36mimport[39m { 
+motion } 
+[36mfrom[39m [32m"fr
+amer-motion"[39m[33m;
+[39m
+ [90m 3 |[39m 
+[36mimport[39m {
+ [90m 4 |[39m     [3
+3mUsers[39m[33m,[39m
+[0m
+
+You're importing a 
+component that needs 
+`useState`. This React 
+Hook only works in a 
+Client Component. To 
+fix, mark the file (or 
+its parent) with the 
+`"use client"` 
+directive.
+
+ Learn more: https://ne
+xtjs.org/docs/app/api-r
+eference/directives/use
+-client
+
+
+
+
+./src/app/(dashboard)/e
+mployer/dashboard/page.
+tsx:40:1
+Export exportHrApplicat
+ionsCsv doesn't exist 
+in target module
+[0m [90m 38 |[39m   
+  [33mRecentActivityIt
+em[39m[33m,[39m
+ [90m 39 |[39m } 
+[36mfrom[39m [32m"@/
+features/employer/api/d
+ashboard-api"[39m[33m
+;[39m
+[31m[1m>[22m[39m[9
+0m 40 |[39m 
+[36mimport[39m {
+ [90m    |[39m [31m
+[1m^[22m[39m[31m[1m
+^[22m[39m[31m[1m^[
+22m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[3
+9m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31
+m[1m^[22m[39m
+[31m[1m>[22m[39m[9
+0m 41 |[39m     export
+HrApplicationsCsv[33m,
+[39m
+ [90m    |[39m [31m
+[1m^[22m[39m[31m[1m
+^[22m[39m[31m[1m^[
+22m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[3
+9m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31
+m[1m^[22m[39m[31m[
+1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[2
+2m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[39
+m[31m[1m^[22m[39m[
+31m[1m^[22m[39m[31m
+[1m^[22m[39m[31m[1
+m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[22
+m[39m[31m[1m^[22m[
+39m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[3
+1m[1m^[22m[39m[31m
+[1m^[22m[39m[31m[1m
+^[22m[39m[31m[1m^[
+22m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[3
+9m
+[31m[1m>[22m[39m[9
+0m 42 |[39m     export
+HrJobsCsv[33m,[39m
+ [90m    |[39m [31m
+[1m^[22m[39m[31m[1m
+^[22m[39m[31m[1m^[
+22m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[3
+9m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31
+m[1m^[22m[39m[31m[
+1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[2
+2m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[39
+m[31m[1m^[22m[39m[
+31m[1m^[22m[39m[31m
+[1m^[22m[39m[31m[1
+m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[22
+m[39m[31m[1m^[22m[
+39m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[3
+1m[1m^[22m[39m[31m
+[1m^[22m[39m[31m[1m
+^[22m[39m[31m[1m^[
+22m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[3
+9m
+[31m[1m>[22m[39m[9
+0m 43 |[39m } 
+[36mfrom[39m [32m"@/
+features/employer/api/d
+ashboard-api"[39m[33m
+;[39m
+ [90m    |[39m [31m
+[1m^[22m[39m[31m[1m
+^[22m[39m[31m[1m^[
+22m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[3
+9m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31
+m[1m^[22m[39m[31m[
+1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[2
+2m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[39
+m[31m[1m^[22m[39m[
+31m[1m^[22m[39m[31m
+[1m^[22m[39m[31m[1
+m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[22
+m[39m[31m[1m^[22m[
+39m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[3
+1m[1m^[22m[39m[31m
+[1m^[22m[39m[31m[1m
+^[22m[39m[31m[1m^[
+22m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[3
+9m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31
+m[1m^[22m[39m[31m[
+1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[2
+2m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[39
+m[31m[1m^[22m[39m[
+31m[1m^[22m[39m[31m
+[1m^[22m[39m[31m[1
+m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[22
+m[39m[31m[1m^[22m[
+39m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[3
+1m[1m^[22m[39m[31m
+[1m^[22m[39m[31m[1m
+^[22m[39m
+ [90m 44 |[39m
+ [90m 45 |[39m 
+[90m// ΓöÇΓöÇΓöÇ 
+Animation Presets ΓöÇΓö
+ÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓ
+öÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö
+ÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39
+m
+ [90m 46 |[39m 
+[36mconst[39m 
+premiumEase 
+[33m=[39m [[35m0.22
+[39m[33m,[39m 
+[35m1[39m[33m,[39m 
+[35m0.36[39m[33m,[3
+9m [35m1[39m] 
+[36mas[39m [36mconst
+[39m[33m;[39m[0m
+
+The export exportHrAppl
+icationsCsv was not 
+found in module [projec
+t]/src/features/employe
+r/api/dashboard-api.ts 
+[app-rsc] (ecmascript).
+Did you mean to import 
+dashboardApi?
+All exports of the 
+module are statically 
+known (It doesn't have 
+dynamic exports). So 
+it's known statically 
+that the requested 
+export doesn't exist.
+
+
+./src/app/(dashboard)/e
+mployer/dashboard/page.
+tsx:40:1
+Export exportHrJobsCsv 
+doesn't exist in 
+target module
+[0m [90m 38 |[39m   
+  [33mRecentActivityIt
+em[39m[33m,[39m
+ [90m 39 |[39m } 
+[36mfrom[39m [32m"@/
+features/employer/api/d
+ashboard-api"[39m[33m
+;[39m
+[31m[1m>[22m[39m[9
+0m 40 |[39m 
+[36mimport[39m {
+ [90m    |[39m [31m
+[1m^[22m[39m[31m[1m
+^[22m[39m[31m[1m^[
+22m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[3
+9m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31
+m[1m^[22m[39m
+[31m[1m>[22m[39m[9
+0m 41 |[39m     export
+HrApplicationsCsv[33m,
+[39m
+ [90m    |[39m [31m
+[1m^[22m[39m[31m[1m
+^[22m[39m[31m[1m^[
+22m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[3
+9m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31
+m[1m^[22m[39m[31m[
+1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[2
+2m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[39
+m[31m[1m^[22m[39m[
+31m[1m^[22m[39m[31m
+[1m^[22m[39m[31m[1
+m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[22
+m[39m[31m[1m^[22m[
+39m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[3
+1m[1m^[22m[39m[31m
+[1m^[22m[39m[31m[1m
+^[22m[39m[31m[1m^[
+22m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[3
+9m
+[31m[1m>[22m[39m[9
+0m 42 |[39m     export
+HrJobsCsv[33m,[39m
+ [90m    |[39m [31m
+[1m^[22m[39m[31m[1m
+^[22m[39m[31m[1m^[
+22m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[3
+9m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31
+m[1m^[22m[39m[31m[
+1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[2
+2m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[39
+m[31m[1m^[22m[39m[
+31m[1m^[22m[39m[31m
+[1m^[22m[39m[31m[1
+m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[22
+m[39m[31m[1m^[22m[
+39m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[3
+1m[1m^[22m[39m[31m
+[1m^[22m[39m[31m[1m
+^[22m[39m[31m[1m^[
+22m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[3
+9m
+[31m[1m>[22m[39m[9
+0m 43 |[39m } 
+[36mfrom[39m [32m"@/
+features/employer/api/d
+ashboard-api"[39m[33m
+;[39m
+ [90m    |[39m [31m
+[1m^[22m[39m[31m[1m
+^[22m[39m[31m[1m^[
+22m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[3
+9m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31
+m[1m^[22m[39m[31m[
+1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[2
+2m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[39
+m[31m[1m^[22m[39m[
+31m[1m^[22m[39m[31m
+[1m^[22m[39m[31m[1
+m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[22
+m[39m[31m[1m^[22m[
+39m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[3
+1m[1m^[22m[39m[31m
+[1m^[22m[39m[31m[1m
+^[22m[39m[31m[1m^[
+22m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[3
+9m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[31
+m[1m^[22m[39m[31m[
+1m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[2
+2m[39m[31m[1m^[22m
+[39m[31m[1m^[22m[39
+m[31m[1m^[22m[39m[
+31m[1m^[22m[39m[31m
+[1m^[22m[39m[31m[1
+m^[22m[39m[31m[1m^
+[22m[39m[31m[1m^[22
+m[39m[31m[1m^[22m[
+39m[31m[1m^[22m[39m
+[31m[1m^[22m[39m[3
+1m[1m^[22m[39m[31m
+[1m^[22m[39m[31m[1m
+^[22m[39m
+ [90m 44 |[39m
+ [90m 45 |[39m 
+[90m// ΓöÇΓöÇΓöÇ 
+Animation Presets ΓöÇΓö
+ÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓ
+öÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö
+ÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ[39
+m
+ [90m 46 |[39m 
+[36mconst[39m 
+premiumEase 
+[33m=[39m [[35m0.22
+[39m[33m,[39m 
+[35m1[39m[33m,[39m 
+[35m0.36[39m[33m,[3
+9m [35m1[39m] 
+[36mas[39m [36mconst
+[39m[33m;[39m[0m
+
+The export 
+exportHrJobsCsv was 
+not found in module [pr
+oject]/src/features/emp
+loyer/api/dashboard-api
+.ts [app-rsc] 
+(ecmascript).
+Did you mean to import 
+dashboardApi?
+All exports of the 
+module are statically 
+known (It doesn't have 
+dynamic exports). So 
+it's known statically 
+that the requested 
+export doesn't exist.
+
+
+    at <unknown> (./src
+/app/(dashboard)/employ
+er/dashboard/page.tsx:1
+:10)
+    at <unknown> (./src
+/app/(dashboard)/employ
+er/dashboard/page.tsx:4
+0:1)
+    at <unknown> (./src
+/app/(dashboard)/employ
+er/dashboard/page.tsx:4
+0:1)

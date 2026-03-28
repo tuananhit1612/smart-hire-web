@@ -1,27 +1,35 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { BellRing, CheckCheck, Inbox } from "lucide-react";
+import { BellRing, CheckCheck, Inbox, Loader2 } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { NotificationCard } from "@/features/notifications/components/notification-card";
 import {
     NotificationFilters,
     NotificationFilter,
 } from "@/features/notifications/components/notification-filters";
-import { mockNotifications, Notification } from "@/features/notifications/types/mock-notifications";
+import { useNotificationStore } from "@/features/notifications/stores/notification-store";
 import { RealtimeEventTrigger } from "@/features/notifications/components/realtime-event-trigger";
 
 export default function NotificationsPage() {
-    const [notifications, setNotifications] = useState<Notification[]>(
-        () => [...mockNotifications]
-    );
+    const { 
+        notifications, 
+        unreadCount, 
+        isLoading, 
+        fetchNotifications, 
+        markAsRead, 
+        markAllAsRead, 
+        currentPage, 
+        totalPages 
+    } = useNotificationStore();
+
     const [filter, setFilter] = useState<NotificationFilter>("all");
 
-    const unreadCount = useMemo(
-        () => notifications.filter((n) => !n.isRead).length,
-        [notifications]
-    );
+    // Fetch initial data
+    useEffect(() => {
+        fetchNotifications(0);
+    }, [fetchNotifications]);
 
     const filteredNotifications = useMemo(() => {
         switch (filter) {
@@ -34,47 +42,46 @@ export default function NotificationsPage() {
         }
     }, [notifications, filter]);
 
-    const handleMarkRead = (id: string) => {
-        setNotifications((prev) =>
-            prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
-        );
-    };
-
-    const handleMarkAllRead = () => {
-        setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+    const handleLoadMore = () => {
+        if (currentPage < totalPages - 1) {
+            fetchNotifications(currentPage + 1);
+        }
     };
 
     return (
-        <section className="relative z-10 pt-6 pb-8 md:pt-8 md:pb-12">
-            <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <section className="relative z-10 pt-6 pb-8 md:pt-8 md:pb-12 min-h-screen bg-[rgba(145,158,171,0.02)] dark:bg-transparent">
+            <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
                 {/* Header */}
                 <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8"
                 >
-                    <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-xl bg-[#22c55e]/10 dark:bg-[#22c55e]/20 flex items-center justify-center">
-                            <BellRing className="w-6 h-6 text-[#22c55e] dark:text-[#22c55e]" />
+                    <div className="flex items-center gap-4">
+                        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#22c55e] to-emerald-400 flex items-center justify-center shadow-lg shadow-[#22c55e]/20">
+                            <BellRing className="w-7 h-7 text-white" />
                         </div>
                         <div>
-                            <h1 className="text-2xl font-bold text-[#1C252E] dark:text-white">
+                            <h1 className="text-3xl font-bold text-[#1C252E] dark:text-white tracking-tight">
                                 Thông báo
                             </h1>
-                            <p className="text-base text-[#637381] dark:text-[#919EAB]">
+                            <p className="text-sm font-medium text-[#637381] dark:text-[#919EAB]">
                                 {unreadCount > 0
                                     ? `Bạn có ${unreadCount} thông báo chưa đọc`
-                                    : "Tất cả thông báo đã được đọc"}
+                                    : "Tất cả thông báo đã được đọc 🎉"}
                             </p>
                         </div>
                     </div>
 
                     {unreadCount > 0 && (
                         <Button
-                            variant="ghost"
+                            variant="outline"
                             size="sm"
-                            onClick={handleMarkAllRead}
-                            className="h-9 text-sm text-[#22c55e] hover:text-[#22c55e] hover:bg-[#22c55e]/10 dark:hover:bg-[#22c55e]/20 rounded-full gap-1.5 cursor-pointer"
+                            onClick={markAllAsRead}
+                            className={cn(
+                                "h-10 px-4 text-sm font-bold text-[#22c55e] border-[#22c55e]/20 hover:bg-[#22c55e]/5 rounded-xl gap-2 transition-all",
+                                "hover:border-[#22c55e]/50 hover:scale-[1.02] active:scale-95"
+                            )}
                         >
                             <CheckCheck className="w-4 h-4" />
                             Đánh dấu tất cả đã đọc
@@ -82,59 +89,82 @@ export default function NotificationsPage() {
                     )}
                 </motion.div>
 
-                {/* Filters */}
-                <motion.div
-                    initial={{ opacity: 0, y: -5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 }}
-                    className="mb-6"
-                >
-                    <NotificationFilters
-                        activeFilter={filter}
-                        onFilterChange={setFilter}
-                        unreadCount={unreadCount}
-                    />
-                </motion.div>
+                {/* Filters Row */}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                    <motion.div
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.1 }}
+                    >
+                        <NotificationFilters
+                            activeFilter={filter}
+                            onFilterChange={setFilter}
+                            unreadCount={unreadCount}
+                        />
+                    </motion.div>
 
-                {/* Realtime Event Trigger (Mock) */}
-                <motion.div
-                    initial={{ opacity: 0, y: -5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.15 }}
-                    className="mb-6"
-                >
-                    <RealtimeEventTrigger />
-                </motion.div>
+                    {/* Mock trigger - helpful for testing */}
+                    <motion.div
+                        initial={{ opacity: 0, x: 10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.15 }}
+                    >
+                        <RealtimeEventTrigger />
+                    </motion.div>
+                </div>
 
                 {/* Notification List */}
-                <div className="space-y-3">
-                    <AnimatePresence mode="popLayout">
+                <div className="space-y-4">
+                    <AnimatePresence mode="popLayout" initial={false}>
                         {filteredNotifications.length > 0 ? (
-                            filteredNotifications.map((notification, index) => (
-                                <NotificationCard
-                                    key={notification.id}
-                                    notification={notification}
-                                    onMarkRead={handleMarkRead}
-                                    index={index}
-                                />
-                            ))
+                            <>
+                                {filteredNotifications.map((notification, index) => (
+                                    <NotificationCard
+                                        key={notification.id}
+                                        notification={notification as any}
+                                        onMarkRead={(id) => markAsRead(Number(id))}
+                                        index={index}
+                                    />
+                                ))}
+                                
+                                {currentPage < totalPages - 1 && (
+                                    <div className="flex justify-center pt-8 pb-4">
+                                        <Button
+                                            variant="ghost"
+                                            onClick={handleLoadMore}
+                                            disabled={isLoading}
+                                            className="text-[#637381] hover:text-[#22c55e] hover:bg-[#22c55e]/5 font-bold"
+                                        >
+                                            {isLoading ? (
+                                                <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                                            ) : null}
+                                            Tải thêm thông báo
+                                        </Button>
+                                    </div>
+                                )}
+                            </>
+                        ) : isLoading ? (
+                            <div className="flex flex-col items-center justify-center py-24 space-y-4">
+                                <Loader2 className="w-10 h-10 text-[#22c55e] animate-spin" />
+                                <p className="text-[#637381] font-medium">Đang tải thông báo...</p>
+                            </div>
                         ) : (
                             <motion.div
                                 key="empty"
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
-                                className="flex flex-col items-center justify-center py-16 text-center"
+                                className="flex flex-col items-center justify-center py-24 text-center bg-white dark:bg-[#1C252E] rounded-3xl border border-[rgba(145,158,171,0.12)] shadow-sm"
                             >
-                                <div className="w-16 h-16 rounded-2xl bg-[rgba(145,158,171,0.08)] dark:bg-white/[0.04] flex items-center justify-center mb-4">
-                                    <Inbox className="w-8 h-8 text-[#C4CDD5] dark:text-[#637381]" />
+                                <div className="w-20 h-20 rounded-full bg-[rgba(145,158,171,0.08)] dark:bg-white/[0.04] flex items-center justify-center mb-6">
+                                    <Inbox className="w-10 h-10 text-[#C4CDD5] dark:text-[#637381]" />
                                 </div>
-                                <h3 className="text-base font-semibold text-[#637381] dark:text-[#919EAB] mb-1">
+                                <h3 className="text-xl font-bold text-[#1C252E] dark:text-white mb-2">
                                     Không có thông báo
                                 </h3>
-                                <p className="text-sm text-[#919EAB] dark:text-[#637381]">
+                                <p className="text-[#637381] dark:text-[#919EAB] max-w-xs">
                                     {filter === "unread"
-                                        ? "Bạn đã đọc tất cả thông báo rồi 🎉"
-                                        : "Chưa có thông báo nào trong mục này."}
+                                        ? "Tuyệt vời! Bạn đã đọc sạch sẽ mọi thông báo mới rồi 🚀"
+                                        : "Vùng đất này có vẻ yên tĩnh... Hiện tại chưa có thông báo nào dành cho bạn."}
                                 </p>
                             </motion.div>
                         )}
@@ -143,5 +173,10 @@ export default function NotificationsPage() {
             </div>
         </section>
     );
+}
+
+// Internal cn helper if not available from shared utility
+function cn(...inputs: any[]) {
+    return inputs.filter(Boolean).join(" ");
 }
 

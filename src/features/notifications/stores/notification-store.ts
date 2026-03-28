@@ -34,6 +34,8 @@ interface NotificationActions {
   markAsRead: (id: number) => Promise<void>;
   /** Mark all notifications as read */
   markAllAsRead: () => Promise<void>;
+  /** Mark a single notification as read locally (for instant UI update) */
+  markReadLocally: (id: number) => void;
   /** Add a notification from realtime WebSocket event */
   addRealtimeNotification: (notification: NotificationDto) => void;
   /** Increment unread count (when any realtime event arrives) */
@@ -110,11 +112,26 @@ export const useNotificationStore = create<
     }
   },
 
-  addRealtimeNotification: (notification: NotificationDto) => {
+  markReadLocally: (id: number) => {
     set((state) => ({
-      notifications: [notification, ...state.notifications],
-      unreadCount: state.unreadCount + 1,
+      notifications: state.notifications.map((n) =>
+        n.id === id ? { ...n, isRead: true } : n
+      ),
+      unreadCount: Math.max(0, state.unreadCount - 1),
     }));
+  },
+
+  addRealtimeNotification: (notification: NotificationDto) => {
+    set((state) => {
+      // Prevent duplicates
+      const exists = state.notifications.some((n) => n.id === notification.id);
+      if (exists) return state;
+
+      return {
+        notifications: [notification, ...state.notifications],
+        unreadCount: state.unreadCount + 1,
+      };
+    });
   },
 
   incrementUnread: () => {

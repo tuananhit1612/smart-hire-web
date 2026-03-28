@@ -1,46 +1,84 @@
 /**
  * ═══════════════════════════════════════════════════════════
- *  Notification API Service
- *  REST endpoints for notification management.
+ *  Notification REST API — Endpoint wrappers
+ *
+ *  GET    /notifications              → list (paginated)
+ *  GET    /notifications/unread-count → badge count
+ *  PATCH  /notifications/:id/read     → mark one read
+ *  PATCH  /notifications/read-all     → mark all read
  * ═══════════════════════════════════════════════════════════
  */
 
 import { apiClient } from "@/shared/lib/api-client";
 import type { ApiWrapper, PageResponse } from "@/shared/types/api";
 
-// ─── Response Types ──────────────────────────────────────
+// ─── DTO Mirrors ─────────────────────────────────────────
 
-export interface NotificationDto {
+export interface NotificationResponse {
   id: number;
   type: string;
   title: string;
-  content: string;
-  referenceType: string | null;
+  message: string;
+  content?: string;
   referenceId: number | null;
+  referenceType: string | null;
   isRead: boolean;
-  createdAt: string; // ISO datetime
+  createdAt: string;
+}
+
+/** Compat alias — develop branch uses NotificationDto */
+export type NotificationDto = NotificationResponse;
+
+export interface UnreadCountResponse {
+  count: number;
+}
+
+export interface NotificationListParams {
+  page?: number;
+  size?: number;
+  unreadOnly?: boolean;
 }
 
 // ─── API Methods ─────────────────────────────────────────
 
 export const notificationApi = {
-  /** GET /notifications?page=&size= */
+  /**
+   * List notifications for the current user (paginated).
+   */
   list: (page = 0, size = 20) =>
-    apiClient.get<ApiWrapper<PageResponse<NotificationDto>>>(
-      `/notifications?page=${page}&size=${size}`
+    apiClient.get<ApiWrapper<PageResponse<NotificationResponse>>>(
+      "/notifications",
+      { params: { page, size } }
     ),
 
-  /** GET /notifications/unread-count */
+  /**
+   * Get unread notification count for badge display.
+   */
   getUnreadCount: () =>
     apiClient.get<ApiWrapper<{ unreadCount: number }>>(
       "/notifications/unread-count"
     ),
 
-  /** PATCH /notifications/:id/read */
-  markAsRead: (id: number) =>
-    apiClient.patch<ApiWrapper<void>>(`/notifications/${id}/read`),
+  /**
+   * Get paginated notifications with full params.
+   */
+  getNotifications: (params: NotificationListParams = {}) =>
+    apiClient.get<ApiWrapper<PageResponse<NotificationResponse>>>(
+      "/notifications",
+      { params }
+    ),
 
-  /** PATCH /notifications/read-all */
+  /**
+   * Mark a single notification as read.
+   */
+  markAsRead: (id: number) =>
+    apiClient.patch<ApiWrapper<void>>(
+      `/notifications/${id}/read`
+    ),
+
+  /**
+   * Mark all notifications as read.
+   */
   markAllAsRead: () =>
     apiClient.patch<ApiWrapper<{ updated: number }>>(
       "/notifications/read-all"

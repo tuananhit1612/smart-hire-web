@@ -9,7 +9,11 @@ import {
 } from "lucide-react";
 import { WelcomeCard } from "@/features/dashboard/components/WelcomeCard";
 import { StatCard } from "@/features/dashboard/components/StatCard";
-import { ActivityChart } from "@/features/dashboard/components/ActivityChart";
+import dynamic from "next/dynamic";
+const ActivityChart = dynamic(
+    () => import("@/features/dashboard/components/ActivityChart").then(mod => mod.ActivityChart),
+    { ssr: false, loading: () => <div className="h-[300px] w-full flex items-center justify-center text-gray-400">Đang tải biểu đồ...</div> }
+);
 import { RecentApplications } from "@/features/dashboard/components/RecentApplications";
 
 const STATS = [

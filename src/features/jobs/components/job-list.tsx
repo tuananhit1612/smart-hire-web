@@ -136,7 +136,7 @@ function JobListInner() {
 
   // ── Client-side pagination ───────────────────────────
   const filteredJobs = useMemo(() => {
-    let jobs = allJobs;
+    const jobs = allJobs;
 
     // Handle "Remote" tag client-side (no backend param for isRemote)
     if (tags.includes("Remote")) {

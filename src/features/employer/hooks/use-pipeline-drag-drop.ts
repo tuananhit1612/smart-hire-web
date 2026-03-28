@@ -15,8 +15,8 @@ export type StageId = "applied" | "screening" | "interview" | "offer" | "hired" 
 
 export interface PipelineCandidate {
     id: string;
-    name: string;
-    avatar: string;
+    fullName: string;
+    avatarUrl: string;
     email: string;
     position: string;
     aiScore: number;
@@ -114,7 +114,7 @@ export function usePipelineDragDrop(initialBoard: BoardState) {
 
                 const event: MoveEvent = {
                     candidateId,
-                    candidateName: candidate.name,
+                    candidateName: candidate.fullName,
                     fromStage,
                     toStage,
                     timestamp: Date.now(),

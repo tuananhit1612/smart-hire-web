@@ -92,7 +92,7 @@ export interface CandidateProfile {
   fullName: string;
   lastName?: string;
   headline?: string;
-  title: string;
+  title?: string;
   email: string;
   phone?: string;
   location: string;

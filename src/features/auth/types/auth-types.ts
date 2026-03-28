@@ -1,4 +1,4 @@
-export type UserRole = "candidate" | "employer" | "admin";
+export type UserRole = "candidate" | "employer" | "admin" | "CANDIDATE" | "HR" | "ADMIN";
 
 /** @deprecated Mock-based auth has been replaced by real API */
 export type MockUserKey = "candidate-new" | "candidate-returning" | "employer-new" | "employer-returning" | "admin";
@@ -12,9 +12,9 @@ export interface RegisterFlowState {
 
 export interface SessionUser {
     id: string;
-    name: string;
+    fullName: string;
     email: string;
-    avatar?: string;
+    avatarUrl?: string;
     role: UserRole;
     company?: string;
     phone?: string;
