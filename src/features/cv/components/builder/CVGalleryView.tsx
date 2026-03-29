@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { motion } from "framer-motion";
-import { Sparkles, Search } from "lucide-react";
+import { Sparkles, Search, FileEdit, ArrowRight } from "lucide-react";
 import { ParticleBackground } from "@/shared/components/effects/ParticleBackground";
 import { TEMPLATES, filterTemplates, type CVTemplate, type TemplateStyle } from "@/features/cv/types/template-types";
 import { TEMPLATE_REGISTRY } from "@/features/cv/components/cv-templates";
@@ -148,6 +148,9 @@ function TemplateCard({ template, onSelect }: { template: CVTemplate; onSelect: 
 /* ─── Main Gallery View ─── */
 export function CVGalleryView() {
     const selectTemplate = useCVBuilderStore((s) => s.selectTemplate);
+    const selectedTemplateId = useCVBuilderStore((s) => s.selectedTemplateId);
+    const setView = useCVBuilderStore((s) => s.setView);
+    const cvName = useCVBuilderStore((s) => s.cvName);
     const [selectedStyle, setSelectedStyle] = React.useState<TemplateStyle | "all">("all");
     const [searchQuery, setSearchQuery] = React.useState("");
 
@@ -193,11 +196,52 @@ export function CVGalleryView() {
         selectTemplate(template.id);
     };
 
+    // Get the saved template name for the resume banner
+    const savedTemplateName = React.useMemo(() => {
+        if (!selectedTemplateId) return null;
+        const entry = TEMPLATE_REGISTRY[selectedTemplateId];
+        return entry?.manifest?.name ?? selectedTemplateId;
+    }, [selectedTemplateId]);
+
     return (
         <div className="w-full relative overflow-hidden min-h-[80vh]">
             <ParticleBackground />
 
             <div className="relative z-10 max-w-7xl mx-auto px-4 py-8 md:py-12">
+                {/* Resume editing banner — shown when user has an ongoing session */}
+                {selectedTemplateId && savedTemplateName && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="mb-8 max-w-2xl mx-auto"
+                    >
+                        <div
+                            className="flex items-center justify-between gap-4 px-6 py-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl border border-green-200 dark:border-green-800/50 shadow-sm"
+                        >
+                            <div className="flex items-center gap-3 min-w-0">
+                                <div className="w-10 h-10 rounded-xl bg-green-500/10 dark:bg-green-500/20 flex items-center justify-center shrink-0">
+                                    <FileEdit className="w-5 h-5 text-green-600 dark:text-green-400" />
+                                </div>
+                                <div className="min-w-0">
+                                    <p className="text-sm font-bold text-[#1C252E] dark:text-white truncate">
+                                        {cvName || "CV của bạn"}
+                                    </p>
+                                    <p className="text-xs text-[#637381] dark:text-[#919EAB]">
+                                        Mẫu: {savedTemplateName} • Đang chỉnh sửa
+                                    </p>
+                                </div>
+                            </div>
+                            <button
+                                onClick={() => setView("editor")}
+                                className="flex items-center gap-2 px-5 py-2.5 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold rounded-xl shadow-md shadow-green-500/20 hover:shadow-lg hover:shadow-green-500/30 transition-all duration-200 shrink-0"
+                            >
+                                Tiếp tục chỉnh sửa
+                                <ArrowRight className="w-4 h-4" />
+                            </button>
+                        </div>
+                    </motion.div>
+                )}
+
                 {/* Header */}
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}

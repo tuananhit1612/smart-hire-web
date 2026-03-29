@@ -18,9 +18,9 @@ const PROTECTED_ROUTES = [
     "/cv-files",
     "/cv-preview",
     "/cv-templates",
+    "/cv-analysis",
     "/upload-cv",
     "/profile",
-    "/interview",
     "/notifications",
     "/company-profile",
 ];

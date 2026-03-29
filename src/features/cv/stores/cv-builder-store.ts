@@ -52,6 +52,7 @@ export interface CVBuilderState {
     /* ── CV Data ── */
     cvData: CVData;
     cvName: string;
+    editingCvFileId: number | null; // null = new CV, number = editing existing
 
     /* ── Design Tokens ── */
     designTokens: CVDesignTokens;
@@ -75,6 +76,7 @@ export interface CVBuilderState {
     patchCvData: (partial: Partial<CVData>) => void;
     resetCvData: () => void;
     setCvName: (name: string) => void;
+    setEditingCvFileId: (id: number | null) => void;
     updatePersonalInfo: (patch: Partial<CVData["personalInfo"]>) => void;
     updateSummary: (summary: string) => void;
 
@@ -131,6 +133,7 @@ export const useCVBuilderStore = create<CVBuilderState>()(
 
         cvData: SAMPLE_CV_DATA,
         cvName: "CV của bạn",
+        editingCvFileId: null,
 
         designTokens: DEFAULT_DESIGN_TOKENS,
 
@@ -147,6 +150,7 @@ export const useCVBuilderStore = create<CVBuilderState>()(
             selectedTemplateId: id,
             currentView: "editor",
             isDataSourceModalOpen: true,
+            editingCvFileId: null, // New template = new CV, don't overwrite existing
         }),
 
         setSidebarTab: (tab) => set({
@@ -163,9 +167,11 @@ export const useCVBuilderStore = create<CVBuilderState>()(
         patchCvData: (partial) =>
             set((s) => ({ cvData: { ...s.cvData, ...partial }, isDirty: true })),
 
-        resetCvData: () => set({ cvData: DEFAULT_CV_DATA, isDirty: false }),
+        resetCvData: () => set({ cvData: DEFAULT_CV_DATA, isDirty: false, editingCvFileId: null }),
 
         setCvName: (name) => set({ cvName: name }),
+
+        setEditingCvFileId: (id) => set({ editingCvFileId: id }),
 
         updatePersonalInfo: (patch) =>
             set((s) => ({
@@ -272,7 +278,9 @@ export const useCVBuilderStore = create<CVBuilderState>()(
                     designTokens: saved.designTokens
                         ? { ...DEFAULT_DESIGN_TOKENS, ...saved.designTokens }
                         : DEFAULT_DESIGN_TOKENS,
-                    currentView: saved.selectedTemplateId ? "editor" : "gallery",
+                    // Always start at gallery when navigating to /cv-builder.
+                    // User can click "Tiếp tục chỉnh sửa" to resume editing.
+                    currentView: "gallery",
                 });
             } catch {
                 // ignore
