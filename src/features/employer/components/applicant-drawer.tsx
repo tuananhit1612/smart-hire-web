@@ -319,7 +319,7 @@ export function ApplicantDrawer({ applicant, isOpen, onClose, jobId, onApplicant
                                 variant="outline" 
                                 className="flex-1 rounded-full border-red-200 dark:border-red-800/40 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 hover:border-red-300"
                                 onClick={() => handleUpdateStage("REJECTED")}
-                                disabled={isUpdatingStage || applicant.status === "REJECTED"}
+                                disabled={isUpdatingStage || applicant.stage === "REJECTED"}
                             >
                                 <XCircle className="w-4 h-4 mr-2" />
                                 Loại hồ sơ
@@ -327,7 +327,7 @@ export function ApplicantDrawer({ applicant, isOpen, onClose, jobId, onApplicant
                             <Button 
                                 className="flex-1 rounded-full bg-green-600 hover:bg-green-700 text-white shadow-lg shadow-green-600/20"
                                 onClick={() => handleUpdateStage("INTERVIEW")}
-                                disabled={isUpdatingStage || applicant.status === "INTERVIEW" || applicant.status === "OFFER" || applicant.status === "HIRED"}
+                                disabled={isUpdatingStage || applicant.stage === "INTERVIEW" || applicant.stage === "OFFER" || applicant.stage === "HIRED"}
                             >
                                 <CheckCircle2 className="w-4 h-4 mr-2" />
                                 Duyệt vòng sau

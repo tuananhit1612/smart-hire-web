@@ -86,8 +86,8 @@ export function useFileUpload() {
                     if (rawFile) {
                         try {
                             const { useCvFileStore } = await import('@/features/cv/stores/cv-file-store');
-                            await useCvFileStore.getState().uploadCvFile(rawFile);
-                            setFiles((prev) => prev.map((f) => f.id === fileId ? { ...f, status: 'success' as const } : f));
+                            const res = await useCvFileStore.getState().uploadCvFile(rawFile);
+                            setFiles((prev) => prev.map((f) => f.id === fileId ? { ...f, status: 'success' as const, backendId: res?.id } : f));
                         } catch (err: any) {
                             setFiles((prev) => prev.map((f) => f.id === fileId ? { ...f, status: 'error' as const, errorMessage: err.message || 'Lỗi khi tải lên máy chủ' } : f));
                         }

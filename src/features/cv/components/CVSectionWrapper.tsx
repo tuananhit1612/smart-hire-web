@@ -24,8 +24,8 @@ interface CVSectionWrapperProps {
     hiddenSections?: CVSection[];
     /** Callback when the user clicks a toolbar action */
     onAction?: (action: SectionAction, section: CVSection, columnSections?: CVSection[]) => void;
-    /** Callback when user picks a hidden section to restore via "+" */
-    onRestoreSection?: (section: CVSection) => void;
+    /** Callback to add a new item to this section's list */
+    onAddItem?: () => void;
     children: React.ReactNode;
     className?: string;
 }
@@ -42,9 +42,8 @@ export function CVSectionWrapper({
     total,
     showToolbar = false,
     columnSections,
-    hiddenSections,
     onAction,
-    onRestoreSection,
+    onAddItem,
     children,
     className,
 }: CVSectionWrapperProps) {
@@ -116,9 +115,8 @@ export function CVSectionWrapper({
                         sectionLabel={label}
                         isFirst={index === 0}
                         isLast={index === total - 1}
-                        hiddenSections={hiddenSections}
                         onAction={(action) => onAction?.(action, section, columnSections)}
-                        onRestoreSection={onRestoreSection}
+                        onAddItem={onAddItem}
                     />
                 )}
             </AnimatePresence>

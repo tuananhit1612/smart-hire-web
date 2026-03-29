@@ -1,45 +1,48 @@
 "use client";
 
 import * as React from "react";
-import { exportToPDF } from "@/features/cv/utils/export-to-pdf";
+import { cvApi } from "@/features/cv/api/cv-api";
 import { useToast } from "@/shared/components/ui/toast";
+import { CVData, CVDesignTokens } from "@/features/cv/types/types";
 
 interface UsePDFExportReturn {
     isExporting: boolean;
-    handleExportFromModal: (elementId: string, fileName: string) => Promise<void>;
-    exportToBlob: (elementId: string, fileName: string) => Promise<File | null>;
+    handleExportPDF: (fileName: string) => Promise<void>;
 }
 
-export function usePDFExport(): UsePDFExportReturn {
+export function usePDFExport(
+    cvData?: CVData, 
+    templateId?: string, 
+    designTokens?: CVDesignTokens
+): UsePDFExportReturn {
     const [isExporting, setIsExporting] = React.useState(false);
     const { addToast } = useToast();
 
-    const handleExportFromModal = async (elementId: string, fileName: string) => {
-        setIsExporting(true);
-        try {
-            const success = await exportToPDF(elementId, fileName);
-            if (success) {
-                addToast("Xuất PDF thành công!", "success", 4000, "CV của bạn đã được tải xuống.");
-            } else {
-                addToast("Xuất PDF thất bại", "error", 5000, "Có lỗi xảy ra, vui lòng thử lại.");
-            }
-        } finally {
-            setIsExporting(false);
+    const handleExportPDF = async (fileName: string) => {
+        if (!cvData || !templateId) {
+            addToast("Dữ liệu không đầy đủ để xuất PDF.", "error");
+            return;
         }
-    };
 
-    const exportToBlob = async (elementId: string, fileName: string): Promise<File | null> => {
         setIsExporting(true);
+        addToast("Hệ thống đang sinh file PDF chuẩn Vector...", "info");
+
         try {
-            const blob = await exportToPDF({ elementId, fileName, returnBlob: true });
-            if (blob instanceof Blob) {
-                return new File([blob], fileName, { type: 'application/pdf' });
-            }
-            return null;
+            const blob = await cvApi.exportPDF({
+                cvData,
+                templateId,
+                design: designTokens
+            });
+
+            // Create object URL and open in a new tab for preview
+            const url = window.URL.createObjectURL(blob);
+            window.open(url, "_blank");
+            // Object URL is not revoked immediately to give the new tab time to load the PDF.
+
+            addToast("Đã tạo bản xem trước PDF!", "success", 4000);
         } catch (error) {
             console.error("Lỗi khi tạo File PDF:", error);
-            addToast("Không thể tạo PDF để tải lên", "error");
-            return null;
+            addToast("Thiết lập server PDF chưa hoàn tất. Vui lòng thử tải báo cáo gốc.", "error");
         } finally {
             setIsExporting(false);
         }
@@ -47,7 +50,6 @@ export function usePDFExport(): UsePDFExportReturn {
 
     return {
         isExporting,
-        handleExportFromModal,
-        exportToBlob,
+        handleExportPDF,
     };
 }

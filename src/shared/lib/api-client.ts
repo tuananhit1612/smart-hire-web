@@ -21,7 +21,7 @@ const SESSION_STORAGE_KEY = "smarthire-session";
 // ─── Axios Instance ──────────────────────────────────────
 export const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL ?? "/api",
-  timeout: 15_000,
+  timeout: 60_000,
   withCredentials: true,
   headers: {
     Accept: "application/json",

@@ -18,7 +18,9 @@ export function CVPreviewModal({
     TemplateComponent,
     onClose,
 }: CVPreviewModalProps) {
-    const { handleExportFromModal } = usePDFExport();
+    // Provide a mocked template ID since this modal might be a generic standalone component. 
+    // In actual usage, designTokens and templateId should be passed via props.
+    const { handleExportPDF } = usePDFExport(cvData, "modern-tech", undefined);
 
     return (
         <div className="fixed inset-0 z-50 bg-white/95 dark:bg-[#141A21]/95 backdrop-blur-xl flex flex-col animate-in fade-in duration-200">
@@ -30,10 +32,7 @@ export function CVPreviewModal({
                 <div className="flex gap-3">
                     <button
                         onClick={() =>
-                            handleExportFromModal(
-                                'cv-modal-content',
-                                `CV_${cvData.personalInfo.fullName || 'Untitled'}.pdf`
-                            )
+                            handleExportPDF(`CV_${cvData.personalInfo.fullName || 'Untitled'}.pdf`)
                         }
                         className="px-5 py-2.5 bg-green-500 hover:bg-green-600 shadow-lg shadow-green-500/20 text-white rounded-full text-sm font-bold transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
                     >

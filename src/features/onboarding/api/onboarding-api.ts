@@ -12,6 +12,22 @@ export interface OnboardingCvData {
     state: string;
     city: string;
     gender: string;
+    summary?: string;
+    skills?: string[];
+    experience?: {
+        company?: string;
+        title?: string;
+        startDate?: string;
+        endDate?: string;
+        description?: string;
+    }[];
+    education?: {
+        school?: string;
+        degree?: string;
+        major?: string;
+        startDate?: string;
+        endDate?: string;
+    }[];
 }
 
 export interface UploadCvResponse {
@@ -57,7 +73,8 @@ export const onboardingApi = {
      */
     getParseStatus: async (cvFileId: number): Promise<ParseStatusResponse> => {
         const response = await apiClient.get<ParseStatusResponse>(
-            `/v1/onboarding/parse-status/${cvFileId}`
+            `/v1/onboarding/parse-status/${cvFileId}`,
+            { timeout: 60000 }
         );
         return response.data;
     },

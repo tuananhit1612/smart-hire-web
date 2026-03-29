@@ -7,7 +7,7 @@ import type { SessionUser } from "./auth-types";
 
 const DEFAULT_SESSION_USER: SessionUser = {
     id: "",
-    name: "",
+    fullName: "",
     email: "",
     role: "candidate",
     joinedDate: "",
@@ -15,8 +15,8 @@ const DEFAULT_SESSION_USER: SessionUser = {
 
 export const mockCandidateNew: SessionUser = { ...DEFAULT_SESSION_USER };
 export const mockCandidateReturning: SessionUser = { ...DEFAULT_SESSION_USER };
-export const mockEmployerNew: SessionUser = { ...DEFAULT_SESSION_USER, role: "employer" };
-export const mockEmployerReturning: SessionUser = { ...DEFAULT_SESSION_USER, role: "employer" };
+export const mockEmployerNew: SessionUser = { ...DEFAULT_SESSION_USER, role: "hr" };
+export const mockEmployerReturning: SessionUser = { ...DEFAULT_SESSION_USER, role: "hr" };
 export const mockAdmin: SessionUser = { ...DEFAULT_SESSION_USER, role: "admin" };
 
 export const mockUsers = {

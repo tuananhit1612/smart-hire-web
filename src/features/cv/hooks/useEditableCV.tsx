@@ -336,6 +336,87 @@ export function useEditableCV({ data, editable, onDataChange }: UseEditableCVOpt
         [editable, patch],
     );
 
+    /* ── Array Helpers (Add, Remove, Move) ────────────────── */
+    // Helper to generate IDs
+    const generateId = () => Math.random().toString(36).substr(2, 9);
+
+    const arrayHelpers = {
+        addExperience: useCallback(() => patch(d => ({
+            ...d, experience: [...d.experience, {
+                id: generateId(), position: "New Position", company: "Company Name",
+                startDate: "2023-01", endDate: "", isCurrent: true, description: "Describe your responsibilities and achievements..."
+            }]
+        })), [patch]),
+        removeExperience: useCallback((idx: number) => patch(d => {
+            const list = [...d.experience]; list.splice(idx, 1);
+            return { ...d, experience: list };
+        }), [patch]),
+
+        addEducation: useCallback(() => patch(d => ({
+            ...d, education: [...d.education, {
+                id: generateId(), school: "University Name", degree: "Bachelor's",
+                field: "Computer Science", startDate: "2019", endDate: "2023"
+            }]
+        })), [patch]),
+        removeEducation: useCallback((idx: number) => patch(d => {
+            const list = [...d.education]; list.splice(idx, 1);
+            return { ...d, education: list };
+        }), [patch]),
+
+        addSkill: useCallback(() => patch(d => ({
+            ...d, skills: [...d.skills, {
+                id: generateId(), name: "New Skill", level: "intermediate", category: "technical"
+            }]
+        })), [patch]),
+        removeSkill: useCallback((idx: number) => patch(d => {
+            const list = [...d.skills]; list.splice(idx, 1);
+            return { ...d, skills: list };
+        }), [patch]),
+        removeSkillById: useCallback((id: string) => patch(d => ({
+            ...d, skills: d.skills.filter(s => s.id !== id)
+        })), [patch]),
+
+        addProject: useCallback(() => patch(d => ({
+            ...d, projects: [...d.projects, {
+                id: generateId(), name: "Project Name", technologies: ["Tech 1", "Tech 2"],
+                description: "Describe the project..."
+            }]
+        })), [patch]),
+        removeProject: useCallback((idx: number) => patch(d => {
+            const list = [...d.projects]; list.splice(idx, 1);
+            return { ...d, projects: list };
+        }), [patch]),
+
+        addLanguage: useCallback(() => patch(d => ({
+            ...d, languages: [...d.languages, {
+                id: generateId(), name: "New Language", level: "intermediate"
+            }]
+        })), [patch]),
+        removeLanguageById: useCallback((id: string) => patch(d => ({
+            ...d, languages: d.languages.filter(l => l.id !== id)
+        })), [patch]),
+
+        addCertification: useCallback(() => patch(d => ({
+            ...d, certifications: [...d.certifications, {
+                id: generateId(), name: "Certification Name", issuer: "Issuing Organization", date: "2023"
+            }]
+        })), [patch]),
+        removeCertification: useCallback((idx: number) => patch(d => {
+            const list = [...d.certifications]; list.splice(idx, 1);
+            return { ...d, certifications: list };
+        }), [patch]),
+
+        addAward: useCallback(() => patch(d => ({
+            ...d, awards: [...d.awards, {
+                id: generateId(), title: "Award Title", issuer: "Organization", date: "2023"
+            }]
+        })), [patch]),
+        removeAward: useCallback((idx: number) => patch(d => {
+            const list = [...d.awards]; list.splice(idx, 1);
+            return { ...d, awards: list };
+        }), [patch]),
+    };
+
     return {
         isEditable: !!editable,
         personalField,
@@ -348,5 +429,6 @@ export function useEditableCV({ data, editable, onDataChange }: UseEditableCVOpt
         skillField,
         langField,
         awardField,
+        arrayHelpers,
     };
 }
