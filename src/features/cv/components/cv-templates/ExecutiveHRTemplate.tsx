@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react';
 import { CVData } from '../../types/types';
 import { Mail, Phone, MapPin, Globe, Calendar, User, Award, BookOpen, Languages, ShieldCheck, Briefcase, GraduationCap, Star } from 'lucide-react';
@@ -6,8 +8,9 @@ import type { TemplateProps } from './template-props';
 import { useEditableCV } from '../../hooks/useEditableCV';
 import { useSectionLayout, CVSection } from '../../hooks/useSectionLayout';
 import { CVSectionWrapper } from '../CVSectionWrapper';
+import { CVItemWrapper } from '../inline-edit/CVItemWrapper';
 
-export function ExecutiveHRTemplate({ data, editable, onDataChange, sectionOrder, hiddenSections, showSectionToolbar, onSectionAction, onRestoreSection }: TemplateProps) {
+export function ExecutiveHRTemplate({ data, editable, onDataChange, sectionOrder, hiddenSections, showSectionToolbar, onSectionAction }: TemplateProps) {
     const { personalInfo, summary, experience, education, skills, projects, languages, certifications, awards } = data;
     const e = useEditableCV({ data, editable, onDataChange });
     const { isVisible, sectionIndex, totalVisible } = useSectionLayout(sectionOrder, hiddenSections);
@@ -38,21 +41,21 @@ export function ExecutiveHRTemplate({ data, editable, onDataChange, sectionOrder
         switch (key) {
             case 'summary':
                 return (
-                    <CVSectionWrapper key="summary" section="summary" index={colIndex} total={colTotal} columnSections={columnItems} showToolbar={showSectionToolbar} onAction={onSectionAction} hiddenSections={hiddenSections} onRestoreSection={onRestoreSection}>
+                    <CVSectionWrapper key="summary" section="summary" index={colIndex} total={colTotal} columnSections={columnItems} showToolbar={showSectionToolbar} onAction={onSectionAction} hiddenSections={hiddenSections}>
                     <section>
                         <h3 className="text-xl font-bold text-[#1a365d] uppercase border-b-2 border-[#1a365d] pb-2 mb-4 flex items-center gap-2">
                             <User className="w-5 h-5" />
                             Mục tiêu nghề nghiệp
                         </h3>
-                        <p className="text-slate-600 leading-relaxed text-justify">
+                        <div className="text-slate-600 leading-relaxed text-justify">
                             {e.summaryField()}
-                        </p>
+                        </div>
                     </section>
                     </CVSectionWrapper>
                 );
             case 'experience':
                 return (
-                    <CVSectionWrapper key="experience" section="experience" index={colIndex} total={colTotal} columnSections={columnItems} showToolbar={showSectionToolbar} onAction={onSectionAction} hiddenSections={hiddenSections} onRestoreSection={onRestoreSection}>
+                    <CVSectionWrapper key="experience" section="experience" index={colIndex} total={colTotal} columnSections={columnItems} showToolbar={showSectionToolbar} onAction={onSectionAction} hiddenSections={hiddenSections} onAddItem={e.arrayHelpers.addExperience}>
                     <section>
                         <h3 className="text-xl font-bold text-[#1a365d] uppercase border-b-2 border-[#1a365d] pb-2 mb-6 mt-6 flex items-center gap-2">
                             <Briefcase className="w-5 h-5" />
@@ -60,7 +63,8 @@ export function ExecutiveHRTemplate({ data, editable, onDataChange, sectionOrder
                         </h3>
                         <div className="space-y-8">
                             {experience.map((exp, expIdx) => (
-                                <div key={exp.id} className="border-l-4 border-[#1a365d] pl-5 hover:border-blue-400 transition-colors">
+                                <CVItemWrapper key={exp.id} onRemove={() => e.arrayHelpers.removeExperience(expIdx)} editable={editable}>
+                                <div className="border-l-4 border-[#1a365d] pl-5 hover:border-blue-400 transition-colors">
                                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline mb-1">
                                         <h4 className="font-bold text-gray-800 text-xl uppercase">{e.expField(expIdx, 'position')}</h4>
                                         <span className="text-slate-400 italic text-sm">
@@ -72,6 +76,7 @@ export function ExecutiveHRTemplate({ data, editable, onDataChange, sectionOrder
                                         {e.expField(expIdx, 'description', undefined, { multiline: true })}
                                     </div>
                                 </div>
+                                </CVItemWrapper>
                             ))}
                         </div>
                     </section>
@@ -79,7 +84,7 @@ export function ExecutiveHRTemplate({ data, editable, onDataChange, sectionOrder
                 );
             case 'education':
                 return (
-                    <CVSectionWrapper key="education" section="education" index={colIndex} total={colTotal} columnSections={columnItems} showToolbar={showSectionToolbar} onAction={onSectionAction} hiddenSections={hiddenSections} onRestoreSection={onRestoreSection}>
+                    <CVSectionWrapper key="education" section="education" index={colIndex} total={colTotal} columnSections={columnItems} showToolbar={showSectionToolbar} onAction={onSectionAction} hiddenSections={hiddenSections} onAddItem={e.arrayHelpers.addEducation}>
                     <section>
                         <h3 className="text-xl font-bold text-[#1a365d] uppercase border-b-2 border-[#1a365d] pb-2 mb-6 mt-6 flex items-center gap-2">
                             <GraduationCap className="w-5 h-5" />
@@ -87,7 +92,8 @@ export function ExecutiveHRTemplate({ data, editable, onDataChange, sectionOrder
                         </h3>
                         <div className="space-y-6">
                             {education.map((edu, eduIdx) => (
-                                <div key={edu.id} className="flex justify-between items-start border-l-4 border-[#1a365d] pl-5">
+                                <CVItemWrapper key={edu.id} onRemove={() => e.arrayHelpers.removeEducation(eduIdx)} editable={editable}>
+                                <div className="flex justify-between items-start border-l-4 border-[#1a365d] pl-5">
                                     <div>
                                         <div className="font-bold text-gray-800 text-lg">{e.eduField(eduIdx, 'school')}</div>
                                         <div className="text-[#1a365d] font-semibold">{e.eduField(eduIdx, 'degree')}</div>
@@ -95,6 +101,7 @@ export function ExecutiveHRTemplate({ data, editable, onDataChange, sectionOrder
                                     </div>
                                     <div className="text-sm text-slate-500 whitespace-nowrap">{formatDateRange(edu.startDate, edu.endDate)}</div>
                                 </div>
+                                </CVItemWrapper>
                             ))}
                         </div>
                     </section>
@@ -102,18 +109,20 @@ export function ExecutiveHRTemplate({ data, editable, onDataChange, sectionOrder
                 );
             case 'certifications':
                 return certifications && certifications.length > 0 ? (
-                    <CVSectionWrapper key="certifications" section="certifications" index={colIndex} total={colTotal} columnSections={columnItems} showToolbar={showSectionToolbar} onAction={onSectionAction} hiddenSections={hiddenSections} onRestoreSection={onRestoreSection}>
+                    <CVSectionWrapper key="certifications" section="certifications" index={colIndex} total={colTotal} columnSections={columnItems} showToolbar={showSectionToolbar} onAction={onSectionAction} hiddenSections={hiddenSections} onAddItem={e.arrayHelpers.addCertification}>
                     <section>
                         <h3 className="text-xl font-bold text-[#1a365d] uppercase border-b-2 border-[#1a365d] pb-2 mb-6 mt-6 flex items-center gap-2">
                             <ShieldCheck className="w-5 h-5" />
                             Chứng chỉ
                         </h3>
                         <div className="space-y-4">
-                            {certifications.map((cert) => (
-                                <div key={cert.id} className="border-l-4 border-[#1a365d] pl-5">
+                            {certifications.map((cert, certIdx) => (
+                                <CVItemWrapper key={cert.id} onRemove={() => e.arrayHelpers.removeCertification(certIdx)} editable={editable}>
+                                <div className="border-l-4 border-[#1a365d] pl-5">
                                     <div className="font-bold text-gray-800">{e.certFieldById(cert.id, 'name')}</div>
                                     <div className="text-sm text-slate-500">{e.certFieldById(cert.id, 'issuer')} · {e.certFieldById(cert.id, 'date')}</div>
                                 </div>
+                                </CVItemWrapper>
                             ))}
                         </div>
                     </section>
@@ -121,17 +130,19 @@ export function ExecutiveHRTemplate({ data, editable, onDataChange, sectionOrder
                 ) : null;
             case 'projects':
                 return (
-                    <CVSectionWrapper key="projects" section="projects" index={colIndex} total={colTotal} columnSections={columnItems} showToolbar={showSectionToolbar} onAction={onSectionAction} hiddenSections={hiddenSections} onRestoreSection={onRestoreSection}>
+                    <CVSectionWrapper key="projects" section="projects" index={colIndex} total={colTotal} columnSections={columnItems} showToolbar={showSectionToolbar} onAction={onSectionAction} hiddenSections={hiddenSections} onAddItem={e.arrayHelpers.addProject}>
                     <section>
                         <h3 className="text-xl font-bold text-[#1a365d] uppercase border-b-2 border-[#1a365d] pb-2 mb-6 flex items-center gap-2">
                             Dự án
                         </h3>
                         <div className="space-y-4">
                             {projects.map((proj, projIdx) => (
-                                <div key={proj.id} className="border-l-4 border-[#1a365d] pl-5">
+                                <CVItemWrapper key={proj.id} onRemove={() => e.arrayHelpers.removeProject(projIdx)} editable={editable}>
+                                <div className="border-l-4 border-[#1a365d] pl-5">
                                     <div className="font-bold text-gray-800">{e.projectField(projIdx, 'name')}</div>
                                     <div className="text-sm text-slate-600">{e.projectField(projIdx, 'description')}</div>
                                 </div>
+                                </CVItemWrapper>
                             ))}
                         </div>
                     </section>
@@ -149,7 +160,7 @@ export function ExecutiveHRTemplate({ data, editable, onDataChange, sectionOrder
         switch (key) {
             case 'skills':
                 return (
-                    <CVSectionWrapper key="skills" section="skills" index={colIndex} total={colTotal} columnSections={columnItems} showToolbar={showSectionToolbar} onAction={onSectionAction} hiddenSections={hiddenSections} onRestoreSection={onRestoreSection}>
+                    <CVSectionWrapper key="skills" section="skills" index={colIndex} total={colTotal} columnSections={columnItems} showToolbar={showSectionToolbar} onAction={onSectionAction} hiddenSections={hiddenSections} onAddItem={e.arrayHelpers.addSkill}>
                     <section>
                         <h3 className="text-lg font-bold text-[#1a365d] uppercase border-b border-[#c2d4e8] pb-2 mb-4 flex items-center gap-2">
                             <Star className="w-4 h-4" />
@@ -157,7 +168,8 @@ export function ExecutiveHRTemplate({ data, editable, onDataChange, sectionOrder
                         </h3>
                         <div className="space-y-3 text-sm">
                             {skills.map((skill) => (
-                                <div key={skill.id}>
+                                <CVItemWrapper key={skill.id} onRemove={() => e.arrayHelpers.removeSkillById(skill.id)} editable={editable}>
+                                <div>
                                     <div className="font-semibold text-gray-800 mb-1">{e.skillField(skill.id, 'name')}</div>
                                     <div className="w-full bg-[#dfe8f0] rounded-full h-2">
                                         <div
@@ -166,6 +178,7 @@ export function ExecutiveHRTemplate({ data, editable, onDataChange, sectionOrder
                                         />
                                     </div>
                                 </div>
+                                </CVItemWrapper>
                             ))}
                         </div>
                     </section>
@@ -173,7 +186,7 @@ export function ExecutiveHRTemplate({ data, editable, onDataChange, sectionOrder
                 );
             case 'languages':
                 return languages && languages.length > 0 ? (
-                    <CVSectionWrapper key="languages" section="languages" index={colIndex} total={colTotal} columnSections={columnItems} showToolbar={showSectionToolbar} onAction={onSectionAction} hiddenSections={hiddenSections} onRestoreSection={onRestoreSection}>
+                    <CVSectionWrapper key="languages" section="languages" index={colIndex} total={colTotal} columnSections={columnItems} showToolbar={showSectionToolbar} onAction={onSectionAction} hiddenSections={hiddenSections} onAddItem={e.arrayHelpers.addLanguage}>
                     <section>
                         <h3 className="text-lg font-bold text-[#1a365d] uppercase border-b border-[#c2d4e8] pb-2 mb-4 flex items-center gap-2">
                             <Languages className="w-4 h-4" />
@@ -181,10 +194,12 @@ export function ExecutiveHRTemplate({ data, editable, onDataChange, sectionOrder
                         </h3>
                         <div className="space-y-2 text-sm">
                             {languages.map((lang) => (
-                                <div key={lang.id} className="flex justify-between">
+                                <CVItemWrapper key={lang.id} onRemove={() => e.arrayHelpers.removeLanguageById(lang.id)} editable={editable}>
+                                <div className="flex justify-between">
                                     <span className="font-medium text-gray-700">{e.langField(lang.id, 'name')}</span>
                                     <span className="text-gray-500 text-xs">{e.langField(lang.id, 'level')}</span>
                                 </div>
+                                </CVItemWrapper>
                             ))}
                         </div>
                     </section>
@@ -192,7 +207,7 @@ export function ExecutiveHRTemplate({ data, editable, onDataChange, sectionOrder
                 ) : null;
             case 'awards':
                 return awards && awards.length > 0 ? (
-                    <CVSectionWrapper key="awards" section="awards" index={colIndex} total={colTotal} columnSections={columnItems} showToolbar={showSectionToolbar} onAction={onSectionAction} hiddenSections={hiddenSections} onRestoreSection={onRestoreSection}>
+                    <CVSectionWrapper key="awards" section="awards" index={colIndex} total={colTotal} columnSections={columnItems} showToolbar={showSectionToolbar} onAction={onSectionAction} hiddenSections={hiddenSections} onAddItem={e.arrayHelpers.addAward}>
                     <section>
                         <h3 className="text-lg font-bold text-[#1a365d] uppercase border-b border-[#c2d4e8] pb-2 mb-4 flex items-center gap-2">
                             <Award className="w-4 h-4" />
@@ -200,10 +215,12 @@ export function ExecutiveHRTemplate({ data, editable, onDataChange, sectionOrder
                         </h3>
                         <div className="space-y-3 text-sm">
                             {awards.map((award, awardIdx) => (
-                                <div key={award.id}>
+                                <CVItemWrapper key={award.id} onRemove={() => e.arrayHelpers.removeAward(awardIdx)} editable={editable}>
+                                <div>
                                     <div className="font-bold text-gray-800">{e.awardField(awardIdx, 'title')}</div>
                                     <div className="text-gray-500 text-xs">{e.awardField(awardIdx, 'issuer')} · {e.awardField(awardIdx, 'date')}</div>
                                 </div>
+                                </CVItemWrapper>
                             ))}
                         </div>
                     </section>
@@ -218,18 +235,14 @@ export function ExecutiveHRTemplate({ data, editable, onDataChange, sectionOrder
         <div className="w-full bg-white min-h-[1000px] grid grid-cols-12 text-slate-800 font-sans">
             {/* Header - Full Width */}
             <div className="col-span-12 bg-[#1a365d] text-white p-8 flex items-center gap-8">
-                {personalInfo.avatarUrl && (
+                {(personalInfo.avatarUrl || e.isEditable) && (
                     <div className="w-32 h-32 rounded-full border-4 border-white overflow-hidden shadow-lg flex-shrink-0">
-                        <img
-                            src={personalInfo.avatarUrl}
-                            alt={personalInfo.fullName}
-                            className="w-full h-full object-cover"
-                        />
+                        {e.avatarField("rounded-full", { size: "w-32 h-32" })}
                     </div>
                 )}
                 <div>
                     <h1 className="text-3xl font-bold uppercase mb-2">{e.personalField('fullName')}</h1>
-                    <p className="text-blue-200 uppercase tracking-widest text-sm font-medium">{e.personalField('title')}</p>
+                    <div className="text-blue-200 uppercase tracking-widest text-sm font-medium">{e.personalField('title')}</div>
                     <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-blue-100 mt-4">
                         {personalInfo.phone && (
                             <div className="flex items-center gap-1.5">

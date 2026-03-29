@@ -44,7 +44,7 @@ export function ApplicantDrawer({ applicant, isOpen, onClose, jobId, onApplicant
         if (!applicant) return;
         setIsUpdatingStage(true);
         try {
-            await employerApplicantApi.updateStage(jobId, applicant.id, { stage: newStage });
+            await employerApplicantApi.updateStage(jobId, String(applicant.id), { stage: newStage });
             onApplicantUpdated?.();
         } finally {
             setIsUpdatingStage(false);
@@ -55,7 +55,7 @@ export function ApplicantDrawer({ applicant, isOpen, onClose, jobId, onApplicant
         if (!applicant || !noteText.trim()) return;
         setIsSavingNote(true);
         try {
-            await employerApplicantApi.addNote(jobId, applicant.id, noteText);
+            await employerApplicantApi.addNote(jobId, String(applicant.id), noteText);
             setNoteText("");
             onApplicantUpdated?.();
         } finally {
@@ -66,7 +66,7 @@ export function ApplicantDrawer({ applicant, isOpen, onClose, jobId, onApplicant
     const handleReAnalyze = () => {
         if (!applicant) return;
         setIsAnalyzing(true);
-        employerApplicantApi.reAnalyze(jobId, applicant.id)
+        employerApplicantApi.reAnalyze(jobId, String(applicant.id))
             .then(() => {
                 onApplicantUpdated?.();
             })
@@ -107,7 +107,7 @@ export function ApplicantDrawer({ applicant, isOpen, onClose, jobId, onApplicant
                                     {applicant.avatarUrl ? (
                                         <img src={applicant.avatarUrl} alt={applicant.fullName} className="w-full h-full object-cover" />
                                     ) : (
-                                        <span className="text-2xl font-bold text-[#919EAB]">{applicant.fullName.charAt(0)}</span>
+                                        <span className="text-2xl font-bold text-[#919EAB]">{applicant.fullName?.charAt(0) ?? '?'}</span>
                                     )}
                                 </div>
                                 <div>
@@ -327,7 +327,7 @@ export function ApplicantDrawer({ applicant, isOpen, onClose, jobId, onApplicant
                             <Button 
                                 className="flex-1 rounded-full bg-green-600 hover:bg-green-700 text-white shadow-lg shadow-green-600/20"
                                 onClick={() => handleUpdateStage("INTERVIEW")}
-                                disabled={isUpdatingStage || applicant.stage === "INTERVIEW" || applicant.stage === "OFFER" || applicant.stage === "HIRED"}
+                                disabled={isUpdatingStage || applicant.stage === "INTERVIEW" || applicant.stage === "HIRED"}
                             >
                                 <CheckCircle2 className="w-4 h-4 mr-2" />
                                 Duyệt vòng sau

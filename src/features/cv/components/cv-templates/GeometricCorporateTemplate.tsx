@@ -37,8 +37,8 @@ export function GeometricCorporateTemplate({ data, editable, onDataChange, secti
                         </div>
                         <div className="space-y-10">
                             {experience.map((exp, idx) => (
-e.arrayHelpers.removeExperience(idx)} editable={editable}>
-<div key={exp.id} className="relative pl-8 border-l-2 border-slate-200">
+                                <CVItemWrapper key={exp.id} onRemove={() => e.arrayHelpers.removeExperience(idx)} editable={editable}>
+                                <div className="relative pl-8 border-l-2 border-slate-200">
                                     <div className="absolute -left-[9px] top-1.5 w-4 h-4 bg-white border-4 border-slate-900 rounded-none transform rotate-45" />
                                     
                                     <div className="flex justify-between items-start mb-2">
@@ -54,7 +54,8 @@ e.arrayHelpers.removeExperience(idx)} editable={editable}>
                                         {e.expField(idx, 'description')}
                                     </p>
                                 </div>
-))}
+                                </CVItemWrapper>
+                            ))}
                         </div>
                     </section>
                     </CVSectionWrapper>
@@ -72,8 +73,8 @@ e.arrayHelpers.removeExperience(idx)} editable={editable}>
                         </div>
                         <div className="grid grid-cols-2 gap-6 pl-2">
                             {projects.map((project, idx) => (
-e.arrayHelpers.removeProject(idx)} editable={editable}>
-<div key={project.id} className="group border border-slate-200 p-6 hover:border-slate-400 hover:shadow-sm transition-all bg-white relative">
+                                <CVItemWrapper key={project.id} onRemove={() => e.arrayHelpers.removeProject(idx)} editable={editable}>
+                                <div className="group border border-slate-200 p-6 hover:border-slate-400 hover:shadow-sm transition-all bg-white relative">
                                     <div className="absolute top-0 left-0 w-full h-1 bg-amber-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
                                     
                                     <h4 className="text-lg font-bold text-slate-900 mb-2 flex items-center justify-between">
@@ -88,9 +89,10 @@ e.arrayHelpers.removeProject(idx)} editable={editable}>
                                             <span key={tech} className="text-[11px] font-bold uppercase tracking-wider text-slate-500 bg-slate-100 px-2 py-1">
                                                 {tech}
                                             </span>
-))}
+                                        ))}
                                     </div>
                                 </div>
+                                </CVItemWrapper>
                             ))}
                         </div>
                     </section>
@@ -109,8 +111,8 @@ e.arrayHelpers.removeProject(idx)} editable={editable}>
                         </div>
                         <div className="space-y-6">
                             {education.map((edu, idx) => (
-e.arrayHelpers.removeEducation(idx)} editable={editable}>
-<div key={edu.id} className="flex justify-between items-start">
+                                <CVItemWrapper key={edu.id} onRemove={() => e.arrayHelpers.removeEducation(idx)} editable={editable}>
+                                <div className="flex justify-between items-start">
                                     <div>
                                         <h4 className="text-xl font-bold text-slate-900">{e.eduField(idx, 'school')}</h4>
                                         <div className="text-base font-semibold text-slate-600">{e.eduField(idx, 'degree')} in {e.eduField(idx, 'field')}</div>
@@ -119,7 +121,8 @@ e.arrayHelpers.removeEducation(idx)} editable={editable}>
                                         {formatDateRange(edu.startDate, edu.endDate)}
                                     </div>
                                 </div>
-))}
+                                </CVItemWrapper>
+                            ))}
                         </div>
                     </section>
                     </CVSectionWrapper>
@@ -132,15 +135,16 @@ e.arrayHelpers.removeEducation(idx)} editable={editable}>
                     <section className="mb-10">
                         <h3 className="text-sm font-bold uppercase tracking-widest text-slate-400 mb-5 border-b border-slate-700/50 pb-2">Technical Skills</h3>
                         <div className="flex flex-col gap-3">
-                            {skills.map((skill, idx) => (
-e.arrayHelpers.removeSkill(idx)} editable={editable}>
-<div key={skill.id} className="flex items-center gap-3">
+                            {skills.map((skill) => (
+                                <CVItemWrapper key={skill.id} onRemove={() => e.arrayHelpers.removeSkillById(skill.id)} editable={editable}>
+                                <div className="flex items-center gap-3">
                                     <ChevronRight className="w-4 h-4 text-amber-500 shrink-0" />
                                     <span className="text-sm font-semibold text-slate-200 uppercase tracking-wide">
                                         {e.skillField(skill.id, 'name')}
                                     </span>
                                 </div>
-))}
+                                </CVItemWrapper>
+                            ))}
                         </div>
                     </section>
                     </CVSectionWrapper>
@@ -154,12 +158,13 @@ e.arrayHelpers.removeSkill(idx)} editable={editable}>
                         <h3 className="text-sm font-bold uppercase tracking-widest text-slate-400 mb-5 border-b border-slate-700/50 pb-2">Languages</h3>
                         <div className="space-y-4">
                             {languages.map((lang) => (
-e.arrayHelpers.removeLanguageById(lang.id)} editable={editable}>
-<div key={lang.id}>
+                                <CVItemWrapper key={lang.id} onRemove={() => e.arrayHelpers.removeLanguageById(lang.id)} editable={editable}>
+                                <div>
                                     <div className="text-sm font-semibold text-slate-200 uppercase tracking-wide mb-1">{e.langField(lang.id, 'name')}</div>
                                     <div className="text-xs text-slate-400 font-medium">{e.langField(lang.id, 'level')}</div>
                                 </div>
-))}
+                                </CVItemWrapper>
+                            ))}
                         </div>
                     </section>
                     </CVSectionWrapper>
@@ -173,12 +178,13 @@ e.arrayHelpers.removeLanguageById(lang.id)} editable={editable}>
                         <h3 className="text-sm font-bold uppercase tracking-widest text-slate-400 mb-5 border-b border-slate-700/50 pb-2">Certifications</h3>
                         <div className="space-y-4">
                             {certifications.map((cert, idx) => (
-e.arrayHelpers.removeCertification(idx)} editable={editable}>
-<div key={cert.id} className="relative pl-4 border-l-2 border-slate-700">
+                                <CVItemWrapper key={cert.id} onRemove={() => e.arrayHelpers.removeCertification(idx)} editable={editable}>
+                                <div className="relative pl-4 border-l-2 border-slate-700">
                                     <div className="text-sm font-bold text-slate-200 uppercase leading-snug tracking-wide">{e.certField(idx, 'name')}</div>
                                     <div className="text-xs text-amber-500 font-medium mt-1">{e.certField(idx, 'issuer')}</div>
                                 </div>
-))}
+                                </CVItemWrapper>
+                            ))}
                         </div>
                     </section>
                     </CVSectionWrapper>
@@ -192,12 +198,13 @@ e.arrayHelpers.removeCertification(idx)} editable={editable}>
                         <h3 className="text-sm font-bold uppercase tracking-widest text-slate-400 mb-5 border-b border-slate-700/50 pb-2">Awards</h3>
                         <div className="space-y-4">
                             {awards.map((award, idx) => (
-e.arrayHelpers.removeAward(idx)} editable={editable}>
-<div key={award.id} className="relative pl-4 border-l-2 border-slate-700">
+                                <CVItemWrapper key={award.id} onRemove={() => e.arrayHelpers.removeAward(idx)} editable={editable}>
+                                <div className="relative pl-4 border-l-2 border-slate-700">
                                     <div className="text-sm font-bold text-slate-200 uppercase leading-snug tracking-wide">{e.awardField(idx, 'title')}</div>
                                     <div className="text-xs text-amber-500 font-medium mt-1">{e.awardField(idx, 'issuer')}</div>
                                 </div>
-))}
+                                </CVItemWrapper>
+                            ))}
                         </div>
                     </section>
                     </CVSectionWrapper>
@@ -218,13 +225,11 @@ e.arrayHelpers.removeAward(idx)} editable={editable}>
                     {/* Header Info */}
                     <div className="mb-12">
                          {/* Avatar */}
-                        {personalInfo.avatarUrl && (
+                        {(personalInfo.avatarUrl || e.isEditable) && (
                             <div className="w-32 h-32 mb-8 bg-slate-800 border-4 border-white transform rotate-45 overflow-hidden mx-auto shadow-2xl">
-                                <img
-                                    src={personalInfo.avatarUrl}
-                                    alt="Avatar"
-                                    className="w-[150%] h-[150%] max-w-none origin-center transform -translate-x-[16.5%] -translate-y-[16.5%] -rotate-45 object-cover"
-                                />
+                                <div className="w-[150%] h-[150%] max-w-none origin-center transform -translate-x-[16.5%] -translate-y-[16.5%] -rotate-45">
+                                    {e.avatarField("object-cover", { size: "w-full h-full" })}
+                                </div>
                             </div>
                         )}
                         <h1 className="text-4xl font-extrabold text-white tracking-tight uppercase leading-[1.1] mb-2 text-center">

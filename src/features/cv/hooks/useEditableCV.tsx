@@ -3,6 +3,7 @@
 import React, { useCallback, useRef, useEffect } from "react";
 import { CVData } from "../types/types";
 import { EditableText } from "../components/inline-edit/EditableText";
+import { EditableAvatar } from "../components/inline-edit/EditableAvatar";
 
 /* ─────────────────────────────────────────────────────────── */
 /*  useEditableCV — provides helper functions that templates   */
@@ -71,6 +72,35 @@ export function useEditableCV({ data, editable, onDataChange }: UseEditableCVOpt
                     multiline={opts?.multiline}
                     as={opts?.as}
                     placeholder={opts?.placeholder ?? `Enter ${String(field)}…`}
+                />
+            );
+        },
+        [editable, patch],
+    );
+
+    /* ── Avatar field ─────────────────────────────────────── */
+    const avatarField = useCallback(
+        (
+            className?: string,
+            opts?: { size?: string },
+        ): React.ReactNode => {
+            const avatarUrl = dataRef.current.personalInfo.avatarUrl;
+            return (
+                <EditableAvatar
+                    src={avatarUrl}
+                    alt={dataRef.current.personalInfo.fullName || "Avatar"}
+                    editable={!!editable}
+                    onAvatarChange={(dataUrl) =>
+                        patch((d) => ({
+                            ...d,
+                            personalInfo: {
+                                ...d.personalInfo,
+                                avatarUrl: dataUrl || undefined,
+                            },
+                        }))
+                    }
+                    className={className}
+                    size={opts?.size}
                 />
             );
         },
@@ -420,6 +450,7 @@ export function useEditableCV({ data, editable, onDataChange }: UseEditableCVOpt
     return {
         isEditable: !!editable,
         personalField,
+        avatarField,
         summaryField,
         expField,
         eduField,

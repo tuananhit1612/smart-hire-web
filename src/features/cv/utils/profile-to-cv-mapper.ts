@@ -86,11 +86,19 @@ export function mapProfileToCVData(profile: CandidateProfile | null | undefined)
             endDate: proj.endDate || "",
         })) || [],
 
-        languages: profile.languages?.map((lang: ProfileLanguage): Language => ({
-            id: lang.id || crypto.randomUUID(),
-            name: lang.language,
-            level: 'fluent' as any // Fallback
-        })) || [],
+        languages: profile.languages?.map((lang: ProfileLanguage): Language => {
+            const levelMap: Record<string, Language["level"]> = {
+                Native: "native",
+                Fluent: "advanced",
+                Intermediate: "intermediate",
+                Basic: "beginner",
+            };
+            return {
+                id: lang.id || crypto.randomUUID(),
+                name: lang.language,
+                level: levelMap[lang.proficiency] || "intermediate",
+            };
+        }) || [],
         
         certifications: profile.certificates?.map((cert: ProfileCertificate): Certification => ({
             id: cert.id || crypto.randomUUID(),

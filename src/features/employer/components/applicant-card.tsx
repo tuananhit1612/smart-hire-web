@@ -48,7 +48,7 @@ export function ApplicantCard({ applicant, onSelect }: ApplicantCardProps) {
         }
     };
 
-    const statusConfig = getStatusConfig(applicant.stage);
+    const statusConfig = getStatusConfig(applicant.stage ?? '');
 
     return (
         <motion.div 
@@ -64,7 +64,7 @@ export function ApplicantCard({ applicant, onSelect }: ApplicantCardProps) {
                         {applicant.avatarUrl ? (
                             <img src={applicant.avatarUrl} alt={applicant.fullName} className="w-full h-full object-cover" />
                         ) : (
-                            <span className="text-lg font-bold text-[#919EAB]">{applicant.fullName.charAt(0)}</span>
+                            <span className="text-lg font-bold text-[#919EAB]">{applicant.fullName?.charAt(0) ?? '?'}</span>
                         )}
                     </div>
                     <div>

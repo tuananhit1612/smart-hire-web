@@ -9,7 +9,6 @@ import { useEditableCV } from '../../hooks/useEditableCV';
 import { useSectionLayout } from '../../hooks/useSectionLayout';
 import { CVSectionWrapper } from '../CVSectionWrapper';
 import { CVItemWrapper } from '../inline-edit/CVItemWrapper';
-import { CVItemWrapper } from '../inline-edit/CVItemWrapper';
 
 export function BoldFounderTemplate({ data, editable, onDataChange, sectionOrder, hiddenSections, showSectionToolbar, onSectionAction, onRestoreSection }: TemplateProps) {
     const { personalInfo, summary, experience, education, skills, projects, languages, certifications, awards } = data;
@@ -40,8 +39,8 @@ export function BoldFounderTemplate({ data, editable, onDataChange, sectionOrder
                         </h3>
                         <div className="space-y-10">
                             {experience.map((exp, idx) => (
-e.arrayHelpers.removeExperience(idx)} editable={editable}>
-<div key={exp.id} className="grid grid-cols-12 gap-6">
+                                <CVItemWrapper key={exp.id} onRemove={() => e.arrayHelpers.removeExperience(idx)} editable={editable}>
+                                <div className="grid grid-cols-12 gap-6">
                                     <div className="col-span-3 text-sm font-bold text-gray-500 uppercase tracking-widest pt-1">
                                         {formatDateRange(exp.startDate, exp.isCurrent ? undefined : exp.endDate, exp.isCurrent)}
                                     </div>
@@ -53,7 +52,8 @@ e.arrayHelpers.removeExperience(idx)} editable={editable}>
                                         </div>
                                     </div>
                                 </div>
-))}
+                                </CVItemWrapper>
+                            ))}
                         </div>
                     </section>
                     </CVSectionWrapper>
@@ -69,8 +69,8 @@ e.arrayHelpers.removeExperience(idx)} editable={editable}>
                         </h3>
                         <div className="space-y-8">
                             {projects.map((project, idx) => (
-e.arrayHelpers.removeProject(idx)} editable={editable}>
-<div key={project.id} className="group">
+                                <CVItemWrapper key={project.id} onRemove={() => e.arrayHelpers.removeProject(idx)} editable={editable}>
+                                <div className="group">
                                     <h4 className="text-xl font-bold text-black group-hover:text-blue-600 transition-colors mb-2 inline-flex items-center gap-2">
                                         {e.projectField(idx, 'name')}
                                         {project.link && <ExternalLink className="w-4 h-4 text-gray-400" />}
@@ -83,9 +83,10 @@ e.arrayHelpers.removeProject(idx)} editable={editable}>
                                             <span key={tech} className="text-xs font-bold px-2 py-1 bg-gray-100 text-gray-800 uppercase tracking-wider">
                                                 {tech}
                                             </span>
-))}
+                                        ))}
                                     </div>
                                 </div>
+                                </CVItemWrapper>
                             ))}
                         </div>
                     </section>
@@ -102,13 +103,14 @@ e.arrayHelpers.removeProject(idx)} editable={editable}>
                         </h3>
                         <div className="grid grid-cols-2 gap-8">
                             {education.map((edu, idx) => (
-e.arrayHelpers.removeEducation(idx)} editable={editable}>
-<div key={edu.id}>
+                                <CVItemWrapper key={edu.id} onRemove={() => e.arrayHelpers.removeEducation(idx)} editable={editable}>
+                                <div>
                                     <h4 className="text-lg font-black text-black">{e.eduField(idx, 'school')}</h4>
                                     <div className="text-gray-600 font-medium my-1">{e.eduField(idx, 'degree')} — {e.eduField(idx, 'field')}</div>
                                     <div className="text-sm font-bold text-gray-400">{formatDateRange(edu.startDate, edu.endDate)}</div>
                                 </div>
-))}
+                                </CVItemWrapper>
+                            ))}
                         </div>
                     </section>
                     </CVSectionWrapper>
@@ -123,12 +125,13 @@ e.arrayHelpers.removeEducation(idx)} editable={editable}>
                             Core Capabilities
                         </h3>
                         <div className="flex flex-wrap gap-3">
-                            {skills.map((skill, idx) => (
-e.arrayHelpers.removeSkill(idx)} editable={editable}>
-<span key={skill.id} className="text-sm font-bold border-2 border-black px-4 py-2 text-black uppercase tracking-wide">
+                            {skills.map((skill) => (
+                                <CVItemWrapper key={skill.id} onRemove={() => e.arrayHelpers.removeSkillById(skill.id)} editable={editable}>
+                                <span className="text-sm font-bold border-2 border-black px-4 py-2 text-black uppercase tracking-wide">
                                     {e.skillField(skill.id, 'name')}
                                 </span>
-))}
+                                </CVItemWrapper>
+                            ))}
                         </div>
                     </section>
                     </CVSectionWrapper>
@@ -165,14 +168,9 @@ e.arrayHelpers.removeSkill(idx)} editable={editable}>
                         </div>
                         
                         {/* Avatar square */}
-                        {personalInfo.avatarUrl && (
+                        {(personalInfo.avatarUrl || e.isEditable) && (
                             <div className="w-48 h-48 shrink-0 grayscale hover:grayscale-0 transition-all duration-500">
-                                <img
-                                    src={personalInfo.avatarUrl}
-                                    alt="Avatar"
-                                    className="w-full h-full object-cover"
-                                    style={{ filter: "contrast(1.2)" }}
-                                />
+                                {e.avatarField("", { size: "w-48 h-48" })}
                             </div>
                         )}
                     </div>
@@ -200,10 +198,11 @@ e.arrayHelpers.removeSkill(idx)} editable={editable}>
                                 <h3 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">Languages</h3>
                                 <div className="space-y-2">
                                     {languages.map(lang => (
-                                        e.arrayHelpers.removeLanguageById(lang.id)} editable={editable}>
+                                        <CVItemWrapper key={lang.id} onRemove={() => e.arrayHelpers.removeLanguageById(lang.id)} editable={editable}>
                                         <div className="text-sm font-bold text-black uppercase">
                                             {e.langField(lang.id, 'name')} <span className="text-gray-400 ml-2">— {e.langField(lang.id, 'level')}</span>
                                         </div>
+                                        </CVItemWrapper>
                                     ))}
                                 </div>
                             </div>
@@ -215,12 +214,13 @@ e.arrayHelpers.removeSkill(idx)} editable={editable}>
                                 <h3 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">Certifications</h3>
                                 <div className="space-y-3">
                                     {certifications.map((cert, idx) => (
-e.arrayHelpers.removeCertification(idx)} editable={editable}>
-<div key={cert.id}>
+                                        <CVItemWrapper key={cert.id} onRemove={() => e.arrayHelpers.removeCertification(idx)} editable={editable}>
+                                        <div>
                                             <div className="text-sm font-bold text-black leading-snug">{e.certField(idx, 'name')}</div>
                                             <div className="text-xs font-bold text-gray-500 uppercase mt-1">{e.certField(idx, 'issuer')}</div>
                                         </div>
-))}
+                                        </CVItemWrapper>
+                                    ))}
                                 </div>
                             </div>
                             </CVSectionWrapper>
@@ -231,12 +231,13 @@ e.arrayHelpers.removeCertification(idx)} editable={editable}>
                                 <h3 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">Awards</h3>
                                 <div className="space-y-3">
                                     {awards.map((award, idx) => (
-e.arrayHelpers.removeAward(idx)} editable={editable}>
-<div key={award.id}>
+                                        <CVItemWrapper key={award.id} onRemove={() => e.arrayHelpers.removeAward(idx)} editable={editable}>
+                                        <div>
                                             <div className="text-sm font-bold text-black leading-snug">{e.awardField(idx, 'title')}</div>
                                             <div className="text-xs font-bold text-gray-500 uppercase mt-1">{e.awardField(idx, 'issuer')}</div>
                                         </div>
-))}
+                                        </CVItemWrapper>
+                                    ))}
                                 </div>
                             </div>
                             </CVSectionWrapper>
