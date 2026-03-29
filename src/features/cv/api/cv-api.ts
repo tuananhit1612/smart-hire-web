@@ -1,8 +1,9 @@
 import { apiClient } from "@/shared/lib/api-client";
 import { CVData } from "@/features/cv/types/types";
+import { ApiWrapper } from "@/shared/types/api";
 
 export interface SaveCVPayload {
-  title: string;
+  title?: string;
   templateId: string;
   cvData: CVData;
 }
@@ -13,19 +14,48 @@ export interface ExportPDFPayload {
   design?: any; // To pass CSS variables info
 }
 
+export interface CvBuilderApiResponse {
+  id: number;
+  cvFileId: number;
+  candidateProfileId: number;
+  templateId: string;
+  sectionsData: CVData;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export const cvApi = {
   /**
-   * Đồng bộ CV Data về Java Backend.
+   * Tạo MỚI 1 CV Builder (tạo CvFile + CvBuilderData mới, không ghi đè)
    */
-  saveCV: async (payload: SaveCVPayload) => {
-    // Backend API mapping: PUT /api/v1/cv-builder
-    // Payload mapping: CvBuilderRequest { templateId: string, sectionsData: { ... } }
+  createCV: async (payload: SaveCVPayload) => {
     const requestData = {
+      title: payload.title,
       templateId: payload.templateId,
       sectionsData: payload.cvData,
     };
-    const response = await apiClient.put("/v1/cv-builder", requestData);
+    const response = await apiClient.post("/v1/cv-builder", requestData);
     return response.data;
+  },
+
+  /**
+   * Cập nhật CV cụ thể theo cvFileId (dùng khi save từ CV Analysis hoặc edit existing CV)
+   */
+  updateCV: async (cvFileId: number, payload: SaveCVPayload) => {
+    const requestData = {
+      title: payload.title,
+      templateId: payload.templateId,
+      sectionsData: payload.cvData,
+    };
+    const response = await apiClient.put(`/v1/cv-builder/${cvFileId}`, requestData);
+    return response.data;
+  },
+
+  /**
+   * Lấy TẤT CẢ CV builder data của user hiện tại
+   */
+  getAllCVs: async () => {
+    return apiClient.get<CvBuilderApiResponse[]>("/v1/cv-builder");
   },
 
   /**
@@ -47,4 +77,10 @@ export const cvApi = {
 
     return response.blob(); // Trả về dạng Binary File để download
   },
+
+  /**
+   * Lấy CV Builder data theo cvFileId.
+   */
+  getCvBuilderByCvFileId: (cvFileId: number) =>
+    apiClient.get<CvBuilderApiResponse>(`/v1/cv-builder/${cvFileId}`),
 };

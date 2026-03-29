@@ -118,15 +118,32 @@ export function CVEditorView() {
         addToast("Đang đồng bộ dữ liệu hồ sơ...", "info");
         try {
             const { cvApi } = await import("@/features/cv/api/cv-api");
-            
-            // 1. Lưu dữ liệu cấu trúc CV
-            await cvApi.saveCV({
-                title: cvName || "My Awesome CV",
-                templateId: templateId,
-                cvData: cvData,
-            });
+            const { editingCvFileId, setEditingCvFileId } = useCVBuilderStore.getState();
 
-            // 2. Xuất bản PDF tự động
+            let savedCvFileId: number | null = editingCvFileId;
+
+            if (editingCvFileId) {
+                // ── CẬP NHẬT CV đã có ──
+                await cvApi.updateCV(editingCvFileId, {
+                    title: cvName || "My CV",
+                    templateId: templateId,
+                    cvData: cvData,
+                });
+            } else {
+                // ── TẠO MỚI CV ──
+                const result = await cvApi.createCV({
+                    title: cvName || "My CV",
+                    templateId: templateId,
+                    cvData: cvData,
+                });
+                // Lưu cvFileId mới vào store để lần save sau update đúng bản này
+                savedCvFileId = result?.cvFileId ?? null;
+                if (savedCvFileId) {
+                    setEditingCvFileId(savedCvFileId);
+                }
+            }
+
+            // Xuất bản PDF tự động
             addToast("Đang tạo tệp PDF bản cứng...", "info");
             const pdfBlob = await cvApi.exportPDF({
                 templateId: templateId,
@@ -134,7 +151,7 @@ export function CVEditorView() {
                 design: designTokens
             });
 
-            // 3. Upload file PDF vào DB (CvFile thuộc về Candidate Profile)
+            // Upload file PDF vào DB (CvFile thuộc về Candidate Profile)
             const file = new File([pdfBlob], fileName, { type: "application/pdf" });
             await uploadCvFile(file, true, "BUILDER");
 
