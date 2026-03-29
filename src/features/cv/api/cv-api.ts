@@ -42,7 +42,12 @@ export const cvApi = {
     });
 
     if (!response.ok) {
-      throw new Error("Lỗi khi tạo file PDF từ server.");
+      let errMessage = "Lỗi khi tạo file PDF từ server.";
+      try {
+        const errorData = await response.json();
+        if (errorData.error) errMessage = errorData.error;
+      } catch (e) {}
+      throw new Error(errMessage);
     }
 
     return response.blob(); // Trả về dạng Binary File để download

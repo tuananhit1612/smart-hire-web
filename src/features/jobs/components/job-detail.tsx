@@ -22,6 +22,7 @@ import {
 import { cn } from "@/shared/utils/cn";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { ApplyModal } from "./apply-modal";
 
 interface JobDetailProps {
     job: Job;
@@ -29,6 +30,7 @@ interface JobDetailProps {
 
 export function JobDetail({ job }: JobDetailProps) {
     const [isSaved, setIsSaved] = useState(false);
+    const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
 
     const formatDate = (dateStr: string) => {
         const date = new Date(dateStr);
@@ -130,7 +132,10 @@ export function JobDetail({ job }: JobDetailProps) {
 
                             {/* Action buttons */}
                             <div className="flex gap-3 mt-6 pt-5 border-t border-[#919EAB]/12 dark:border-white/8">
-                                <button className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#22C55E] hover:bg-[#16A34A] text-white text-[14px] font-semibold rounded-xl transition-colors">
+                                <button 
+                                    onClick={() => setIsApplyModalOpen(true)}
+                                    className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#22C55E] hover:bg-[#16A34A] text-white text-[14px] font-semibold rounded-xl transition-colors"
+                                >
                                     <Send size={16} />
                                     Ứng tuyển ngay
                                 </button>
@@ -165,9 +170,10 @@ export function JobDetail({ job }: JobDetailProps) {
                             <h2 className="text-lg font-bold text-[#1C252E] dark:text-white mb-4">
                                 Mô tả công việc
                             </h2>
-                            <div className="text-[14px] leading-relaxed text-[#454F5B] dark:text-[#C4CDD5] whitespace-pre-line">
-                                {job.fullDescription || job.description}
-                            </div>
+                            <div 
+                                className="text-[14px] leading-relaxed text-[#454F5B] dark:text-[#C4CDD5] prose prose-sm dark:prose-invert max-w-none prose-p:mb-2 prose-ul:list-disc prose-ul:ml-4 prose-li:mb-1"
+                                dangerouslySetInnerHTML={{ __html: job.fullDescription || job.description }}
+                            />
                         </motion.div>
 
                         {/* Responsibilities */}
@@ -209,17 +215,24 @@ export function JobDetail({ job }: JobDetailProps) {
                                 <h2 className="text-lg font-bold text-[#1C252E] dark:text-white mb-4">
                                     Yêu cầu
                                 </h2>
-                                <ul className="space-y-3">
-                                    {job.requirements.map((item, i) => (
-                                        <li
-                                            key={i}
-                                            className="flex items-start gap-3 text-[14px] text-[#454F5B] dark:text-[#C4CDD5]"
-                                        >
-                                            <span className="w-1.5 h-1.5 rounded-full bg-[#919EAB] mt-2 shrink-0" />
-                                            {item}
-                                        </li>
-                                    ))}
-                                </ul>
+                                {job.requirements.length === 1 && job.requirements[0].includes('<') ? (
+                                    <div 
+                                        className="text-[14px] leading-relaxed text-[#454F5B] dark:text-[#C4CDD5] prose prose-sm dark:prose-invert max-w-none prose-p:mb-2 prose-ul:list-disc prose-ul:ml-4 prose-li:mb-1"
+                                        dangerouslySetInnerHTML={{ __html: job.requirements[0] }}
+                                    />
+                                ) : (
+                                    <ul className="space-y-3">
+                                        {job.requirements.map((item, i) => (
+                                            <li
+                                                key={i}
+                                                className="flex items-start gap-3 text-[14px] text-[#454F5B] dark:text-[#C4CDD5]"
+                                            >
+                                                <span className="w-1.5 h-1.5 rounded-full bg-[#919EAB] mt-2 shrink-0" />
+                                                {item}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
                             </motion.div>
                         )}
 
@@ -234,20 +247,27 @@ export function JobDetail({ job }: JobDetailProps) {
                                 <h2 className="text-lg font-bold text-[#1C252E] dark:text-white mb-4">
                                     Phúc lợi
                                 </h2>
-                                <ul className="space-y-3">
-                                    {job.benefits.map((item, i) => (
-                                        <li
-                                            key={i}
-                                            className="flex items-start gap-3 text-[14px] text-[#454F5B] dark:text-[#C4CDD5]"
-                                        >
-                                            <CheckCircle2
-                                                size={16}
-                                                className="text-[#22C55E] mt-0.5 shrink-0"
-                                            />
-                                            {item}
-                                        </li>
-                                    ))}
-                                </ul>
+                                {job.benefits.length === 1 && job.benefits[0].includes('<') ? (
+                                    <div 
+                                        className="text-[14px] leading-relaxed text-[#454F5B] dark:text-[#C4CDD5] prose prose-sm dark:prose-invert max-w-none prose-p:mb-2 prose-ul:list-disc prose-ul:ml-4 prose-li:mb-1"
+                                        dangerouslySetInnerHTML={{ __html: job.benefits[0] }}
+                                    />
+                                ) : (
+                                    <ul className="space-y-3">
+                                        {job.benefits.map((item, i) => (
+                                            <li
+                                                key={i}
+                                                className="flex items-start gap-3 text-[14px] text-[#454F5B] dark:text-[#C4CDD5]"
+                                            >
+                                                <CheckCircle2
+                                                    size={16}
+                                                    className="text-[#22C55E] mt-0.5 shrink-0"
+                                                />
+                                                {item}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
                             </motion.div>
                         )}
 
@@ -451,6 +471,13 @@ export function JobDetail({ job }: JobDetailProps) {
                     </div>
                 </div>
             </div>
+
+            <ApplyModal 
+                job={job}
+                isOpen={isApplyModalOpen}
+                onClose={() => setIsApplyModalOpen(false)}
+                onSuccess={() => {}}
+            />
         </div>
     );
 }

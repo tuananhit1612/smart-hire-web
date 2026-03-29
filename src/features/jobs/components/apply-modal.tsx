@@ -106,9 +106,12 @@ export function ApplyModal({ job, isOpen, onClose, onSuccess }: ApplyModalProps)
     clearSubmitError();
 
     try {
+      // selectedCV could be "cv-1", "cv-2". We need to extract the number or use a fallback.
+      const parsedId = parseInt(selectedCV.replace(/\D/g, ""), 10) || 1;
+
       await applyToJob({
         jobId: Number(job.id),
-        cvFileId: Number(selectedCV),
+        cvFileId: parsedId,
       });
       setModalState("success");
     } catch {

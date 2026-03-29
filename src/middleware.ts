@@ -67,6 +67,11 @@ export function middleware(request: NextRequest) {
     const session = getSessionFromCookie(request);
     const isLoggedIn = !!session;
 
+    // ─── 0. OAuth callback: always allow (no session yet) ─────
+    if (pathname.startsWith("/auth/callback")) {
+        return NextResponse.next();
+    }
+
     // ─── 1. Auth pages: redirect away if already logged in ───
     if (AUTH_PAGES.some((p) => pathname.startsWith(p))) {
         if (isLoggedIn) {

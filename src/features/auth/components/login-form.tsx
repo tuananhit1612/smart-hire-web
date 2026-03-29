@@ -8,11 +8,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Fingerprint, Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+// GitHub SVG icon (inline — no extra dep needed)
 
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { useToastHelpers } from "@/shared/components/ui/toast";
 import { useAuth } from "../hooks/use-auth";
+import { tokenStorage } from "../lib/token-storage";
 import { cn } from "@/lib/utils";
 
 const loginSchema = z.object({
@@ -27,6 +29,22 @@ export function LoginForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { login, user } = useAuth();
+
+    // Show GitHub error from redirect (e.g. ?error=...)
+    const githubError = searchParams.get("error");
+
+    const handleGitHubLogin = () => {
+        // ── Clear any stale session first ──────────────────────────
+        tokenStorage.clearTokens();
+        if (typeof document !== "undefined") {
+            document.cookie = "smarthire-session=; path=/; SameSite=Lax; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        }
+
+        const clientId = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
+        const redirectUri = encodeURIComponent("http://localhost:8080/api/auth/github/callback");
+        const scope = encodeURIComponent("user:email");
+        window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}`;
+    };
 
     const {
         register,
@@ -151,7 +169,24 @@ export function LoginForm() {
                     </div>
                 </motion.div>
 
-                {/* Register link */}
+                {/* GitHub OAuth button */}
+                <motion.div variants={itemVariants}>
+                    <button
+                        type="button"
+                        onClick={handleGitHubLogin}
+                        className="w-full h-12 flex items-center justify-center gap-3 rounded-xl border border-[rgba(145,158,171,0.2)] dark:border-white/[0.1] bg-white dark:bg-white/[0.04] hover:bg-[#24292e] hover:text-white dark:hover:bg-white/[0.08] text-[#1C252E] dark:text-white text-sm font-semibold transition-all duration-200 group"
+                    >
+                        <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 0C5.37 0 0 5.373 0 12c0 5.303 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.083-.729.083-.729 1.205.084 1.84 1.237 1.84 1.237 1.07 1.834 2.809 1.304 3.495.997.108-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.929.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .322.216.694.825.576C20.565 21.795 24 17.298 24 12c0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        <span>Tiếp tục với GitHub</span>
+                    </button>
+                    {githubError && (
+                        <p className="mt-2 text-xs text-red-500 text-center">{decodeURIComponent(githubError)}</p>
+                    )}
+                </motion.div>
+
+
                 <motion.div variants={itemVariants}>
                     <p className="text-center text-sm text-[#637381] dark:text-[#C4CDD5]">
                         Chưa có tài khoản?{" "}

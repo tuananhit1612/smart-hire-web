@@ -6,11 +6,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
     Kanban,
     Search,
-    Mail,
     Clock,
     MoreHorizontal,
-    Eye,
-    MessageSquare,
     ArrowRight,
     ArrowLeft,
     ChevronDown,
@@ -23,6 +20,8 @@ import { AvatarInitials } from "@/shared/components/ui/avatar-initials";
 import { PageSection } from "@/shared/components/layout/page-section";
 
 import { employerApplicantApi } from "@/features/employer/api/employer-api";
+import { StageUpdateModal, type StageUpdateData } from "@/features/employer/components/stage-update-modal";
+import { interviewService } from "@/features/interview/api/interviewService";
 
 // ─── Types ───────────────────────────────────────────
 type StageId = "APPLIED" | "INTERVIEW" | "HIRED" | "REJECTED";
@@ -59,6 +58,14 @@ interface DragState {
     offsetY: number;
 }
 
+/** Pending move waiting for modal confirmation */
+interface PendingMove {
+    candidateId: string;
+    from: StageId;
+    to: StageId;
+    candidate: PipelineCandidate;
+}
+
 // ─── Stage Config ────────────────────────────────────
 const stages: PipelineStage[] = [
     { id: "APPLIED",   label: "Ứng tuyển", color: "text-[#22c55e] dark:text-[#22c55e]",      bg: "bg-[#22c55e]/10 dark:bg-[#22c55e]/20",      headerBg: "bg-[#22c55e]/15 dark:bg-[#22c55e]/20",      dot: "bg-[#22c55e]" },
@@ -71,39 +78,10 @@ const emptyBoard: Record<StageId, PipelineCandidate[]> = {
     APPLIED: [], INTERVIEW: [], HIRED: [], REJECTED: []
 };
 
-// ─── Mini Card (used for ghost and real card rendering) ──
-function CardContent({ candidate }: { candidate: PipelineCandidate }) {
-    return (
-        <>
-            <div className="flex items-start justify-between mb-2">
-                <div className="flex items-center gap-2">
-                    <AvatarInitials initials={candidate.avatar} size="sm" />
-                    <div className="min-w-0">
-                        <p className="text-sm font-semibold text-[#1C252E] dark:text-white truncate">{candidate.name}</p>
-                        <p className="text-[10px] text-[#919EAB] truncate">{candidate.position}</p>
-                    </div>
-                </div>
-                <div className="w-6 h-6 rounded-md flex items-center justify-center opacity-40">
-                    <MoreHorizontal className="w-3.5 h-3.5 text-slate-400" />
-                </div>
-            </div>
-            <div className="flex flex-wrap gap-1 mb-2">
-                {candidate.tags.map((tag) => (
-                    <span key={tag} className="text-[9px] font-medium px-1.5 py-0.5 rounded-md bg-[rgba(145,158,171,0.08)] dark:bg-white/[0.06] text-[#637381] dark:text-[#919EAB]">
-                        {tag}
-                    </span>
-                ))}
-            </div>
-            <div className="flex items-center justify-between pt-2 border-t border-[rgba(145,158,171,0.12)] dark:border-white/[0.08]">
-                <div className="flex items-center gap-1 text-[10px] text-[#919EAB]">
-                    <Clock className="w-2.5 h-2.5" />
-                    {candidate.daysInStage > 0 ? `${candidate.daysInStage} ngày` : "Hôm nay"}
-                </div>
-                <ScoreBadge score={candidate.aiScore} />
-            </div>
-        </>
-    );
-}
+/** Map pipeline StageId to the lowercase stage IDs used by StageUpdateModal */
+const toModalStage = (s: StageId): "applied" | "interview" | "hired" | "rejected" => {
+    return s.toLowerCase() as "applied" | "interview" | "hired" | "rejected";
+};
 
 // ─── Floating Ghost Card ──────────────────────────────
 function DragGhost({ dragState }: { dragState: DragState }) {
@@ -121,7 +99,22 @@ function DragGhost({ dragState }: { dragState: DragState }) {
             }}
             className="bg-white dark:bg-[#1C252E] rounded-xl border-2 border-[#22c55e]/30 dark:border-[#22c55e]/30 p-3 shadow-2xl shadow-green-500/20 dark:shadow-[#22c55e]/20"
         >
-            <CardContent candidate={dragState.candidate} />
+            <div className="flex items-start justify-between mb-2">
+                <div className="flex items-center gap-2">
+                    <AvatarInitials initials={dragState.candidate.avatar} size="sm" />
+                    <div className="min-w-0">
+                        <p className="text-sm font-semibold text-[#1C252E] dark:text-white truncate">{dragState.candidate.name}</p>
+                        <p className="text-[10px] text-[#919EAB] truncate">{dragState.candidate.position}</p>
+                    </div>
+                </div>
+            </div>
+            <div className="flex items-center justify-between pt-2 border-t border-[rgba(145,158,171,0.12)] dark:border-white/[0.08]">
+                <div className="flex items-center gap-1 text-[10px] text-[#919EAB]">
+                    <Clock className="w-2.5 h-2.5" />
+                    {dragState.candidate.daysInStage > 0 ? `${dragState.candidate.daysInStage} ngày` : "Hôm nay"}
+                </div>
+                <ScoreBadge score={dragState.candidate.aiScore} />
+            </div>
         </div>,
         document.body
     );
@@ -131,13 +124,13 @@ function DragGhost({ dragState }: { dragState: DragState }) {
 function CandidateCard({
     candidate,
     stageId,
-    onMove,
+    onRequestMove,
     onDragStarted,
     isDragging,
 }: {
     readonly candidate: PipelineCandidate;
     readonly stageId: StageId;
-    readonly onMove: (candidateId: string, from: StageId, to: StageId) => void;
+    readonly onRequestMove: (candidateId: string, from: StageId, to: StageId) => void;
     readonly onDragStarted: (ds: DragState) => void;
     readonly isDragging: boolean;
 }) {
@@ -148,7 +141,6 @@ function CandidateCard({
     const canMoveRight = stageIndex < stages.length - 1;
 
     const handleMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-        // Don't start drag if clicking a button
         if ((e.target as HTMLElement).closest("button")) return;
         e.preventDefault();
 
@@ -171,7 +163,6 @@ function CandidateCard({
             animate={{ opacity: isDragging ? 0 : 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95 }}
         >
-            {/* Placeholder when dragging */}
             {isDragging ? (
                 <div className="rounded-xl border-2 border-dashed border-[#22c55e]/30 dark:border-[#22c55e]/30 bg-[#22c55e]/10 dark:bg-[#22c55e]/20 h-[120px] flex items-center justify-center">
                     <GripVertical className="w-5 h-5 text-[#22c55e] dark:text-[#22c55e]" />
@@ -206,18 +197,10 @@ function CandidateCard({
                                         exit={{ opacity: 0, scale: 0.9 }}
                                         className="absolute right-0 top-7 z-20 bg-white dark:bg-[#1C252E] rounded-lg border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] shadow-lg dark:shadow-black/30 py-1 min-w-[148px]"
                                     >
-                                        <button className="w-full px-3 py-1.5 text-xs text-left hover:bg-[rgba(145,158,171,0.06)] dark:hover:bg-white/[0.04] flex items-center gap-2 text-[#637381] dark:text-[#919EAB]">
-                                            <Eye className="w-3 h-3" /> Xem hồ sơ
-                                        </button>
-                                        <button className="w-full px-3 py-1.5 text-xs text-left hover:bg-[rgba(145,158,171,0.06)] dark:hover:bg-white/[0.04] flex items-center gap-2 text-[#637381] dark:text-[#919EAB]">
-                                            <MessageSquare className="w-3 h-3" /> Gửi tin nhắn
-                                        </button>
-                                        <button className="w-full px-3 py-1.5 text-xs text-left hover:bg-[rgba(145,158,171,0.06)] dark:hover:bg-white/[0.04] flex items-center gap-2 text-[#637381] dark:text-[#919EAB]">
-                                            <Mail className="w-3 h-3" /> Gửi email
-                                        </button>
+
                                         {canMoveLeft && (
                                             <button
-                                                onClick={() => { onMove(candidate.id, stageId, stages[stageIndex - 1].id); setShowActions(false); }}
+                                                onClick={() => { onRequestMove(candidate.id, stageId, stages[stageIndex - 1].id); setShowActions(false); }}
                                                 className="w-full px-3 py-1.5 text-xs text-left hover:bg-[rgba(145,158,171,0.06)] dark:hover:bg-white/[0.04] flex items-center gap-2 text-amber-600"
                                             >
                                                 <ArrowLeft className="w-3 h-3" /> Lùi về {stages[stageIndex - 1].label}
@@ -225,7 +208,7 @@ function CandidateCard({
                                         )}
                                         {canMoveRight && (
                                             <button
-                                                onClick={() => { onMove(candidate.id, stageId, stages[stageIndex + 1].id); setShowActions(false); }}
+                                                onClick={() => { onRequestMove(candidate.id, stageId, stages[stageIndex + 1].id); setShowActions(false); }}
                                                 className="w-full px-3 py-1.5 text-xs text-left hover:bg-[rgba(145,158,171,0.06)] dark:hover:bg-white/[0.04] flex items-center gap-2 text-emerald-600"
                                             >
                                                 <ArrowRight className="w-3 h-3" /> Chuyển {stages[stageIndex + 1].label}
@@ -268,6 +251,11 @@ export default function PipelineBoardPage() {
     const [dragOverStage, setDragOverStage] = useState<StageId | null>(null);
     const columnRefs = useRef<Partial<Record<StageId, HTMLDivElement>>>({});
 
+    // ─── Interview Modal State ─────────────────────
+    const [pendingMove, setPendingMove] = useState<PendingMove | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isConfirming, setIsConfirming] = useState(false);
+
     useEffect(() => {
         const fetchBoard = async () => {
             setIsLoading(true);
@@ -306,7 +294,6 @@ export default function PipelineBoardPage() {
                 setBoardData(grouped);
             } catch (err) {
                 console.error("Failed to load pipeline data:", err);
-                alert("Lỗi tải dữ liệu. Vui lòng thử lại.");
             } finally {
                 setIsLoading(false);
             }
@@ -314,36 +301,124 @@ export default function PipelineBoardPage() {
         fetchBoard();
     }, []);
 
-    const handleMove = useCallback(async (candidateId: string, from: StageId, to: StageId) => {
+    /**
+     * Request a move — always goes through the confirmation modal.
+     */
+    const requestMove = useCallback((candidateId: string, from: StageId, to: StageId) => {
+        if (from === to) return;
         const candidate = boardData[from]?.find((c) => c.id === candidateId);
         if (!candidate) return;
 
-        // Optimistic update
-        setBoardData((prev) => {
-            return {
-                ...prev,
-                [from]: prev[from].filter((c) => c.id !== candidateId),
-                [to]: [...prev[to], { ...candidate, daysInStage: 0 }],
-            };
-        });
-
-        // API Call
-        try {
-            await employerApplicantApi.updateStage(candidate.jobId, candidateId, { stage: to });
-        } catch (err) {
-            console.error(err);
-            alert("Lỗi khi cập nhật trạng thái");
-        }
+        setPendingMove({ candidateId, from, to, candidate });
+        setIsModalOpen(true);
     }, [boardData]);
 
-    // Global mouse move & up listeners
+    /**
+     * Called when HR confirms in the modal.
+     * 1. Update stage via API (always).
+     * 2. Create Interview room + send SMTP email (only if moving to INTERVIEW).
+     * 3. Optimistically update UI.
+     */
+    const handleConfirm = useCallback(async (data: StageUpdateData) => {
+        if (!pendingMove) return;
+
+        setIsConfirming(true);
+        const { candidateId, from, to, candidate } = pendingMove;
+
+        // Optimistic UI update
+        setBoardData((prev) => ({
+            ...prev,
+            [from]: prev[from].filter((c) => c.id !== candidateId),
+            [to]: [...prev[to], { ...candidate, daysInStage: 0 }],
+        }));
+
+        setIsModalOpen(false);
+        setPendingMove(null);
+
+        // ── Step 1: Update stage (critical) ──────────────────────────────
+        let stageUpdateOk = false;
+        try {
+            await employerApplicantApi.updateStage(candidate.jobId, candidateId, {
+                stage: to,
+                note: data.note || undefined,
+            });
+            stageUpdateOk = true;
+        } catch (err) {
+            console.error("updateStage failed:", err);
+            // Rollback optimistic update
+            setBoardData((prev) => ({
+                ...prev,
+                [from]: [...prev[from], { ...candidate }],
+                [to]: prev[to].filter((c) => c.id !== candidateId),
+            }));
+            alert("Lỗi khi cập nhật trạng thái. Vui lòng thử lại.");
+            setIsConfirming(false);
+            return;
+        }
+
+        // ── Step 2: Create interview room + fire SMTP email (non-critical) ──
+        if (stageUpdateOk && to === "INTERVIEW" && data.scheduleDate && data.scheduleTime) {
+            try {
+                const scheduledAt = `${data.scheduleDate}T${data.scheduleTime}:00`;
+
+                let meetingUrl: string | undefined;
+                if (data.scheduleType === "online") {
+                    // Call Next.js API route → Google Calendar API → real Meet link
+                    const scheduledAt = `${data.scheduleDate}T${data.scheduleTime}:00`;
+                    const meetRes = await fetch("/api/interview/create-meet", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            title: `Phỏng vấn — ${candidate.position} — ${candidate.name}`,
+                            scheduledAt,
+                            durationMinutes: 60,
+                        }),
+                    });
+                    if (meetRes.ok) {
+                        const { meetUrl } = await meetRes.json();
+                        meetingUrl = meetUrl;
+                    } else {
+                        // Fallback to Jitsi Meet if Google Calendar API fails
+                        const roomId = "SmartHire-" + Math.random().toString(36).substring(2, 7).toUpperCase()
+                            + "-" + Math.random().toString(36).substring(2, 7).toUpperCase();
+                        meetingUrl = `https://meet.jit.si/${roomId}`;
+                        console.warn("Google Calendar API failed, falling back to Jitsi Meet");
+                    }
+                } else if (data.scheduleType === "onsite" && data.scheduleLocation) {
+                    meetingUrl = data.scheduleLocation;
+                }
+                // phone → meetingUrl is undefined → backend handles as phone type
+
+                await interviewService.create({
+                    applicationId: Number(candidateId),
+                    roomName: `Phỏng vấn — ${candidate.position} — ${candidate.name}`,
+                    scheduledAt,
+                    durationMinutes: 60,
+                    meetingUrl,
+                    note: data.note || undefined,
+                });
+            } catch (err) {
+                console.error("createInterview (email) failed:", err);
+                // Stage update already succeeded — just warn, don't rollback
+                alert("Trạng thái đã được cập nhật, nhưng không thể tạo lịch phỏng vấn / gửi email. Vui lòng tạo lại lịch thủ công.");
+            }
+        }
+
+        setIsConfirming(false);
+    }, [pendingMove]);
+
+    const handleModalClose = useCallback(() => {
+        setIsModalOpen(false);
+        setPendingMove(null);
+    }, []);
+
+    // Global mouse move & up listeners for drag-and-drop
     useEffect(() => {
         if (!dragState) return;
 
         const onMouseMove = (e: MouseEvent) => {
             setDragState((prev) => prev ? { ...prev, x: e.clientX, y: e.clientY } : null);
 
-            // Find which column the cursor is over
             let found: StageId | null = null;
             for (const stageId of Object.keys(columnRefs.current) as StageId[]) {
                 const el = columnRefs.current[stageId];
@@ -359,7 +434,8 @@ export default function PipelineBoardPage() {
 
         const onMouseUp = () => {
             if (dragState && dragOverStage && dragOverStage !== dragState.fromStage) {
-                handleMove(dragState.candidateId, dragState.fromStage, dragOverStage);
+                // Open modal instead of calling API directly
+                requestMove(dragState.candidateId, dragState.fromStage, dragOverStage);
             }
             setDragState(null);
             setDragOverStage(null);
@@ -367,7 +443,6 @@ export default function PipelineBoardPage() {
 
         window.addEventListener("mousemove", onMouseMove);
         window.addEventListener("mouseup", onMouseUp);
-        // Prevent text selection while dragging
         document.body.style.userSelect = "none";
 
         return () => {
@@ -375,7 +450,7 @@ export default function PipelineBoardPage() {
             window.removeEventListener("mouseup", onMouseUp);
             document.body.style.userSelect = "";
         };
-    }, [dragState, dragOverStage, handleMove]);
+    }, [dragState, dragOverStage, requestMove]);
 
     const allPositions = useMemo(() => {
         const set = new Set<string>();
@@ -413,6 +488,32 @@ export default function PipelineBoardPage() {
             {/* Floating Ghost Card */}
             {dragState && <DragGhost dragState={dragState} />}
 
+            {/* Stage Update / Interview Modal */}
+            <StageUpdateModal
+                isOpen={isModalOpen}
+                onClose={handleModalClose}
+                onConfirm={handleConfirm}
+                candidate={pendingMove ? {
+                    id: pendingMove.candidateId,
+                    fullName: pendingMove.candidate.name,
+                    avatarUrl: pendingMove.candidate.avatar,
+                    position: pendingMove.candidate.position,
+                    aiScore: pendingMove.candidate.aiScore,
+                } : null}
+                fromStage={pendingMove ? toModalStage(pendingMove.from) : "applied"}
+                toStage={pendingMove ? toModalStage(pendingMove.to) : "interview"}
+            />
+
+            {/* Confirming overlay */}
+            {isConfirming && (
+                <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/20 backdrop-blur-sm">
+                    <div className="bg-white dark:bg-[#1C252E] rounded-2xl px-6 py-4 shadow-2xl flex items-center gap-3">
+                        <div className="w-5 h-5 rounded-full border-2 border-[#22c55e] border-t-transparent animate-spin" />
+                        <p className="text-sm font-semibold text-[#1C252E] dark:text-white">Đang xử lý & gửi email...</p>
+                    </div>
+                </div>
+            )}
+
             {/* Header */}
             <motion.div initial={{ opacity: 0, y: -15 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
                 <div className="flex items-center justify-between flex-wrap gap-4">
@@ -422,7 +523,7 @@ export default function PipelineBoardPage() {
                             <h1 className="text-2xl font-bold text-[#1C252E] dark:text-white">Pipeline tuyển dụng</h1>
                         </div>
                         <p className="text-sm text-[#637381] dark:text-[#919EAB] mt-1">
-                            {isLoading ? "Đang tải dữ liệu..." : `${totalCandidates} ứng viên đang trong pipeline — Kéo thả card vào cột để chuyển giai đoạn`}
+                            {isLoading ? "Đang tải dữ liệu..." : `${totalCandidates} ứng viên đang trong pipeline — Kéo thả hoặc dùng menu để chuyển giai đoạn`}
                         </p>
                     </div>
                     <div className="flex items-center gap-2">
@@ -501,7 +602,7 @@ export default function PipelineBoardPage() {
                                             key={candidate.id}
                                             candidate={candidate}
                                             stageId={stage.id}
-                                            onMove={handleMove}
+                                            onRequestMove={requestMove}
                                             onDragStarted={setDragState}
                                             isDragging={isDraggingId === candidate.id}
                                         />
@@ -555,4 +656,3 @@ export default function PipelineBoardPage() {
         </PageSection>
     );
 }
-

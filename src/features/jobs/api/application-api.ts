@@ -25,6 +25,8 @@ export interface ApplicationTrackingResponse {
   currentStage: string;
   appliedAt: string; // ISO-8601 from LocalDateTime
   updatedAt: string;
+  cvFileName: string | null;
+  cvFileUrl: string | null;
 }
 
 /** Mirrors ApplicationHistoryResponse.java */
