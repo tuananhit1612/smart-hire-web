@@ -16,7 +16,7 @@ interface CvFileStore {
 
   // Actions
   fetchCvFiles: () => Promise<void>;
-  uploadCvFile: (file: File, isPrimary?: boolean, source?: "UPLOAD" | "BUILDER") => Promise<void>;
+  uploadCvFile: (file: File, isPrimary?: boolean, source?: "UPLOAD" | "BUILDER") => Promise<CvFileResponse | undefined>;
   setPrimaryCv: (id: number) => Promise<void>;
   deleteCvFile: (id: number) => Promise<void>;
   downloadCvFile: (id: number, fileName: string) => Promise<void>;
@@ -44,9 +44,10 @@ export const useCvFileStore = create<CvFileStore>((set, get) => ({
   uploadCvFile: async (file: File, isPrimary?: boolean, source: "UPLOAD" | "BUILDER" = "UPLOAD") => {
     set({ isLoading: true, error: null });
     try {
-      await profileApi.uploadCvFile(file, isPrimary, source);
+      const res = await profileApi.uploadCvFile(file, isPrimary, source);
       // Reload list after upload
       await get().fetchCvFiles();
+      return res.data.data;
     } catch (err: any) {
       set({
         isLoading: false,

@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@400;700&family=Playfair+Display:wght@400;600;700&family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&family=Source+Sans+3:wght@400;600;700&display=swap');
 @import "tailwindcss";
 
 @plugin "tailwindcss-animate";
@@ -709,5 +710,29 @@ h1, h2, h3, h4, h5, h6 {
   }
   100% {
     background-position: -200% 0;
+  }
+}
+
+/* ─────────────────────────────────────────── */
+/*  CV Print Pagination Classes                */
+/* ─────────────────────────────────────────── */
+@media print {
+  .break-inside-avoid {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  .break-before-always {
+    page-break-before: always !important;
+    break-before: always !important;
+  }
+  .break-after-always {
+    page-break-after: always !important;
+    break-after: always !important;
+  }
+  /* Hide shadows or UI elements naturally if needed */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 }

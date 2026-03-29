@@ -11,12 +11,13 @@ const STORAGE_KEY = "cv_design_tokens";
 
 export interface UseCVDesignReturn {
     designTokens: CVDesignTokens;
-    setDesignTokens: React.Dispatch<React.SetStateAction<CVDesignTokens>>;
+    setDesignTokens: ((tokens: CVDesignTokens) => void) | React.Dispatch<React.SetStateAction<CVDesignTokens>>;
     updateToken: <K extends keyof CVDesignTokens>(key: K, value: CVDesignTokens[K]) => void;
     toggleSectionVisibility: (section: CVSection) => void;
     reorderSections: (newOrder: CVSection[]) => void;
     resetTokens: () => void;
 }
+
 
 export function useCVDesign(): UseCVDesignReturn {
     const [designTokens, setDesignTokens] = React.useState<CVDesignTokens>(() => {

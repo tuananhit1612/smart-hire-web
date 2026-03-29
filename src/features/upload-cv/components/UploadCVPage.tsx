@@ -100,17 +100,25 @@ export function UploadCVPage() {
                             transition={{ duration: 0.4 }}
                             className="mt-8 flex justify-center"
                         >
-                            <Link href="/cv-analysis">
+                            <Link 
+                                href={successfulFiles[0]?.backendId ? `/cv-analysis/${successfulFiles[0].backendId}` : "#"}
+                                onClick={(e) => {
+                                    if (!successfulFiles[0]?.backendId) {
+                                        e.preventDefault();
+                                    }
+                                }}
+                            >
                                 <motion.button
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
+                                    disabled={!successfulFiles[0]?.backendId}
                                     className="
                     inline-flex items-center gap-3 px-8 py-4 rounded-full
                     bg-gradient-to-r from-green-500 to-emerald-600
                     text-white font-semibold text-lg
                     shadow-lg shadow-green-500/30
                     hover:shadow-xl hover:shadow-green-500/40
-                    transition-shadow duration-300
+                    transition-shadow duration-300 disabled:opacity-50
                   "
                                 >
                                     <SparklesIcon className="w-6 h-6" />

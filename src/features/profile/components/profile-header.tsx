@@ -6,6 +6,7 @@ import { Mail, MapPin, Phone, Linkedin, Github, Globe, Twitter, CheckCircle2, Ca
 import { CandidateProfile, SocialLink } from "../types/profile";
 import { useProfileStore } from "../stores/profile-store";
 import { useAuth } from "@/features/auth/hooks/use-auth";
+import { resolveAvatarUrl } from "@/shared/utils/resolve-avatar-url";
 
 interface ProfileHeaderProps {
   profile: CandidateProfile;
@@ -118,7 +119,7 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
                 <div className="h-28 w-28 md:h-32 md:w-32 rounded-2xl border-4 border-white dark:border-[#1C252E] overflow-hidden shadow-lg bg-white dark:bg-[#1C252E] relative">
                   {profile.avatarUrl ? (
                     <img
-                      src={profile.avatarUrl.startsWith("http") ? profile.avatarUrl : `${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api").replace("/api", "")}/uploads/${profile.avatarUrl}`}
+                      src={resolveAvatarUrl(profile.avatarUrl)}
                       alt={isMounted ? (profile.fullName || user?.fullName || "Avatar") : "Avatar"}
                       className="w-full h-full object-cover"
                     />

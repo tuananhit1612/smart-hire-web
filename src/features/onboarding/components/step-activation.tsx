@@ -46,38 +46,43 @@ export function StepActivation({ onNext, onBack }: StepActivationProps) {
         setUploadProgress(10);
         setProgressText("Đang tải file lên hệ thống...");
         
-        // Mock data logic as requested
-        let progress = 10;
-        const interval = setInterval(() => {
-            progress += Math.random() * 15;
-            if (progress >= 100) {
-                progress = 100;
-                clearInterval(interval);
+        try {
+            // 1. Upload CV to system
+            const uploadRes = await onboardingApi.uploadCv(file);
+            setUploadProgress(30);
+            setProgressText("Đang đọc nội dung file...");
+            
+            // Start visual progress while waiting for AI (since it runs synchronously in polling)
+            const interval = setInterval(() => {
+                setUploadProgress((prev) => {
+                    if (prev >= 90) return 90;
+                    return prev + Math.random() * 5;
+                });
+            }, 600);
+
+            // 2. Poll/Wait for AI parsing result
+            setProgressText("Đang phân tích kỹ năng và kinh nghiệm...");
+            const parseRes = await onboardingApi.getParseStatus(uploadRes.cvFileId);
+            
+            clearInterval(interval);
+            
+            // 3. Handle result
+            if (parseRes.status === "COMPLETED" && parseRes.data) {
+                setUploadProgress(100);
                 setProgressText("Trích xuất thành công");
                 
                 setTimeout(() => {
-                    const mockData: OnboardingCvData = {
-                        cvFileId: 999, // Fake ID for mock
-                        firstName: "Tuấn Anh",
-                        lastName: "Trần",
-                        phone: "0987654321",
-                        email: "tta24.dev@gmail.com",
-                        linkedin: "https://linkedin.com/in/tuananh",
-                        website: "https://github.com/tuananhhit1612",
-                        country: "VN",
-                        state: "Đồng Nai",
-                        city: "Biên Hòa",
-                        gender: "Nam"
-                    };
-                    onNext("ai", mockData);
+                    onNext("ai", parseRes.data);
                 }, 800);
-            } else if (progress > 60) {
-                setProgressText("Đang phân tích kỹ năng và kinh nghiệm...");
-            } else if (progress > 30) {
-                setProgressText("Đang đọc nội dung file...");
+            } else {
+                console.error("AI Parsing failed:", parseRes.message);
+                setIsUploading(false);
+                // Could add toast here
             }
-            setUploadProgress(Math.min(progress, 100));
-        }, 300);
+        } catch (error) {
+            console.error("Error during CV upload/parsing:", error);
+            setIsUploading(false);
+        }
     };
 
     return (

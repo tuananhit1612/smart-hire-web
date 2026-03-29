@@ -3,7 +3,7 @@
 import * as React from "react";
 import { CVData, DEFAULT_CV_DATA } from "@/features/cv/types/types";
 import { useSearchParams } from "next/navigation";
-import { getMockDataForTemplate, MOCK_DATA_MAP, MOCK_CV_DATA } from "@/features/cv/data/mock-data";
+import { getMockDataForTemplate, MOCK_DATA_MAP } from "@/features/cv/data/mock-data";
 import { TEMPLATE_COMPONENTS } from "@/features/cv/components/cv-templates";
 import { useToast } from "@/shared/components/ui/toast";
 import { useCVAutoFill } from "@/features/cv/hooks/useCVAutoFill";

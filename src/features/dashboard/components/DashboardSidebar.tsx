@@ -15,9 +15,6 @@ import {
     ChevronLeft,
     ChevronRight,
     Rocket,
-    Upload,
-    LayoutTemplate,
-    Sparkles,
     Building2,
     Users,
     Kanban,
@@ -40,13 +37,11 @@ const NAV_CANDIDATE_GENERAL: NavItemType[] = [
 ];
 
 const NAV_CANDIDATE_TOOLS: NavItemType[] = [
-    { label: "Tìm việc AI", href: "/jobs", icon: Briefcase },
+    { label: "Tìm việc", href: "/jobs", icon: Briefcase },
     { label: "Đơn ứng tuyển", href: "/applications", icon: ClipboardList },
     { label: "Hồ sơ CV", href: "/cv-files", icon: FileText },
     { label: "Xây dựng CV", href: "/cv-builder", icon: Edit3 },
     { label: "Phỏng vấn AI", href: "/interview", icon: Mic2 },
-    { label: "Tải lên CV", href: "/upload-cv", icon: Upload },
-    { label: "Mẫu CV", href: "/cv-templates", icon: LayoutTemplate },
 ];
 
 /* ─── Employer/HR Nav (Module M2) ─── */

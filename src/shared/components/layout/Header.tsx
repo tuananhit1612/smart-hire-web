@@ -27,7 +27,7 @@ const navLinks: NavItem[] = [
     {
         label: "Tính năng",
         children: [
-            { label: "Tìm việc AI", href: "/ai-job-search" },
+            { label: "Tìm việc", href: "/ai-job-search" },
             { label: "Ứng tuyển bằng AI", href: "/ai-job-application" },
             { label: "Tạo CV AI", href: "/ai-resume-builder" },
             { label: "Tạo Cover Letter AI", href: "/ai-cover-letter-generator" },
@@ -164,8 +164,8 @@ export function Header() {
                             {user ? (
                                 <div className="relative group">
                                     <button className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-full border border-[rgba(145,158,171,0.2)] hover:border-[#22c55e]/50 hover:bg-[rgba(145,158,171,0.04)] transition-all">
-                                        <AvatarInitials 
-                                            initials={user.fullName ? user.fullName.charAt(0).toUpperCase() : "U"} 
+                                        <AvatarInitials
+                                            initials={user.fullName ? user.fullName.charAt(0).toUpperCase() : "U"}
                                             size="sm"
                                         />
                                         <span className="text-sm font-medium text-[#1C252E] dark:text-white max-w-[100px] truncate">
@@ -277,8 +277,8 @@ export function Header() {
                                 {user ? (
                                     <>
                                         <div className="flex items-center gap-3 mb-4 px-2">
-                                            <AvatarInitials 
-                                                initials={user.fullName ? user.fullName.charAt(0).toUpperCase() : "U"} 
+                                            <AvatarInitials
+                                                initials={user.fullName ? user.fullName.charAt(0).toUpperCase() : "U"}
                                                 size="md"
                                             />
                                             <div>

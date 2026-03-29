@@ -63,11 +63,30 @@ export function CVDesignPreviewWrapper({
     font-family: var(--cv-font-family) !important;
 }
 
+/* ═══════════ Font scale ═══════════ */
+.cv-design-preview { font-size: calc(1rem * var(--cv-font-scale)) !important; }
+.cv-design-preview .text-xs { font-size: calc(0.75rem * var(--cv-font-scale)) !important; line-height: calc(1rem * var(--cv-font-scale)) !important; }
+.cv-design-preview .text-sm { font-size: calc(0.875rem * var(--cv-font-scale)) !important; line-height: calc(1.25rem * var(--cv-font-scale)) !important; }
+.cv-design-preview .text-base { font-size: calc(1rem * var(--cv-font-scale)) !important; line-height: calc(1.5rem * var(--cv-font-scale)) !important; }
+.cv-design-preview .text-lg { font-size: calc(1.125rem * var(--cv-font-scale)) !important; line-height: calc(1.75rem * var(--cv-font-scale)) !important; }
+.cv-design-preview .text-xl { font-size: calc(1.25rem * var(--cv-font-scale)) !important; line-height: calc(1.75rem * var(--cv-font-scale)) !important; }
+.cv-design-preview .text-2xl { font-size: calc(1.5rem * var(--cv-font-scale)) !important; line-height: calc(2rem * var(--cv-font-scale)) !important; }
+.cv-design-preview .text-3xl { font-size: calc(1.875rem * var(--cv-font-scale)) !important; line-height: calc(2.25rem * var(--cv-font-scale)) !important; }
+.cv-design-preview .text-4xl { font-size: calc(2.25rem * var(--cv-font-scale)) !important; line-height: calc(2.5rem * var(--cv-font-scale)) !important; }
+.cv-design-preview .text-5xl { font-size: calc(3rem * var(--cv-font-scale)) !important; line-height: 1 !important; }
+
 /* ═══════════ TEXT: accent color ═══════════ */
 .cv-design-preview [class*="text-rose-"],
+.cv-design-preview [class*="text-emerald-5"],
 .cv-design-preview [class*="text-emerald-6"],
 .cv-design-preview [class*="text-emerald-7"],
-.cv-design-preview [class*="text-emerald-9"] {
+.cv-design-preview [class*="text-emerald-8"],
+.cv-design-preview [class*="text-emerald-9"],
+.cv-design-preview [class*="text-teal-"],
+.cv-design-preview [class*="text-red-"],
+.cv-design-preview [class*="text-indigo-"],
+.cv-design-preview [class*="text-amber-"],
+.cv-design-preview [class*="text-blue-"] {
     color: var(--cv-accent) !important;
 }
 /* Lighter accent text on dark bg (emerald-100/200/300) */
@@ -87,6 +106,10 @@ export function CVDesignPreviewWrapper({
 .cv-design-preview [class*="bg-rose-6"],
 .cv-design-preview [class*="bg-emerald-6"],
 .cv-design-preview [class*="bg-emerald-9"],
+.cv-design-preview [class*="bg-red-6"],
+.cv-design-preview [class*="bg-indigo-6"],
+.cv-design-preview [class*="bg-blue-6"],
+.cv-design-preview [class*="bg-teal-400"],
 .cv-design-preview [class*="bg-\\[\\#0fa3b1\\]"] {
     background-color: var(--cv-accent) !important;
 }
@@ -99,6 +122,9 @@ export function CVDesignPreviewWrapper({
 .cv-design-preview [class*="bg-rose-50"],
 .cv-design-preview [class*="bg-rose-100"],
 .cv-design-preview [class*="bg-emerald-50"],
+.cv-design-preview [class*="bg-indigo-50"],
+.cv-design-preview [class*="bg-amber-50"],
+.cv-design-preview [class*="bg-blue-50"],
 .cv-design-preview [class*="bg-\\[\\#fff3cd\\]"],
 .cv-design-preview [class*="bg-\\[\\#fcede8\\]"] {
     background-color: var(--cv-accent-bg) !important;
@@ -109,6 +135,11 @@ export function CVDesignPreviewWrapper({
 .cv-design-preview [class*="border-rose-2"],
 .cv-design-preview [class*="border-emerald-1"],
 .cv-design-preview [class*="border-emerald-7"],
+.cv-design-preview [class*="border-teal-"],
+.cv-design-preview [class*="border-red-"],
+.cv-design-preview [class*="border-indigo-"],
+.cv-design-preview [class*="border-amber-"],
+.cv-design-preview [class*="border-blue-"],
 .cv-design-preview [class*="border-\\[\\#e9bc2e\\]"],
 .cv-design-preview [class*="border-\\[\\#8e5252\\]"],
 .cv-design-preview [class*="border-\\[\\#eddcd2\\]"] {
@@ -116,7 +147,10 @@ export function CVDesignPreviewWrapper({
 }
 
 /* ═══════════ RING ═══════════ */
-.cv-design-preview [class*="ring-rose-"] {
+.cv-design-preview [class*="ring-rose-"],
+.cv-design-preview [class*="ring-red-"],
+.cv-design-preview [class*="ring-indigo-"],
+.cv-design-preview [class*="ring-blue-"] {
     --tw-ring-color: var(--cv-accent-border) !important;
 }
 
@@ -124,11 +158,18 @@ export function CVDesignPreviewWrapper({
 .cv-design-preview [class*="hover\\:text-rose-"]:hover,
 .cv-design-preview [class*="group-hover\\:text-rose-"],
 .cv-design-preview [class*="group-hover\\:text-green-"],
+.cv-design-preview [class*="group-hover\\:text-teal-"],
+.cv-design-preview [class*="group-hover\\:text-red-"],
+.cv-design-preview [class*="group-hover\\:text-indigo-"],
+.cv-design-preview [class*="group-hover\\:text-amber-"],
+.cv-design-preview [class*="group-hover\\:text-blue-"],
 .cv-design-preview .group:hover [class*="group-hover\\:text-rose-"],
 .cv-design-preview .group:hover [class*="group-hover\\:text-green-"] {
     color: var(--cv-accent) !important;
 }
-.cv-design-preview .group:hover [class*="group-hover\\:bg-rose-"] {
+.cv-design-preview .group:hover [class*="group-hover\\:bg-rose-"],
+.cv-design-preview .group:hover [class*="group-hover\\:bg-red-"],
+.cv-design-preview .group:hover [class*="group-hover\\:bg-indigo-"] {
     background-color: var(--cv-accent) !important;
 }
 .cv-design-preview .group:hover [class*="group-hover\\:ring-rose-"] {
@@ -144,7 +185,10 @@ export function CVDesignPreviewWrapper({
 }
 
 /* ═══════════ Skill progress bars ═══════════ */
-.cv-design-preview [class*="bg-emerald-600"][style*="width"] {
+.cv-design-preview [class*="bg-emerald-600"][style*="width"],
+.cv-design-preview [class*="bg-red-6"][style*="width"],
+.cv-design-preview [class*="bg-blue-6"][style*="width"],
+.cv-design-preview [class*="bg-indigo-6"][style*="width"] {
     background-color: var(--cv-accent) !important;
 }
 
@@ -157,6 +201,15 @@ export function CVDesignPreviewWrapper({
 }
 .cv-design-preview .space-y-6 > * + * {
     margin-top: calc(1.5rem * var(--cv-spacing-scale)) !important;
+}
+.cv-design-preview .space-y-4 > * + * {
+    margin-top: calc(1rem * var(--cv-spacing-scale)) !important;
+}
+.cv-design-preview .space-y-3 > * + * {
+    margin-top: calc(0.75rem * var(--cv-spacing-scale)) !important;
+}
+.cv-design-preview .space-y-2 > * + * {
+    margin-top: calc(0.5rem * var(--cv-spacing-scale)) !important;
 }
 `;
 

@@ -1,6 +1,7 @@
 // Upload CV Types
 export interface CVFile {
-    id: string;
+    id: string; // frontend generation UUID
+    backendId?: number; // the actual DB ID returned successfully
     name: string;
     size: number;
     type: string;

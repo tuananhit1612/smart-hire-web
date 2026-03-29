@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 // ... giữ nguyên phần đầu, thêm import
 import { useAuth } from "@/features/auth/hooks/use-auth";
 import { useRouter } from "next/navigation";
+import { resolveAvatarUrl } from "@/shared/utils/resolve-avatar-url";
 
 interface Props {
     onToggleSidebar: () => void;
@@ -18,7 +19,7 @@ interface Props {
 
 const ROUTE_LABELS: Record<string, string> = {
     "/dashboard": "Tổng quan",
-    "/jobs": "Tìm việc AI",
+    "/jobs": "Tìm việc",
     "/applications": "Đơn ứng tuyển",
     "/cv-files": "Hồ sơ CV",
     "/cv-builder": "Xây dựng CV",
@@ -125,9 +126,10 @@ export function DashboardTopbar({ onToggleSidebar }: Props) {
                     className="relative block rounded-xl focus:outline-none focus:ring-2 focus:ring-[#22C55E]/30 focus:ring-offset-2 dark:focus:ring-offset-[#141A21]"
                 >
                     <img
-                        src={user?.avatarUrl || "https://api.dicebear.com/7.x/avataaars/svg?seed=smarthire"}
+                        src={mounted ? resolveAvatarUrl(user?.avatarUrl) : undefined}
                         alt="avatar"
                         className="w-10 h-10 rounded-xl border-2 border-[#22C55E]/20 hover:border-[#22C55E]/50 transition-colors object-cover bg-[#F4F6F8] dark:bg-[#212B36]"
+                        suppressHydrationWarning
                     />
                     <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-[#22C55E] border-2 border-white dark:border-[#141A21] shadow-[0_0_6px_rgba(34,197,94,0.4)]" />
                 </button>
@@ -139,9 +141,10 @@ export function DashboardTopbar({ onToggleSidebar }: Props) {
                         <div className="px-5 py-5 border-b border-[rgba(145,158,171,0.08)] dark:border-white/[0.04] flex flex-col items-center bg-gradient-to-b from-[rgba(145,158,171,0.03)] to-transparent dark:from-white/[0.02]">
                             <div className="w-16 h-16 rounded-2xl p-[3px] bg-gradient-to-tr from-[#22C55E] to-[#10B981] mb-3 shadow-[0_4px_16px_rgba(34,197,94,0.3)]">
                                 <img
-                                    src={user?.avatarUrl || "https://api.dicebear.com/7.x/avataaars/svg?seed=smarthire"}
+                                    src={mounted ? resolveAvatarUrl(user?.avatarUrl) : undefined}
                                     alt="avatar large"
                                     className="w-full h-full rounded-[13px] border-2 border-white dark:border-[#1C252E] object-cover bg-white"
+                                    suppressHydrationWarning
                                 />
                             </div>
                             <p className="text-[14px] font-bold text-[#1C252E] dark:text-white">{user?.fullName || "Người Dùng"}</p>
