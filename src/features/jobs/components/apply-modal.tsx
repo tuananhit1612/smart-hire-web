@@ -19,7 +19,8 @@ import {
 } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { Job } from "@/features/jobs/types/job";
-import { mockCVVersions, CVVersion } from "@/features/cv/types/cv-versions";
+import { profileApi } from "@/features/profile/api/profile-api";
+import { CvFileResponse } from "@/features/profile/types/profile-api-types";
 import { useRouter } from "next/navigation";
 import { useApplicationStore } from "../stores/application-store";
 import Link from "next/link";
@@ -38,6 +39,8 @@ export function ApplyModal({ job, isOpen, onClose, onSuccess }: ApplyModalProps)
   const [selectedCV, setSelectedCV] = useState<string>("");
   const [coverLetter, setCoverLetter] = useState("");
   const [modalState, setModalState] = useState<ModalState>("form");
+  const [cvFiles, setCvFiles] = useState<CvFileResponse[]>([]);
+  const [isLoadingCvs, setIsLoadingCvs] = useState(false);
   const hasInitializedRef = useRef(false);
 
   const { applyToJob, hasApplied, withdrawApplication, submitError, clearSubmitError } = useApplicationStore();
@@ -48,16 +51,25 @@ export function ApplyModal({ job, isOpen, onClose, onSuccess }: ApplyModalProps)
     if (isOpen && !hasInitializedRef.current) {
       hasInitializedRef.current = true;
 
-      // Read selectedCV from URL params
-      if (typeof window !== "undefined") {
-        const urlParams = new URLSearchParams(window.location.search);
-        const cvFromUrl = urlParams.get("selectedCV");
-        if (cvFromUrl) {
-          setSelectedCV(cvFromUrl);
-          // Clean up URL
-          window.history.replaceState({}, "", `/jobs/${job.id}?openApply=true`);
-        }
-      }
+      setIsLoadingCvs(true);
+      profileApi.getCvFiles()
+        .then(res => {
+          const files = res.data.data.sort((a,b) => (a.isPrimary === b.isPrimary ? 0 : a.isPrimary ? -1 : 1));
+          setCvFiles(files);
+          
+          if (typeof window !== "undefined") {
+            const urlParams = new URLSearchParams(window.location.search);
+            const cvFromUrl = urlParams.get("selectedCV");
+            if (cvFromUrl) {
+              setSelectedCV(cvFromUrl);
+              window.history.replaceState({}, "", `/jobs/${job.id}?openApply=true`);
+            } else {
+              const primaryCv = files.find(c => c.isPrimary);
+              if (primaryCv) setSelectedCV(primaryCv.id.toString());
+            }
+          }
+        })
+        .finally(() => setIsLoadingCvs(false));
 
       // Check job status and application status
       if (job.status === "closed") {
@@ -93,10 +105,13 @@ export function ApplyModal({ job, isOpen, onClose, onSuccess }: ApplyModalProps)
   };
 
   // Handle view CV - navigate to full preview page
-  const handleViewCV = (cv: CVVersion) => {
-    // Close modal and navigate to preview page
-    onClose();
-    router.push(`/cv-preview?id=${cv.id}&returnTo=apply&jobId=${job.id}`);
+  const handleViewCV = (cv: CvFileResponse) => {
+    if (cv.source === 'BUILDER') {
+      onClose();
+      router.push(`/cv-preview?id=${cv.id}&returnTo=apply&jobId=${job.id}`);
+    } else if (cv.downloadUrl) {
+      window.open(cv.downloadUrl, '_blank');
+    }
   };
 
   // Handle submit
@@ -106,8 +121,8 @@ export function ApplyModal({ job, isOpen, onClose, onSuccess }: ApplyModalProps)
     clearSubmitError();
 
     try {
-      // selectedCV could be "cv-1", "cv-2". We need to extract the number or use a fallback.
-      const parsedId = parseInt(selectedCV.replace(/\D/g, ""), 10) || 1;
+      const parsedId = parseInt(selectedCV, 10);
+      if (!parsedId) throw new Error("Invalid CV ID");
 
       await applyToJob({
         jobId: Number(job.id),
@@ -168,6 +183,8 @@ export function ApplyModal({ job, isOpen, onClose, onSuccess }: ApplyModalProps)
             {(modalState === "form" || modalState === "submitting") && (
               <FormView
                 job={job}
+                cvFiles={cvFiles}
+                isLoadingCvs={isLoadingCvs}
                 selectedCV={selectedCV}
                 coverLetter={coverLetter}
                 isSubmitting={modalState === "submitting"}
@@ -550,13 +567,15 @@ function JobClosedView({ job, onClose }: { job: Job; onClose: () => void }) {
 // ==================== Form View (Original) ====================
 interface FormViewProps {
   job: Job;
+  cvFiles: CvFileResponse[];
+  isLoadingCvs: boolean;
   selectedCV: string;
   coverLetter: string;
   isSubmitting: boolean;
   submitError: string | null;
   onCoverLetterChange: (value: string) => void;
   onSelectCV: (cvId: string) => void;
-  onViewCV: (cv: CVVersion) => void;
+  onViewCV: (cv: CvFileResponse) => void;
   onSubmit: () => void;
   onClose: () => void;
   formatDate: (date: string) => string;
@@ -564,6 +583,8 @@ interface FormViewProps {
 
 function FormView({
   job,
+  cvFiles,
+  isLoadingCvs,
   selectedCV,
   coverLetter,
   isSubmitting,
@@ -612,16 +633,32 @@ function FormView({
             Click vào CV để chọn, hoặc click "Xem CV" để xem chi tiết và chỉnh sửa
           </p>
           <div className="space-y-3">
-            {mockCVVersions.map((cv) => (
-              <CVCard
-                key={cv.id}
-                cv={cv}
-                isSelected={selectedCV === cv.id}
-                onSelect={() => onSelectCV(cv.id)}
-                onView={() => onViewCV(cv)}
-                formatDate={formatDate}
-              />
-            ))}
+            {isLoadingCvs ? (
+              <div className="flex items-center justify-center p-8 bg-[rgba(145,158,171,0.04)] dark:bg-[rgba(145,158,171,0.08)] rounded-xl">
+                 <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} className="w-5 h-5 border-2 border-[#22C55E]/30 border-t-[#22C55E] rounded-full" />
+                 <span className="ml-3 text-sm text-[#919EAB]">Đang tải CV...</span>
+              </div>
+            ) : cvFiles.length === 0 ? (
+              <div className="text-center p-8 bg-[rgba(145,158,171,0.04)] dark:bg-[rgba(145,158,171,0.08)] rounded-xl border border-dashed border-[rgba(145,158,171,0.2)]">
+                <FileText className="w-10 h-10 text-[#919EAB] mx-auto mb-3" />
+                <p className="text-[#1C252E] dark:text-white font-medium mb-1">Bạn chưa có CV nào</p>
+                <p className="text-sm text-[#919EAB] mb-4">Vui lòng tải lên hoặc tạo CV mới để ứng tuyển</p>
+                <Link href="/cv-files">
+                  <Button variant="outline" size="sm" className="rounded-full">Đi tới Quản lý CV</Button>
+                </Link>
+              </div>
+            ) : (
+              cvFiles.map((cv) => (
+                <CVCard
+                  key={cv.id}
+                  cv={cv}
+                  isSelected={selectedCV === cv.id.toString()}
+                  onSelect={() => onSelectCV(cv.id.toString())}
+                  onView={() => onViewCV(cv)}
+                  formatDate={formatDate}
+                />
+              ))
+            )}
           </div>
         </div>
 
@@ -634,7 +671,7 @@ function FormView({
             <div className="mb-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-xl border border-green-200 dark:border-green-800">
               <p className="text-sm text-green-700 dark:text-green-400 flex items-center gap-2">
                 <Check className="w-4 h-4" />
-                Đã chọn: <strong>{mockCVVersions.find((cv) => cv.id === selectedCV)?.name}</strong>
+                Đã chọn: <strong>{cvFiles.find((cv) => cv.id.toString() === selectedCV)?.fileName}</strong>
               </p>
             </div>
 
@@ -713,7 +750,7 @@ function FormView({
 
 // ==================== CV Card Component ====================
 interface CVCardProps {
-  cv: CVVersion;
+  cv: CvFileResponse;
   isSelected: boolean;
   onSelect: () => void;
   onView: () => void;
@@ -732,59 +769,34 @@ function CVCard({ cv, isSelected, onSelect, onView, formatDate }: CVCardProps) {
         }`}
     >
       {/* Thumbnail */}
-      <div className="w-16 h-22 rounded-lg overflow-hidden bg-[rgba(145,158,171,0.04)] dark:bg-[rgba(145,158,171,0.08)] shrink-0">
-        {cv.thumbnail ? (
-          <img
-            src={cv.thumbnail}
-            alt={cv.name}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <FileText className="w-6 h-6 text-[#919EAB]" />
-          </div>
-        )}
+      <div className="w-16 h-20 rounded-lg overflow-hidden bg-[rgba(145,158,171,0.04)] dark:bg-[rgba(145,158,171,0.08)] shrink-0 flex items-center justify-center">
+        <FileText className="w-8 h-8 text-[#919EAB]" />
       </div>
 
       {/* Info */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
-          <h4 className="font-semibold text-[#1C252E] dark:text-white">
-            {cv.name}
+          <h4 className="font-semibold text-[#1C252E] dark:text-white truncate max-w-xs">
+            {cv.fileName}
           </h4>
-          {cv.isDefault && (
-            <span className="px-2 py-0.5 text-xs font-medium bg-[#FFAB00]/10 text-[#FFAB00] rounded-full">
+          {cv.isPrimary && (
+            <span className="px-2 py-0.5 text-xs font-medium bg-[#FFAB00]/10 text-[#FFAB00] rounded-full shrink-0">
               Mặc định
             </span>
           )}
           {isSelected && (
-            <span className="px-2 py-0.5 text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full flex items-center gap-1">
+            <span className="px-2 py-0.5 text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full flex items-center gap-1 shrink-0">
               <Check className="w-3 h-3" />
               Đã chọn
             </span>
           )}
         </div>
         <p className="text-sm text-[#919EAB] mt-0.5">
-          Template: {cv.templateName}
+          {cv.source === "BUILDER" ? "Tạo từ SmartHire" : "Tải lên từ máy"} • {cv.fileType}
         </p>
         <p className="text-xs text-[#919EAB] mt-1">
-          Cập nhật: {formatDate(cv.updatedAt)}
+          Cập nhật: {formatDate(cv.createdAt)}
         </p>
-
-        {/* Skills preview */}
-        <div className="flex flex-wrap gap-1 mt-2">
-          {cv.data.skills.slice(0, 4).map((skill) => (
-            <span
-              key={skill.id}
-              className="text-xs px-2 py-0.5 rounded-full bg-[rgba(145,158,171,0.04)] dark:bg-[rgba(145,158,171,0.08)] text-[#637381] dark:text-[#919EAB]"
-            >
-              {skill.name}
-            </span>
-          ))}
-          {cv.data.skills.length > 4 && (
-            <span className="text-xs text-[#919EAB]">+{cv.data.skills.length - 4}</span>
-          )}
-        </div>
       </div>
 
       {/* View button - separate click handler */}
