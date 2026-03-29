@@ -81,7 +81,9 @@ export function StepComplete({ preferences }: StepCompleteProps) {
     const handleGoToDashboard = () => {
         // Mark onboarding complete in auth context
         authCompleteOnboarding();
-        router.push("/dashboard");
+        // Force a hard navigation to guarantee server reads the updated session cookie
+        // and avoids React Context state batching race conditions with usePathname.
+        window.location.href = "/dashboard";
     };
 
     if (isSubmitting) {

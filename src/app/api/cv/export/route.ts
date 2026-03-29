@@ -1,79 +1,85 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { pdfCache, CachedCVPayload } from "@/features/cv/api/pdf-cache";
-import puppeteer from "puppeteer";
+import puppeteer, { HTTPRequest } from "puppeteer";
 import crypto from "crypto";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  let cid = "";
   try {
-    const payload: CachedCVPayload = await req.json();
+    const body: CachedCVPayload = await req.json();
 
-    if (!payload.cvData || !payload.templateId) {
-      return NextResponse.json(
-        { message: "Missing required data (cvData or templateId)" },
-        { status: 400 }
-      );
+    if (!body.cvData || !body.templateId) {
+      return NextResponse.json({ error: "Missing cvData or templateId" }, { status: 400 });
     }
 
-    // 1. Generate unique request ID and cache the data
-    const requestId = crypto.randomUUID();
-    pdfCache.set(requestId, payload);
+    // Cache the payload so the headless browser can fetch and render it
+    cid = crypto.randomUUID();
+    pdfCache.set(cid, body);
 
-    // 2. Determine base URL (localhost in development, domain in production)
-    const origin = req.headers.get("origin");
-    const host = req.headers.get("host");
-    const protocol = host?.includes("localhost") ? "http" : "https";
-    const baseUrl = origin || `${protocol}://${host}`;
+    console.log("PDF Request received. Launching Puppeteer...");
 
-    const renderUrl = `${baseUrl}/cv-render?id=${requestId}`;
-
-    console.log(`[PDF EXPORT] Launching Puppeteer for ${renderUrl}`);
-
-    // 3. Launch Puppeteer
+    // Launch Headless Browser
     const browser = await puppeteer.launch({
       headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
+      channel: "chrome", // Fallback to system Chrome
+      args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"],
     });
 
-    const page = await browser.newPage();
-    
-    // Set viewport to approximate A4 dimensions
-    await page.setViewport({ width: 794, height: 1123, deviceScaleFactor: 2 });
+    try {
+      const page = await browser.newPage();
 
-    // Navigate and wait for network activity to finish (fonts and images)
-    await page.goto(renderUrl, { waitUntil: "networkidle0", timeout: 30000 });
+      // Optimize page loading
+      await page.setRequestInterception(true);
+      page.on('request', (request: HTTPRequest) => {
+        if (['image', 'font'].includes(request.resourceType())) {
+          request.continue();
+        } else if (['stylesheet', 'script', 'document', 'fetch', 'xhr'].includes(request.resourceType())) {
+             request.continue();
+        } else {
+             request.abort();
+        }
+      });
 
-    // Ensure all custom fonts are ready
-    await page.evaluateHandle("document.fonts.ready");
+      const rootUrl = process.env.NEXT_PUBLIC_APP_URL || "http://127.0.0.1:3000";
+      const targetUrl = `${rootUrl}/cv-pdf-render?id=${cid}`;
+      
+      console.log(`Puppeteer navigating to: ${targetUrl}`);
+      
+      // Navigate to the hidden Render page. Use networkidle2 because Next.js dev mode has an active WebSocket for HMR.
+      await page.goto(targetUrl, { waitUntil: "networkidle2", timeout: 25000 });
 
-    console.log(`[PDF EXPORT] Generating PDF...`);
+      // Ensure the content wrapper is ready
+      await page.waitForSelector("#rendering-cv-content", { timeout: 10000 });
+      
+      // Give 500ms for tailwind or animations to settle
+      await new Promise(r => setTimeout(r, 500));
 
-    // 4. Print to PDF
-    const pdfBuffer = await page.pdf({
-      format: "A4",
-      printBackground: true,
-      margin: { top: 0, bottom: 0, left: 0, right: 0 },
-    });
+      const pdfBuffer = await page.pdf({
+        format: "A4",
+        printBackground: true,
+        preferCSSPageSize: true, // Let @page size map natively
+        margin: { top: "0", bottom: "0", left: "0", right: "0" },
+      });
 
-    await browser.close();
+      await browser.close();
 
-    // 5. Cleanup memory
-    pdfCache.delete(requestId);
+      console.log("PDF Buffer generated successfully.");
 
-    console.log(`[PDF EXPORT] Complete. Buffer size: ${pdfBuffer.length} bytes`);
-
-    // 6. Return PDF Buffer as response
-    return new NextResponse(Buffer.from(pdfBuffer), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/pdf",
-        "Content-Disposition": 'attachment; filename="smart-hire-cv.pdf"',
-      },
-    });
-  } catch (error) {
-    console.error("[PDF EXPORT] Error generation PDF:", error);
-    return NextResponse.json(
-      { message: "Error generating PDF", error: (error as Error).message },
-      { status: 500 }
-    );
+      return new Response(pdfBuffer as BodyInit, {
+        headers: {
+          "Content-Type": "application/pdf",
+          "Content-Disposition": `inline; filename="cv-export-${cid}.pdf"`,
+        },
+      });
+    } catch (pageError) {
+      await browser.close();
+      throw pageError;
+    }
+  } catch (error: any) {
+    console.error("Puppeteer PDF generation error:", error);
+    return NextResponse.json({ error: error.message || "Failed to generate PDF" }, { status: 500 });
+  } finally {
+    // Always clean up the filesystem cache payload
+    pdfCache.delete(cid);
   }
 }

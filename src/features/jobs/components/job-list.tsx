@@ -9,6 +9,7 @@ import { jobApi, JobSearchParams } from "../api/job-api";
 import { JobResponse } from "../types/job-api-types";
 import { useJobFilters } from "../hooks/useJobFilters";
 import { Search, Loader2, AlertTriangle, RefreshCw } from "lucide-react";
+import { ApplyModal } from "./apply-modal";
 
 const PAGE_SIZE = 9; // 3×3 grid
 
@@ -97,6 +98,7 @@ function JobListInner() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [savedJobIds, setSavedJobIds] = useState<Set<string>>(new Set());
+  const [applyJob, setApplyJob] = useState<Job | null>(null);
 
   // ── Derive backend query params from UI tags ─────────
   const apiParams = useMemo<JobSearchParams>(() => {
@@ -264,7 +266,7 @@ function JobListInner() {
                 job={job}
                 index={i}
                 isSaved={savedJobIds.has(job.id)}
-                onApply={() => {}}
+                onApply={() => setApplyJob(job)}
                 onSave={toggleSaveJob}
               />
             ))}
@@ -300,6 +302,15 @@ function JobListInner() {
             Xóa tất cả bộ lọc
           </button>
         </div>
+      )}
+
+      {applyJob && (
+        <ApplyModal
+          job={applyJob}
+          isOpen={!!applyJob}
+          onClose={() => setApplyJob(null)}
+          onSuccess={() => {}}
+        />
       )}
     </div>
   );

@@ -19,6 +19,7 @@ export interface Application {
   readonly lastUpdated: string;
   readonly timeline: ReadonlyArray<ApplicationTimelineEvent>;
   readonly notes?: string;
+  readonly cvFileUrl?: string | null;
 }
 
 export const mockApplications: ReadonlyArray<Application> = [];

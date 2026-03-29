@@ -110,9 +110,7 @@ export function RouteGuard({
     // Redirect unauthenticated users
     useEffect(() => {
         if (status === "unauthenticated" && loginPath) {
-            // In mock mode we show the login screen inline instead of redirecting
-            // Uncomment below for real auth redirect:
-            // router.replace(loginPath);
+            router.replace(loginPath);
         }
     }, [status, loginPath, router]);
 

@@ -1,33 +1,51 @@
+import fs from "fs";
+import path from "path";
+
 export interface CachedCVPayload {
   cvData: any;
   design?: any;
   templateId: string;
 }
 
-// Ensure the cache persists across HMR (Hot Module Replacement) in development
-const globalForCache = global as unknown as {
-  pdfCacheMap: Map<string, CachedCVPayload>;
+const getCacheFile = (id: string) => {
+  const tmpDir = path.join(process.cwd(), ".next", "cache", "pdf-renders");
+  if (!fs.existsSync(tmpDir)) {
+      fs.mkdirSync(tmpDir, { recursive: true });
+  }
+  return path.join(tmpDir, `${id}.json`);
 };
-
-if (!globalForCache.pdfCacheMap) {
-  globalForCache.pdfCacheMap = new Map();
-}
 
 export const pdfCache = {
   set: (id: string, payload: CachedCVPayload) => {
-    globalForCache.pdfCacheMap.set(id, payload);
-    
-    // Auto clear cache after 15 seconds to prevent memory leaks
-    setTimeout(() => {
-      globalForCache.pdfCacheMap.delete(id);
-    }, 15000);
+    try {
+        const file = getCacheFile(id);
+        fs.writeFileSync(file, JSON.stringify(payload), "utf8");
+    } catch (e) {
+        console.error("Cache Write Error", e);
+    }
   },
   
   get: (id: string): CachedCVPayload | undefined => {
-    return globalForCache.pdfCacheMap.get(id);
+    try {
+        const file = getCacheFile(id);
+        if (fs.existsSync(file)) {
+            const data = fs.readFileSync(file, "utf8");
+            return JSON.parse(data);
+        }
+    } catch (e) {
+        console.error("Cache Read Error", e);
+    }
+    return undefined;
   },
   
   delete: (id: string) => {
-    globalForCache.pdfCacheMap.delete(id);
+    try {
+        const file = getCacheFile(id);
+        if (fs.existsSync(file)) {
+            fs.unlinkSync(file);
+        }
+    } catch (e) {
+        console.error("Cache Delete Error", e);
+    }
   }
 };

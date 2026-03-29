@@ -8,7 +8,12 @@ import {
   Calendar,
   ArrowRight,
   Trash2,
-  Loader2
+  Loader2,
+  Eye,
+  FileText,
+  Video,
+  ExternalLink,
+  Clock
 } from "lucide-react";
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
@@ -24,6 +29,8 @@ import { ApplicationStatus, ApplicationStage } from "@/shared/types/application"
 import { cn } from "@/shared/lib/utils";
 import { useApplicationStore } from "@/features/jobs/stores/application-store";
 import { CheckCircle2 } from "lucide-react";
+import { interviewService } from "@/features/interview/api/interviewService";
+import type { InterviewResponse } from "@/features/interview/types/interview-types";
 
 // ─── Design Constants ─────────────────────────────────────────────────────────
 const ACTIVE_STAGES = new Set([
@@ -85,6 +92,7 @@ function toViewApplication(raw: ApplicationTrackingResponse): Application {
     appliedAt,
     lastUpdated: raw.updatedAt ?? appliedAt,
     timeline,
+    cvFileUrl: raw.cvFileUrl ?? null,
   };
 }
 
@@ -142,6 +150,17 @@ function ApplicationCard({ application }: { application: Application }) {
   const [confirmWithdraw, setConfirmWithdraw] = useState(false);
   const { withdrawApplication, withdrawingJobId, withdrawError, clearWithdrawError } = useApplicationStore();
   const isWithdrawing = withdrawingJobId === application.jobId;
+  const [interviews, setInterviews] = useState<InterviewResponse[]>([]);
+
+  // Fetch interview details when in INTERVIEW stage
+  useEffect(() => {
+    if (application.status !== ApplicationStage.INTERVIEW) return;
+    const appId = Number(application.id);
+    if (isNaN(appId)) return;
+    interviewService.getByApplication(appId)
+      .then(setInterviews)
+      .catch(() => setInterviews([]));
+  }, [application.id, application.status]);
 
   const handleWithdraw = async () => {
     if (!confirmWithdraw) {
@@ -222,6 +241,20 @@ function ApplicationCard({ application }: { application: Application }) {
                   )}
                   {isWithdrawing ? "Đang rút..." : confirmWithdraw ? "Xác nhận rút?" : "Rút hồ sơ"}
                 </button>
+                {application.cvFileUrl && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      // Extract ID and redirect to explicit download page
+                      const cvId = application.cvFileUrl?.split('id=')[1] || "cv-1";
+                      window.open(`/applications/cv-download?id=${cvId}`, "_blank");
+                    }}
+                    className="px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 flex items-center gap-1.5 bg-[#22c55e]/10 dark:bg-[#22c55e]/20 text-[#22c55e] border-[#22c55e]/30 hover:bg-[#22c55e]/20"
+                  >
+                    <FileText className="w-3.5 h-3.5" />
+                    Xem CV
+                  </button>
+                )}
                 {withdrawError && withdrawingJobId === null && (
                   <button
                     onClick={(e) => { e.stopPropagation(); clearWithdrawError(); }}
@@ -232,6 +265,47 @@ function ApplicationCard({ application }: { application: Application }) {
                 )}
               </div>
             </div>
+
+            {/* Interview Meet Card — visible when INTERVIEW stage + link exists */}
+            {application.status === ApplicationStage.INTERVIEW && interviews.length > 0 && (
+              <div className="mt-4 p-4 rounded-xl bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-700/30">
+                <p className="text-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                  <Video className="w-3.5 h-3.5" /> Lịch phỏng vấn
+                </p>
+                {interviews.map((iv) => (
+                  <div key={iv.id} className="flex items-center justify-between gap-3">
+                    <div className="space-y-1">
+                      {iv.scheduledAt && (
+                        <div className="flex items-center gap-1.5 text-sm font-semibold text-[#1C252E] dark:text-white">
+                          <Calendar className="w-4 h-4 text-amber-500" />
+                          {new Date(iv.scheduledAt).toLocaleString('vi-VN', {
+                            weekday: 'long', day: '2-digit', month: '2-digit',
+                            year: 'numeric', hour: '2-digit', minute: '2-digit'
+                          })}
+                        </div>
+                      )}
+                      <div className="flex items-center gap-1.5 text-xs text-[#637381] dark:text-[#919EAB]">
+                        <Clock className="w-3.5 h-3.5" />
+                        Thời lượng: {iv.durationMinutes} phút
+                      </div>
+                    </div>
+                    {iv.meetingUrl && (
+                      <a
+                        href={iv.meetingUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold transition-colors shrink-0 shadow-lg shadow-amber-500/30"
+                      >
+                        <Video className="w-4 h-4" />
+                        Vào phỏng vấn
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
 
             {/* Meta — only show if data is available */}
             <div className="flex flex-wrap gap-4 text-sm text-[#637381] dark:text-[#919EAB] mb-6">
