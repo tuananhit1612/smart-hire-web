@@ -46,8 +46,8 @@ export function NeobrutalismTemplate({ data, editable, onDataChange, sectionOrde
                         </h3>
                         <div className="space-y-8">
                             {experience.map((exp, idx) => (
-e.arrayHelpers.removeExperience(idx)} editable={editable}>
-<div key={exp.id} className={cn(brutalStyle, "relative")}>
+                                <CVItemWrapper key={exp.id} onRemove={() => e.arrayHelpers.removeExperience(idx)} editable={editable}>
+                                <div className={cn(brutalStyle, "relative")}>
                                     <div className="absolute -top-4 -right-4 bg-yellow-300 border-4 border-black px-4 py-1 font-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transform rotate-3 z-10">
                                         {formatDateRange(exp.startDate, exp.isCurrent ? undefined : exp.endDate, exp.isCurrent)}
                                     </div>
@@ -57,7 +57,8 @@ e.arrayHelpers.removeExperience(idx)} editable={editable}>
                                         {e.expField(idx, 'description')}
                                     </p>
                                 </div>
-))}
+                                </CVItemWrapper>
+                            ))}
                         </div>
                     </section>
                     </CVSectionWrapper>
@@ -74,8 +75,8 @@ e.arrayHelpers.removeExperience(idx)} editable={editable}>
                         </h3>
                         <div className="grid grid-cols-2 gap-8">
                             {projects.map((project, idx) => (
-e.arrayHelpers.removeProject(idx)} editable={editable}>
-<div key={project.id} className={cn(brutalStyle, "bg-slate-50 flex flex-col")}>
+                                <CVItemWrapper key={project.id} onRemove={() => e.arrayHelpers.removeProject(idx)} editable={editable}>
+                                <div className={cn(brutalStyle, "bg-slate-50 flex flex-col")}>
                                     <div className="flex justify-between items-start mb-3 border-b-4 border-black pb-3">
                                         <h4 className="text-xl font-black uppercase w-full">
                                             {e.projectField(idx, 'name')}
@@ -90,9 +91,10 @@ e.arrayHelpers.removeProject(idx)} editable={editable}>
                                             <span key={tech} className={cn(brutalBadge, "bg-emerald-300")}>
                                                 {tech}
                                             </span>
-))}
+                                        ))}
                                     </div>
                                 </div>
+                                </CVItemWrapper>
                             ))}
                         </div>
                     </section>
@@ -108,13 +110,14 @@ e.arrayHelpers.removeProject(idx)} editable={editable}>
                             <h3 className="font-black text-2xl uppercase border-b-4 border-black pb-2 mb-6">Education</h3>
                             <div className="space-y-6">
                                 {education.map((edu, idx) => (
-e.arrayHelpers.removeEducation(idx)} editable={editable}>
-<div key={edu.id} className="border-l-4 border-black pl-4">
+                                    <CVItemWrapper key={edu.id} onRemove={() => e.arrayHelpers.removeEducation(idx)} editable={editable}>
+                                    <div className="border-l-4 border-black pl-4">
                                         <h4 className="text-xl font-black uppercase text-black">{e.eduField(idx, 'school')}</h4>
                                         <div className="text-base font-bold text-amber-700 my-1">{e.eduField(idx, 'degree')} IN {e.eduField(idx, 'field')}</div>
                                         <div className="font-black text-black bg-white inline-block px-2 border-2 border-black mt-2">{formatDateRange(edu.startDate, edu.endDate)}</div>
                                     </div>
-))}
+                                    </CVItemWrapper>
+                                ))}
                             </div>
                         </div>
                     </section>
@@ -133,12 +136,12 @@ e.arrayHelpers.removeEducation(idx)} editable={editable}>
                                     const colors = ["bg-yellow-300", "bg-green-300", "bg-blue-300", "bg-red-300", "bg-purple-300", "bg-pink-300"];
                                     const color = colors[idx % colors.length];
                                     return (
-e.arrayHelpers.removeSkill(idx)} editable={editable}>
-
-                                        <span  className={cn(brutalBadge, color, "text-sm")}>
+                                        <CVItemWrapper key={skill.id} onRemove={() => e.arrayHelpers.removeSkillById(skill.id)} editable={editable}>
+                                        <span className={cn(brutalBadge, color, "text-sm")}>
                                             {e.skillField(skill.id, 'name')}
                                         </span>
-);
+                                        </CVItemWrapper>
+                                    );
                                 })}
                             </div>
                         </div>
@@ -168,15 +171,7 @@ e.arrayHelpers.removeSkill(idx)} editable={editable}>
                 {/* Avatar */}
                 <div className="shrink-0 relative">
                     <div className="w-40 h-40 rounded-full border-4 border-black overflow-hidden shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] bg-cyan-300">
-                        {personalInfo.avatarUrl ? (
-                            <img
-                                src={personalInfo.avatarUrl}
-                                alt="Avatar"
-                                className="w-full h-full object-cover"
-                            />
-                        ) : (
-                            <div className="w-full h-full flex items-center justify-center font-black text-2xl uppercase">Hey</div>
-                        )}
+                        {e.avatarField("rounded-full", { size: "w-40 h-40" })}
                     </div>
                 </div>
 
@@ -211,13 +206,13 @@ e.arrayHelpers.removeSkill(idx)} editable={editable}>
                             <h3 className="text-xl font-black uppercase border-b-4 border-black pb-2 mb-4">Langs</h3>
                             <div className="space-y-3">
                                 {languages.map(lang => (
-e.arrayHelpers.removeLanguageById(lang.id)} editable={editable}>
-
-                                    <div  className="text-sm font-bold bg-white border-2 border-black flex justify-between p-2">
+                                    <CVItemWrapper key={lang.id} onRemove={() => e.arrayHelpers.removeLanguageById(lang.id)} editable={editable}>
+                                    <div className="text-sm font-bold bg-white border-2 border-black flex justify-between p-2">
                                         <span className="uppercase">{e.langField(lang.id, 'name')}</span> 
                                         <span className="text-gray-500 uppercase">{e.langField(lang.id, 'level')}</span>
                                     </div>
-))}
+                                    </CVItemWrapper>
+                                ))}
                             </div>
                         </div>
                         </CVSectionWrapper>
@@ -228,12 +223,13 @@ e.arrayHelpers.removeLanguageById(lang.id)} editable={editable}>
                             <h3 className="text-xl font-black uppercase border-b-4 border-black pb-2 mb-4">Certs</h3>
                             <div className="space-y-3">
                                 {certifications.map((cert, idx) => (
-e.arrayHelpers.removeCertification(idx)} editable={editable}>
-<div key={cert.id} className="bg-white border-2 border-black p-2">
+                                    <CVItemWrapper key={cert.id} onRemove={() => e.arrayHelpers.removeCertification(idx)} editable={editable}>
+                                    <div className="bg-white border-2 border-black p-2">
                                         <div className="text-sm font-black uppercase truncate">{e.certField(idx, 'name')}</div>
                                         <div className="text-xs font-bold text-gray-500 uppercase">{e.certField(idx, 'issuer')}</div>
                                     </div>
-))}
+                                    </CVItemWrapper>
+                                ))}
                             </div>
                         </div>
                         </CVSectionWrapper>
@@ -244,12 +240,13 @@ e.arrayHelpers.removeCertification(idx)} editable={editable}>
                             <h3 className="text-xl font-black uppercase border-b-4 border-black pb-2 mb-4">Awards</h3>
                             <div className="space-y-3">
                                 {awards.map((award, idx) => (
-e.arrayHelpers.removeAward(idx)} editable={editable}>
-<div key={award.id} className="bg-white border-2 border-black p-2">
+                                    <CVItemWrapper key={award.id} onRemove={() => e.arrayHelpers.removeAward(idx)} editable={editable}>
+                                    <div className="bg-white border-2 border-black p-2">
                                         <div className="text-sm font-black uppercase truncate">{e.awardField(idx, 'title')}</div>
                                         <div className="text-xs font-bold text-gray-500 uppercase flex items-center gap-1">★ {e.awardField(idx, 'issuer')}</div>
                                     </div>
-))}
+                                    </CVItemWrapper>
+                                ))}
                             </div>
                         </div>
                         </CVSectionWrapper>

@@ -44,7 +44,7 @@ export function ElegantCreativeTemplate({ data, editable, onDataChange, sectionO
                         </h3>
                         <div className="space-y-10 pl-2">
                             {experience.map((exp, idx) => (
-                                e.arrayHelpers.removeExperience(idx)} editable={editable}>
+                                <CVItemWrapper key={exp.id} onRemove={() => e.arrayHelpers.removeExperience(idx)} editable={editable}>
                                 <div className="relative group">
                                     <div className="flex justify-between items-end border-b border-stone-200 pb-3 mb-4">
                                         <div>
@@ -59,6 +59,7 @@ export function ElegantCreativeTemplate({ data, editable, onDataChange, sectionO
                                         {e.expField(idx, 'description')}
                                     </div>
                                 </div>
+                                </CVItemWrapper>
                             ))}
                         </div>
                     </section>
@@ -76,7 +77,7 @@ export function ElegantCreativeTemplate({ data, editable, onDataChange, sectionO
                         </h3>
                         <div className="grid grid-cols-2 gap-8">
                             {projects.map((project, idx) => (
-                                e.arrayHelpers.removeProject(idx)} editable={editable}>
+                                <CVItemWrapper key={project.id} onRemove={() => e.arrayHelpers.removeProject(idx)} editable={editable}>
                                 <div className="bg-white/50 p-6 rounded-2xl border border-stone-100 shadow-sm hover:shadow-md transition-shadow">
                                     <div className="flex items-center justify-between mb-2">
                                         <h4 className="font-medium text-stone-800">
@@ -94,6 +95,7 @@ export function ElegantCreativeTemplate({ data, editable, onDataChange, sectionO
                                         ))}
                                     </div>
                                 </div>
+                                </CVItemWrapper>
                             ))}
                         </div>
                     </section>
@@ -108,12 +110,13 @@ export function ElegantCreativeTemplate({ data, editable, onDataChange, sectionO
                         <h3 className="font-serif italic text-xl text-stone-800 mb-6">Education</h3>
                         <div className="space-y-6">
                             {education.map((edu, idx) => (
-                                e.arrayHelpers.removeEducation(idx)} editable={editable}>
+                                <CVItemWrapper key={edu.id} onRemove={() => e.arrayHelpers.removeEducation(idx)} editable={editable}>
                                 <div>
                                     <div className="text-base font-medium text-stone-900">{e.eduField(idx, 'degree')} in {e.eduField(idx, 'field')}</div>
                                     <div className="text-sm font-serif text-amber-700/80 italic my-1">{e.eduField(idx, 'school')}</div>
                                     <div className="text-xs tracking-widest text-stone-400">{formatDateRange(edu.startDate, edu.endDate)}</div>
                                 </div>
+                                </CVItemWrapper>
                             ))}
                         </div>
                     </section>
@@ -127,12 +130,13 @@ export function ElegantCreativeTemplate({ data, editable, onDataChange, sectionO
                     <section className="mb-10">
                         <h3 className="font-serif italic text-xl text-stone-800 mb-6">Expertise</h3>
                         <div className="flex flex-wrap gap-2">
-                            {skills.map((skill, idx) => (
-                                e.arrayHelpers.removeSkill(idx)} editable={editable}>
+                            {skills.map((skill) => (
+                                <CVItemWrapper key={skill.id} onRemove={() => e.arrayHelpers.removeSkillById(skill.id)} editable={editable}>
                                 <span className="text-sm text-stone-600 border border-stone-200 px-4 py-1.5 rounded-full bg-white/50">
                                     {e.skillField(skill.id, 'name')}
                                 </span>
-))}
+                                </CVItemWrapper>
+                            ))}
                         </div>
                     </section>
                     </CVSectionWrapper>
@@ -169,18 +173,7 @@ export function ElegantCreativeTemplate({ data, editable, onDataChange, sectionO
                     <div className="shrink-0 relative group">
                         <div className="absolute inset-0 bg-gradient-to-tr from-amber-200 to-rose-200 rounded-[1.5rem] blur-md opacity-60 group-hover:opacity-100 transition-opacity" />
                         <div className="relative w-36 h-36 rounded-[1.5rem] overflow-hidden border-2 border-white bg-stone-100">
-                            {personalInfo.avatarUrl ? (
-                                <img
-                                    src={personalInfo.avatarUrl}
-                                    alt="Avatar"
-                                    className="w-full h-full object-cover"
-                                />
-                            ) : (
-                                <div className="w-full h-full flex flex-col items-center justify-center bg-stone-50">
-                                    <div className="w-12 h-12 bg-stone-200 rounded-full mb-2" />
-                                    <div className="w-16 h-2 bg-stone-200 rounded" />
-                                </div>
-                            )}
+                            {e.avatarField("", { size: "w-36 h-36" })}
                         </div>
                     </div>
 
@@ -220,13 +213,13 @@ export function ElegantCreativeTemplate({ data, editable, onDataChange, sectionO
                                 <h3 className="font-serif italic text-lg text-stone-800 mb-4">Languages</h3>
                                 <div className="space-y-3">
                                     {languages.map(lang => (
-e.arrayHelpers.removeLanguageById(lang.id)} editable={editable}>
-
-                                        <div  className="flex justify-between items-center bg-white/50 px-3 py-2 rounded-lg text-sm border border-stone-100">
+                                        <CVItemWrapper key={lang.id} onRemove={() => e.arrayHelpers.removeLanguageById(lang.id)} editable={editable}>
+                                        <div className="flex justify-between items-center bg-white/50 px-3 py-2 rounded-lg text-sm border border-stone-100">
                                             <span className="text-stone-700">{e.langField(lang.id, 'name')}</span>
                                             <span className="text-stone-400 text-xs tracking-wide">{e.langField(lang.id, 'level')}</span>
                                         </div>
-))}
+                                        </CVItemWrapper>
+                                    ))}
                                 </div>
                              </div>
                              </CVSectionWrapper>
@@ -238,11 +231,12 @@ e.arrayHelpers.removeLanguageById(lang.id)} editable={editable}>
                                 <h3 className="font-serif italic text-lg text-stone-800 mb-4">Certifications</h3>
                                 <div className="space-y-4">
                                     {certifications.map((cert, idx) => (
-                                        e.arrayHelpers.removeCertification(idx)} editable={editable}>
+                                        <CVItemWrapper key={cert.id} onRemove={() => e.arrayHelpers.removeCertification(idx)} editable={editable}>
                                         <div>
                                             <div className="font-medium text-sm text-stone-800">{e.certField(idx, 'name')}</div>
                                             <div className="text-xs text-stone-500 font-serif italic mt-0.5">{e.certField(idx, 'issuer')}</div>
                                         </div>
+                                        </CVItemWrapper>
                                     ))}
                                 </div>
                             </div>
@@ -255,11 +249,12 @@ e.arrayHelpers.removeLanguageById(lang.id)} editable={editable}>
                                 <h3 className="font-serif italic text-lg text-stone-800 mb-4">Awards</h3>
                                 <div className="space-y-4">
                                     {awards.map((award, idx) => (
-                                        e.arrayHelpers.removeAward(idx)} editable={editable}>
+                                        <CVItemWrapper key={award.id} onRemove={() => e.arrayHelpers.removeAward(idx)} editable={editable}>
                                         <div>
                                             <div className="font-medium text-sm text-stone-800">{e.awardField(idx, 'title')}</div>
                                             <div className="text-xs text-stone-500 font-serif italic mt-0.5">{e.awardField(idx, 'issuer')}</div>
                                         </div>
+                                        </CVItemWrapper>
                                     ))}
                                 </div>
                             </div>
