@@ -5,7 +5,11 @@ import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/features/auth/context/auth-context";
 
-export function WelcomeCard() {
+interface WelcomeCardProps {
+    profileCompleteness?: number;
+}
+
+export function WelcomeCard({ profileCompleteness = 0 }: WelcomeCardProps) {
     const auth = useContext(AuthContext);
     const [userName, setUserName] = useState("Bạn");
 
@@ -41,7 +45,7 @@ export function WelcomeCard() {
                     </h2>
 
                     <p className="text-base text-[#637381] dark:text-[#919EAB] mb-6 max-w-lg mx-auto md:mx-0 leading-relaxed">
-                        Hệ thống AI đã phân tích hồ sơ của bạn và tìm thấy <strong className="text-[#1C252E] dark:text-white font-semibold">15 công việc</strong> mới rất phù hợp. Khám phá ngay!
+                        Hệ thống AI đã phân tích hồ sơ của bạn. Hãy hoàn thiện hồ sơ để tăng cơ hội được nhà tuyển dụng chú ý!
                     </p>
 
                     <div className="flex flex-col sm:flex-row items-center gap-4 justify-center md:justify-start">
@@ -66,7 +70,7 @@ export function WelcomeCard() {
                     <div className="absolute inset-0 bg-gradient-to-br from-[#22C55E]/10 to-[#10B981]/10 rounded-full animate-pulse" style={{ animationDuration: "3s" }} />
                     <div className="absolute inset-4 bg-white dark:bg-[#1C252E] rounded-full border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] shadow-lg flex flex-col items-center justify-center z-10 glass">
                         <div className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-[#22C55E] to-[#16A34A] mb-1">
-                            85%
+                            {profileCompleteness}%
                         </div>
                         <div className="text-[10px] font-bold text-[#637381] dark:text-[#919EAB] uppercase tracking-widest text-center px-4">
                             Độ hoàn thiện<br />Hồ sơ
