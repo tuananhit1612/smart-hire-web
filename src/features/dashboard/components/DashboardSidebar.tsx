@@ -147,7 +147,7 @@ export function DashboardSidebar({ collapsed, onToggle }: Props) {
 
     return (
         <motion.aside
-            animate={{ width: collapsed ? 88 : 220 }}
+            animate={{ width: collapsed ? 88 : 230 }}
             transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
             className={cn(
                 "fixed top-0 left-0 z-30 h-full flex flex-col",
@@ -170,12 +170,12 @@ export function DashboardSidebar({ collapsed, onToggle }: Props) {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ duration: 0.15 }}
-                            className="flex items-center gap-3 overflow-hidden"
+                            className="flex items-center gap-3 py-1"
                         >
-                            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#22C55E] to-[#059669] flex items-center justify-center shrink-0 shadow-[0_4px_12px_rgba(34,197,94,0.3)]">
+                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#22C55E] to-[#059669] flex items-center justify-center shrink-0">
                                 <Rocket className="w-5 h-5 text-white" />
                             </div>
-                            <span className="text-[18px] font-extrabold text-[#1C252E] dark:text-white whitespace-nowrap tracking-tight">
+                            <span className="text-[18px] font-extrabold text-[#1C252E] dark:text-white tracking-tight">
                                 SmartHire
                             </span>
                         </motion.div>
@@ -186,7 +186,7 @@ export function DashboardSidebar({ collapsed, onToggle }: Props) {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#22C55E] to-[#059669] flex items-center justify-center shadow-[0_4px_12px_rgba(34,197,94,0.3)]"
+                            className="w-10 h-10 rounded-full bg-gradient-to-br from-[#22C55E] to-[#059669] flex items-center justify-center"
                         >
                             <Rocket className="w-5 h-5 text-white" />
                         </motion.div>

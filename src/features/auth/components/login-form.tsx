@@ -92,7 +92,6 @@ export function LoginForm() {
                     <Input
                         label="Email"
                         type="email"
-                        value="tta@gmail.com"
                         placeholder="ten@congty.com"
                         error={errors.email?.message}
                         {...register("email")}
@@ -107,7 +106,6 @@ export function LoginForm() {
                         <Input
                             label="Mật khẩu"
                             type={showPassword ? "text" : "password"}
-                            value="Anh@2004"
                             placeholder="••••••••"
                             error={errors.password?.message}
                             {...register("password")}

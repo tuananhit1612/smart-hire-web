@@ -26,18 +26,22 @@ export interface ActivityLog {
 }
 
 export interface EmployerApplicant {
-    readonly id: string;
-    readonly fullName: string;
+    readonly id: string | number;
+    readonly jobId?: string | number;
+    readonly jobTitle?: string;
+    readonly fullName?: string;
+    readonly name?: string;
     readonly email: string;
     readonly phone: string;
     readonly avatarUrl?: string;
     readonly appliedAt: string;
-    readonly stage: ApplicationStage;
+    readonly stage?: ApplicationStage;
+    readonly status?: ApplicationStage;
     readonly currentTitle: string;
     readonly experienceYears: number;
     readonly skills: string[];
     readonly aiAnalysis: AIAnalysis;
-    readonly cvUrl: string;
+    readonly cvUrl?: string;
     readonly notes: ApplicantNote[];
     readonly activities: ActivityLog[];
 }

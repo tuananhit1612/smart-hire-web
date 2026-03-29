@@ -44,7 +44,7 @@ function applyClientFilters(
     const lowerQuery = search.toLowerCase();
     result = result.filter(
       (app) =>
-        app.fullName.toLowerCase().includes(lowerQuery) ||
+        (app.fullName || "").toLowerCase().includes(lowerQuery) ||
         app.skills.some((skill) => skill.toLowerCase().includes(lowerQuery))
     );
   }
@@ -88,14 +88,22 @@ export function useApplicants(
       setError(null);
 
       try {
-        const response = await employerApplicantApi.list({
-          jobId,
-          search: params.search || undefined,
-          sortBy: params.sortBy,
-        });
+        let resultData: EmployerApplicant[] = [];
+        if (jobId === "ALL") {
+          const response = await employerApplicantApi.getAll();
+          resultData = response.data.data || [];
+          resultData = applyClientFilters(resultData, params.search, params.sortBy);
+        } else {
+          const response = await employerApplicantApi.list({
+            jobId,
+            search: params.search || undefined,
+            sortBy: params.sortBy,
+          });
+          resultData = response.data.data?.data || [];
+        }
 
         if (!cancelled) {
-          setData(response.data.data.data || []);
+          setData(resultData);
         }
       } catch (err: any) {
         if (!cancelled) {

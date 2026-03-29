@@ -21,7 +21,7 @@ export interface ApplicationTrackingResponse {
   jobId: number;
   jobTitle: string;
   companyName: string;
-  /** e.g. "APPLIED" | "SCREENING" | "INTERVIEW" | "OFFER" | "HIRED" | "REJECTED" */
+  /** e.g. "APPLIED" | "INTERVIEW" | "HIRED" | "REJECTED" */
   currentStage: string;
   appliedAt: string; // ISO-8601 from LocalDateTime
   updatedAt: string;

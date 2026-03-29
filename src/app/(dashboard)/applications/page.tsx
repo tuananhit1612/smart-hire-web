@@ -28,9 +28,7 @@ import { CheckCircle2 } from "lucide-react";
 // ─── Design Constants ─────────────────────────────────────────────────────────
 const ACTIVE_STAGES = new Set([
   ApplicationStage.APPLIED,
-  ApplicationStage.SCREENING,
   ApplicationStage.INTERVIEW,
-  ApplicationStage.OFFER,
 ]);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -53,9 +51,7 @@ function toViewApplication(raw: ApplicationTrackingResponse): Application {
 
   if (raw.currentStage !== "APPLIED") {
     const stageLabels: Record<string, string> = {
-      SCREENING: "Đang xét duyệt",
       INTERVIEW: "Phỏng vấn",
-      OFFER: "Đề nghị nhận việc",
       HIRED: "Đã nhận việc",
       REJECTED: "Từ chối",
     };
@@ -98,12 +94,8 @@ function StatusBadge({ status }: { status: ApplicationStatus }) {
     switch (status) {
       case ApplicationStage.APPLIED:
         return { color: "text-[#22c55e]", bg: "bg-[#22c55e]/10", border: "border-[#22c55e]/30", label: "Đã nộp hồ sơ" };
-      case ApplicationStage.SCREENING:
-        return { color: "text-purple-700", bg: "bg-purple-50", border: "border-purple-200", label: "Đang xét duyệt" };
       case ApplicationStage.INTERVIEW:
         return { color: "text-amber-700", bg: "bg-amber-50", border: "border-amber-200", label: "Phỏng vấn" };
-      case ApplicationStage.OFFER:
-        return { color: "text-green-700", bg: "bg-green-50", border: "border-green-200", label: "Đề nghị nhận việc" };
       case ApplicationStage.HIRED:
         return { color: "text-emerald-700", bg: "bg-emerald-50", border: "border-emerald-200", label: "Đã nhận việc" };
       case ApplicationStage.REJECTED:

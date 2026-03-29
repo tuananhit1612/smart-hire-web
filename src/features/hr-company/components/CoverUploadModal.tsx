@@ -4,6 +4,7 @@ import * as React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Upload, Image, X, Check, Camera } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
+import { getImageUrl } from "@/shared/lib/api-client";
 
 interface CoverUploadModalProps {
     currentCover?: string;
@@ -24,11 +25,13 @@ const SAMPLE_COVERS = [
 export function CoverUploadModal({ currentCover, onUpload, onClose }: CoverUploadModalProps) {
     const [preview, setPreview] = React.useState<string | null>(null);
     const [selectedSample, setSelectedSample] = React.useState<string | null>(null);
+    const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
     const [isDragging, setIsDragging] = React.useState(false);
     const inputRef = React.useRef<HTMLInputElement>(null);
 
     const handleFileSelect = (file: File) => {
         if (file && file.type.startsWith("image/")) {
+            setSelectedFile(file);
             const reader = new FileReader();
             reader.onloadend = () => {
                 setPreview(reader.result as string);
@@ -48,19 +51,19 @@ export function CoverUploadModal({ currentCover, onUpload, onClose }: CoverUploa
     const handleSampleSelect = (url: string) => {
         setSelectedSample(url);
         setPreview(null);
+        setSelectedFile(null);
     };
 
     const handleSave = () => {
         if (selectedSample) {
             onUpload(null, selectedSample);
-        } else if (preview) {
-            // In a real app, you'd upload the file and get a URL
-            onUpload(null, preview);
+        } else if (selectedFile) {
+            onUpload(selectedFile, undefined);
         }
         onClose();
     };
 
-    const displayImage = preview || selectedSample || currentCover;
+    const displayImage = preview || selectedSample || getImageUrl(currentCover);
 
     return (
         <AnimatePresence>

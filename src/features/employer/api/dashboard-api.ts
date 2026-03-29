@@ -41,6 +41,25 @@ export interface RecentActivityItem {
     avatarUrl: string | null;
 }
 
+export interface PassRateRow {
+    position: string;
+    department: string;
+    totalApplicants: number;
+    passed: number;
+    passRate: number;      
+    prevRate: number;      
+    avgTimeToHire: number; 
+}
+
+export interface MissingSkill {
+    skill: string;
+    category: "technical" | "soft" | "tool" | "certification";
+    demandCount: number;     
+    candidateGap: number;    
+    trend: "rising" | "stable" | "declining";
+    suggestedAction?: string;
+}
+
 export interface HrDashboardOverview {
     totalJobs: number;
     openJobs: number;
@@ -53,6 +72,8 @@ export interface HrDashboardOverview {
     weeklyTrend: WeeklyTrendItem[];
     topJobs: TopJobItem[];
     recentActivities: RecentActivityItem[];
+    passRates: PassRateRow[];
+    missingSkills: MissingSkill[];
 }
 
 export interface JobDashboardStats {

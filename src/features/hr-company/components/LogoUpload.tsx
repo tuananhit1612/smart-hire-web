@@ -3,6 +3,7 @@
 import * as React from "react";
 import { motion } from "framer-motion";
 import { Upload, Camera, X, Check } from "lucide-react";
+import { getImageUrl } from "@/shared/lib/api-client";
 
 interface LogoUploadProps {
     currentLogo?: string;
@@ -40,8 +41,8 @@ export function LogoUpload({
             reader.onloadend = () => {
                 const dataUrl = reader.result as string;
                 setPreview(dataUrl);
-                // Call with data URL string for immediate preview update
-                onLogoChange?.(dataUrl);
+                // Call with the actual File object to trigger multipart upload
+                onLogoChange?.(file);
             };
             reader.readAsDataURL(file);
         }
@@ -80,26 +81,21 @@ export function LogoUpload({
         onLogoChange?.(null);
     };
 
-    const displayImage = preview || currentLogo;
+    const displayImage = preview ? preview : getImageUrl(currentLogo);
 
     return (
-        <motion.div
-            className={`relative ${sizeClasses[size]} rounded-2xl overflow-hidden cursor-pointer group`}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            onClick={handleClick}
+        <div
+            className={`relative ${sizeClasses[size]} rounded-md overflow-hidden group`}
             onDrop={handleDrop}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
-            whileHover={{ scale: editable ? 1.05 : 1 }}
-            whileTap={{ scale: editable ? 0.98 : 1 }}
         >
             {/* Background */}
             <div
                 className={`absolute inset-0 transition-all duration-300 ${isDragging
                     ? "bg-[#22c55e]/15 dark:bg-[#22c55e]/20 border-2 border-dashed border-[#22c55e]/30"
                     : displayImage
-                        ? "bg-white dark:bg-[#1C252E]"
+                        ? "bg-transparent"
                         : "bg-gradient-to-br from-[rgba(145,158,171,0.04)] to-white dark:from-[rgba(145,158,171,0.04)] dark:to-[#1C252E] border-2 border-dashed border-[#22c55e]/30 dark:border-white/[0.08]"
                     }`}
             />
@@ -120,33 +116,17 @@ export function LogoUpload({
                 </div>
             )}
 
-            {/* Hover Overlay */}
+            {/* Edit Button Corner Overlay */}
             {editable && (
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: isHovered ? 1 : 0 }}
-                    className="absolute inset-0 bg-[#1C252E] backdrop-blur-sm flex items-center justify-center"
+                <button
+                    onClick={handleClick}
+                    className="absolute bottom-1 right-1 p-1.5 bg-white dark:bg-[#1C252E] rounded-full shadow border border-gray-200 dark:border-gray-700 text-gray-500 hover:text-green-500 transition-colors z-10"
+                    title="Đổi Logo"
                 >
-                    <div className="text-white text-center">
-                        <Camera className={iconSizes[size]} />
-                        {size === "lg" && (
-                            <span className="text-xs mt-1 block">Đổi Logo</span>
-                        )}
-                    </div>
-                </motion.div>
+                    <Camera className="w-4 h-4" />
+                </button>
             )}
 
-            {/* Clear Button */}
-            {displayImage && editable && isHovered && (
-                <motion.button
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    onClick={clearLogo}
-                    className="absolute -top-1 -right-1 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-white shadow-lg hover:bg-red-600 transition-colors z-10"
-                >
-                    <X className="w-3 h-3" />
-                </motion.button>
-            )}
 
             {/* Drag Indicator */}
             {isDragging && (
@@ -170,7 +150,7 @@ export function LogoUpload({
                 onChange={handleInputChange}
                 className="hidden"
             />
-        </motion.div>
+        </div>
     );
 }
 

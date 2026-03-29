@@ -52,6 +52,14 @@ export const employerApplicantApi = {
     ),
 
   /**
+   * Get all applicants across all jobs for the current employer.
+   */
+  getAll: () =>
+    apiClient.get<ApiWrapper<EmployerApplicant[]>>(
+      `/employer/jobs/applications/all`
+    ),
+
+  /**
    * Get a single applicant's full details.
    */
   getById: (jobId: string, applicantId: string) =>

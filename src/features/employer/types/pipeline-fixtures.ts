@@ -8,7 +8,7 @@
 
 // ─── Types ───────────────────────────────────────────
 
-export type StageId = "applied" | "screening" | "interview" | "offer" | "hired" | "rejected";
+export type StageId = "applied" | "interview" | "hired" | "rejected";
 
 export interface PipelineCandidate {
     id: string;
@@ -55,9 +55,7 @@ export interface PipelineStageConfig {
 
 export const PIPELINE_STAGES: PipelineStageConfig[] = [
     { id: "applied", label: "Ứng tuyển", color: "text-sky-700", bg: "bg-sky-50", headerBg: "bg-sky-100", dot: "bg-sky-400" },
-    { id: "screening", label: "Sàng lọc", color: "text-violet-700", bg: "bg-violet-50", headerBg: "bg-violet-100", dot: "bg-violet-400" },
     { id: "interview", label: "Phỏng vấn", color: "text-amber-700", bg: "bg-amber-50", headerBg: "bg-amber-100", dot: "bg-amber-400" },
-    { id: "offer", label: "Đề nghị", color: "text-emerald-700", bg: "bg-emerald-50", headerBg: "bg-emerald-100", dot: "bg-emerald-400" },
     { id: "hired", label: "Đã tuyển", color: "text-teal-700", bg: "bg-teal-50", headerBg: "bg-teal-100", dot: "bg-teal-400" },
     { id: "rejected", label: "Từ chối", color: "text-rose-700", bg: "bg-rose-50", headerBg: "bg-rose-100", dot: "bg-rose-400" },
 ];
@@ -71,16 +69,9 @@ const frontendBoard: BoardState = {
         { id: "fe-c3", name: "Lê Minh Cường", avatar: "LMC", email: "leminhcuong@gmail.com", position: "Senior React Developer", aiScore: 91, appliedDate: "1 ngày trước", daysInStage: 1, tags: ["React", "Next.js", "GraphQL"] },
         { id: "fe-c4", name: "Phạm Ngọc Dung", avatar: "PND", email: "phamngocdung@gmail.com", position: "Senior React Developer", aiScore: 68, appliedDate: "4 ngày trước", daysInStage: 4, tags: ["Angular", "RxJS"] },
     ],
-    screening: [
-        { id: "fe-c5", name: "Hoàng Đức Em", avatar: "HDE", email: "hoangducem@gmail.com", position: "Senior React Developer", aiScore: 88, appliedDate: "5 ngày trước", daysInStage: 2, tags: ["React", "Next.js", "Tailwind"] },
-        { id: "fe-c6", name: "Vũ Thị Phương", avatar: "VTP", email: "vuthiphuong@gmail.com", position: "Senior React Developer", aiScore: 79, appliedDate: "6 ngày trước", daysInStage: 3, tags: ["React", "Redux", "Jest"] },
-    ],
     interview: [
         { id: "fe-c7", name: "Đặng Quốc Gia", avatar: "DQG", email: "dangquocgia@gmail.com", position: "Senior React Developer", aiScore: 94, appliedDate: "10 ngày trước", daysInStage: 3, tags: ["React", "TypeScript", "AWS"] },
         { id: "fe-c8", name: "Bùi Thanh Hải", avatar: "BTH", email: "buithanhai@gmail.com", position: "Senior React Developer", aiScore: 86, appliedDate: "8 ngày trước", daysInStage: 2, tags: ["React", "Node.js"] },
-    ],
-    offer: [
-        { id: "fe-c9", name: "Đinh Quốc Khánh", avatar: "DQK", email: "dinhquockhanh@gmail.com", position: "Senior React Developer", aiScore: 96, appliedDate: "15 ngày trước", daysInStage: 2, tags: ["React", "TypeScript", "Lead"] },
     ],
     hired: [
         { id: "fe-c10", name: "Lý Minh Long", avatar: "LML", email: "lyminhlong@gmail.com", position: "Senior React Developer", aiScore: 90, appliedDate: "20 ngày trước", daysInStage: 0, tags: ["React", "Next.js"] },
@@ -98,14 +89,10 @@ const backendBoard: BoardState = {
         { id: "be-c2", name: "Ngô Thị Mai", avatar: "NTM", email: "ngothimai@gmail.com", position: "Backend Engineer (Go)", aiScore: 72, appliedDate: "2 ngày trước", daysInStage: 2, tags: ["Go", "REST", "Redis"] },
         { id: "be-c3", name: "Phan Văn Sơn", avatar: "PVS", email: "phanvanson@gmail.com", position: "Backend Engineer (Go)", aiScore: 78, appliedDate: "3 ngày trước", daysInStage: 3, tags: ["Go", "Docker", "K8s"] },
     ],
-    screening: [
-        { id: "be-c4", name: "Đỗ Hữu Phúc", avatar: "DHP", email: "dohuuphuc@gmail.com", position: "Backend Engineer (Go)", aiScore: 91, appliedDate: "5 ngày trước", daysInStage: 2, tags: ["Go", "Microservices", "AWS"] },
-    ],
     interview: [
         { id: "be-c5", name: "Lương Thị Quỳnh", avatar: "LTQ", email: "luongthiquynh@gmail.com", position: "Backend Engineer (Go)", aiScore: 88, appliedDate: "8 ngày trước", daysInStage: 3, tags: ["Go", "gRPC", "CI/CD"] },
         { id: "be-c6", name: "Hà Xuân Trường", avatar: "HXT", email: "haxuantruong@gmail.com", position: "Backend Engineer (Go)", aiScore: 83, appliedDate: "9 ngày trước", daysInStage: 4, tags: ["Go", "PostgreSQL"] },
     ],
-    offer: [],
     hired: [],
     rejected: [
         { id: "be-c7", name: "Tô Minh Uy", avatar: "TMU", email: "tominhuy@gmail.com", position: "Backend Engineer (Go)", aiScore: 48, appliedDate: "6 ngày trước", daysInStage: 1, tags: ["Python"] },
@@ -119,14 +106,8 @@ const devopsBoard: BoardState = {
         { id: "do-c1", name: "Châu Quốc Vĩnh", avatar: "CQV", email: "chauquocvinh@gmail.com", position: "DevOps Engineer", aiScore: 80, appliedDate: "2 ngày trước", daysInStage: 2, tags: ["Docker", "K8s", "Terraform"] },
         { id: "do-c2", name: "Kiều Anh Xuân", avatar: "KAX", email: "kieuanhxuan@gmail.com", position: "DevOps Engineer", aiScore: 74, appliedDate: "3 ngày trước", daysInStage: 3, tags: ["AWS", "CI/CD"] },
     ],
-    screening: [
-        { id: "do-c3", name: "Dương Yến Vy", avatar: "DYV", email: "duongyenvy@gmail.com", position: "DevOps Engineer", aiScore: 92, appliedDate: "4 ngày trước", daysInStage: 1, tags: ["K8s", "ArgoCD", "Helm"] },
-    ],
     interview: [
         { id: "do-c4", name: "Lâm Hoàng Zung", avatar: "LHZ", email: "lamhoangzung@gmail.com", position: "DevOps Engineer", aiScore: 87, appliedDate: "7 ngày trước", daysInStage: 2, tags: ["Docker", "Jenkins", "GCP"] },
-    ],
-    offer: [
-        { id: "do-c5", name: "Tạ Bá Quốc", avatar: "TBQ", email: "tabaquoc@gmail.com", position: "DevOps Engineer", aiScore: 95, appliedDate: "12 ngày trước", daysInStage: 1, tags: ["AWS", "Terraform", "K8s"] },
     ],
     hired: [],
     rejected: [],
@@ -138,12 +119,7 @@ const designBoard: BoardState = {
     applied: [
         { id: "ux-c1", name: "Trương Thuý Hà", avatar: "TTH", email: "truongthuyhа@gmail.com", position: "UI/UX Designer", aiScore: 77, appliedDate: "1 ngày trước", daysInStage: 1, tags: ["Figma", "Design System"] },
     ],
-    screening: [
-        { id: "ux-c2", name: "Bành Minh Khoa", avatar: "BMK", email: "banhminhkhoa@gmail.com", position: "UI/UX Designer", aiScore: 84, appliedDate: "4 ngày trước", daysInStage: 2, tags: ["Figma", "Prototyping", "Research"] },
-        { id: "ux-c3", name: "Lê Ngọc Linh", avatar: "LNL", email: "lengoclinh@gmail.com", position: "UI/UX Designer", aiScore: 81, appliedDate: "5 ngày trước", daysInStage: 3, tags: ["Sketch", "Illustration"] },
-    ],
     interview: [],
-    offer: [],
     hired: [
         { id: "ux-c4", name: "Đoàn Thanh Mai", avatar: "DTM", email: "doanthanhmai@gmail.com", position: "UI/UX Designer", aiScore: 93, appliedDate: "18 ngày trước", daysInStage: 0, tags: ["Figma", "Design System", "Motion"] },
     ],
@@ -192,13 +168,13 @@ export const pipelineJobs: PipelineJob[] = [
 // ─── Stage Notes ─────────────────────────────────────
 
 export const mockStageNotes: StageNote[] = [
-    { id: "n1", candidateId: "fe-c7", fromStage: "screening", toStage: "interview", note: "CV ấn tượng, kinh nghiệm 5 năm React. Lên lịch phỏng vấn kỹ thuật.", author: "Trần Thị Bảo", createdAt: "2025-12-01T10:30:00" },
-    { id: "n2", candidateId: "fe-c9", fromStage: "interview", toStage: "offer", note: "Phỏng vấn xuất sắc. Kỹ năng leadership tốt. Đề nghị mức Senior.", author: "Trần Thị Bảo", createdAt: "2025-12-05T14:00:00" },
-    { id: "n3", candidateId: "fe-c10", fromStage: "offer", toStage: "hired", note: "Đã chấp nhận offer. Mức lương 45M. Bắt đầu 15/12.", author: "HR Team", createdAt: "2025-12-08T09:00:00" },
-    { id: "n4", candidateId: "fe-c11", fromStage: "screening", toStage: "rejected", note: "Không đáp ứng yêu cầu kỹ thuật cơ bản. Chưa có kinh nghiệm React.", author: "Trần Thị Bảo", createdAt: "2025-12-02T16:00:00" },
-    { id: "n5", candidateId: "be-c5", fromStage: "screening", toStage: "interview", note: "Kinh nghiệm Go 3 năm, hiểu biết microservices. Phỏng vấn system design.", author: "Lê Hoàng Cường", createdAt: "2025-12-03T11:00:00" },
-    { id: "n6", candidateId: "do-c5", fromStage: "interview", toStage: "offer", note: "Kết quả phỏng vấn rất tốt. Chuyên gia IaC. Gửi offer ASAP.", author: "Lê Hoàng Cường", createdAt: "2025-12-06T13:00:00" },
-    { id: "n7", candidateId: "ux-c4", fromStage: "offer", toStage: "hired", note: "Designer xuất sắc, portfolio ấn tượng. Đã nhận offer.", author: "HR Team", createdAt: "2025-12-04T10:00:00" },
+    { id: "n1", candidateId: "fe-c7", fromStage: "applied", toStage: "interview", note: "CV ấn tượng, kinh nghiệm 5 năm React. Lên lịch phỏng vấn kỹ thuật.", author: "Trần Thị Bảo", createdAt: "2025-12-01T10:30:00" },
+    { id: "n2", candidateId: "fe-c9", fromStage: "interview", toStage: "hired", note: "Phỏng vấn xuất sắc. Kỹ năng leadership tốt.", author: "Trần Thị Bảo", createdAt: "2025-12-05T14:00:00" },
+    { id: "n3", candidateId: "fe-c10", fromStage: "interview", toStage: "hired", note: "Đã chấp nhận offer. Mức lương 45M. Bắt đầu 15/12.", author: "HR Team", createdAt: "2025-12-08T09:00:00" },
+    { id: "n4", candidateId: "fe-c11", fromStage: "applied", toStage: "rejected", note: "Không đáp ứng yêu cầu kỹ thuật cơ bản. Chưa có kinh nghiệm React.", author: "Trần Thị Bảo", createdAt: "2025-12-02T16:00:00" },
+    { id: "n5", candidateId: "be-c5", fromStage: "applied", toStage: "interview", note: "Kinh nghiệm Go 3 năm, hiểu biết microservices. Phỏng vấn system design.", author: "Lê Hoàng Cường", createdAt: "2025-12-03T11:00:00" },
+    { id: "n6", candidateId: "do-c5", fromStage: "interview", toStage: "hired", note: "Kết quả phỏng vấn rất tốt. Chuyên gia IaC. Gửi offer ASAP.", author: "Lê Hoàng Cường", createdAt: "2025-12-06T13:00:00" },
+    { id: "n7", candidateId: "ux-c4", fromStage: "interview", toStage: "hired", note: "Designer xuất sắc, portfolio ấn tượng. Đã nhận offer.", author: "HR Team", createdAt: "2025-12-04T10:00:00" },
     { id: "n8", candidateId: "be-c7", fromStage: "applied", toStage: "rejected", note: "Ứng tuyển Backend Go nhưng chỉ có kinh nghiệm Python. Không phù hợp.", author: "Lê Hoàng Cường", createdAt: "2025-12-02T15:30:00" },
 ];
 
@@ -223,12 +199,10 @@ export function getCandidatesByStage(stageId: StageId): PipelineCandidate[] {
 /** Get stage distribution for a job */
 export function getStageDistribution(jobId: string): Record<StageId, number> {
     const board = getBoardByJobId(jobId);
-    if (!board) return { applied: 0, screening: 0, interview: 0, offer: 0, hired: 0, rejected: 0 };
+    if (!board) return { applied: 0, interview: 0, hired: 0, rejected: 0 };
     return {
         applied: board.applied.length,
-        screening: board.screening.length,
         interview: board.interview.length,
-        offer: board.offer.length,
         hired: board.hired.length,
         rejected: board.rejected.length,
     };
@@ -237,16 +211,14 @@ export function getStageDistribution(jobId: string): Record<StageId, number> {
 /** Get average AI score per stage for a job */
 export function getAvgScoreByStage(jobId: string): Record<StageId, number> {
     const board = getBoardByJobId(jobId);
-    if (!board) return { applied: 0, screening: 0, interview: 0, offer: 0, hired: 0, rejected: 0 };
+    if (!board) return { applied: 0, interview: 0, hired: 0, rejected: 0 };
 
     const avg = (arr: PipelineCandidate[]) =>
         arr.length > 0 ? Math.round(arr.reduce((s, c) => s + c.aiScore, 0) / arr.length) : 0;
 
     return {
         applied: avg(board.applied),
-        screening: avg(board.screening),
         interview: avg(board.interview),
-        offer: avg(board.offer),
         hired: avg(board.hired),
         rejected: avg(board.rejected),
     };
@@ -255,7 +227,7 @@ export function getAvgScoreByStage(jobId: string): Record<StageId, number> {
 /** Get conversion rate between consecutive stages */
 export function getConversionRates(jobId: string): { from: string; to: string; rate: number }[] {
     const dist = getStageDistribution(jobId);
-    const order: StageId[] = ["applied", "screening", "interview", "offer", "hired"];
+    const order: StageId[] = ["applied", "interview", "hired"];
     const results: { from: string; to: string; rate: number }[] = [];
 
     for (let i = 0; i < order.length - 1; i++) {
@@ -279,9 +251,7 @@ export function getPipelineSummary() {
         totalNotes: mockStageNotes.length,
         stageDistribution: {
             applied: getCandidatesByStage("applied").length,
-            screening: getCandidatesByStage("screening").length,
             interview: getCandidatesByStage("interview").length,
-            offer: getCandidatesByStage("offer").length,
             hired: getCandidatesByStage("hired").length,
             rejected: getCandidatesByStage("rejected").length,
         },

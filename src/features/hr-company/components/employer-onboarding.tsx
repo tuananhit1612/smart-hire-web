@@ -109,7 +109,7 @@ export function EmployerOnboarding() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-4 relative">
+        <div className="w-full min-h-screen flex flex-col items-center justify-center p-4 md:p-8 relative">
             {/* Transparent bg — particle background shows through (Design System §10.1) */}
 
             <StepIndicator current={step} total={3} />
@@ -175,7 +175,7 @@ export function EmployerOnboarding() {
                         initial="hidden"
                         animate="visible"
                         exit="exit"
-                        className="max-w-md w-full"
+                        className="max-w-xl w-full"
                     >
                         {/* Glassmorphism Card (§4.2) */}
                         <div className="relative group">
@@ -235,11 +235,12 @@ export function EmployerOnboarding() {
                                             value={formData.size}
                                             onChange={(e) => setFormData({ ...formData, size: e.target.value })}
                                         >
-                                            <option value="" disabled>Chọn quy mô</option>
-                                            <option value="1-10">1 - 10 nhân viên</option>
-                                            <option value="11-50">11 - 50 nhân viên</option>
-                                            <option value="51-200">51 - 200 nhân viên</option>
-                                            <option value="200+">Hơn 200 nhân viên</option>
+                                            <option className="bg-white dark:bg-[#1C252E] text-[#1C252E] dark:text-white" value="" disabled>Chọn quy mô</option>
+                                            <option className="bg-white dark:bg-[#1C252E] text-[#1C252E] dark:text-white" value="STARTUP">1 - 10 nhân viên</option>
+                                            <option className="bg-white dark:bg-[#1C252E] text-[#1C252E] dark:text-white" value="SMALL">11 - 50 nhân viên</option>
+                                            <option className="bg-white dark:bg-[#1C252E] text-[#1C252E] dark:text-white" value="MEDIUM">51 - 200 nhân viên</option>
+                                            <option className="bg-white dark:bg-[#1C252E] text-[#1C252E] dark:text-white" value="LARGE">201 - 500 nhân viên</option>
+                                            <option className="bg-white dark:bg-[#1C252E] text-[#1C252E] dark:text-white" value="ENTERPRISE">Trên 500 nhân viên</option>
                                         </select>
                                     </motion.div>
 

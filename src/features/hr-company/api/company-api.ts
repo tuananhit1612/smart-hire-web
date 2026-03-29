@@ -26,6 +26,14 @@ export const companyApi = {
         });
         return response.data.data;
     },
+    uploadCover: async (id: number, file: File): Promise<CompanyResponse> => {
+        const formData = new FormData();
+        formData.append('file', file);
+        const response = await apiClient.post(`/companies/${id}/cover`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        return response.data.data;
+    },
     deleteCompany: async (id: number): Promise<void> => {
         await apiClient.delete(`/companies/${id}`);
     }

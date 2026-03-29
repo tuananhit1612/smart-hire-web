@@ -40,7 +40,7 @@ import {
     DEFAULT_JOB,
     SkillLevel,
 } from "../types/job";
-import { MOCK_COMPANIES } from "../../hr-company/data/mock-companies";
+import { useCompanyStore } from "../../hr-company/stores/company-store";
 
 // Modern input field - larger and cleaner
 function FormField({
@@ -62,20 +62,20 @@ function FormField({
 }) {
     return (
         <div className="space-y-1.5">
-            <label className="block text-sm font-semibold text-[#1C252E]">
+            <label className="block text-sm font-semibold text-[#1C252E] dark:text-white mb-2">
                 {label}
                 {required && <span className="text-red-500 ml-1">*</span>}
             </label>
             <div className="relative">
                 {Icon && (
-                    <Icon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#22c55e]" />
+                    <Icon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#919EAB]" />
                 )}
                 <input
                     type={type}
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
                     placeholder={placeholder}
-                    className={`w-full ${Icon ? "pl-12" : "pl-4"} pr-4 py-3.5 bg-white border-2 border-[rgba(145,158,171,0.12)] rounded-2xl focus:border-[#22c55e]/30 focus:ring-4 focus:ring-[#22c55e]/30 focus:outline-none transition-all text-[#1C252E] placeholder:text-[#22c55e] text-base`}
+                    className={`w-full ${Icon ? "pl-10" : "pl-4"} pr-4 h-11 bg-white dark:bg-[rgba(145,158,171,0.04)] border border-[rgba(145,158,171,0.32)] dark:border-white/[0.08] rounded-xl focus:border-[#22c55e] focus:ring-1 focus:ring-[#22c55e] focus:outline-none transition-all text-[#1C252E] dark:text-white placeholder:text-[#919EAB] text-sm`}
                 />
             </div>
         </div>
@@ -102,7 +102,7 @@ function FormTextarea({
 }) {
     return (
         <div className="space-y-1.5">
-            <label className="block text-sm font-semibold text-[#1C252E]">
+            <label className="block text-sm font-semibold text-[#1C252E] dark:text-white mb-2">
                 {label}
                 {required && <span className="text-red-500 ml-1">*</span>}
             </label>
@@ -111,7 +111,7 @@ function FormTextarea({
                 onChange={(e) => onChange(e.target.value)}
                 placeholder={placeholder}
                 rows={rows}
-                className="w-full px-4 py-3.5 bg-white border-2 border-[rgba(145,158,171,0.12)] rounded-2xl focus:border-[#22c55e]/30 focus:ring-4 focus:ring-[#22c55e]/30 focus:outline-none transition-all text-[#1C252E] placeholder:text-[#22c55e] resize-none text-base"
+                className="w-full px-4 py-3 bg-white dark:bg-[rgba(145,158,171,0.04)] border border-[rgba(145,158,171,0.32)] dark:border-white/[0.08] rounded-xl focus:border-[#22c55e] focus:ring-1 focus:ring-[#22c55e] focus:outline-none transition-all text-[#1C252E] dark:text-white placeholder:text-[#919EAB] resize-none text-sm"
             />
         </div>
     );
@@ -151,19 +151,19 @@ function SkillTagInput({
 
     return (
         <div className="space-y-2">
-            <label className="block text-sm font-semibold text-[#1C252E]">{label}</label>
+            <label className="block text-sm font-semibold text-[#1C252E] dark:text-white mb-2">{label}</label>
 
             {/* Skills */}
-            <div className="flex flex-wrap gap-2 min-h-[36px]">
+            <div className="flex flex-wrap gap-2 min-h-[32px]">
                 {skills.map((skill) => (
                     <span
                         key={skill.id}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 ${colorClass} text-white rounded-full text-sm font-medium`}
+                        className={`flex items-center gap-1.5 px-3 py-1 ${colorClass} text-white rounded-full text-xs font-medium shadow-sm`}
                     >
                         {skill.name}
                         <button
                             onClick={() => onRemove(skill.id!)}
-                            className="opacity-70 hover:opacity-100"
+                            className="opacity-70 hover:opacity-100 transition-opacity"
                         >
                             <X className="w-3.5 h-3.5" />
                         </button>
@@ -185,11 +185,11 @@ function SkillTagInput({
                         }
                     }}
                     placeholder="Nhập kỹ năng..."
-                    className="flex-1 px-4 py-2.5 bg-white border-2 border-dashed border-[#22c55e]/30 rounded-xl focus:border-[#22c55e]/30 focus:border-solid focus:outline-none transition-all text-sm"
+                    className="flex-1 px-4 h-11 bg-transparent border border-dashed border-[rgba(145,158,171,0.32)] dark:border-white/[0.08] rounded-xl focus:border-[#22c55e] focus:border-solid focus:ring-1 focus:ring-[#22c55e] focus:outline-none transition-all text-[#1C252E] dark:text-white text-sm placeholder:text-[#919EAB]"
                 />
                 <button
                     onClick={() => input.trim() && handleAdd(input.trim())}
-                    className="px-4 py-2.5 bg-[#22c55e]/15 text-[#22c55e] rounded-xl hover:bg-[rgba(145,158,171,0.04)] transition-colors font-medium text-sm"
+                    className="px-4 h-11 bg-[rgba(145,158,171,0.04)] dark:bg-white/[0.04] text-[#1C252E] dark:text-white border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] rounded-xl hover:bg-[rgba(145,158,171,0.08)] transition-colors font-medium text-sm flex items-center justify-center"
                 >
                     <Plus className="w-4 h-4" />
                 </button>
@@ -214,13 +214,13 @@ function SkillTagInput({
 }
 
 // Live Preview Component
-function LivePreview({ formData, company }: { formData: Omit<Job, 'id' | 'createdAt' | 'updatedAt'>; company: typeof MOCK_COMPANIES[0] }) {
+function LivePreview({ formData, company }: { formData: Omit<Job, 'id' | 'createdAt' | 'updatedAt'>; company: any }) {
     const formatSalary = (min?: number, max?: number) => {
         if (!min && !max) return "Thỏa thuận";
-        const format = (n: number) => (n / 1000000).toFixed(0);
-        if (min && max) return `${format(min)} - ${format(max)} triệu VND`;
-        if (min) return `Từ ${format(min)} triệu VND`;
-        return `Đến ${format(max!)} triệu VND`;
+        const format = (n: number) => n.toLocaleString('vi-VN');
+        if (min && max) return `${format(min)} - ${format(max)} VNĐ`;
+        if (min) return `Từ ${format(min)} VNĐ`;
+        return `Đến ${format(max!)} VNĐ`;
     };
 
     return (
@@ -350,9 +350,8 @@ function LivePreview({ formData, company }: { formData: Omit<Job, 'id' | 'create
 
 export function JobFormModal() {
     const { selectedJob, setFormOpen, addJob, updateJob, selectJob } = useJobStore();
+    const company = useCompanyStore((state) => state.company);
     const isEditing = !!selectedJob;
-
-    const company = MOCK_COMPANIES[0];
     const suggestedSkills = [
         ...(company?.techStack || []),
         "Communication",
@@ -415,26 +414,26 @@ export function JobFormModal() {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}
                 onClick={(e) => e.stopPropagation()}
-                className="w-full max-w-6xl h-[90vh] bg-gradient-to-br from-[rgba(145,158,171,0.04)] to-white rounded-3xl shadow-2xl overflow-hidden flex"
+                className="w-full max-w-6xl h-[90vh] bg-white dark:bg-[#1C252E] border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] rounded-3xl shadow-2xl overflow-hidden flex"
             >
                 {/* Left: Form Input */}
                 <div className="flex-1 flex flex-col min-w-0">
                     {/* Header */}
-                    <div className="flex items-center justify-between p-5 border-b border-[rgba(145,158,171,0.12)] bg-white/80">
+                    <div className="flex items-center justify-between p-5 border-b border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] bg-white dark:bg-[#1C252E]">
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#22c55e] to-[#10b981] flex items-center justify-center shadow-lg">
-                                <Briefcase className="w-5 h-5 text-white" />
+                            <div className="w-10 h-10 rounded-xl bg-[rgba(145,158,171,0.04)] dark:bg-white/[0.04] flex items-center justify-center">
+                                <Briefcase className="w-5 h-5 text-[#22c55e]" />
                             </div>
                             <div>
-                                <h2 className="text-lg font-bold text-[#1C252E]">
+                                <h2 className="text-lg font-bold text-[#1C252E] dark:text-white">
                                     {isEditing ? "Chỉnh sửa tin" : "Tạo tin tuyển dụng"}
                                 </h2>
-                                <p className="text-sm text-[#22c55e]">{company?.name}</p>
+                                <p className="text-sm text-[#919EAB]">{company?.name}</p>
                             </div>
                         </div>
                         <button
                             onClick={handleClose}
-                            className="p-2 hover:bg-[#22c55e]/15 rounded-xl transition-colors text-[#22c55e]"
+                            className="p-2 hover:bg-[rgba(145,158,171,0.08)] rounded-xl transition-colors text-[#637381] dark:text-[#C4CDD5]"
                         >
                             <X className="w-5 h-5" />
                         </button>
@@ -481,8 +480,8 @@ export function JobFormModal() {
                             />
                         </div>
 
-                        {/* Location & Salary */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {/* Location, Salary & Deadline */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                             <FormField
                                 label="Địa điểm"
                                 value={formData.location}
@@ -491,18 +490,33 @@ export function JobFormModal() {
                                 icon={MapPin}
                             />
                             <FormField
-                                label="Lương tối thiểu"
-                                value={formData.salaryMin || ""}
-                                onChange={(v) => updateField("salaryMin", parseInt(v) || undefined)}
-                                placeholder="25000000"
-                                type="number"
+                                label="Lương tối thiểu (VNĐ)"
+                                value={formData.salaryMin ? formData.salaryMin.toLocaleString('en-US') : ""}
+                                onChange={(v) => {
+                                    const numStr = v.replace(/\D/g, '');
+                                    updateField("salaryMin", numStr ? parseInt(numStr) : undefined);
+                                }}
+                                placeholder="25,000,000"
+                                type="text"
+                                icon={DollarSign}
                             />
                             <FormField
-                                label="Lương tối đa"
-                                value={formData.salaryMax || ""}
-                                onChange={(v) => updateField("salaryMax", parseInt(v) || undefined)}
-                                placeholder="40000000"
-                                type="number"
+                                label="Lương tối đa (VNĐ)"
+                                value={formData.salaryMax ? formData.salaryMax.toLocaleString('en-US') : ""}
+                                onChange={(v) => {
+                                    const numStr = v.replace(/\D/g, '');
+                                    updateField("salaryMax", numStr ? parseInt(numStr) : undefined);
+                                }}
+                                placeholder="40,000,000"
+                                type="text"
+                                icon={DollarSign}
+                            />
+                            <FormField
+                                label="Hạn nộp hồ sơ"
+                                value={formData.deadline ? formData.deadline.split('T')[0] : ""}
+                                onChange={(v) => updateField("deadline", v ? new Date(v).toISOString() : undefined)}
+                                type="date"
+                                icon={Calendar}
                             />
                         </div>
 
@@ -559,10 +573,10 @@ export function JobFormModal() {
                     </div>
 
                     {/* Footer */}
-                    <div className="p-5 border-t border-[rgba(145,158,171,0.12)] bg-white/80 flex justify-end gap-3">
+                    <div className="p-5 border-t border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] bg-white dark:bg-[#1C252E] flex justify-end gap-3 shrink-0">
                         <button
                             onClick={handleClose}
-                            className="px-6 py-2.5 text-[#22c55e] font-medium hover:bg-[#22c55e]/10 rounded-xl transition-colors"
+                            className="px-6 h-12 text-[#637381] dark:text-white font-medium hover:bg-[rgba(145,158,171,0.08)] rounded-xl transition-colors"
                         >
                             Hủy
                         </button>
@@ -570,7 +584,7 @@ export function JobFormModal() {
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                             onClick={handleSubmit}
-                            className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold shadow-lg shadow-green-500/30"
+                            className="flex items-center gap-2 px-6 h-12 bg-[#1C252E] dark:bg-white text-white dark:text-[#1C252E] rounded-xl font-bold shadow-sm"
                         >
                             <Save className="w-4 h-4" />
                             {isEditing ? "Cập nhật" : "Tạo tin"}
@@ -579,7 +593,7 @@ export function JobFormModal() {
                 </div>
 
                 {/* Right: Live Preview */}
-                <div className="w-[380px] bg-slate-50 border-l border-[rgba(145,158,171,0.12)] p-5 hidden lg:flex flex-col overflow-hidden flex-shrink-0">
+                <div className="w-[380px] bg-[rgba(145,158,171,0.04)] dark:bg-black/20 border-l border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] p-5 hidden lg:flex flex-col overflow-hidden flex-shrink-0">
                     <LivePreview formData={formData} company={company} />
                 </div>
             </motion.div>

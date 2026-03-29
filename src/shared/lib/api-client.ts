@@ -228,3 +228,25 @@ apiClient.interceptors.response.use(
     );
   }
 );
+
+/**
+ * Transforms relative backend file paths (e.g. "covers/123.jpg" or "logos/123.png")
+ * into absolute URLs that the frontend can render by prepending the backend URL.
+ */
+export function getImageUrl(path: string | null | undefined): string | undefined {
+  if (!path) return undefined;
+  if (path.startsWith("http") || path.startsWith("data:") || path.startsWith("blob:")) {
+    return path;
+  }
+  
+  // Example: If NEXT_PUBLIC_API_URL is "http://localhost:8080/api"
+  // We want the base to be "http://localhost:8080"
+  let baseUrl = "http://localhost:8080";
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (apiUrl) {
+    baseUrl = apiUrl.replace(/\/api$/, "");
+  }
+
+  const cleanPath = path.startsWith("/") ? path.substring(1) : path;
+  return `${baseUrl}/uploads/${cleanPath}`;
+}

@@ -8,8 +8,9 @@ interface CompanyStore {
     isLoading: boolean;
     error: string | null;
     fetchMyCompany: () => Promise<void>;
-    saveCompany: () => Promise<void>;
+    saveCompany: (directUpdates?: Partial<Company>) => Promise<void>;
     uploadLogo: (file: File) => Promise<void>;
+    uploadCover: (file: File) => Promise<void>;
     setCompany: (company: Company) => void;
     updateField: <K extends keyof Company>(field: K, value: Company[K]) => void;
     setEditing: (editing: boolean) => void;
@@ -34,15 +35,23 @@ export const useCompanyStore = create<CompanyStore>((set, get) => ({
                         id: res.id.toString(),
                         name: res.name,
                         industry: res.industry || '',
-                        size: (res.companySize as Company['size']) || '11-50',
+                        size: (res.companySize as Company['size']) || 'STARTUP',
                         location: res.address || '',
+                        address: res.address || '',
                         about: res.description || '',
                         website: res.website || '',
-                        email: '',
-                        phone: '',
+                        tagline: res.tagline || '',
+                        email: res.email || '',
+                        phone: res.phone || '',
+                        founded: res.founded || '',
+                        techStack: res.techStack || [],
+                        benefits: res.benefits || [],
+                        socialLinks: (res.socialLinks as any) || [],
                         logoUrl: res.logoUrl || undefined,
+                        coverUrl: res.coverUrl || undefined,
                     }
                 });
+                console.log('--- [DEBUG fetchMyCompany] Fetched successfully. Mapped company:', get().company);
             }
         } catch (error) {
             set({ error: 'Failed to fetch company data' });
@@ -52,24 +61,41 @@ export const useCompanyStore = create<CompanyStore>((set, get) => ({
         }
     },
 
-    saveCompany: async () => {
-        const { company } = get();
+    saveCompany: async (directUpdates?: Partial<Company>) => {
+        const currentCompany = get().company;
+        const companyToSave = directUpdates ? { ...currentCompany, ...directUpdates } : currentCompany;
+        
+        console.log('--- [DEBUG saveCompany] Current store company:', currentCompany);
+        console.log('--- [DEBUG saveCompany] Company to save:', companyToSave);
+        
         set({ isLoading: true, error: null });
         try {
             const payload = {
-                name: company.name,
-                description: company.about,
-                website: company.website,
-                industry: company.industry,
-                companySize: company.size,
-                address: company.location,
-                city: company.location,
+                name: companyToSave.name,
+                description: companyToSave.about,
+                website: companyToSave.website,
+                industry: companyToSave.industry,
+                companySize: companyToSave.size,
+                address: companyToSave.location,
+                city: companyToSave.location,
+                tagline: companyToSave.tagline,
+                email: companyToSave.email,
+                phone: companyToSave.phone,
+                founded: companyToSave.founded,
+                techStack: companyToSave.techStack,
+                benefits: companyToSave.benefits,
+                socialLinks: companyToSave.socialLinks,
+                coverUrl: companyToSave.coverUrl,
             };
-            if (company.id) {
-                await companyApi.updateCompany(Number(company.id), payload);
+            console.log('--- [DEBUG saveCompany] Sending payload:', payload);
+            if (companyToSave.id) {
+                await companyApi.updateCompany(Number(companyToSave.id), payload);
+                if (directUpdates) {
+                    set({ company: companyToSave });
+                }
             } else {
                 const res = await companyApi.createCompany(payload);
-                set({ company: { ...company, id: res.id.toString() }});
+                set({ company: { ...companyToSave, id: res.id.toString() }});
             }
             set({ isEditing: false });
         } catch (error) {
@@ -95,12 +121,29 @@ export const useCompanyStore = create<CompanyStore>((set, get) => ({
         }
     },
 
+    uploadCover: async (file: File) => {
+        const { company } = get();
+        if (!company.id) return;
+        set({ isLoading: true, error: null });
+        try {
+            const res = await companyApi.uploadCover(Number(company.id), file);
+            set({ company: { ...company, coverUrl: res.coverUrl || undefined } });
+        } catch (error) {
+            set({ error: 'Failed to upload cover' });
+            console.error(error);
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
     setCompany: (company) => set({ company }),
 
-    updateField: (field, value) =>
+    updateField: (field, value) => {
+        console.log(`--- [DEBUG updateField] updating: ${field} = ${value}`);
         set((state) => ({
             company: { ...state.company, [field]: value },
-        })),
+        }));
+    },
 
     setEditing: (editing) => set({ isEditing: editing }),
 
