@@ -8,10 +8,8 @@ export enum NotificationType {
 
 export enum NotificationCategory {
     APPLIED = "APPLIED",
-    SCREENING = "SCREENING",
     SHORTLISTED = "SHORTLISTED",
     REJECTED = "REJECTED",
-    OFFER = "OFFER",
     VIEWED = "VIEWED",
     INTERVIEW_SCHEDULED = "INTERVIEW_SCHEDULED",
     INTERVIEW_REMINDER = "INTERVIEW_REMINDER",

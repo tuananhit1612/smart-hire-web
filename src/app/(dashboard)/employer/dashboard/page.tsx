@@ -22,6 +22,13 @@ import {
     XCircle,
     Download,
 } from "lucide-react";
+import {
+    AreaChart,
+    Area,
+    XAxis,
+    Tooltip,
+    ResponsiveContainer,
+} from "recharts";
 import { cn } from "@/shared/utils/cn";
 import { downloadBlob } from "@/shared/utils/download-file";
 import { useToastHelpers } from "@/shared/components/ui/toast";
@@ -113,18 +120,14 @@ function buildStatCards(data: HrDashboardOverview): StatCard[] {
 // ─── Stage visual config (maps backend stage names to icons/colors) ─
 const STAGE_VISUAL: Record<string, { icon: typeof Users; color: string; bg: string; barColor: string }> = {
     APPLIED: { icon: Users, color: "text-[#22c55e]", bg: "bg-[#22c55e]/10 dark:bg-[#22c55e]/20", barColor: "bg-[#22c55e]" },
-    SCREENING: { icon: FileSearch, color: "text-violet-600", bg: "bg-violet-50 dark:bg-violet-900/20", barColor: "bg-violet-500" },
     INTERVIEW: { icon: FileSearch, color: "text-amber-600", bg: "bg-amber-50 dark:bg-amber-900/20", barColor: "bg-amber-500" },
-    OFFER: { icon: CheckCircle2, color: "text-emerald-600", bg: "bg-emerald-50 dark:bg-emerald-900/20", barColor: "bg-emerald-500" },
     HIRED: { icon: UserCheck, color: "text-rose-600", bg: "bg-rose-50 dark:bg-rose-900/20", barColor: "bg-rose-500" },
     REJECTED: { icon: XCircle, color: "text-red-600", bg: "bg-red-50 dark:bg-red-900/20", barColor: "bg-red-500" },
 };
 
 const STAGE_LABELS: Record<string, string> = {
     APPLIED: "Ứng tuyển",
-    SCREENING: "Sàng lọc",
     INTERVIEW: "Phỏng vấn",
-    OFFER: "Offer",
     HIRED: "Tuyển dụng",
     REJECTED: "Từ chối",
 };
@@ -165,25 +168,62 @@ function timeAgo(iso: string): string {
     return `${days} ngày trước`;
 }
 
-// ─── Animated Bar ────────────────────────────────────
-function MiniBar({ values, colors }: { readonly values: number[]; readonly colors: string[] }) {
-    const max = Math.max(...values);
+// ─── Animated Area Chart ────────────────────────────────
+function WeeklyTrendChart({ data }: { readonly data: WeeklyTrendItem[] }) {
+    const formattedData = data.map((d) => ({
+        ...d,
+        labelDate: new Date(d.date).toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit" }),
+    }));
+
     return (
-        <div className="flex items-end gap-2 h-32">
-            {values.map((v, i) => (
-                <motion.div
-                    key={i}
-                    initial={{ height: 0 }}
-                    whileInView={{ height: `${(v / max) * 100}%` }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.7, delay: 0.3 + i * 0.08, ease: premiumEase }}
-                    className={cn("flex-1 rounded-t-lg min-w-0", colors[i % colors.length])}
-                />
-            ))}
+        <div className="h-40 w-full mt-4 -ml-2">
+            <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={formattedData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
+                    <defs>
+                        <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#22c55e" stopOpacity={0.4} />
+                            <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
+                        </linearGradient>
+                    </defs>
+                    <XAxis
+                        dataKey="labelDate"
+                        axisLine={false}
+                        tickLine={false}
+                        tick={{ fill: "#919EAB", fontSize: 10, fontWeight: 500 }}
+                        dy={10}
+                    />
+                    <Tooltip
+                        cursor={{ stroke: "rgba(145,158,171,0.2)", strokeWidth: 1, strokeDasharray: "4 4" }}
+                        content={({ active, payload, label }) => {
+                            if (active && payload && payload.length) {
+                                return (
+                                    <div className="bg-white dark:bg-[#1C252E] border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] rounded-lg shadow-xl p-3">
+                                        <p className="text-[10px] text-[#919EAB] mb-1 font-medium">{label}</p>
+                                        <p className="text-sm font-bold text-[#1C252E] dark:text-white flex items-center gap-2">
+                                            <span className="w-2 h-2 rounded-full bg-[#22c55e]"></span>
+                                            {payload[0].value} ứng viên
+                                        </p>
+                                    </div>
+                                );
+                            }
+                            return null;
+                        }}
+                    />
+                    <Area
+                        type="monotone"
+                        dataKey="count"
+                        stroke="#22c55e"
+                        strokeWidth={4}
+                        fillOpacity={1}
+                        fill="url(#colorCount)"
+                        isAnimationActive={true}
+                        animationDuration={1500}
+                    />
+                </AreaChart>
+            </ResponsiveContainer>
         </div>
     );
 }
-
 // ─── Main Page ───────────────────────────────────────
 export default function HRDashboardPage() {
     const { data: overview, isLoading, error, refetch } = useDashboardOverview();
@@ -351,7 +391,7 @@ export default function HRDashboardPage() {
                 {/* ═══ Section: Charts & Funnel ═══ */}
                 <div className="mb-12">
                     <SectionOverline label="Biểu đồ & Phễu tuyển dụng" />
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
                         {/* Application Trend — live weekly data */}
                         <motion.div
                             {...fadeUp}
@@ -378,19 +418,7 @@ export default function HRDashboardPage() {
                                 )}
                             </div>
                             {overview?.weeklyTrend && overview.weeklyTrend.length > 0 ? (
-                                <>
-                                    <MiniBar
-                                        values={overview.weeklyTrend.map((d) => d.count || 0.5)}
-                                        colors={["bg-[#22c55e]/40 dark:bg-[#22c55e]/60", "bg-[#22c55e] dark:bg-[#22c55e]"]}
-                                    />
-                                    <div className="flex justify-between mt-3 px-1">
-                                        {overview.weeklyTrend.map((d) => (
-                                            <span key={d.date} className="text-[10px] text-[#C4CDD5] dark:text-[#637381] font-medium">
-                                                {new Date(d.date).toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit" })}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </>
+                                <WeeklyTrendChart data={overview.weeklyTrend} />
                             ) : (
                                 <p className="text-sm text-[#919EAB] text-center py-8">Chưa có dữ liệu</p>
                             )}
@@ -532,13 +560,13 @@ export default function HRDashboardPage() {
                             {...fadeUp}
                             transition={{ duration: 0.5, delay: 0.1, ease: premiumEase }}
                         >
-                            <PassRateTable />
+                            <PassRateTable data={overview?.passRates || []} />
                         </motion.div>
                         <motion.div
                             {...fadeUp}
                             transition={{ duration: 0.5, delay: 0.2, ease: premiumEase }}
                         >
-                            <TopMissingSkills />
+                            <TopMissingSkills skills={overview?.missingSkills || []} />
                         </motion.div>
                     </div>
                 </div>

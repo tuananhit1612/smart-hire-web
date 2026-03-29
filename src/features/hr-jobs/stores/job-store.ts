@@ -3,10 +3,10 @@ import { Job, JobStatus, JobType, DEFAULT_JOB } from '../types/job';
 import { hrJobApi } from '../api/hr-job-api';
 import { mapHrJobToFeJob, mapFeJobToCreateRequest, mapFeJobToUpdateRequest } from '../utils/hr-job-mapper';
 
-// Using a placeholder companyId for now since Company is part of context or store
-// Generally we can get the active companyId from another store or local storage.
-// For now, let's hardcode 1 or get it from parameters.
-const ACTIVE_COMPANY_ID = 1;
+import { useCompanyStore } from '../../hr-company/stores/company-store';
+
+// We now fetch active company directly from companyStore inside the actions
+
 
 interface JobFilters {
     status: JobStatus | 'all';
@@ -78,7 +78,13 @@ export const useJobStore = create<JobStore>((set, get) => ({
     addJob: async (jobData) => {
         set({ isLoading: true, error: null });
         try {
-            const req = mapFeJobToCreateRequest(jobData, ACTIVE_COMPANY_ID);
+            const companyIdStr = useCompanyStore.getState().company.id;
+            const companyId = companyIdStr ? Number(companyIdStr) : 0;
+            if (!companyId) {
+                throw new Error("Không tìm thấy thông tin công ty. Vui lòng cập nhật Hồ sơ công ty trước khi tạo tin.");
+            }
+
+            const req = mapFeJobToCreateRequest(jobData, companyId);
             const data = await hrJobApi.createJob(req);
             const newJob = mapHrJobToFeJob(data);
             set((state) => ({ jobs: [newJob, ...state.jobs], isFormOpen: false }));

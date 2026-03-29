@@ -37,12 +37,8 @@ export function ApplicantCard({ applicant, onSelect }: ApplicantCardProps) {
         switch (status) {
             case ApplicationStage.APPLIED:
                 return { label: "Mới nộp", color: "bg-[#22c55e]/15 text-[#22c55e]" };
-            case ApplicationStage.SCREENING:
-                return { label: "Đang duyệt", color: "bg-purple-100 text-purple-700" };
             case ApplicationStage.INTERVIEW:
                 return { label: "Phỏng vấn", color: "bg-amber-100 text-amber-700" };
-            case ApplicationStage.OFFER:
-                return { label: "Đề nghị", color: "bg-pink-100 text-pink-700" };
             case ApplicationStage.HIRED:
                 return { label: "Đã tuyển", color: "bg-green-100 text-green-700" };
             case ApplicationStage.REJECTED:

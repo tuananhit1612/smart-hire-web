@@ -11,28 +11,7 @@ import {
 import { cn } from "@/shared/utils/cn";
 import { fmtNumber } from "@/shared/utils/format";
 
-// ─── Types ───────────────────────────────────────────
-export interface PassRateRow {
-    readonly position: string;
-    readonly department: string;
-    readonly totalApplicants: number;
-    readonly passed: number;
-    readonly passRate: number;      // 0-100
-    readonly prevRate: number;      // previous period for comparison
-    readonly avgTimeToHire: number; // days
-}
-
-// ─── Mock Data ───────────────────────────────────────
-const defaultData: PassRateRow[] = [
-    { position: "Senior Frontend Dev", department: "Engineering", totalApplicants: 142, passed: 12, passRate: 8.5, prevRate: 7.2, avgTimeToHire: 14 },
-    { position: "Backend Engineer", department: "Engineering", totalApplicants: 98, passed: 15, passRate: 15.3, prevRate: 18.1, avgTimeToHire: 18 },
-    { position: "UX/UI Designer", department: "Design", totalApplicants: 76, passed: 8, passRate: 10.5, prevRate: 10.5, avgTimeToHire: 12 },
-    { position: "DevOps Engineer", department: "Infrastructure", totalApplicants: 45, passed: 5, passRate: 11.1, prevRate: 9.0, avgTimeToHire: 21 },
-    { position: "Data Analyst", department: "Data", totalApplicants: 34, passed: 6, passRate: 17.6, prevRate: 15.0, avgTimeToHire: 10 },
-    { position: "Product Manager", department: "Product", totalApplicants: 28, passed: 3, passRate: 10.7, prevRate: 12.5, avgTimeToHire: 24 },
-    { position: "Mobile Developer", department: "Engineering", totalApplicants: 52, passed: 4, passRate: 7.7, prevRate: 6.1, avgTimeToHire: 16 },
-    { position: "QA Engineer", department: "Engineering", totalApplicants: 38, passed: 7, passRate: 18.4, prevRate: 20.0, avgTimeToHire: 9 },
-];
+import type { PassRateRow } from "@/features/employer/api/dashboard-api";
 
 // ─── Trend Badge ─────────────────────────────────────
 function TrendBadge({ current, previous }: { readonly current: number; readonly previous: number }) {
@@ -84,7 +63,7 @@ function RateBar({ rate, delay }: { readonly rate: number; readonly delay: numbe
 
 // ─── Main Widget ─────────────────────────────────────
 export default function PassRateTable({
-    data = defaultData,
+    data = [],
     title = "Tỉ lệ đậu theo vị trí",
 }: {
     readonly data?: PassRateRow[];

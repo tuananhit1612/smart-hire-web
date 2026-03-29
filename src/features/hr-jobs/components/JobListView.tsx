@@ -192,10 +192,10 @@ const JobCard = React.memo(function JobCard({ job, index, onViewApplicants }: { 
 
     const formatSalary = (min?: number, max?: number) => {
         if (!min && !max) return "Thỏa thuận";
-        const f = (n: number) => (n / 1000000).toFixed(0);
-        if (min && max) return `${f(min)} - ${f(max)}M`;
-        if (min) return `Từ ${f(min)}M`;
-        return `Đến ${f(max!)}M`;
+        const f = (n: number) => n.toLocaleString('vi-VN');
+        if (min && max) return `${f(min)} - ${f(max)} VNĐ`;
+        if (min) return `Từ ${f(min)} VNĐ`;
+        return `Đến ${f(max!)} VNĐ`;
     };
 
     const handleCardClick = () => {
@@ -338,51 +338,6 @@ const JobCard = React.memo(function JobCard({ job, index, onViewApplicants }: { 
                             </div>
                         </div>
 
-                        {/* Action buttons - neutral, only color on individual hover */}
-                        <div className="flex items-center gap-0.5 translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-200">
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    onViewApplicants(job);
-                                }}
-                                className="p-1.5 rounded-lg text-[#919EAB] dark:text-[#637381] hover:text-[#22c55e] dark:hover:text-[#22c55e] hover:bg-[rgba(145,158,171,0.08)] dark:hover:bg-white/[0.06] transition-colors"
-                                title="Xem ứng viên"
-                            >
-                                <Users className="w-3.5 h-3.5" />
-                            </button>
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    selectJob(job);
-                                    setFormOpen(true);
-                                }}
-                                className="p-1.5 rounded-lg text-[#919EAB] dark:text-[#637381] hover:text-[#22c55e] dark:hover:text-[#22c55e] hover:bg-[rgba(145,158,171,0.08)] dark:hover:bg-white/[0.06] transition-colors"
-                                title="Chỉnh sửa"
-                            >
-                                <Edit3 className="w-3.5 h-3.5" />
-                            </button>
-                            <button
-                                onClick={handleClone}
-                                className="p-1.5 rounded-lg text-[#919EAB] dark:text-[#637381] hover:text-[#22c55e] dark:hover:text-[#22c55e] hover:bg-[rgba(145,158,171,0.08)] dark:hover:bg-white/[0.06] transition-colors"
-                                title="Nhân bản"
-                            >
-                                <Copy className="w-3.5 h-3.5" />
-                            </button>
-                            <button
-                                onClick={handlePause}
-                                className="p-1.5 rounded-lg text-[#919EAB] dark:text-[#637381] hover:text-amber-500 dark:hover:text-amber-400 hover:bg-[rgba(145,158,171,0.08)] dark:hover:bg-white/[0.06] transition-colors"
-                                title={pauseTitle}
-                            >
-                                {job.status === "OPEN" ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
-                            </button>
-                            <button
-                                onClick={handleDelete}
-                                className="p-1.5 rounded-lg text-[#919EAB] dark:text-[#637381] hover:text-red-500 dark:hover:text-red-400 hover:bg-[rgba(145,158,171,0.08)] dark:hover:bg-white/[0.06] transition-colors"
-                                title="Xóa tin"
-                            >
-                                <Trash2 className="w-3.5 h-3.5" />
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -551,7 +506,12 @@ export function JobListView() {
         isFormOpen,
         isPreviewOpen,
         selectedJob,
+        fetchMyJobs,
     } = useJobStore();
+
+    React.useEffect(() => {
+        fetchMyJobs();
+    }, [fetchMyJobs]);
 
     const [searchValue, setSearchValue] = React.useState("");
     const [applicantJob, setApplicantJob] = React.useState<Job | null>(null);
@@ -864,7 +824,9 @@ export function JobListView() {
             {/* Modals */}
             <AnimatePresence>
                 {isFormOpen && <JobFormModal />}
-                {isPreviewOpen && selectedJob && <JobPreviewPanel />}
+                {isPreviewOpen && selectedJob && (
+                    <JobPreviewPanel onViewApplicants={(job: Job) => setApplicantJob(job)} />
+                )}
                 {applicantJob && (
                     <ApplicantPanel
                         job={applicantJob}

@@ -22,11 +22,14 @@ import { ScoreBadge } from "@/shared/components/ui/status-badge";
 import { AvatarInitials } from "@/shared/components/ui/avatar-initials";
 import { PageSection } from "@/shared/components/layout/page-section";
 
+import { employerApplicantApi } from "@/features/employer/api/employer-api";
+
 // ─── Types ───────────────────────────────────────────
-type StageId = "applied" | "screening" | "interview" | "offer" | "hired" | "rejected";
+type StageId = "APPLIED" | "INTERVIEW" | "HIRED" | "REJECTED";
 
 interface PipelineCandidate {
     id: string;
+    jobId: string;
     name: string;
     avatar: string;
     email: string;
@@ -58,41 +61,14 @@ interface DragState {
 
 // ─── Stage Config ────────────────────────────────────
 const stages: PipelineStage[] = [
-    { id: "applied",   label: "Ứng tuyển", color: "text-[#22c55e] dark:text-[#22c55e]",      bg: "bg-[#22c55e]/10 dark:bg-[#22c55e]/20",      headerBg: "bg-[#22c55e]/15 dark:bg-[#22c55e]/20",      dot: "bg-[#22c55e]" },
-    { id: "screening", label: "Sàng lọc",  color: "text-violet-700 dark:text-violet-400", bg: "bg-violet-50 dark:bg-violet-900/20", headerBg: "bg-violet-100 dark:bg-violet-900/30", dot: "bg-violet-400" },
-    { id: "interview", label: "Phỏng vấn", color: "text-amber-700 dark:text-amber-400",  bg: "bg-amber-50 dark:bg-amber-900/20",  headerBg: "bg-amber-100 dark:bg-amber-900/30",  dot: "bg-amber-400" },
-    { id: "offer",     label: "Đề nghị",   color: "text-emerald-700 dark:text-emerald-400", bg: "bg-emerald-50 dark:bg-emerald-900/20", headerBg: "bg-emerald-100 dark:bg-emerald-900/30", dot: "bg-emerald-400" },
-    { id: "hired",     label: "Đã tuyển",  color: "text-teal-700 dark:text-teal-400",    bg: "bg-teal-50 dark:bg-teal-900/20",    headerBg: "bg-teal-100 dark:bg-teal-900/30",    dot: "bg-teal-400" },
-    { id: "rejected",  label: "Từ chối",   color: "text-rose-700 dark:text-rose-400",    bg: "bg-rose-50 dark:bg-rose-900/20",    headerBg: "bg-rose-100 dark:bg-rose-900/30",    dot: "bg-rose-400" },
+    { id: "APPLIED",   label: "Ứng tuyển", color: "text-[#22c55e] dark:text-[#22c55e]",      bg: "bg-[#22c55e]/10 dark:bg-[#22c55e]/20",      headerBg: "bg-[#22c55e]/15 dark:bg-[#22c55e]/20",      dot: "bg-[#22c55e]" },
+    { id: "INTERVIEW", label: "Phỏng vấn", color: "text-amber-700 dark:text-amber-400",  bg: "bg-amber-50 dark:bg-amber-900/20",  headerBg: "bg-amber-100 dark:bg-amber-900/30",  dot: "bg-amber-400" },
+    { id: "HIRED",     label: "Đã tuyển",  color: "text-teal-700 dark:text-teal-400",    bg: "bg-teal-50 dark:bg-teal-900/20",    headerBg: "bg-teal-100 dark:bg-teal-900/30",    dot: "bg-teal-400" },
+    { id: "REJECTED",  label: "Từ chối",   color: "text-rose-700 dark:text-rose-400",    bg: "bg-rose-50 dark:bg-rose-900/20",    headerBg: "bg-rose-100 dark:bg-rose-900/30",    dot: "bg-rose-400" },
 ];
 
-// ─── Mock Data ───────────────────────────────────────
-const initialCandidates: Record<StageId, PipelineCandidate[]> = {
-    applied: [
-        { id: "c1", name: "Nguyễn Văn An",  avatar: "NVA", email: "nguyenvanan@gmail.com",  position: "Frontend Developer",    aiScore: 82, appliedDate: "2 ngày trước",  daysInStage: 2, tags: ["React", "TypeScript"] },
-        { id: "c2", name: "Trần Thị Bảo",   avatar: "TTB", email: "tranthibao@gmail.com",   position: "Frontend Developer",    aiScore: 75, appliedDate: "3 ngày trước",  daysInStage: 3, tags: ["Vue.js", "CSS"] },
-        { id: "c3", name: "Lê Minh Cường",  avatar: "LMC", email: "leminhcuong@gmail.com",  position: "Backend Developer",     aiScore: 91, appliedDate: "1 ngày trước",  daysInStage: 1, tags: ["Node.js", "PostgreSQL"] },
-        { id: "c4", name: "Phạm Ngọc Dung", avatar: "PND", email: "phamngocdung@gmail.com", position: "UI/UX Designer",        aiScore: 68, appliedDate: "4 ngày trước",  daysInStage: 4, tags: ["Figma", "Design System"] },
-    ],
-    screening: [
-        { id: "c5", name: "Hoàng Đức Em",   avatar: "HDE", email: "hoangducem@gmail.com",   position: "Frontend Developer",    aiScore: 88, appliedDate: "5 ngày trước",  daysInStage: 2, tags: ["React", "Next.js"] },
-        { id: "c6", name: "Vũ Thị Phương",  avatar: "VTP", email: "vuthiphuong@gmail.com",  position: "Backend Developer",     aiScore: 79, appliedDate: "6 ngày trước",  daysInStage: 3, tags: ["Java", "Spring Boot"] },
-    ],
-    interview: [
-        { id: "c7", name: "Đặng Quốc Gia",  avatar: "DQG", email: "dangquocgia@gmail.com",  position: "Full-Stack Developer",  aiScore: 94, appliedDate: "10 ngày trước", daysInStage: 3, tags: ["React", "Node.js", "AWS"] },
-        { id: "c8", name: "Bùi Thanh Hải",  avatar: "BTH", email: "buithanhai@gmail.com",   position: "DevOps Engineer",       aiScore: 86, appliedDate: "8 ngày trước",  daysInStage: 2, tags: ["Docker", "K8s", "CI/CD"] },
-        { id: "c9", name: "Cao Thị Ivy",    avatar: "CTI", email: "caothiivy@gmail.com",    position: "Frontend Developer",    aiScore: 72, appliedDate: "12 ngày trước", daysInStage: 5, tags: ["Angular", "RxJS"] },
-    ],
-    offer: [
-        { id: "c10", name: "Đinh Quốc Khánh", avatar: "DQK", email: "dinhquockhanh@gmail.com", position: "Senior React Developer", aiScore: 96, appliedDate: "15 ngày trước", daysInStage: 2, tags: ["React", "TypeScript", "Lead"] },
-    ],
-    hired: [
-        { id: "c11", name: "Lý Minh Long",   avatar: "LML", email: "lyminhlong@gmail.com",   position: "Backend Developer",     aiScore: 90, appliedDate: "20 ngày trước", daysInStage: 0, tags: ["Go", "gRPC", "Microservices"] },
-    ],
-    rejected: [
-        { id: "c12", name: "Mai Phương Nam", avatar: "MPN", email: "maiphuongnam@gmail.com", position: "Frontend Developer",    aiScore: 45, appliedDate: "7 ngày trước",  daysInStage: 1, tags: ["jQuery"] },
-        { id: "c13", name: "Ngô Văn Oanh",   avatar: "NVO", email: "ngovanoanh@gmail.com",   position: "QA Engineer",           aiScore: 52, appliedDate: "9 ngày trước",  daysInStage: 2, tags: ["Manual Testing"] },
-    ],
+const emptyBoard: Record<StageId, PipelineCandidate[]> = {
+    APPLIED: [], INTERVIEW: [], HIRED: [], REJECTED: []
 };
 
 // ─── Mini Card (used for ghost and real card rendering) ──
@@ -284,24 +260,81 @@ function CandidateCard({
 
 // ─── Main Page ───────────────────────────────────────
 export default function PipelineBoardPage() {
-    const [boardData, setBoardData] = useState(initialCandidates);
+    const [boardData, setBoardData] = useState<Record<StageId, PipelineCandidate[]>>(emptyBoard);
+    const [isLoading, setIsLoading] = useState(true);
     const [search, setSearch] = useState("");
     const [positionFilter, setPositionFilter] = useState("all");
     const [dragState, setDragState] = useState<DragState | null>(null);
     const [dragOverStage, setDragOverStage] = useState<StageId | null>(null);
     const columnRefs = useRef<Partial<Record<StageId, HTMLDivElement>>>({});
 
-    const handleMove = useCallback((candidateId: string, from: StageId, to: StageId) => {
+    useEffect(() => {
+        const fetchBoard = async () => {
+            setIsLoading(true);
+            try {
+                const res = await employerApplicantApi.getAll();
+                const data = res.data.data || [];
+                
+                const grouped: Record<StageId, PipelineCandidate[]> = {
+                    APPLIED: [], INTERVIEW: [], HIRED: [], REJECTED: []
+                };
+                
+                data.forEach((app: any) => {
+                    const stage = app.status as StageId || "APPLIED";
+                    
+                    const appliedDate = new Date(app.appliedAt || new Date());
+                    const diffTime = Math.abs(new Date().getTime() - appliedDate.getTime());
+                    const days = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+                    const candidate: PipelineCandidate = {
+                        id: String(app.id),
+                        jobId: String(app.jobId),
+                        name: app.name || "Unknown",
+                        avatar: app.name ? app.name.slice(0, 2).toUpperCase() : "?",
+                        email: app.email,
+                        position: app.jobTitle || "Vị trí",
+                        aiScore: app.aiAnalysis?.matchScore || 0,
+                        appliedDate: appliedDate.toLocaleDateString('vi-VN'),
+                        daysInStage: days,
+                        tags: app.skills || []
+                    };
+                    
+                    if (grouped[stage]) {
+                        grouped[stage].push(candidate);
+                    }
+                });
+                setBoardData(grouped);
+            } catch (err) {
+                console.error("Failed to load pipeline data:", err);
+                alert("Lỗi tải dữ liệu. Vui lòng thử lại.");
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchBoard();
+    }, []);
+
+    const handleMove = useCallback(async (candidateId: string, from: StageId, to: StageId) => {
+        const candidate = boardData[from]?.find((c) => c.id === candidateId);
+        if (!candidate) return;
+
+        // Optimistic update
         setBoardData((prev) => {
-            const candidate = prev[from].find((c) => c.id === candidateId);
-            if (!candidate) return prev;
             return {
                 ...prev,
                 [from]: prev[from].filter((c) => c.id !== candidateId),
                 [to]: [...prev[to], { ...candidate, daysInStage: 0 }],
             };
         });
-    }, []);
+
+        // API Call
+        try {
+            await employerApplicantApi.updateStage(candidate.jobId, candidateId, { stage: to });
+        } catch (err) {
+            console.error(err);
+            alert("Lỗi khi cập nhật trạng thái");
+        }
+    }, [boardData]);
 
     // Global mouse move & up listeners
     useEffect(() => {
@@ -346,18 +379,18 @@ export default function PipelineBoardPage() {
 
     const allPositions = useMemo(() => {
         const set = new Set<string>();
-        for (const stage of Object.values(initialCandidates)) {
+        for (const stage of Object.values(boardData)) {
             for (const c of stage) set.add(c.position);
         }
         return Array.from(set);
-    }, []);
+    }, [boardData]);
 
     const filteredBoard = useMemo(() => {
         const result: Record<StageId, PipelineCandidate[]> = {
-            applied: [], screening: [], interview: [], offer: [], hired: [], rejected: [],
+            APPLIED: [], INTERVIEW: [], HIRED: [], REJECTED: []
         };
         for (const stage of stages) {
-            let candidates = boardData[stage.id];
+            let candidates = boardData[stage.id] || [];
             if (search.trim()) {
                 const q = search.toLowerCase();
                 candidates = candidates.filter(
@@ -389,7 +422,7 @@ export default function PipelineBoardPage() {
                             <h1 className="text-2xl font-bold text-[#1C252E] dark:text-white">Pipeline tuyển dụng</h1>
                         </div>
                         <p className="text-sm text-[#637381] dark:text-[#919EAB] mt-1">
-                            {totalCandidates} ứng viên đang trong pipeline — Kéo thả card vào cột để chuyển giai đoạn
+                            {isLoading ? "Đang tải dữ liệu..." : `${totalCandidates} ứng viên đang trong pipeline — Kéo thả card vào cột để chuyển giai đoạn`}
                         </p>
                     </div>
                     <div className="flex items-center gap-2">

@@ -11,7 +11,7 @@
 import { useState, useCallback, useRef } from "react";
 
 // ─── Types ───────────────────────────────────────────
-export type StageId = "applied" | "screening" | "interview" | "offer" | "hired" | "rejected";
+export type StageId = "applied" | "interview" | "hired" | "rejected";
 
 export interface PipelineCandidate {
     id: string;

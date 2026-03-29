@@ -23,9 +23,7 @@ export type SkillType = "MUST_HAVE" | "NICE_TO_HAVE";
 // ─── Application ─────────────────────────────────────────
 export type ApplicationStage =
   | "APPLIED"
-  | "SCREENING"
   | "INTERVIEW"
-  | "OFFER"
   | "HIRED"
   | "REJECTED";
 
