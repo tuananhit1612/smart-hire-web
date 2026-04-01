@@ -183,7 +183,7 @@ const JobCard = React.memo(function JobCard({ job, index, onViewApplicants }: { 
     const deadlineInfo = getDeadlineInfo(job.deadline);
     const dept = DEPT_GRADIENTS[job.department] || DEFAULT_DEPT;
 
-    const statusConfig = JOB_STATUSES[job.status];
+    const statusConfig = JOB_STATUSES[job.status] || JOB_STATUSES['DRAFT'];
     const statusColors: Record<string, string> = {
         OPEN: "from-green-500 to-emerald-600",
         CLOSED: "from-slate-400 to-slate-500",

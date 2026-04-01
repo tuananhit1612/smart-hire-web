@@ -21,6 +21,8 @@ export interface InterviewResponse {
     meetingUrl: string | null;
     note: string | null;
     status: InterviewStatus;
+    round?: number;
+    isPassed?: boolean;
     createdAt: string;
     updatedAt: string;
 }
@@ -33,6 +35,7 @@ export interface CreateInterviewRequest {
     durationMinutes?: number;
     meetingUrl?: string;
     note?: string;
+    round?: number;
 }
 
 /** Maps to BE UpdateInterviewRequest DTO */
@@ -42,4 +45,5 @@ export interface UpdateInterviewRequest {
     durationMinutes?: number;
     meetingUrl?: string;
     note?: string;
+    isPassed?: boolean;
 }
