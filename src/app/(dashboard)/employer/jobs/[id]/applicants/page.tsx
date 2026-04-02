@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, use } from "react";
 import type { EmployerApplicant } from "@/features/employer/types/mock-applicants";
 import { useApplicants } from "@/features/employer/hooks/use-applicants";
 import { ApplicantList } from "@/features/employer/components/applicant-list";
@@ -10,8 +10,9 @@ import { ArrowLeft, Users, Sparkles, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
-export default function EmployerApplicantsPage({ params }: { params: { id: string } }) {
-    // In real app, we fetch job details using params.id
+export default function EmployerApplicantsPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = use(params);
+    // In real app, we fetch job details using id
     // For now, we simulate a job title
     const jobTitle = "Senior Frontend Developer";
 
@@ -33,7 +34,7 @@ export default function EmployerApplicantsPage({ params }: { params: { id: strin
     };
 
     const { applicants: filteredApplicants, isLoading, refetch } = useApplicants(
-        params.id,
+        id,
         { search: searchQuery, sortBy }
     );
 
@@ -115,7 +116,7 @@ export default function EmployerApplicantsPage({ params }: { params: { id: strin
                     applicant={selectedApplicant}
                     isOpen={isDrawerOpen}
                     onClose={handleCloseDrawer}
-                    jobId={params.id}
+                    jobId={id}
                     onApplicantUpdated={refetch}
                 />
             </div>

@@ -38,8 +38,8 @@ export const employerApplicantApi = {
   /**
    * List applicants for a specific job posting.
    */
-  list: (params: ApplicantListParams) =>
-    apiClient.get<ApiWrapper<ApplicantListResponse>>(
+  list: async (params: ApplicantListParams) => {
+    const res = await apiClient.get<ApiWrapper<ApplicantListResponse>>(
       `/employer/jobs/${params.jobId}/applicants`,
       {
         params: {
@@ -49,32 +49,76 @@ export const employerApplicantApi = {
           limit: params.limit,
         },
       }
-    ),
+    );
+    if (res.data?.data?.data) {
+      res.data.data.data = res.data.data.data.map((app) => ({
+        ...app,
+        skills: app.skills || [],
+        notes: app.notes || [],
+        activities: app.activities || [],
+        email: app.email || "",
+      }));
+    }
+    return res;
+  },
 
   /**
    * Get all applicants across all jobs for the current employer.
    */
-  getAll: () =>
-    apiClient.get<ApiWrapper<EmployerApplicant[]>>(
+  getAll: async () => {
+    const res = await apiClient.get<ApiWrapper<EmployerApplicant[]>>(
       `/employer/jobs/applications/all`
-    ),
+    );
+    if (res.data?.data) {
+      res.data.data = res.data.data.map((app) => ({
+        ...app,
+        skills: app.skills || [],
+        notes: app.notes || [],
+        activities: app.activities || [],
+        email: app.email || "",
+      }));
+    }
+    return res;
+  },
 
   /**
    * Get a single applicant's full details.
    */
-  getById: (jobId: string, applicantId: string) =>
-    apiClient.get<ApiWrapper<EmployerApplicant>>(
+  getById: async (jobId: string, applicantId: string) => {
+    const res = await apiClient.get<ApiWrapper<EmployerApplicant>>(
       `/employer/jobs/${jobId}/applicants/${applicantId}`
-    ),
+    );
+    if (res.data?.data) {
+      res.data.data = {
+        ...res.data.data,
+        skills: res.data.data.skills || [],
+        notes: res.data.data.notes || [],
+        activities: res.data.data.activities || [],
+        email: res.data.data.email || "",
+      };
+    }
+    return res;
+  },
 
   /**
    * Move an applicant to a different pipeline stage.
    */
-  updateStage: (jobId: string, applicantId: string, data: UpdateStagePayload) =>
-    apiClient.patch<ApiWrapper<EmployerApplicant>>(
+  updateStage: async (jobId: string, applicantId: string, data: UpdateStagePayload) => {
+    const res = await apiClient.patch<ApiWrapper<EmployerApplicant>>(
       `/employer/jobs/${jobId}/applicants/${applicantId}/stage`,
       data
-    ),
+    );
+    if (res.data?.data) {
+      res.data.data = {
+        ...res.data.data,
+        skills: res.data.data.skills || [],
+        notes: res.data.data.notes || [],
+        activities: res.data.data.activities || [],
+        email: res.data.data.email || "",
+      };
+    }
+    return res;
+  },
 
   /**
    * Add an internal note to an applicant.

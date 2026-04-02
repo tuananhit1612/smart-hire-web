@@ -86,8 +86,23 @@ export const useApplicationStore = create<ApplicationState>()(
 
         try {
           const response = await applicationApi.list(0, 50);
+          
+          const newAppliedJobIds = new Set(get().appliedJobIds);
+          const newApplicationDates = { ...get().applicationDates };
+          const newApplicationIdMap = { ...get().applicationIdMap };
+
+          response.data.content.forEach((app) => {
+            const jobIdStr = String(app.jobId);
+            newAppliedJobIds.add(jobIdStr);
+            newApplicationDates[jobIdStr] = app.appliedAt || new Date().toISOString();
+            newApplicationIdMap[jobIdStr] = app.id;
+          });
+
           set({
             serverApplications: response.data.content,
+            appliedJobIds: Array.from(newAppliedJobIds),
+            applicationDates: newApplicationDates,
+            applicationIdMap: newApplicationIdMap,
             isLoadingApplications: false,
           });
         } catch (error) {

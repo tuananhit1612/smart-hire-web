@@ -2,11 +2,14 @@
 
 import { BackButton } from "@/shared/components/ui/back-button";
 import { motion } from "framer-motion";
-import { Mic2, BrainCircuit, ArrowRight, Calendar, Clock, ExternalLink } from "lucide-react";
+import { Mic2, BrainCircuit, ArrowRight, Calendar, Clock, ExternalLink, Video } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Button } from "@/shared/components/ui/button";
 import { useMyInterviews } from "@/features/interview/hooks/useInterviewService";
 
-function InterviewHistoryItem({ interview }: { readonly interview: { id: number; roomName: string; scheduledAt: string; status: string; durationMinutes: number } }) {
+function InterviewHistoryItem({ interview }: { readonly interview: { id: number; roomName: string; scheduledAt: string; status: string; durationMinutes: number; meetingUrl?: string | null; } }) {
+    const router = useRouter();
     const date = new Date(interview.scheduledAt);
     const statusColors: Record<string, string> = {
         SCHEDULED: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
@@ -39,9 +42,20 @@ function InterviewHistoryItem({ interview }: { readonly interview: { id: number;
                     </span>
                 </div>
             </div>
-            <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${statusColors[interview.status] ?? statusColors.SCHEDULED}`}>
+            <span className={`px-2.5 py-1 text-center rounded-full text-xs font-semibold whitespace-nowrap ${statusColors[interview.status] ?? statusColors.SCHEDULED}`}>
                 {statusLabels[interview.status] ?? interview.status}
             </span>
+            
+            {interview.meetingUrl && interview.status !== "CANCELLED" && (
+                <Button 
+                    onClick={() => router.push(`/interview/room?id=${interview.id}`)}
+                    size="sm" 
+                    className="ml-2 rounded-full bg-[#22c55e] hover:bg-[#16a34a] text-white flex gap-2 items-center shrink-0 min-w-max"
+                >
+                    <Video className="w-4 h-4" />
+                    <span className="hidden sm:inline">Vào phòng</span>
+                </Button>
+            )}
         </div>
     );
 }
