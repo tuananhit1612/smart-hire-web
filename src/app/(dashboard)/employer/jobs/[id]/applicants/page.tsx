@@ -1,3 +1,5 @@
+"use client";
+
 import { EmployerApplicantsClient } from "./client-page";
 
 interface PageProps {

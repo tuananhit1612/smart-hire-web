@@ -1,3 +1,5 @@
+"use client";
+
 import { AIAnalysis, EmployerApplicant } from "../types/mock-applicants";
 import { Button } from "@/shared/components/ui/button";
 import { Badge } from "@/shared/components/ui/badge";
