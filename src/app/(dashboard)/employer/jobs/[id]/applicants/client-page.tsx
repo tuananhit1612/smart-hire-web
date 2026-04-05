@@ -130,6 +130,7 @@ export function EmployerApplicantsClient({ jobId }: EmployerApplicantsClientProp
                     applicant={selectedApplicant}
                     isOpen={isDrawerOpen}
                     onClose={handleCloseDrawer}
+                    jobId={jobId}
                 />
             </div>
         </div>
