@@ -1,6 +1,12 @@
 import { create } from 'zustand';
 import { Job, JobStatus, JobType, DEFAULT_JOB } from '../types/job';
-import { MOCK_JOBS } from '../data/mock-jobs';
+import { hrJobApi } from '../api/hr-job-api';
+import { mapHrJobToFeJob, mapFeJobToCreateRequest, mapFeJobToUpdateRequest } from '../utils/hr-job-mapper';
+
+import { useCompanyStore } from '../../hr-company/stores/company-store';
+
+// We now fetch active company directly from companyStore inside the actions
+
 
 interface JobFilters {
     status: JobStatus | 'all';
@@ -10,23 +16,25 @@ interface JobFilters {
 }
 
 interface JobStore {
-    // State
     jobs: Job[];
     selectedJob: Job | null;
     isFormOpen: boolean;
     isPreviewOpen: boolean;
     isLoading: boolean;
+    error: string | null;
     filters: JobFilters;
 
-    // Actions
-    setJobs: (jobs: Job[]) => void;
-    addJob: (job: Omit<Job, 'id' | 'createdAt' | 'updatedAt'>) => void;
-    updateJob: (id: string, updates: Partial<Job>) => void;
-    deleteJob: (id: string) => void;            // soft-delete → status = 'closed'
-    permanentDeleteJob: (id: string) => void;   // hard-delete → removes from array
-    restoreJob: (id: string) => void;           // restore → status = 'open'
-    cloneJob: (id: string) => void;             // duplicate job as draft
-    toggleJobStatus: (id: string) => void;      // open ↔ paused
+    // Async Actions
+    fetchMyJobs: () => Promise<void>;
+    addJob: (job: Omit<Job, 'id' | 'createdAt' | 'updatedAt'>) => Promise<void>;
+    updateJob: (id: string, updates: Partial<Job>) => Promise<void>;
+    deleteJob: (id: string) => Promise<void>;
+    permanentDeleteJob: (id: string) => Promise<void>;
+    restoreJob: (id: string) => Promise<void>;
+    toggleJobStatus: (id: string) => Promise<void>;
+
+    // Sync Actions
+    cloneJob: (id: string) => void;
     selectJob: (job: Job | null) => void;
     setFormOpen: (open: boolean) => void;
     setPreviewOpen: (open: boolean) => void;
@@ -47,104 +55,152 @@ const DEFAULT_FILTERS: JobFilters = {
 };
 
 export const useJobStore = create<JobStore>((set, get) => ({
-    // Initial State
-    jobs: MOCK_JOBS,
+    jobs: [],
     selectedJob: null,
     isFormOpen: false,
     isPreviewOpen: false,
     isLoading: false,
+    error: null,
     filters: DEFAULT_FILTERS,
 
-    // Actions
-    setJobs: (jobs) => set({ jobs }),
-
-    addJob: (jobData) => {
-        const newJob: Job = {
-            ...DEFAULT_JOB,
-            ...jobData,
-            id: `job-${Date.now()}`,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-        };
-        set((state) => ({ jobs: [newJob, ...state.jobs] }));
+    fetchMyJobs: async () => {
+        set({ isLoading: true, error: null });
+        try {
+            const data = await hrJobApi.getMyJobs();
+            set({ jobs: data.map(mapHrJobToFeJob) });
+        } catch (error: any) {
+            set({ error: error.message || 'Lỗi khi tải danh sách công việc' });
+        } finally {
+            set({ isLoading: false });
+        }
     },
 
-    updateJob: (id, updates) => {
-        set((state) => ({
-            jobs: state.jobs.map((job) =>
-                job.id === id
-                    ? { ...job, ...updates, updatedAt: new Date().toISOString() }
-                    : job
-            ),
-        }));
+    addJob: async (jobData) => {
+        set({ isLoading: true, error: null });
+        try {
+            const companyIdStr = useCompanyStore.getState().company.id;
+            const companyId = companyIdStr ? Number(companyIdStr) : 0;
+            if (!companyId) {
+                throw new Error("Không tìm thấy thông tin công ty. Vui lòng cập nhật Hồ sơ công ty trước khi tạo tin.");
+            }
+
+            const req = mapFeJobToCreateRequest(jobData, companyId);
+            const data = await hrJobApi.createJob(req);
+            const newJob = mapHrJobToFeJob(data);
+            set((state) => ({ jobs: [newJob, ...state.jobs], isFormOpen: false }));
+        } catch (error: any) {
+            set({ error: error.message || 'Lỗi khi tạo công việc' });
+            throw error;
+        } finally {
+            set({ isLoading: false });
+        }
     },
 
-    // Soft delete: change status to 'closed' (job stays in array)
-    deleteJob: (id) => {
-        set((state) => ({
-            jobs: state.jobs.map((job) =>
-                job.id === id
-                    ? { ...job, status: 'closed' as JobStatus, updatedAt: new Date().toISOString() }
-                    : job
-            ),
-            selectedJob: state.selectedJob?.id === id ? null : state.selectedJob,
-        }));
+    updateJob: async (id, updates) => {
+        set({ isLoading: true, error: null });
+        try {
+            // Because skills might be partially updated, it's problematic if we only send the ones added.
+            // Best practice: Frontend sends all skills for update or we map carefully.
+            const req = mapFeJobToUpdateRequest(updates);
+            // We also need to send full skills if updates contain mustHaveSkills or niceToHaveSkills.
+            const data = await hrJobApi.updateJob(Number(id), req);
+            const updatedJob = mapHrJobToFeJob(data);
+            set((state) => ({
+                jobs: state.jobs.map((job) => (job.id === id ? updatedJob : job)),
+                isFormOpen: false,
+                selectedJob: state.selectedJob?.id === id ? updatedJob : state.selectedJob
+            }));
+        } catch (error: any) {
+            set({ error: error.message || 'Lỗi khi cập nhật công việc' });
+            throw error;
+        } finally {
+            set({ isLoading: false });
+        }
     },
 
-    // Hard delete: permanently remove from array
-    permanentDeleteJob: (id) => {
-        set((state) => ({
-            jobs: state.jobs.filter((job) => job.id !== id),
-            selectedJob: state.selectedJob?.id === id ? null : state.selectedJob,
-        }));
+    // Soft delete -> Close job API
+    deleteJob: async (id) => {
+        set({ isLoading: true, error: null });
+        try {
+            const data = await hrJobApi.changeJobStatus(Number(id), 'CLOSED');
+            const updatedJob = mapHrJobToFeJob(data);
+            set((state) => ({
+                jobs: state.jobs.map((job) => (job.id === id ? updatedJob : job)),
+            }));
+        } catch (error: any) {
+            set({ error: error.message || 'Lỗi khi đóng công việc' });
+        } finally {
+            set({ isLoading: false });
+        }
     },
 
-    // Restore: set closed → open
-    restoreJob: (id) => {
-        set((state) => ({
-            jobs: state.jobs.map((job) =>
-                job.id === id
-                    ? { ...job, status: 'open' as JobStatus, updatedAt: new Date().toISOString() }
-                    : job
-            ),
-        }));
+    // Permanent delete -> Call DELETE API
+    permanentDeleteJob: async (id) => {
+        set({ isLoading: true, error: null });
+        try {
+            await hrJobApi.deleteJob(Number(id));
+            set((state) => ({
+                jobs: state.jobs.filter((job) => job.id !== id),
+                selectedJob: state.selectedJob?.id === id ? null : state.selectedJob,
+            }));
+        } catch (error: any) {
+            set({ error: error.message || 'Lỗi khi xóa công việc' });
+        } finally {
+            set({ isLoading: false });
+        }
     },
 
-    // Clone: create a copy as draft
+    // Restore -> Open job API
+    restoreJob: async (id) => {
+        set({ isLoading: true, error: null });
+        try {
+            const data = await hrJobApi.changeJobStatus(Number(id), 'OPEN');
+            const updatedJob = mapHrJobToFeJob(data);
+            set((state) => ({
+                jobs: state.jobs.map((job) => (job.id === id ? updatedJob : job)),
+            }));
+        } catch (error: any) {
+            set({ error: error.message || 'Lỗi khi khôi phục công việc' });
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
+    toggleJobStatus: async (id) => {
+        const job = get().jobs.find((j) => j.id === id);
+        if (!job) return;
+        set({ isLoading: true, error: null });
+        try {
+            const newStatus = job.status === 'OPEN' ? 'DRAFT' : 'OPEN';
+            const data = await hrJobApi.changeJobStatus(Number(id), newStatus);
+            const updatedJob = mapHrJobToFeJob(data);
+            set((state) => ({
+                jobs: state.jobs.map((j) => (j.id === id ? updatedJob : j)),
+            }));
+        } catch (error: any) {
+            set({ error: error.message || 'Lỗi khi chuyển trạng thái' });
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
+    // Clone as draft locally before saving (or we can save it directly)
     cloneJob: (id) => {
         const { jobs } = get();
         const source = jobs.find((j) => j.id === id);
         if (!source) return;
         const cloned: Job = {
             ...source,
-            id: `job-${Date.now()}`,
+            id: `new-clone-${Date.now()}`,
             title: `${source.title} (Bản sao)`,
-            status: 'draft',
+            status: 'DRAFT',
             applicantCount: 0,
             viewCount: 0,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
         };
-        set((state) => ({ jobs: [cloned, ...state.jobs] }));
-    },
-
-    // Toggle: open ↔ paused
-    toggleJobStatus: (id) => {
-        set((state) => ({
-            jobs: state.jobs.map((job) => {
-                if (job.id !== id) return job;
-                let newStatus: JobStatus;
-                if (job.status === 'open') {
-                    newStatus = 'paused';
-                } else if (job.status === 'paused') {
-                    newStatus = 'open';
-                } else {
-                    // draft/closed → open
-                    newStatus = 'open';
-                }
-                return { ...job, status: newStatus, updatedAt: new Date().toISOString() };
-            }),
-        }));
+        // Just set form open with cloned data (we could handle this in UI, but placing in store for now)
+        set({ selectedJob: cloned, isFormOpen: true });
     },
 
     selectJob: (job) => set({ selectedJob: job }),
@@ -153,20 +209,18 @@ export const useJobStore = create<JobStore>((set, get) => ({
     setFilters: (filters) => set((state) => ({ filters: { ...state.filters, ...filters } })),
     resetFilters: () => set({ filters: DEFAULT_FILTERS }),
 
-    // Computed: active jobs (not closed) filtered by current filters
     getFilteredJobs: () => {
         const { jobs, filters } = get();
         return jobs.filter((job) => {
-            // When filter is 'all', exclude 'closed' jobs from main view
-            if (filters.status === 'all' && job.status === 'closed') return false;
+            if (filters.status === 'all' && job.status === 'CLOSED') return false;
             if (filters.status !== 'all' && job.status !== filters.status) return false;
             if (filters.type !== 'all' && job.type !== filters.type) return false;
-            if (filters.department !== 'all' && job.department !== filters.department) return false;
+            // if (filters.department !== 'all' && job.department !== filters.department) return false;
             if (filters.search) {
                 const search = filters.search.toLowerCase();
                 return (
                     job.title.toLowerCase().includes(search) ||
-                    job.department.toLowerCase().includes(search) ||
+                    // job.department.toLowerCase().includes(search) ||
                     job.description.toLowerCase().includes(search)
                 );
             }
@@ -174,20 +228,19 @@ export const useJobStore = create<JobStore>((set, get) => ({
         });
     },
 
-    // Get only closed jobs (for the "Đã đóng" section)
     getClosedJobs: () => {
         const { jobs } = get();
-        return jobs.filter((job) => job.status === 'closed');
+        return jobs.filter((job) => job.status === 'CLOSED');
     },
 
     getJobStats: () => {
         const { jobs } = get();
-        const activeJobs = jobs.filter((j) => j.status !== 'closed');
+        const activeJobs = jobs.filter((j) => j.status !== 'CLOSED');
         return {
             total: activeJobs.length,
-            open: jobs.filter((j) => j.status === 'open').length,
-            paused: jobs.filter((j) => j.status === 'paused').length,
-            closed: jobs.filter((j) => j.status === 'closed').length,
+            open: jobs.filter((j) => j.status === 'OPEN').length,
+            paused: 0, // removed paused
+            closed: jobs.filter((j) => j.status === 'CLOSED').length,
             applicants: activeJobs.reduce((sum, j) => sum + j.applicantCount, 0),
             views: activeJobs.reduce((sum, j) => sum + j.viewCount, 0),
         };

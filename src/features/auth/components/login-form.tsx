@@ -3,74 +3,76 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Github, Fingerprint, User, Briefcase, Sparkles, UserCheck, ShieldCheck } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { Fingerprint, Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+// GitHub SVG icon (inline — no extra dep needed)
 
 import { Button } from "@/shared/components/ui/button";
+import { Input } from "@/shared/components/ui/input";
 import { useToastHelpers } from "@/shared/components/ui/toast";
 import { useAuth } from "../hooks/use-auth";
-import type { MockUserKey } from "../types/auth-types";
+import { tokenStorage } from "../lib/token-storage";
 import { cn } from "@/lib/utils";
 
-const MOCK_OPTIONS = [
-    {
-        id: "candidate-new" as MockUserKey,
-        label: "Ứng viên (Mới)",
-        desc: "Luồng tạo CV / Hoàn thiện hồ sơ lần đầu",
-        icon: Sparkles,
-        role: "candidate"
-    },
-    {
-        id: "candidate-returning" as MockUserKey,
-        label: "Ứng viên (Đã có data)",
-        desc: "Luồng tìm việc / Quản lý việc làm, CV",
-        icon: User,
-        role: "candidate"
-    },
-    {
-        id: "employer-new" as MockUserKey,
-        label: "Nhà tuyển dụng (Mới)",
-        desc: "Luồng setup thông tin công ty lần đầu",
-        icon: ShieldCheck,
-        role: "employer"
-    },
-    {
-        id: "employer-returning" as MockUserKey,
-        label: "Nhà tuyển dụng (Đã có data)",
-        desc: "Luồng quản lý ứng viên, tin tuyển dụng",
-        icon: Briefcase,
-        role: "employer"
-    },
-];
+const loginSchema = z.object({
+    email: z.string().email("Vui lòng nhập địa chỉ email hợp lệ"),
+    password: z.string().min(6, "Mật khẩu phải có ít nhất 6 ký tự"),
+});
 
 export function LoginForm() {
-    const [selectedRoleKey, setSelectedRoleKey] = useState<MockUserKey>("candidate-returning");
     const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const toastHelpers = useToastHelpers();
     const router = useRouter();
     const searchParams = useSearchParams();
-    const { login } = useAuth();
+    const { login, user } = useAuth();
 
-    const handleLogin = async (e: React.FormEvent) => {
-        e.preventDefault();
+    // Show GitHub error from redirect (e.g. ?error=...)
+    const githubError = searchParams.get("error");
+
+    const handleGitHubLogin = () => {
+        // ── Clear any stale session first ──────────────────────────
+        tokenStorage.clearTokens();
+        if (typeof document !== "undefined") {
+            document.cookie = "smarthire-session=; path=/; SameSite=Lax; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        }
+
+        const clientId = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
+        const redirectUri = encodeURIComponent("http://localhost:8080/api/auth/github/callback");
+        const scope = encodeURIComponent("user:email");
+        window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}`;
+    };
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<z.infer<typeof loginSchema>>({
+        resolver: zodResolver(loginSchema),
+    });
+
+    const onSubmit = async (data: z.infer<typeof loginSchema>) => {
         setIsLoading(true);
-        await login(selectedRoleKey);
-        setIsLoading(false);
+        try {
+            const sessionUser = await login(data.email, data.password);
+            toastHelpers.success("Đăng nhập thành công!", "Chào mừng trở lại SmartHire.");
 
-        toastHelpers.success("Chào mừng trở lại!", "Bạn đã đăng nhập thành công giả lập.");
-
-        const callbackUrl = searchParams.get("callbackUrl");
-        if (callbackUrl) {
-            router.push(callbackUrl);
-        } else {
-            // Role mapping for fallback
-            const role = MOCK_OPTIONS.find(o => o.id === selectedRoleKey)?.role;
-            const redirectMap: Record<string, string> = {
-                candidate: "/jobs",
-                employer: "/employer/dashboard",
-                admin: "/admin/dashboard",
-            };
-            router.push(redirectMap[role || "candidate"] ?? "/jobs");
+            const callbackUrl = searchParams.get("callbackUrl");
+            if (callbackUrl) {
+                router.push(callbackUrl);
+            } else if (sessionUser.role === "candidate" && sessionUser.isOnboarded === false) {
+                // Candidate hasn't completed onboarding yet
+                router.push("/dashboard/onboarding");
+            } else {
+                router.push("/dashboard");
+            }
+        } catch (error: any) {
+            toastHelpers.error("Đăng nhập thất bại", error.message || "Vui lòng kiểm tra lại email hoặc mật khẩu.");
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -78,6 +80,9 @@ export function LoginForm() {
         hidden: { opacity: 0, y: 12 },
         visible: { opacity: 1, y: 0 },
     };
+
+    // Common input classes matching Design System
+    const inputClasses = "h-12 bg-transparent border-[rgba(145,158,171,0.2)] dark:border-[rgba(145,158,171,0.12)] focus:border-[#22C55E] focus:ring-[#22C55E]/10 rounded-xl transition-all text-[#1C252E] dark:text-white placeholder:text-[#919EAB]";
 
     return (
         <motion.div
@@ -92,55 +97,52 @@ export function LoginForm() {
                     <Fingerprint className="w-7 h-7 text-white" />
                 </div>
                 <h1 className="text-2xl font-bold tracking-tight text-[#1C252E] dark:text-white">
-                    Simulate Login
+                    Đăng nhập hệ thống
                 </h1>
                 <p className="text-[#637381] dark:text-[#C4CDD5] text-sm">
-                    Chọn một tài khoản mock dưới đây để trải nghiệm các luồng.
+                    Nhập email và mật khẩu của bạn để tiếp tục.
                 </p>
             </motion.div>
 
-            <form onSubmit={handleLogin} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                {/* Email */}
+                <motion.div variants={itemVariants}>
+                    <Input
+                        label="Email"
+                        type="email"
+                        placeholder="ten@congty.com"
+                        error={errors.email?.message}
+                        {...register("email")}
+                        className={inputClasses}
+                        startIcon={<Mail className="text-[#919EAB] w-4 h-4" />}
+                    />
+                </motion.div>
 
-                <motion.div variants={itemVariants} className="grid grid-cols-1 gap-3">
-                    {MOCK_OPTIONS.map((option) => {
-                        const Icon = option.icon;
-                        const isSelected = selectedRoleKey === option.id;
-                        return (
-                            <div
-                                key={option.id}
-                                onClick={() => setSelectedRoleKey(option.id)}
-                                className={cn(
-                                    "relative flex items-center p-4 border rounded-xl cursor-pointer transition-all",
-                                    isSelected
-                                        ? "border-[#22c55e] bg-[#22c55e]/5 shadow-sm"
-                                        : "border-[rgba(145,158,171,0.2)] dark:border-[rgba(145,158,171,0.12)] hover:bg-[rgba(145,158,171,0.04)]"
-                                )}
-                            >
-                                <div className={cn(
-                                    "flex items-center justify-center w-10 h-10 rounded-full mr-4 transition-colors",
-                                    isSelected
-                                        ? "bg-[#22c55e]/20 text-[#22c55e]"
-                                        : "bg-[rgba(145,158,171,0.08)] text-[#637381] dark:text-[#919EAB]"
-                                )}>
-                                    <Icon className="w-5 h-5" />
-                                </div>
-                                <div className="flex-1">
-                                    <h3 className={cn("text-sm font-bold", isSelected ? "text-[#22c55e]" : "text-[#1C252E] dark:text-white")}>
-                                        {option.label}
-                                    </h3>
-                                    <p className="text-xs text-[#919EAB] mt-0.5">
-                                        {option.desc}
-                                    </p>
-                                </div>
-                                <div className={cn(
-                                    "w-5 h-5 rounded-full border-2 flex items-center justify-center ml-2",
-                                    isSelected ? "border-[#22c55e]" : "border-[rgba(145,158,171,0.32)]"
-                                )}>
-                                    {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-[#22c55e]" />}
-                                </div>
-                            </div>
-                        );
-                    })}
+                {/* Password */}
+                <motion.div variants={itemVariants}>
+                    <div className="relative">
+                        <Input
+                            label="Mật khẩu"
+                            type={showPassword ? "text" : "password"}
+                            placeholder="••••••••"
+                            error={errors.password?.message}
+                            {...register("password")}
+                            className={`${inputClasses} pr-10`}
+                            startIcon={<Lock className="text-[#919EAB] w-4 h-4" />}
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-3 top-[38px] text-[#919EAB] hover:text-[#637381] dark:hover:text-[#C4CDD5] transition-colors"
+                        >
+                            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                    </div>
+                    <div className="flex justify-end mt-1">
+                        <Link href="/forgot-password" className="text-xs text-[#22c55e] hover:text-[#16a34a] font-medium transition-colors">
+                            Quên mật khẩu?
+                        </Link>
+                    </div>
                 </motion.div>
 
                 {/* Submit */}
@@ -151,7 +153,7 @@ export function LoginForm() {
                         isLoading={isLoading}
                         variant="primary"
                     >
-                        Đăng nhập bằng Mock
+                        Đăng nhập
                     </Button>
                 </motion.div>
 
@@ -167,14 +169,32 @@ export function LoginForm() {
                     </div>
                 </motion.div>
 
-                {/* Register link */}
+                {/* GitHub OAuth button */}
+                <motion.div variants={itemVariants}>
+                    <button
+                        type="button"
+                        onClick={handleGitHubLogin}
+                        className="w-full h-12 flex items-center justify-center gap-3 rounded-xl border border-[rgba(145,158,171,0.2)] dark:border-white/[0.1] bg-white dark:bg-white/[0.04] hover:bg-[#24292e] hover:text-white dark:hover:bg-white/[0.08] text-[#1C252E] dark:text-white text-sm font-semibold transition-all duration-200 group"
+                    >
+                        <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 0C5.37 0 0 5.373 0 12c0 5.303 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.083-.729.083-.729 1.205.084 1.84 1.237 1.84 1.237 1.07 1.834 2.809 1.304 3.495.997.108-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.929.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .322.216.694.825.576C20.565 21.795 24 17.298 24 12c0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        <span>Tiếp tục với GitHub</span>
+                    </button>
+                    {githubError && (
+                        <p className="mt-2 text-xs text-red-500 text-center">{decodeURIComponent(githubError)}</p>
+                    )}
+                </motion.div>
+
+
                 <motion.div variants={itemVariants}>
                     <p className="text-center text-sm text-[#637381] dark:text-[#C4CDD5]">
+                        Chưa có tài khoản?{" "}
                         <Link
                             href="/register"
                             className="font-semibold text-[#22C55E] hover:text-[#16A34A] transition-colors"
                         >
-                            Đăng ký tài khoản
+                            Đăng ký ngay
                         </Link>
                     </p>
                 </motion.div>

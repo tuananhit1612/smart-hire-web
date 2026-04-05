@@ -42,6 +42,7 @@ import { JobPreviewPanel } from "./JobPreviewPanel";
 import { ApplicantPanel } from "./ApplicantPanel";
 import { Job, JOB_TYPES, JOB_STATUSES, JOB_LEVELS, JobStatus, JobType, DEPARTMENTS } from "../types/job";
 import { FloatingElements, BentoItem } from "../../hr-company/components/ui/premium-effects";
+import { Pagination } from "@/shared/components/ui/pagination";
 import { useToastHelpers } from "@/shared/components/ui/toast";
 
 type SortOption = "newest" | "oldest" | "applicants" | "views";
@@ -182,20 +183,19 @@ const JobCard = React.memo(function JobCard({ job, index, onViewApplicants }: { 
     const deadlineInfo = getDeadlineInfo(job.deadline);
     const dept = DEPT_GRADIENTS[job.department] || DEFAULT_DEPT;
 
-    const statusConfig = JOB_STATUSES[job.status];
+    const statusConfig = JOB_STATUSES[job.status] || JOB_STATUSES['DRAFT'];
     const statusColors: Record<string, string> = {
-        open: "from-green-500 to-emerald-600",
-        closed: "from-slate-400 to-slate-500",
-        paused: "from-amber-400 to-orange-500",
-        draft: "from-[#22c55e] to-[#10b981]",
+        OPEN: "from-green-500 to-emerald-600",
+        CLOSED: "from-slate-400 to-slate-500",
+        DRAFT: "from-[#22c55e] to-[#10b981]",
     };
 
     const formatSalary = (min?: number, max?: number) => {
         if (!min && !max) return "Thỏa thuận";
-        const f = (n: number) => (n / 1000000).toFixed(0);
-        if (min && max) return `${f(min)} - ${f(max)}M`;
-        if (min) return `Từ ${f(min)}M`;
-        return `Đến ${f(max!)}M`;
+        const f = (n: number) => n.toLocaleString('vi-VN');
+        if (min && max) return `${f(min)} - ${f(max)} VNĐ`;
+        if (min) return `Từ ${f(min)} VNĐ`;
+        return `Đến ${f(max!)} VNĐ`;
     };
 
     const handleCardClick = () => {
@@ -203,14 +203,14 @@ const JobCard = React.memo(function JobCard({ job, index, onViewApplicants }: { 
         setPreviewOpen(true);
     };
 
-    const pauseTitle = job.status === "open" ? "Tạm dừng" : job.status === "paused" ? "Mở lại" : "Mở tin";
+    const pauseTitle = job.status === "OPEN" ? "Tạm dừng" : "Mở tin";
 
     const handlePause = (e: React.MouseEvent) => {
         e.stopPropagation();
-        const wasPaused = job.status === "paused";
+        const wasDraft = job.status === "DRAFT";
         toggleJobStatus(job.id);
         toast.success(
-            wasPaused ? "Đã mở lại tin tuyển dụng" : "Đã tạm dừng tin tuyển dụng",
+            wasDraft ? "Đã mở lại tin tuyển dụng" : "Đã chuyển về bản nháp",
             job.title,
             { label: "Hoàn tác", onClick: () => toggleJobStatus(job.id) }
         );
@@ -242,7 +242,7 @@ const JobCard = React.memo(function JobCard({ job, index, onViewApplicants }: { 
         >
             <div
                 onClick={handleCardClick}
-                className={`relative bg-gradient-to-br from-white dark:from-[#1C252E] to-[#22c55e]/5 dark:to-[#1C252E] backdrop-blur-xl rounded-3xl border cursor-pointer transition-all duration-300 overflow-hidden hover:shadow-2xl hover:shadow-green-500/20 hover:-translate-y-1.5 hover:scale-[1.01] hover:from-[rgba(145,158,171,0.04)] hover:to-[#22c55e]/5 dark:hover:from-[#1E2C38] dark:hover:to-[#1E2C38] ${job.status === "paused"
+                className={`relative bg-gradient-to-br from-white dark:from-[#1C252E] to-[#22c55e]/5 dark:to-[#1C252E] backdrop-blur-xl rounded-3xl border cursor-pointer transition-all duration-300 overflow-hidden hover:shadow-2xl hover:shadow-green-500/20 hover:-translate-y-1.5 hover:scale-[1.01] hover:from-[rgba(145,158,171,0.04)] hover:to-[#22c55e]/5 dark:hover:from-[#1E2C38] dark:hover:to-[#1E2C38] ${job.status === "DRAFT"
                     ? "border-[#22c55e]/30 dark:border-white/[0.06] opacity-75 grayscale-[20%]"
                     : "border-[#22c55e]/30 dark:border-white/[0.08] shadow-lg shadow-[#22c55e]/20[0.06]"
                     }`}
@@ -260,7 +260,7 @@ const JobCard = React.memo(function JobCard({ job, index, onViewApplicants }: { 
                         </motion.div>
                         <div className="flex items-center gap-2">
                             {/* Deadline warning */}
-                            {deadlineInfo && job.status === "open" && (
+                            {deadlineInfo && job.status === "OPEN" && (
                                 <div className={`px-2 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 ${deadlineInfo.expired
                                     ? "bg-red-50 text-red-600 border border-red-100"
                                     : deadlineInfo.urgent
@@ -272,7 +272,7 @@ const JobCard = React.memo(function JobCard({ job, index, onViewApplicants }: { 
                                 </div>
                             )}
                             <div className={`px-2.5 py-1 rounded-lg text-[10px] font-bold text-white bg-gradient-to-r ${statusColors[job.status]} shadow-sm`}>
-                                {job.status === "open" && (
+                                {job.status === "OPEN" && (
                                     <span className="inline-block w-1.5 h-1.5 bg-white rounded-full mr-1 animate-pulse" />
                                 )}
                                 {statusConfig.label}
@@ -338,51 +338,6 @@ const JobCard = React.memo(function JobCard({ job, index, onViewApplicants }: { 
                             </div>
                         </div>
 
-                        {/* Action buttons - neutral, only color on individual hover */}
-                        <div className="flex items-center gap-0.5 translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-200">
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    onViewApplicants(job);
-                                }}
-                                className="p-1.5 rounded-lg text-[#919EAB] dark:text-[#637381] hover:text-[#22c55e] dark:hover:text-[#22c55e] hover:bg-[rgba(145,158,171,0.08)] dark:hover:bg-white/[0.06] transition-colors"
-                                title="Xem ứng viên"
-                            >
-                                <Users className="w-3.5 h-3.5" />
-                            </button>
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    selectJob(job);
-                                    setFormOpen(true);
-                                }}
-                                className="p-1.5 rounded-lg text-[#919EAB] dark:text-[#637381] hover:text-[#22c55e] dark:hover:text-[#22c55e] hover:bg-[rgba(145,158,171,0.08)] dark:hover:bg-white/[0.06] transition-colors"
-                                title="Chỉnh sửa"
-                            >
-                                <Edit3 className="w-3.5 h-3.5" />
-                            </button>
-                            <button
-                                onClick={handleClone}
-                                className="p-1.5 rounded-lg text-[#919EAB] dark:text-[#637381] hover:text-[#22c55e] dark:hover:text-[#22c55e] hover:bg-[rgba(145,158,171,0.08)] dark:hover:bg-white/[0.06] transition-colors"
-                                title="Nhân bản"
-                            >
-                                <Copy className="w-3.5 h-3.5" />
-                            </button>
-                            <button
-                                onClick={handlePause}
-                                className="p-1.5 rounded-lg text-[#919EAB] dark:text-[#637381] hover:text-amber-500 dark:hover:text-amber-400 hover:bg-[rgba(145,158,171,0.08)] dark:hover:bg-white/[0.06] transition-colors"
-                                title={pauseTitle}
-                            >
-                                {job.status === "open" ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
-                            </button>
-                            <button
-                                onClick={handleDelete}
-                                className="p-1.5 rounded-lg text-[#919EAB] dark:text-[#637381] hover:text-red-500 dark:hover:text-red-400 hover:bg-[rgba(145,158,171,0.08)] dark:hover:bg-white/[0.06] transition-colors"
-                                title="Xóa tin"
-                            >
-                                <Trash2 className="w-3.5 h-3.5" />
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -400,10 +355,9 @@ function FilterPills({
 }) {
     const statuses = [
         { value: "all", label: "Tất cả", icon: LayoutGrid },
-        { value: "open", label: "Đang tuyển", icon: CheckCircle2, color: "green" },
-        { value: "paused", label: "Tạm dừng", icon: Pause, color: "amber" },
-        { value: "closed", label: "Đã đóng", icon: X, color: "slate" },
-        { value: "draft", label: "Bản nháp", icon: Edit3, color: "sky" },
+        { value: "OPEN", label: "Đang tuyển", icon: CheckCircle2, color: "green" },
+        { value: "CLOSED", label: "Đã đóng", icon: X, color: "slate" },
+        { value: "DRAFT", label: "Bản nháp", icon: Edit3, color: "sky" },
     ];
 
     return (
@@ -552,7 +506,12 @@ export function JobListView() {
         isFormOpen,
         isPreviewOpen,
         selectedJob,
+        fetchMyJobs,
     } = useJobStore();
+
+    React.useEffect(() => {
+        fetchMyJobs();
+    }, [fetchMyJobs]);
 
     const [searchValue, setSearchValue] = React.useState("");
     const [applicantJob, setApplicantJob] = React.useState<Job | null>(null);
@@ -560,6 +519,9 @@ export function JobListView() {
     const [showSortMenu, setShowSortMenu] = React.useState(false);
     const jobs = getFilteredJobs();
     const stats = getJobStats();
+
+    const [currentPage, setCurrentPage] = React.useState(1);
+    const ITEMS_PER_PAGE = 9;
 
     // Filter by search + sort
     const filteredJobs = React.useMemo(() => {
@@ -583,6 +545,18 @@ export function JobListView() {
             }
         });
     }, [jobs, searchValue, sortBy]);
+
+    // Reset pagination when filters change
+    React.useEffect(() => {
+        setCurrentPage(1);
+    }, [searchValue, filters, sortBy]);
+
+    // Calculate pagination
+    const totalPages = Math.ceil(filteredJobs.length / ITEMS_PER_PAGE);
+    const paginatedJobs = filteredJobs.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE
+    );
 
     return (
         <div className="relative bg-gradient-to-br from-[rgba(145,158,171,0.04)] via-white to-green-50/30 dark:from-[#141A21] dark:via-[#141A21] dark:to-[#141A21] -m-6 px-6 pb-16">
@@ -750,10 +724,21 @@ export function JobListView() {
 
                 {/* Jobs Grid */}
                 {filteredJobs.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                        {filteredJobs.map((job, index) => (
-                            <JobCard key={job.id} job={job} index={index} onViewApplicants={(j) => setApplicantJob(j)} />
-                        ))}
+                    <div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                            {paginatedJobs.map((job, index) => (
+                                <JobCard key={job.id} job={job} index={index} onViewApplicants={(j) => setApplicantJob(j)} />
+                            ))}
+                        </div>
+                        {totalPages > 1 && (
+                            <div className="mt-10 flex justify-center">
+                                <Pagination
+                                    currentPage={currentPage}
+                                    totalPages={totalPages}
+                                    onPageChange={setCurrentPage}
+                                />
+                            </div>
+                        )}
                     </div>
                 ) : (
                     <motion.div
@@ -839,7 +824,9 @@ export function JobListView() {
             {/* Modals */}
             <AnimatePresence>
                 {isFormOpen && <JobFormModal />}
-                {isPreviewOpen && selectedJob && <JobPreviewPanel />}
+                {isPreviewOpen && selectedJob && (
+                    <JobPreviewPanel onViewApplicants={(job: Job) => setApplicantJob(job)} />
+                )}
                 {applicantJob && (
                     <ApplicantPanel
                         job={applicantJob}

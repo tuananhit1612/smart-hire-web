@@ -209,11 +209,11 @@ export function HeroSection() {
                     </motion.div>
 
                     {/* H1 - Animated Gradient */}
-                    <h1 className="text-center font-heading font-extrabold text-[2rem] sm:text-[2.5rem] md:text-[2.75rem] lg:text-[4.5rem] leading-[1.1] lg:leading-[90px] mb-6">
+                    <h1 className="text-center font-heading font-extrabold text-[2rem] sm:text-[2.5rem] md:text-[2.75rem] lg:text-[4.5rem] leading-[1.2] lg:leading-[1.2] mb-6">
                         <span className="block text-[#1C252E] dark:text-white opacity-90">
                             Tìm Việc Nhanh Hơn,
                         </span>
-                        <span className="block mt-1">
+                        <span className="block mt-1 pb-2">
                             <span className="bg-gradient-to-r from-[#22c55e] via-[#10b981] to-[#FFAB00] bg-[length:400%_400%] bg-clip-text text-transparent animate-gradient">
                                 Thành Công Dễ Dàng!
                             </span>

@@ -1,6 +1,7 @@
 // Upload CV Types
 export interface CVFile {
-    id: string;
+    id: string; // frontend generation UUID
+    backendId?: number; // the actual DB ID returned successfully
     name: string;
     size: number;
     type: string;
@@ -8,6 +9,7 @@ export interface CVFile {
     status: 'uploading' | 'success' | 'error' | 'validating';
     progress: number;
     errorMessage?: string;
+    rawFile?: File;
 }
 
 export interface UploadState {

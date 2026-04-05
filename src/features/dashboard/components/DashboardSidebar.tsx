@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -9,14 +10,11 @@ import {
     FileText,
     Edit3,
     ClipboardList,
-    Mic2,
+    ScanSearch,
     User,
     ChevronLeft,
     ChevronRight,
     Rocket,
-    Upload,
-    LayoutTemplate,
-    Sparkles,
     Building2,
     Users,
     Kanban,
@@ -39,13 +37,11 @@ const NAV_CANDIDATE_GENERAL: NavItemType[] = [
 ];
 
 const NAV_CANDIDATE_TOOLS: NavItemType[] = [
-    { label: "Tìm việc AI", href: "/jobs", icon: Briefcase },
+    { label: "Tìm việc", href: "/jobs", icon: Briefcase },
     { label: "Đơn ứng tuyển", href: "/applications", icon: ClipboardList },
     { label: "Hồ sơ CV", href: "/cv-files", icon: FileText },
     { label: "Xây dựng CV", href: "/cv-builder", icon: Edit3 },
-    { label: "Phỏng vấn AI", href: "/interview", icon: Mic2 },
-    { label: "Tải lên CV", href: "/upload-cv", icon: Upload },
-    { label: "Mẫu CV", href: "/cv-templates", icon: LayoutTemplate },
+    { label: "Đánh giá CV", href: "/cv-analysis", icon: ScanSearch },
 ];
 
 /* ─── Employer/HR Nav (Module M2) ─── */
@@ -130,8 +126,14 @@ function NavItem({
 export function DashboardSidebar({ collapsed, onToggle }: Props) {
     const pathname = usePathname();
     const { user } = useAuth();
+    const [mounted, setMounted] = useState(false);
 
-    const isEmployer = user?.role === "employer";
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    const isEmployer = mounted ? user?.role === "hr" : false;
+    const fullName = mounted && user?.fullName ? user.fullName : "";
 
     // Pick the right nav sets based on role
     const navGeneral = isEmployer ? NAV_EMPLOYER_GENERAL : NAV_CANDIDATE_GENERAL;
@@ -140,7 +142,7 @@ export function DashboardSidebar({ collapsed, onToggle }: Props) {
 
     return (
         <motion.aside
-            animate={{ width: collapsed ? 88 : 280 }}
+            animate={{ width: collapsed ? 88 : 230 }}
             transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
             className={cn(
                 "fixed top-0 left-0 z-30 h-full flex flex-col",
@@ -163,12 +165,12 @@ export function DashboardSidebar({ collapsed, onToggle }: Props) {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ duration: 0.15 }}
-                            className="flex items-center gap-3 overflow-hidden"
+                            className="flex items-center gap-3 py-1"
                         >
-                            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#22C55E] to-[#059669] flex items-center justify-center shrink-0 shadow-[0_4px_12px_rgba(34,197,94,0.3)]">
+                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#22C55E] to-[#059669] flex items-center justify-center shrink-0">
                                 <Rocket className="w-5 h-5 text-white" />
                             </div>
-                            <span className="text-[18px] font-extrabold text-[#1C252E] dark:text-white whitespace-nowrap tracking-tight">
+                            <span className="text-[18px] font-extrabold text-[#1C252E] dark:text-white tracking-tight">
                                 SmartHire
                             </span>
                         </motion.div>
@@ -179,7 +181,7 @@ export function DashboardSidebar({ collapsed, onToggle }: Props) {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#22C55E] to-[#059669] flex items-center justify-center shadow-[0_4px_12px_rgba(34,197,94,0.3)]"
+                            className="w-10 h-10 rounded-full bg-gradient-to-br from-[#22C55E] to-[#059669] flex items-center justify-center"
                         >
                             <Rocket className="w-5 h-5 text-white" />
                         </motion.div>
@@ -262,14 +264,14 @@ export function DashboardSidebar({ collapsed, onToggle }: Props) {
                 <div className={cn("flex items-center gap-3", collapsed && "justify-center")}>
                     <div className="relative shrink-0">
                         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#22C55E] to-[#10B981] flex items-center justify-center text-white font-bold text-sm border-2 border-[#22C55E]/20">
-                            {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
+                            {fullName ? fullName.charAt(0).toUpperCase() : "U"}
                         </div>
                         <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-[#22C55E] border-2 border-white dark:border-[#1C252E] shadow-[0_0_6px_rgba(34,197,94,0.4)]" />
                     </div>
                     {!collapsed && (
                         <div className="flex-1 min-w-0">
                             <p className="text-[14px] font-bold text-[#1C252E] dark:text-white truncate">
-                                {user?.name || "Người Dùng"}
+                                {fullName || "Người Dùng"}
                             </p>
                             <p className="text-[12px] text-[#919EAB] font-medium truncate">
                                 {isEmployer ? "Nhà tuyển dụng" : "Ứng viên"}

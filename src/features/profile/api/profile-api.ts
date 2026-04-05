@@ -1,0 +1,159 @@
+/**
+ * ═══════════════════════════════════════════════════════════
+ *  Profile API Service
+ *  Thin wrapper around apiClient for profile endpoints.
+ *  Pattern matches auth-api.ts — returns Axios responses.
+ * ═══════════════════════════════════════════════════════════
+ */
+
+import { apiClient } from "@/shared/lib/api-client";
+import { ApiWrapper } from "@/shared/types/api";
+import type {
+  CandidateProfileResponse,
+  ProfilePayload,
+  EducationResponse,
+  EducationPayload,
+  ExperienceResponse,
+  ExperiencePayload,
+  ProjectResponse,
+  ProjectPayload,
+  SkillResponse,
+  SkillPayload,
+  CvFileResponse,
+} from "../types/profile-api-types";
+
+const BASE = "/candidate/profile";
+
+export const profileApi = {
+  // ─── Profile ─────────────────────────────────────────────
+
+  /** GET /candidate/profile */
+  getProfile: () =>
+    apiClient.get<ApiWrapper<CandidateProfileResponse>>(BASE),
+
+  /** POST /candidate/profile — first-time creation */
+  createProfile: (data: ProfilePayload) =>
+    apiClient.post<ApiWrapper<CandidateProfileResponse>>(BASE, data),
+
+  /** PUT /candidate/profile — update existing */
+  updateProfile: (data: ProfilePayload) =>
+    apiClient.put<ApiWrapper<CandidateProfileResponse>>(BASE, data),
+
+  /** PUT /users/me — update root user identity (name, phone) */
+  updateUserIdentity: (data: { fullName?: string; phone?: string }) =>
+    apiClient.put<ApiWrapper<any>>(`/users/me`, data),
+
+  /** POST /users/me/avatar — upload avatar (multipart/form-data) */
+  uploadAvatar: (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    return apiClient.post<ApiWrapper<CandidateProfileResponse>>(
+      "/users/me/avatar",
+      formData
+    );
+  },
+
+  // ─── Education CRUD ────────────────────────────────────
+
+  /** GET /candidate/profile/educations */
+  getEducations: () =>
+    apiClient.get<ApiWrapper<EducationResponse[]>>(`${BASE}/educations`),
+
+  /** POST /candidate/profile/educations */
+  createEducation: (data: EducationPayload) =>
+    apiClient.post<ApiWrapper<EducationResponse>>(`${BASE}/educations`, data),
+
+  /** PUT /candidate/profile/educations/:id */
+  updateEducation: (id: number, data: Partial<EducationPayload>) =>
+    apiClient.put<ApiWrapper<EducationResponse>>(`${BASE}/educations/${id}`, data),
+
+  /** DELETE /candidate/profile/educations/:id */
+  deleteEducation: (id: number) =>
+    apiClient.delete(`${BASE}/educations/${id}`),
+
+  // ─── Experience CRUD ───────────────────────────────────
+
+  /** GET /candidate/profile/experiences */
+  getExperiences: () =>
+    apiClient.get<ApiWrapper<ExperienceResponse[]>>(`${BASE}/experiences`),
+
+  /** POST /candidate/profile/experiences */
+  createExperience: (data: ExperiencePayload) =>
+    apiClient.post<ApiWrapper<ExperienceResponse>>(`${BASE}/experiences`, data),
+
+  /** PUT /candidate/profile/experiences/:id */
+  updateExperience: (id: number, data: Partial<ExperiencePayload>) =>
+    apiClient.put<ApiWrapper<ExperienceResponse>>(`${BASE}/experiences/${id}`, data),
+
+  /** DELETE /candidate/profile/experiences/:id */
+  deleteExperience: (id: number) =>
+    apiClient.delete(`${BASE}/experiences/${id}`),
+
+  // ─── Project CRUD ──────────────────────────────────────
+
+  /** GET /candidate/profile/projects */
+  getProjects: () =>
+    apiClient.get<ApiWrapper<ProjectResponse[]>>(`${BASE}/projects`),
+
+  /** POST /candidate/profile/projects */
+  createProject: (data: ProjectPayload) =>
+    apiClient.post<ApiWrapper<ProjectResponse>>(`${BASE}/projects`, data),
+
+  /** PUT /candidate/profile/projects/:id */
+  updateProject: (id: number, data: Partial<ProjectPayload>) =>
+    apiClient.put<ApiWrapper<ProjectResponse>>(`${BASE}/projects/${id}`, data),
+
+  /** DELETE /candidate/profile/projects/:id */
+  deleteProject: (id: number) =>
+    apiClient.delete(`${BASE}/projects/${id}`),
+
+  // ─── Skill CRUD ────────────────────────────────────────
+
+  /** GET /candidate/profile/skills */
+  getSkills: () =>
+    apiClient.get<ApiWrapper<SkillResponse[]>>(`${BASE}/skills`),
+
+  /** POST /candidate/profile/skills */
+  createSkill: (data: SkillPayload) =>
+    apiClient.post<ApiWrapper<SkillResponse>>(`${BASE}/skills`, data),
+
+  /** PUT /candidate/profile/skills/:id */
+  updateSkill: (id: number, data: Partial<SkillPayload>) =>
+    apiClient.put<ApiWrapper<SkillResponse>>(`${BASE}/skills/${id}`, data),
+
+  /** DELETE /candidate/profile/skills/:id */
+  deleteSkill: (id: number) =>
+    apiClient.delete(`${BASE}/skills/${id}`),
+
+  // ─── CV Files ──────────────────────────────────────────
+
+  /** GET /candidate/profile/cv-files */
+  getCvFiles: () =>
+    apiClient.get<ApiWrapper<CvFileResponse[]>>(`${BASE}/cv-files`),
+
+  /** POST /candidate/profile/cv-files — upload (multipart/form-data) */
+  uploadCvFile: (file: File, isPrimary?: boolean, source: "UPLOAD" | "BUILDER" = "UPLOAD") => {
+    const formData = new FormData();
+    formData.append("file", file);
+    if (source) formData.append("source", source);
+    if (isPrimary !== undefined) {
+        formData.append("isPrimary", String(isPrimary));
+    }
+    // Let Axios automatically detect FormData and set Content-Type with boundary!
+    return apiClient.post<ApiWrapper<CvFileResponse>>(`${BASE}/cv-files`, formData);
+  },
+
+  /** DELETE /candidate/profile/cv-files/:id */
+  deleteCvFile: (id: number) =>
+    apiClient.delete<ApiWrapper<void>>(`${BASE}/cv-files/${id}`),
+
+  /** PUT /candidate/profile/cv-files/:id/primary */
+  setCvFilePrimary: (id: number) =>
+    apiClient.put<ApiWrapper<CvFileResponse>>(`${BASE}/cv-files/${id}/primary`),
+
+  /** GET /candidate/profile/cv-files/:id/download */
+  downloadCvFile: (id: number) =>
+    apiClient.get<Blob>(`${BASE}/cv-files/${id}/download`, {
+      responseType: "blob",
+    }),
+};

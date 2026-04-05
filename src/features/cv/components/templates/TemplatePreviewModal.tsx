@@ -6,7 +6,7 @@ import { X, Check, ChevronLeft, ChevronRight, Download, ExternalLink } from "luc
 import { cn } from "@/shared/utils/cn";
 import { CVTemplate } from "@/features/cv/types/template-types";
 import { TEMPLATE_COMPONENTS } from "@/features/cv/components/cv-templates";
-import { MOCK_DATA_INTERN, MOCK_DATA_LEADER, MOCK_DATA_SENIOR } from "@/features/cv/data/mock-data";
+
 import { CVData } from "@/features/cv/types/types";
 
 interface TemplatePreviewModalProps {

@@ -24,6 +24,7 @@ import {
     Coffee,
     Rocket,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 // Feature highlight data
 const COMPANY_HIGHLIGHTS = [
@@ -48,13 +49,19 @@ const COMPANY_HIGHLIGHTS = [
 ];
 
 export function CompanyProfileViewPremium() {
-    const { company, updateField } = useCompanyStore();
+    const { company, updateField, fetchMyCompany, saveCompany } = useCompanyStore();
     const { addToast } = useToast();
+    const router = useRouter();
 
-    const handleUpdate = (updates: Partial<Company>) => {
+    React.useEffect(() => {
+        fetchMyCompany();
+    }, [fetchMyCompany]);
+
+    const handleUpdate = async (updates: Partial<Company>) => {
         Object.entries(updates).forEach(([key, value]) => {
             updateField(key as keyof Company, value);
         });
+        await saveCompany(updates);
         addToast("Đã cập nhật thông tin!", "success", 2000);
     };
 
@@ -69,7 +76,7 @@ export function CompanyProfileViewPremium() {
     };
 
     return (
-        <div className="relative w-full bg-gradient-to-br from-[rgba(145,158,171,0.04)] via-white to-green-50/30 dark:from-[#141A21] dark:via-[#141A21] dark:to-[#141A21] -m-6 px-6 pb-16">
+        <div className="relative w-full bg-gradient-to-br from-gray-50/50 via-white to-[#22c55e]/5 dark:from-[#1C252E] dark:via-[#1C252E] dark:to-[#1C252E]/90 -m-6 px-6 pb-16">
 
             {/* Content */}
             <motion.div
@@ -100,11 +107,6 @@ export function CompanyProfileViewPremium() {
                                 Công ty
                             </span>
                             <motion.span
-                                animate={{
-                                    opacity: [0.5, 1, 0.5],
-                                    scale: [1, 1.2, 1],
-                                }}
-                                transition={{ duration: 2, repeat: Infinity }}
                                 className="absolute -right-6 -top-2"
                             >
                                 <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
@@ -215,16 +217,19 @@ export function CompanyProfileViewPremium() {
                                     label="Đăng tin tuyển dụng"
                                     description="Tìm ứng viên phù hợp"
                                     gradient="from-green-500 to-emerald-600"
+                                    onClick={() => router.push("/hr/jobs")}
                                 />
                                 <QuickActionButton
                                     label="Xem analytics"
                                     description="Theo dõi hiệu suất"
                                     gradient="from-[#22c55e] to-[#10b981]"
+                                    onClick={() => router.push("/employer/dashboard")}
                                 />
                                 <QuickActionButton
                                     label="Quản lý ứng viên"
                                     description="Xử lý hồ sơ ứng tuyển"
                                     gradient="from-purple-500 to-[#10b981]"
+                                    onClick={() => router.push("/employer/candidates")}
                                 />
                             </div>
                         </div>
@@ -261,6 +266,7 @@ export function CompanyProfileViewPremium() {
                             <motion.button
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.98 }}
+                                onClick={() => router.push("/hr/jobs")}
                                 className="px-8 py-3 bg-white text-[#16A34A] rounded-full font-semibold shadow-lg hover:shadow-xl transition-all flex items-center gap-2"
                             >
                                 Đăng tin ngay
@@ -290,13 +296,16 @@ function QuickActionButton({
     label,
     description,
     gradient,
+    onClick,
 }: {
     label: string;
     description: string;
     gradient: string;
+    onClick?: () => void;
 }) {
     return (
         <motion.button
+            onClick={onClick}
             whileHover={{ scale: 1.02, x: 5 }}
             whileTap={{ scale: 0.98 }}
             className="w-full p-4 bg-[#22c55e]/10 dark:bg-white/[0.04] hover:bg-[#22c55e]/15 dark:hover:bg-white/[0.06] rounded-xl text-left transition-all group border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] hover:border-[#22c55e]/30 dark:hover:border-white/[0.12]"

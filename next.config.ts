@@ -15,6 +15,7 @@ const nextConfig = {
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
+  serverExternalPackages: ["puppeteer"],
 };
 
 export default nextConfig;

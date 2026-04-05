@@ -27,12 +27,12 @@ import {
 import { cn } from "@/shared/utils/cn";
 
 // ─── Types ───────────────────────────────────────────
-type StageId = "applied" | "screening" | "interview" | "offer" | "hired" | "rejected";
+type StageId = "applied" | "interview" | "hired" | "rejected";
 
 interface StageUpdateCandidate {
     id: string;
-    name: string;
-    avatar: string;
+    fullName: string;
+    avatarUrl: string;
     position: string;
     aiScore: number;
 }
@@ -66,27 +66,16 @@ export interface StageUpdateData {
 // ─── Stage Config ────────────────────────────────────
 const STAGE_META: Record<StageId, { label: string; color: string; bg: string; dot: string }> = {
     applied: { label: "Ứng tuyển", color: "text-[#22c55e] dark:text-[#22c55e]", bg: "bg-[#22c55e]/15 dark:bg-[#22c55e]/20", dot: "bg-[#22c55e]" },
-    screening: { label: "Sàng lọc", color: "text-violet-700 dark:text-violet-400", bg: "bg-violet-100 dark:bg-violet-900/30", dot: "bg-violet-400" },
     interview: { label: "Phỏng vấn", color: "text-amber-700 dark:text-amber-400", bg: "bg-amber-100 dark:bg-amber-900/30", dot: "bg-amber-400" },
-    offer: { label: "Đề nghị", color: "text-emerald-700 dark:text-emerald-400", bg: "bg-emerald-100 dark:bg-emerald-900/30", dot: "bg-emerald-400" },
     hired: { label: "Đã tuyển", color: "text-teal-700 dark:text-teal-400", bg: "bg-teal-100 dark:bg-teal-900/30", dot: "bg-teal-400" },
     rejected: { label: "Từ chối", color: "text-rose-700 dark:text-rose-400", bg: "bg-rose-100 dark:bg-rose-900/30", dot: "bg-rose-400" },
 };
 
 const NOTE_TEMPLATES: Record<string, string[]> = {
-    screening: [
-        "CV phù hợp yêu cầu, chuyển sang vòng phỏng vấn.",
-        "Kinh nghiệm phù hợp, cần check kỹ năng kỹ thuật.",
-        "Profile ấn tượng, ưu tiên phỏng vấn sớm.",
-    ],
     interview: [
         "Lên lịch phỏng vấn kỹ thuật vòng 1.",
         "Chuyển phỏng vấn culture fit + team lead.",
         "Phỏng vấn final với CTO.",
-    ],
-    offer: [
-        "Kết quả phỏng vấn tốt, chuẩn bị offer letter.",
-        "Đàm phán mức lương, gửi offer chính thức.",
     ],
     hired: [
         "Ứng viên đã chấp nhận offer. Chuẩn bị onboarding.",
@@ -176,10 +165,10 @@ export function StageUpdateModal({
                                 {/* Candidate Info */}
                                 <div className="flex items-center gap-3 bg-[rgba(145,158,171,0.06)] dark:bg-white/[0.04] rounded-xl p-3">
                                     <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[rgba(145,158,171,0.04)] to-violet-100 dark:from-[rgba(145,158,171,0.04)] dark:to-violet-900/30 flex items-center justify-center text-xs font-bold text-[#22c55e] dark:text-[#22c55e]">
-                                        {candidate.avatar}
+                                        {candidate.avatarUrl}
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <p className="text-sm font-semibold text-[#1C252E] dark:text-white">{candidate.name}</p>
+                                        <p className="text-sm font-semibold text-[#1C252E] dark:text-white">{candidate.fullName}</p>
                                         <p className="text-[11px] text-[#919EAB]">{candidate.position}</p>
                                     </div>
                                     <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#22c55e]/15 dark:bg-[#22c55e]/20 text-[#22c55e] dark:text-[#22c55e] flex items-center gap-0.5">

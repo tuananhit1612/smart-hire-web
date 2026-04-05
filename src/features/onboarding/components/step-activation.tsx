@@ -1,25 +1,13 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/shared/components/ui/button";
 import { Loader2, FileText, CheckCircle2 } from "lucide-react";
-
-export type MockCVData = {
-    firstName: string;
-    lastName: string;
-    phone: string;
-    email: string;
-    linkedin: string;
-    website: string;
-    country: string;
-    state: string;
-    city: string;
-    gender: string;
-};
+import { onboardingApi, OnboardingCvData } from "../api/onboarding-api";
 
 interface StepActivationProps {
-    onNext: (option: "ai" | "manual", cvData?: MockCVData) => void;
+    onNext: (option: "ai" | "manual", cvData?: OnboardingCvData) => void;
     onBack: () => void;
 }
 
@@ -27,7 +15,16 @@ export function StepActivation({ onNext, onBack }: StepActivationProps) {
     const [selectedOption, setSelectedOption] = useState<"ai" | "manual" | null>(null);
     const [isUploading, setIsUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
+    const [progressText, setProgressText] = useState("Đang trích xuất các kỹ năng và kinh nghiệm chính...");
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+    // Cleanup interval on unmount
+    useEffect(() => {
+        return () => {
+            if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
+        };
+    }, []);
 
     const handleContinue = () => {
         if (!selectedOption) return;
@@ -41,41 +38,51 @@ export function StepActivation({ onNext, onBack }: StepActivationProps) {
         }
     };
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
-        if (file) {
-            simulateUploadAndParse();
-        }
-    };
+        if (!file) return;
 
-    const simulateUploadAndParse = () => {
         setIsUploading(true);
-        // Simulate progress
-        let progress = 0;
-        const interval = setInterval(() => {
-            progress += Math.random() * 15;
-            if (progress >= 100) {
-                progress = 100;
-                clearInterval(interval);
-                // Return mock data after brief delay at 100%
+        setUploadProgress(10);
+        setProgressText("Đang tải file lên hệ thống...");
+        
+        try {
+            // 1. Upload CV to system
+            const uploadRes = await onboardingApi.uploadCv(file);
+            setUploadProgress(30);
+            setProgressText("Đang đọc nội dung file...");
+            
+            // Start visual progress while waiting for AI (since it runs synchronously in polling)
+            const interval = setInterval(() => {
+                setUploadProgress((prev) => {
+                    if (prev >= 90) return 90;
+                    return prev + Math.random() * 5;
+                });
+            }, 600);
+
+            // 2. Poll/Wait for AI parsing result
+            setProgressText("Đang phân tích kỹ năng và kinh nghiệm...");
+            const parseRes = await onboardingApi.getParseStatus(uploadRes.cvFileId);
+            
+            clearInterval(interval);
+            
+            // 3. Handle result
+            if (parseRes.status === "COMPLETED" && parseRes.data) {
+                setUploadProgress(100);
+                setProgressText("Trích xuất thành công");
+                
                 setTimeout(() => {
-                    const mockData: MockCVData = {
-                        firstName: "Tuấn Anh",
-                        lastName: "Trần",
-                        phone: "0987654321",
-                        email: "tta24.dev@gmail.com",
-                        linkedin: "https://linkedin.com/in/tuananh",
-                        website: "https://github.com/tuananhhit1612",
-                        country: "VN",
-                        state: "Đồng Nai",
-                        city: "Biên Hòa",
-                        gender: "Nam"
-                    };
-                    onNext("ai", mockData);
+                    onNext("ai", parseRes.data);
                 }, 800);
+            } else {
+                console.error("AI Parsing failed:", parseRes.message);
+                setIsUploading(false);
+                // Could add toast here
             }
-            setUploadProgress(Math.min(progress, 100));
-        }, 300);
+        } catch (error) {
+            console.error("Error during CV upload/parsing:", error);
+            setIsUploading(false);
+        }
     };
 
     return (
@@ -238,8 +245,8 @@ export function StepActivation({ onNext, onBack }: StepActivationProps) {
                                 <h3 className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-emerald-400 bg-clip-text text-transparent">
                                     Đang phân tích hồ sơ
                                 </h3>
-                                <p className="text-slate-600 dark:text-slate-400 font-medium">
-                                    Đang trích xuất các kỹ năng và kinh nghiệm chính...
+                                <p className="text-slate-600 dark:text-slate-400 font-medium text-center">
+                                    {progressText}
                                 </p>
                             </div>
 

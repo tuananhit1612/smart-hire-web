@@ -10,24 +10,31 @@ import {
     Tooltip,
     ResponsiveContainer,
 } from "recharts";
+import type { WeeklyActivityItem } from "../api/candidate-dashboard-api";
 
-const data = [
-    { name: "T2", applications: 2, views: 10 },
-    { name: "T3", applications: 3, views: 15 },
-    { name: "T4", applications: 1, views: 25 },
-    { name: "T5", applications: 4, views: 20 },
-    { name: "T6", applications: 2, views: 35 },
-    { name: "T7", applications: 5, views: 40 },
-    { name: "CN", applications: 1, views: 15 },
+interface ActivityChartProps {
+    weeklyActivity?: WeeklyActivityItem[];
+}
+
+const fallbackData = [
+    { day: "T2", applications: 0, views: 0 },
+    { day: "T3", applications: 0, views: 0 },
+    { day: "T4", applications: 0, views: 0 },
+    { day: "T5", applications: 0, views: 0 },
+    { day: "T6", applications: 0, views: 0 },
+    { day: "T7", applications: 0, views: 0 },
+    { day: "CN", applications: 0, views: 0 },
 ];
 
-export function ActivityChart() {
+export function ActivityChart({ weeklyActivity }: ActivityChartProps) {
+    const data = useMemo(() => weeklyActivity || fallbackData, [weeklyActivity]);
+
     return (
         <div className="bg-white dark:bg-[#1C252E] rounded-2xl border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] p-6 h-full flex flex-col">
             <div className="flex items-center justify-between mb-6">
                 <div>
                     <h3 className="text-lg font-bold text-[#1C252E] dark:text-white">
-                        Hoạt động tuần này
+                        Hoạt động 7 ngày gần đây
                     </h3>
                     <p className="text-sm text-[#637381] dark:text-[#919EAB]">
                         Lượt xem hồ sơ & đơn ứng tuyển
@@ -67,7 +74,7 @@ export function ActivityChart() {
                             stroke="rgba(145,158,171,0.12)"
                         />
                         <XAxis
-                            dataKey="name"
+                            dataKey="day"
                             axisLine={false}
                             tickLine={false}
                             tick={{ fill: "#919EAB", fontSize: 12, fontWeight: 600 }}
@@ -77,6 +84,7 @@ export function ActivityChart() {
                             axisLine={false}
                             tickLine={false}
                             tick={{ fill: "#919EAB", fontSize: 12 }}
+                            allowDecimals={false}
                         />
                         <Tooltip
                             contentStyle={{

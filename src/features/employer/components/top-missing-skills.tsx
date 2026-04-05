@@ -11,29 +11,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
 
-// ─── Types ───────────────────────────────────────────
-export interface MissingSkill {
-    readonly skill: string;
-    readonly category: "technical" | "soft" | "tool" | "certification";
-    readonly demandCount: number;     // how many job postings require this
-    readonly candidateGap: number;    // % of applicants lacking this skill
-    readonly trend: "rising" | "stable" | "declining";
-    readonly suggestedAction?: string;
-}
-
-// ─── Mock Data ───────────────────────────────────────
-const defaultSkills: MissingSkill[] = [
-    { skill: "TypeScript", category: "technical", demandCount: 18, candidateGap: 62, trend: "rising", suggestedAction: "Thêm vào yêu cầu tuyển dụng hoặc đào tạo nội bộ" },
-    { skill: "System Design", category: "technical", demandCount: 12, candidateGap: 78, trend: "rising", suggestedAction: "Tổ chức mock interview về system design" },
-    { skill: "CI/CD Pipeline", category: "tool", demandCount: 10, candidateGap: 55, trend: "stable", suggestedAction: "Workshop DevOps basics cho candidates" },
-    { skill: "AWS / Cloud", category: "tool", demandCount: 14, candidateGap: 68, trend: "rising", suggestedAction: "Cân nhắc đào tạo AWS certification" },
-    { skill: "Agile / Scrum", category: "soft", demandCount: 20, candidateGap: 35, trend: "stable" },
-    { skill: "Leadership", category: "soft", demandCount: 8, candidateGap: 72, trend: "rising", suggestedAction: "Mentoring program cho senior candidates" },
-    { skill: "Docker / K8s", category: "tool", demandCount: 11, candidateGap: 58, trend: "stable", suggestedAction: "Thêm Docker basics vào technical assessment" },
-    { skill: "GraphQL", category: "technical", demandCount: 6, candidateGap: 45, trend: "declining" },
-    { skill: "Data Analysis", category: "technical", demandCount: 9, candidateGap: 52, trend: "rising", suggestedAction: "Mở thêm vị trí data intern" },
-    { skill: "PMP / PRINCE2", category: "certification", demandCount: 4, candidateGap: 85, trend: "stable", suggestedAction: "Sponsor certification cho internal PM" },
-];
+import type { MissingSkill } from "@/features/employer/api/dashboard-api";
 
 // ─── Category Config ─────────────────────────────────
 const CATEGORY_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
@@ -80,7 +58,7 @@ function GapBar({ gap, delay }: { readonly gap: number; readonly delay: number }
 
 // ─── Main Widget ─────────────────────────────────────
 export default function TopMissingSkills({
-    skills = defaultSkills,
+    skills = [],
     title = "Top kỹ năng thiếu hụt",
     maxDisplay = 8,
 }: {

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import {
     Users,
@@ -13,14 +14,39 @@ import {
     Activity,
     ArrowUpRight,
     Star,
-    Eye,
     Sparkles,
     CalendarDays,
+    Loader2,
+    AlertCircle,
+    CheckCircle2,
+    XCircle,
+    Download,
 } from "lucide-react";
+import {
+    AreaChart,
+    Area,
+    XAxis,
+    Tooltip,
+    ResponsiveContainer,
+} from "recharts";
 import { cn } from "@/shared/utils/cn";
-import FunnelByStage from "@/features/employer/components/funnel-by-stage";
+import { downloadBlob } from "@/shared/utils/download-file";
+import { useToastHelpers } from "@/shared/components/ui/toast";
+import FunnelByStage, {
+    type FunnelStage,
+    defaultFunnelStages,
+} from "@/features/employer/components/funnel-by-stage";
 import PassRateTable from "@/features/employer/components/pass-rate-table";
 import TopMissingSkills from "@/features/employer/components/top-missing-skills";
+import { useDashboardOverview } from "@/features/employer/hooks/use-dashboard-overview";
+import {
+    dashboardApi,
+    type HrDashboardOverview,
+    type StageFunnelItem,
+    type WeeklyTrendItem,
+    type TopJobItem,
+    type RecentActivityItem,
+} from "@/features/employer/api/dashboard-api";
 
 // ─── Animation Presets ───────────────────────────────
 const premiumEase = [0.22, 1, 0.36, 1] as const;
@@ -48,122 +74,191 @@ function SectionOverline({ label, className }: { readonly label: string; readonl
 interface StatCard {
     label: string;
     value: string;
-    change: string;
-    trend: "up" | "down";
     icon: typeof Users;
     gradient: string;
     shadowColor: string;
+    statusIcon?: typeof CheckCircle2;
+    statusColor?: string;
 }
 
-const statCards: StatCard[] = [
-    {
-        label: "Tổng ứng viên",
-        value: "1,284",
-        change: "+12.5%",
-        trend: "up",
-        icon: Users,
-        gradient: "from-[#22c55e] to-[#10b981]",
-        shadowColor: "shadow-green-500/20",
-    },
-    {
-        label: "Tin tuyển dụng",
-        value: "24",
-        change: "+3",
-        trend: "up",
-        icon: Briefcase,
-        gradient: "from-violet-500 to-purple-600",
-        shadowColor: "shadow-violet-500/25",
-    },
-    {
-        label: "Đang phỏng vấn",
-        value: "38",
-        change: "+8.2%",
-        trend: "up",
-        icon: FileSearch,
-        gradient: "from-emerald-500 to-green-600",
-        shadowColor: "shadow-emerald-500/25",
-    },
-    {
-        label: "Đã tuyển tháng này",
-        value: "7",
-        change: "-2",
-        trend: "down",
-        icon: UserCheck,
-        gradient: "from-amber-500 to-orange-600",
-        shadowColor: "shadow-amber-500/25",
-    },
-];
-
-// ─── Recent Activity Data ────────────────────────────
-interface ActivityItem {
-    id: string;
-    action: string;
-    subject: string;
-    time: string;
-    type: "application" | "interview" | "hired" | "posted";
+/** Build stat cards from live API data */
+function buildStatCards(data: HrDashboardOverview): StatCard[] {
+    return [
+        {
+            label: "Tổng ứng viên",
+            value: data.totalApplications.toLocaleString("vi-VN"),
+            icon: Users,
+            gradient: "from-[#22c55e] to-[#10b981]",
+            shadowColor: "shadow-green-500/20",
+        },
+        {
+            label: "Tổng tin tuyển dụng",
+            value: data.totalJobs.toLocaleString("vi-VN"),
+            icon: Briefcase,
+            gradient: "from-violet-500 to-purple-600",
+            shadowColor: "shadow-violet-500/25",
+        },
+        {
+            label: "Đang tuyển",
+            value: data.openJobs.toLocaleString("vi-VN"),
+            icon: FileSearch,
+            gradient: "from-emerald-500 to-green-600",
+            shadowColor: "shadow-emerald-500/25",
+            statusIcon: CheckCircle2,
+            statusColor: "text-emerald-500",
+        },
+        {
+            label: "Tỷ lệ tuyển dụng",
+            value: `${data.hireRate.toFixed(1)}%`,
+            icon: UserCheck,
+            gradient: "from-amber-500 to-orange-600",
+            shadowColor: "shadow-amber-500/25",
+        },
+    ];
 }
 
-const recentActivities: ActivityItem[] = [
-    { id: "a1", action: "Ứng viên mới ứng tuyển", subject: "Nguyễn Văn A — Senior Frontend Dev", time: "5 phút trước", type: "application" },
-    { id: "a2", action: "Lên lịch phỏng vấn", subject: "Trần Thị B — UX Designer", time: "32 phút trước", type: "interview" },
-    { id: "a3", action: "Đã tuyển dụng", subject: "Lê Văn C — Backend Engineer", time: "2 giờ trước", type: "hired" },
-    { id: "a4", action: "Đăng tin mới", subject: "DevOps Engineer — Remote", time: "3 giờ trước", type: "posted" },
-    { id: "a5", action: "Ứng viên mới ứng tuyển", subject: "Phạm Thị D — Data Analyst", time: "5 giờ trước", type: "application" },
-    { id: "a6", action: "Lên lịch phỏng vấn", subject: "Hoàng Văn E — Mobile Developer", time: "6 giờ trước", type: "interview" },
-    { id: "a7", action: "Đã tuyển dụng", subject: "Vũ Thị F — QA Engineer", time: "1 ngày trước", type: "hired" },
-    { id: "a8", action: "Đăng tin mới", subject: "Product Manager — Hybrid", time: "1 ngày trước", type: "posted" },
-];
-
-const ACTIVITY_COLORS: Record<string, { dot: string; bg: string }> = {
-    application: { dot: "bg-[#22c55e]", bg: "bg-[#22c55e]/10 dark:bg-[#22c55e]/20" },
-    interview: { dot: "bg-violet-500", bg: "bg-violet-50 dark:bg-violet-900/20" },
-    hired: { dot: "bg-emerald-500", bg: "bg-emerald-50 dark:bg-emerald-900/20" },
-    posted: { dot: "bg-amber-500", bg: "bg-amber-50 dark:bg-amber-900/20" },
+// ─── Stage visual config (maps backend stage names to icons/colors) ─
+const STAGE_VISUAL: Record<string, { icon: typeof Users; color: string; bg: string; barColor: string }> = {
+    APPLIED: { icon: Users, color: "text-[#22c55e]", bg: "bg-[#22c55e]/10 dark:bg-[#22c55e]/20", barColor: "bg-[#22c55e]" },
+    INTERVIEW: { icon: FileSearch, color: "text-amber-600", bg: "bg-amber-50 dark:bg-amber-900/20", barColor: "bg-amber-500" },
+    HIRED: { icon: UserCheck, color: "text-rose-600", bg: "bg-rose-50 dark:bg-rose-900/20", barColor: "bg-rose-500" },
+    REJECTED: { icon: XCircle, color: "text-red-600", bg: "bg-red-50 dark:bg-red-900/20", barColor: "bg-red-500" },
 };
 
-// ─── Top Jobs Data ───────────────────────────────────
-interface TopJob {
-    title: string;
-    applicants: number;
-    views: number;
-    status: "hot" | "active" | "closing";
+const STAGE_LABELS: Record<string, string> = {
+    APPLIED: "Ứng tuyển",
+    INTERVIEW: "Phỏng vấn",
+    HIRED: "Tuyển dụng",
+    REJECTED: "Từ chối",
+};
+
+function mapStageFunnelToUI(items: StageFunnelItem[]): FunnelStage[] {
+    return items.map((item, idx) => {
+        const vis = STAGE_VISUAL[item.stage] ?? STAGE_VISUAL.APPLIED;
+        return {
+            id: item.stage.toLowerCase(),
+            label: STAGE_LABELS[item.stage] ?? item.stage,
+            count: item.count,
+            icon: vis.icon,
+            color: vis.color,
+            bg: vis.bg,
+            barColor: vis.barColor,
+        };
+    });
 }
 
-const topJobs: TopJob[] = [
-    { title: "Senior Frontend Developer", applicants: 142, views: 3200, status: "hot" },
-    { title: "Backend Engineer (Node.js)", applicants: 98, views: 2100, status: "hot" },
-    { title: "UX/UI Designer", applicants: 76, views: 1800, status: "active" },
-    { title: "DevOps Engineer", applicants: 45, views: 1200, status: "active" },
-    { title: "Data Analyst", applicants: 34, views: 890, status: "closing" },
-];
-
+// ─── Status badge for TopJob ─────────────────────────
 const STATUS_BADGE: Record<string, { label: string; color: string }> = {
-    hot: { label: "Hot", color: "bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400" },
-    active: { label: "Active", color: "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400" },
-    closing: { label: "Closing", color: "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400" },
+    OPEN: { label: "Active", color: "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400" },
+    CLOSED: { label: "Closed", color: "bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400" },
+    DRAFT: { label: "Draft", color: "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400" },
+    UNKNOWN: { label: "—", color: "bg-gray-100 dark:bg-gray-800 text-gray-500" },
 };
 
-// ─── Animated Bar ────────────────────────────────────
-function MiniBar({ values, colors }: { readonly values: number[]; readonly colors: string[] }) {
-    const max = Math.max(...values);
+/** Format ISO timestamp to a relative "time ago" string */
+function timeAgo(iso: string): string {
+    if (!iso) return "";
+    const diff = Date.now() - new Date(iso).getTime();
+    const mins = Math.floor(diff / 60_000);
+    if (mins < 1) return "Vừa xong";
+    if (mins < 60) return `${mins} phút trước`;
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return `${hours} giờ trước`;
+    const days = Math.floor(hours / 24);
+    return `${days} ngày trước`;
+}
+
+// ─── Animated Area Chart ────────────────────────────────
+function WeeklyTrendChart({ data }: { readonly data: WeeklyTrendItem[] }) {
+    const formattedData = data.map((d) => ({
+        ...d,
+        labelDate: new Date(d.date).toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit" }),
+    }));
+
     return (
-        <div className="flex items-end gap-2 h-32">
-            {values.map((v, i) => (
-                <motion.div
-                    key={i}
-                    initial={{ height: 0 }}
-                    whileInView={{ height: `${(v / max) * 100}%` }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.7, delay: 0.3 + i * 0.08, ease: premiumEase }}
-                    className={cn("flex-1 rounded-t-lg min-w-0", colors[i % colors.length])}
-                />
-            ))}
+        <div className="h-40 w-full mt-4 -ml-2">
+            <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={formattedData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
+                    <defs>
+                        <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#22c55e" stopOpacity={0.4} />
+                            <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
+                        </linearGradient>
+                    </defs>
+                    <XAxis
+                        dataKey="labelDate"
+                        axisLine={false}
+                        tickLine={false}
+                        tick={{ fill: "#919EAB", fontSize: 10, fontWeight: 500 }}
+                        dy={10}
+                    />
+                    <Tooltip
+                        cursor={{ stroke: "rgba(145,158,171,0.2)", strokeWidth: 1, strokeDasharray: "4 4" }}
+                        content={({ active, payload, label }) => {
+                            if (active && payload && payload.length) {
+                                return (
+                                    <div className="bg-white dark:bg-[#1C252E] border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] rounded-lg shadow-xl p-3">
+                                        <p className="text-[10px] text-[#919EAB] mb-1 font-medium">{label}</p>
+                                        <p className="text-sm font-bold text-[#1C252E] dark:text-white flex items-center gap-2">
+                                            <span className="w-2 h-2 rounded-full bg-[#22c55e]"></span>
+                                            {payload[0].value} ứng viên
+                                        </p>
+                                    </div>
+                                );
+                            }
+                            return null;
+                        }}
+                    />
+                    <Area
+                        type="monotone"
+                        dataKey="count"
+                        stroke="#22c55e"
+                        strokeWidth={4}
+                        fillOpacity={1}
+                        fill="url(#colorCount)"
+                        isAnimationActive={true}
+                        animationDuration={1500}
+                    />
+                </AreaChart>
+            </ResponsiveContainer>
         </div>
     );
 }
-
 // ─── Main Page ───────────────────────────────────────
 export default function HRDashboardPage() {
+    const { data: overview, isLoading, error, refetch } = useDashboardOverview();
+    const [exportingApps, setExportingApps] = useState(false);
+    const [exportingJobs, setExportingJobs] = useState(false);
+    const toast = useToastHelpers();
+
+    const handleExportApps = async () => {
+        try {
+            setExportingApps(true);
+            const blob = await dashboardApi.exportApplicationsCsv();
+            const filename = `hr_applications_${new Date().toISOString().slice(0, 10)}.csv`;
+            downloadBlob(blob, filename);
+            toast.success("Đã xuất báo cáo CSV Ứng viên thành công!", "Tệp tải xuống nằm trong thư mục Downloads.");
+        } catch (err) {
+            toast.error("Xuất báo cáo thất bại", "Vui lòng thử lại sau.");
+        } finally {
+            setExportingApps(false);
+        }
+    };
+
+    const handleExportJobs = async () => {
+        try {
+            setExportingJobs(true);
+            const blob = await dashboardApi.exportJobsCsv();
+            const filename = `hr_jobs_${new Date().toISOString().slice(0, 10)}.csv`;
+            downloadBlob(blob, filename);
+            toast.success("Đã xuất báo cáo CSV Tin tuyển dụng thành công!", "Tệp tải xuống nằm trong thư mục Downloads.");
+        } catch (err) {
+            toast.error("Xuất báo cáo thất bại", "Vui lòng thử lại sau.");
+        } finally {
+            setExportingJobs(false);
+        }
+    };
+
     const today = new Date();
     const dateStr = today.toLocaleDateString("vi-VN", {
         weekday: "long",
@@ -171,6 +266,11 @@ export default function HRDashboardPage() {
         month: "long",
         year: "numeric",
     });
+
+    const statCards = overview ? buildStatCards(overview) : [];
+    const funnelStages = overview?.stageFunnel?.length
+        ? mapStageFunnelToUI(overview.stageFunnel)
+        : defaultFunnelStages;
 
     return (
         <section className="relative z-10 pt-8 pb-16 md:pt-10">
@@ -200,61 +300,99 @@ export default function HRDashboardPage() {
                                 {dateStr} — Tổng quan tuyển dụng của bạn hôm nay
                             </p>
                         </div>
-                        <div className="flex items-center gap-3 ml-[52px] md:ml-0">
-                            <div className="px-4 py-2 rounded-full bg-[rgba(145,158,171,0.04)] dark:bg-[rgba(145,158,171,0.08)] border border-[rgba(145,158,171,0.12)] text-xs font-medium text-[#637381] dark:text-[#919EAB] flex items-center gap-2">
-                                <CalendarDays className="w-3.5 h-3.5" />
-                                Tháng {today.getMonth() + 1}, {today.getFullYear()}
+                            <div className="flex flex-col sm:flex-row items-center gap-3 ml-[52px] md:ml-0 mt-4 md:mt-0">
+                                <div className="px-4 py-2 rounded-full bg-[rgba(145,158,171,0.04)] dark:bg-[rgba(145,158,171,0.08)] border border-[rgba(145,158,171,0.12)] text-xs font-medium text-[#637381] dark:text-[#919EAB] flex items-center gap-2">
+                                    <CalendarDays className="w-3.5 h-3.5" />
+                                    Tháng {today.getMonth() + 1}, {today.getFullYear()}
+                                </div>
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={handleExportApps}
+                                        disabled={exportingApps}
+                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/70 hover:bg-white dark:bg-white/10 dark:hover:bg-white/20 border border-[rgba(145,158,171,0.2)] text-xs font-semibold text-[#1C252E] dark:text-white transition-all hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                                        title="Xuất CSV Ứng viên"
+                                    >
+                                        {exportingApps ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5 text-violet-600" />}
+                                        <span className="hidden sm:inline">CSV Ứng viên</span>
+                                    </button>
+                                    <button
+                                        onClick={handleExportJobs}
+                                        disabled={exportingJobs}
+                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/70 hover:bg-white dark:bg-white/10 dark:hover:bg-white/20 border border-[rgba(145,158,171,0.2)] text-xs font-semibold text-[#1C252E] dark:text-white transition-all hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                                        title="Xuất CSV Tin tuyển dụng"
+                                    >
+                                        {exportingJobs ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5 text-emerald-600" />}
+                                        <span className="hidden sm:inline">CSV Việc làm</span>
+                                    </button>
+                                </div>
                             </div>
-                        </div>
                     </div>
                 </motion.div>
 
                 {/* ═══ Section: Stat Cards ═══ */}
                 <div className="mb-12">
                     <SectionOverline label="Tổng quan" />
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {statCards.map((card, i) => {
-                            const Icon = card.icon;
-                            return (
-                                <motion.div
-                                    key={card.label}
-                                    {...fadeUp}
-                                    transition={{ duration: 0.5, delay: 0.1 + i * 0.1, ease: premiumEase }}
-                                    className="group relative bg-white dark:bg-[#1C252E] border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] rounded-2xl p-6 hover:border-[rgba(145,158,171,0.32)] hover:shadow-lg transition-all duration-300 cursor-default"
-                                >
-                                    <div className="flex items-start justify-between mb-4">
-                                        <div className={cn(
-                                            "w-14 h-14 rounded-2xl flex items-center justify-center bg-gradient-to-br shadow-lg",
-                                            card.gradient,
-                                            card.shadowColor
-                                        )}>
-                                            <Icon className="w-7 h-7 text-white" />
+
+                    {/* Error banner */}
+                    {error && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="mb-6 flex items-center gap-3 rounded-xl border border-rose-200 dark:border-rose-800/40 bg-rose-50 dark:bg-rose-900/20 p-4 text-sm text-rose-700 dark:text-rose-400"
+                        >
+                            <AlertCircle className="w-5 h-5 shrink-0" />
+                            <span>{error}</span>
+                            <button onClick={refetch} className="ml-auto text-xs font-semibold underline hover:no-underline">Thử lại</button>
+                        </motion.div>
+                    )}
+
+                    {/* Loading state */}
+                    {isLoading ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                            {[0, 1, 2, 3].map((i) => (
+                                <div key={i} className="bg-white dark:bg-[#1C252E] border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] rounded-2xl p-6 animate-pulse">
+                                    <div className="w-14 h-14 rounded-2xl bg-gray-200 dark:bg-gray-700 mb-4" />
+                                    <div className="h-8 w-24 bg-gray-200 dark:bg-gray-700 rounded mb-2" />
+                                    <div className="h-4 w-32 bg-gray-100 dark:bg-gray-800 rounded" />
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                            {statCards.map((card, i) => {
+                                const Icon = card.icon;
+                                return (
+                                    <motion.div
+                                        key={card.label}
+                                        {...fadeUp}
+                                        transition={{ duration: 0.5, delay: 0.1 + i * 0.1, ease: premiumEase }}
+                                        className="group relative bg-white dark:bg-[#1C252E] border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] rounded-2xl p-6 hover:border-[rgba(145,158,171,0.32)] hover:shadow-lg transition-all duration-300 cursor-default"
+                                    >
+                                        <div className="flex items-start justify-between mb-4">
+                                            <div className={cn(
+                                                "w-14 h-14 rounded-2xl flex items-center justify-center bg-gradient-to-br shadow-lg",
+                                                card.gradient,
+                                                card.shadowColor
+                                            )}>
+                                                <Icon className="w-7 h-7 text-white" />
+                                            </div>
                                         </div>
-                                        <div className={cn(
-                                            "flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full",
-                                            card.trend === "up"
-                                                ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400"
-                                                : "bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400"
-                                        )}>
-                                            {card.trend === "up" ? <TrendingUp className="w-3.5 h-3.5" /> : <TrendingDown className="w-3.5 h-3.5" />}
-                                            {card.change}
-                                        </div>
-                                    </div>
-                                    <h3 className="text-3xl font-black text-[#1C252E] dark:text-white mb-1 tracking-tight">
-                                        {card.value}
-                                    </h3>
-                                    <p className="text-sm text-[#919EAB] font-medium">{card.label}</p>
-                                </motion.div>
-                            );
-                        })}
-                    </div>
+                                        <h3 className="text-3xl font-black text-[#1C252E] dark:text-white mb-1 tracking-tight">
+                                            {card.value}
+                                        </h3>
+                                        <p className="text-sm text-[#919EAB] font-medium">{card.label}</p>
+                                    </motion.div>
+                                );
+                            })}
+                        </div>
+                    )}
                 </div>
 
                 {/* ═══ Section: Charts & Funnel ═══ */}
                 <div className="mb-12">
                     <SectionOverline label="Biểu đồ & Phễu tuyển dụng" />
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        {/* Application Trend — enhanced mini bar chart */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+                        {/* Application Trend — live weekly data */}
                         <motion.div
                             {...fadeUp}
                             transition={{ duration: 0.5, delay: 0.15, ease: premiumEase }}
@@ -266,35 +404,32 @@ export default function HRDashboardPage() {
                                         <BarChart3 className="w-5 h-5 text-[#1C252E] dark:text-white" />
                                     </div>
                                     <div>
-                                        <h3 className="text-base font-bold text-[#1C252E] dark:text-white">Ứng viên theo tuần</h3>
-                                        <p className="text-xs text-[#919EAB]">8 tuần gần nhất</p>
+                                        <h3 className="text-base font-bold text-[#1C252E] dark:text-white">Ứng viên theo ngày</h3>
+                                        <p className="text-xs text-[#919EAB]">8 ngày gần nhất</p>
                                     </div>
                                 </div>
-                                <div className="text-right">
-                                    <p className="text-3xl font-black text-[#1C252E] dark:text-white">85</p>
-                                    <div className="flex items-center justify-end gap-1 text-xs text-emerald-600 dark:text-emerald-400 font-semibold mt-0.5">
-                                        <TrendingUp className="w-3.5 h-3.5" />
-                                        +26.8% tuần này
+                                {overview?.weeklyTrend && overview.weeklyTrend.length > 0 && (
+                                    <div className="text-right">
+                                        <p className="text-3xl font-black text-[#1C252E] dark:text-white">
+                                            {overview.weeklyTrend[overview.weeklyTrend.length - 1].count}
+                                        </p>
+                                        <p className="text-xs text-[#919EAB] mt-0.5">hôm nay</p>
                                     </div>
-                                </div>
+                                )}
                             </div>
-                            <MiniBar
-                                values={[45, 62, 38, 78, 55, 92, 67, 85]}
-                                colors={["bg-[rgba(145,158,171,0.04)] dark:bg-[#22c55e]", "bg-[#22c55e] dark:bg-[#22c55e]", "bg-[#22c55e] dark:bg-[#22c55e]", "bg-[#22c55e] dark:bg-[#22c55e]"]}
-                            />
-                            <div className="flex justify-between mt-3 px-1">
-                                {["T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8"].map((l) => (
-                                    <span key={l} className="text-[10px] text-[#C4CDD5] dark:text-[#637381] font-medium">{l}</span>
-                                ))}
-                            </div>
+                            {overview?.weeklyTrend && overview.weeklyTrend.length > 0 ? (
+                                <WeeklyTrendChart data={overview.weeklyTrend} />
+                            ) : (
+                                <p className="text-sm text-[#919EAB] text-center py-8">Chưa có dữ liệu</p>
+                            )}
                         </motion.div>
 
-                        {/* Pipeline Funnel */}
+                        {/* Pipeline Funnel — live data from API */}
                         <motion.div
                             {...fadeUp}
                             transition={{ duration: 0.5, delay: 0.25, ease: premiumEase }}
                         >
-                            <FunnelByStage />
+                            <FunnelByStage stages={funnelStages} />
                         </motion.div>
                     </div>
                 </div>
@@ -321,11 +456,14 @@ export default function HRDashboardPage() {
                                 </button>
                             </div>
                             <div className="space-y-2">
-                                {topJobs.map((job, i) => {
-                                    const badge = STATUS_BADGE[job.status];
+                                {(overview?.topJobs ?? []).length === 0 && (
+                                    <p className="text-sm text-[#919EAB] text-center py-6">Chưa có dữ liệu</p>
+                                )}
+                                {(overview?.topJobs ?? []).map((job, i) => {
+                                    const badge = STATUS_BADGE[job.status] ?? STATUS_BADGE.UNKNOWN;
                                     return (
                                         <motion.div
-                                            key={job.title}
+                                            key={job.jobId}
                                             {...fadeUp}
                                             transition={{ delay: 0.2 + i * 0.08, ease: premiumEase }}
                                             className="flex items-center gap-4 p-4 rounded-xl hover:bg-[rgba(145,158,171,0.06)] dark:hover:bg-white/[0.04] transition-colors group cursor-pointer"
@@ -337,11 +475,16 @@ export default function HRDashboardPage() {
                                                 </p>
                                                 <div className="flex items-center gap-4 mt-1">
                                                     <span className="text-xs text-[#919EAB] flex items-center gap-1.5">
-                                                        <Users className="w-3.5 h-3.5" /> {job.applicants} ứng viên
+                                                        <Users className="w-3.5 h-3.5" /> {job.applicationCount} ứng viên
                                                     </span>
                                                     <span className="text-xs text-[#919EAB] flex items-center gap-1.5">
-                                                        <Eye className="w-3.5 h-3.5" /> {job.views.toLocaleString()} views
+                                                        <UserCheck className="w-3.5 h-3.5" /> {job.hiredCount} đã tuyển
                                                     </span>
+                                                    {job.newToday > 0 && (
+                                                        <span className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
+                                                            <TrendingUp className="w-3 h-3" /> +{job.newToday} hôm nay
+                                                        </span>
+                                                    )}
                                                 </div>
                                             </div>
                                             <span className={cn("text-[10px] font-bold px-2.5 py-1 rounded-full", badge?.color)}>
@@ -367,31 +510,43 @@ export default function HRDashboardPage() {
                                 <h3 className="text-base font-bold text-[#1C252E] dark:text-white">Hoạt động gần đây</h3>
                             </div>
                             <div className="space-y-4 max-h-[420px] overflow-y-auto pr-1 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[rgba(145,158,171,0.2)]">
-                                {recentActivities.map((act, i) => {
-                                    const colors = ACTIVITY_COLORS[act.type];
-                                    return (
-                                        <motion.div
-                                            key={act.id}
-                                            {...fadeUp}
-                                            transition={{ delay: 0.25 + i * 0.06, ease: premiumEase }}
-                                            className="flex items-start gap-3"
-                                        >
-                                            <div className="mt-1.5 relative">
-                                                <div className={cn("w-2.5 h-2.5 rounded-full ring-4 ring-white dark:ring-[#1C252E]", colors?.dot)} />
-                                                {i < recentActivities.length - 1 && (
-                                                    <div className="absolute top-3.5 left-1 w-px h-8 bg-[rgba(145,158,171,0.15)] dark:bg-white/[0.06]" />
-                                                )}
-                                            </div>
-                                            <div className="flex-1 min-w-0">
-                                                <p className="text-xs font-semibold text-[#1C252E] dark:text-white">{act.action}</p>
-                                                <p className="text-xs text-[#637381] dark:text-[#919EAB] truncate">{act.subject}</p>
-                                                <p className="text-[10px] text-[#C4CDD5] dark:text-[#637381] mt-0.5 flex items-center gap-1">
-                                                    <Clock className="w-2.5 h-2.5" /> {act.time}
-                                                </p>
-                                            </div>
-                                        </motion.div>
-                                    );
-                                })}
+                                {(overview?.recentActivities ?? []).length === 0 && (
+                                    <p className="text-sm text-[#919EAB] text-center py-6">Chưa có hoạt động nào</p>
+                                )}
+                                {(overview?.recentActivities ?? []).map((act, i) => (
+                                    <motion.div
+                                        key={`${act.candidateName}-${act.timestamp}-${i}`}
+                                        {...fadeUp}
+                                        transition={{ delay: 0.25 + i * 0.06, ease: premiumEase }}
+                                        className="flex items-start gap-3"
+                                    >
+                                        <div className="mt-1.5 relative">
+                                            {act.avatarUrl ? (
+                                                <img
+                                                    src={act.avatarUrl}
+                                                    alt={act.candidateName}
+                                                    className="w-7 h-7 rounded-full object-cover"
+                                                />
+                                            ) : (
+                                                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#22c55e] to-[#10b981] flex items-center justify-center text-white text-[10px] font-bold">
+                                                    {act.candidateName.charAt(0)}
+                                                </div>
+                                            )}
+                                            {i < (overview?.recentActivities ?? []).length - 1 && (
+                                                <div className="absolute top-8 left-3.5 w-px h-6 bg-[rgba(145,158,171,0.15)] dark:bg-white/[0.06]" />
+                                            )}
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-xs font-semibold text-[#1C252E] dark:text-white">{act.candidateName}</p>
+                                            <p className="text-xs text-[#637381] dark:text-[#919EAB] truncate">
+                                                {act.action} — {act.jobTitle}
+                                            </p>
+                                            <p className="text-[10px] text-[#C4CDD5] dark:text-[#637381] mt-0.5 flex items-center gap-1">
+                                                <Clock className="w-2.5 h-2.5" /> {timeAgo(act.timestamp)}
+                                            </p>
+                                        </div>
+                                    </motion.div>
+                                ))}
                             </div>
                         </motion.div>
                     </div>
@@ -405,13 +560,13 @@ export default function HRDashboardPage() {
                             {...fadeUp}
                             transition={{ duration: 0.5, delay: 0.1, ease: premiumEase }}
                         >
-                            <PassRateTable />
+                            <PassRateTable data={overview?.passRates || []} />
                         </motion.div>
                         <motion.div
                             {...fadeUp}
                             transition={{ duration: 0.5, delay: 0.2, ease: premiumEase }}
                         >
-                            <TopMissingSkills />
+                            <TopMissingSkills skills={overview?.missingSkills || []} />
                         </motion.div>
                     </div>
                 </div>
