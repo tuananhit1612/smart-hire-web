@@ -39,8 +39,8 @@ export function EmployerApplicantsClient({ jobId }: EmployerApplicantsClientProp
         if (searchQuery) {
             const lowerQuery = searchQuery.toLowerCase();
             result = result.filter(app =>
-                app.name.toLowerCase().includes(lowerQuery) ||
-                app.skills.some(skill => skill.toLowerCase().includes(lowerQuery))
+                (app.name || "").toLowerCase().includes(lowerQuery) ||
+                (app.skills || []).some(skill => skill.toLowerCase().includes(lowerQuery))
             );
         }
 
