@@ -40,8 +40,6 @@ const NAV_CANDIDATE_TOOLS: NavItemType[] = [
     { label: "Tìm việc", href: "/jobs", icon: Briefcase },
     { label: "Đơn ứng tuyển", href: "/applications", icon: ClipboardList },
     { label: "Hồ sơ CV", href: "/cv-files", icon: FileText },
-    { label: "Xây dựng CV", href: "/cv-builder", icon: Edit3 },
-    { label: "Đánh giá CV", href: "/cv-analysis", icon: ScanSearch },
 ];
 
 /* ─── Employer/HR Nav (Module M2) ─── */

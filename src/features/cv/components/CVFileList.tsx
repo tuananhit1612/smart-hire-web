@@ -20,7 +20,7 @@ import { CVFileCard } from "./cv-files/CVFileCard";
 import { DeleteConfirmDialog } from "./cv-files/DeleteConfirmDialog";
 import { UploadCVModal } from "./cv-files/UploadCVModal";
 
-type FilterTab = "all" | "primary" | "uploaded" | "generated";
+type FilterTab = "all" | "primary" | "uploaded";
 type CVFileSortOption = "newest" | "oldest" | "name" | "size";
 
 export function CVFileList() {
@@ -68,8 +68,6 @@ export function CVFileList() {
             result = result.filter((f) => f.isPrimary);
         } else if (activeFilter === "uploaded") {
             result = result.filter((f) => f.source === "UPLOAD");
-        } else if (activeFilter === "generated") {
-            result = result.filter((f) => f.source === "BUILDER");
         }
 
         if (searchQuery) {
@@ -102,7 +100,6 @@ export function CVFileList() {
             all: files.length,
             primary: files.filter((f) => f.isPrimary).length,
             uploaded: files.filter((f) => f.source === "UPLOAD").length,
-            generated: files.filter((f) => f.source === "BUILDER").length,
         };
     }, [files]);
 
@@ -154,7 +151,6 @@ export function CVFileList() {
         { id: "all", label: "Tất cả", count: statusCounts.all },
         { id: "primary", label: "CV Mặc định", count: statusCounts.primary },
         { id: "uploaded", label: "Tải lên", count: statusCounts.uploaded },
-        { id: "generated", label: "Tạo từ Builder", count: statusCounts.generated },
     ];
 
     const sortOptions: { id: CVFileSortOption; label: string }[] = [
@@ -189,7 +185,7 @@ export function CVFileList() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
-                        className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8"
+                        className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8"
                     >
                         {[
                             {
@@ -209,12 +205,6 @@ export function CVFileList() {
                                 value: statusCounts.uploaded,
                                 icon: Upload,
                                 color: "from-blue-500 to-blue-600",
-                            },
-                            {
-                                label: "Tạo từ Builder",
-                                value: statusCounts.generated,
-                                icon: FolderOpen,
-                                color: "from-purple-500 to-purple-600",
                             },
                         ].map((stat, i) => (
                             <motion.div
