@@ -10,19 +10,7 @@ export type {
     AuthStatus,
     AuthState,
     RegisterFlowState,
-    MockUserKey,
 } from "./types/auth-types";
-
-// Mock session data
-export {
-    mockCandidateNew,
-    mockCandidateReturning,
-    mockEmployerNew,
-    mockEmployerReturning,
-    mockAdmin,
-    mockUsers,
-    DEFAULT_MOCK_USER,
-} from "./types/mock-session";
 
 // Context & Provider
 export { AuthContext, AuthProvider } from "./context/auth-context";

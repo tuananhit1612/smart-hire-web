@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@400;700&family=Playfair+Display:wght@400;600;700&family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&family=Source+Sans+3:wght@400;600;700&display=swap');
 @import "tailwindcss";
 
 @plugin "tailwindcss-animate";
@@ -212,6 +213,16 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ============================================
+   EDITABLE TEXT — contentEditable placeholder
+   ============================================ */
+[data-placeholder]:empty::before {
+  content: attr(data-placeholder);
+  color: #9ca3af; /* gray-400 */
+  font-style: italic;
+  pointer-events: none;
+}
+
+/* ============================================
    ANIMATIONS - Design System
    ============================================ */
 
@@ -287,6 +298,49 @@ h1, h2, h3, h4, h5, h6 {
    ============================================ */
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ============================================
+   CUSTOM SCROLLBAR — Auto-hide, Thin Green
+   Visible only when hovering the scroll area
+   ============================================ */
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+*:hover {
+  scrollbar-color: rgba(34, 197, 94, 0.45) transparent;
+}
+
+/* Webkit (Chrome, Edge, Safari) */
+*::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(34, 197, 94, 0);
+  border-radius: 9999px;
+  transition: background 0.3s ease;
+}
+
+*:hover::-webkit-scrollbar-thumb {
+  background: rgba(34, 197, 94, 0.4);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(34, 197, 94, 0.7);
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
 
 .focus-ring:focus {
   outline: none;
@@ -656,5 +710,29 @@ h1, h2, h3, h4, h5, h6 {
   }
   100% {
     background-position: -200% 0;
+  }
+}
+
+/* ─────────────────────────────────────────── */
+/*  CV Print Pagination Classes                */
+/* ─────────────────────────────────────────── */
+@media print {
+  .break-inside-avoid {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  .break-before-always {
+    page-break-before: always !important;
+    break-before: always !important;
+  }
+  .break-after-always {
+    page-break-after: always !important;
+    break-after: always !important;
+  }
+  /* Hide shadows or UI elements naturally if needed */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 }

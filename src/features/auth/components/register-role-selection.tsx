@@ -56,8 +56,8 @@ export function RegisterRoleSelection({ onRoleSelect }: RegisterRoleSelectionPro
                     icon={Building2}
                     title="Tôi là Nhà tuyển dụng"
                     description="Tuyển dụng nhân tài & đăng tin"
-                    isSelected={selectedRole === "employer"}
-                    onSelect={() => setSelectedRole("employer")}
+                    isSelected={selectedRole === "hr"}
+                    onSelect={() => setSelectedRole("hr")}
                 />
             </motion.div>
 

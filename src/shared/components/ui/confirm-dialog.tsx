@@ -130,6 +130,8 @@ export function ConfirmDialog({
 
 // Hook for easier usage
 export function useConfirmDialog() {
+    const resolveRef = React.useRef<((value: boolean) => void) | null>(null);
+
     const [state, setState] = React.useState<{
         isOpen: boolean;
         title: string;
@@ -137,13 +139,11 @@ export function useConfirmDialog() {
         variant: "danger" | "warning" | "info";
         confirmText?: string;
         cancelText?: string;
-        onConfirm: () => void;
     }>({
         isOpen: false,
         title: "",
         message: "",
         variant: "danger",
-        onConfirm: () => { },
     });
 
     const confirm = React.useCallback(
@@ -154,7 +154,14 @@ export function useConfirmDialog() {
             confirmText?: string;
             cancelText?: string;
         }): Promise<boolean> => {
+            // If a previous dialog is still pending, resolve it as cancelled
+            if (resolveRef.current) {
+                resolveRef.current(false);
+                resolveRef.current = null;
+            }
+
             return new Promise((resolve) => {
+                resolveRef.current = resolve;
                 setState({
                     isOpen: true,
                     title: options.title,
@@ -162,15 +169,28 @@ export function useConfirmDialog() {
                     variant: options.variant || "danger",
                     confirmText: options.confirmText,
                     cancelText: options.cancelText,
-                    onConfirm: () => resolve(true),
                 });
             });
         },
         []
     );
 
+    const handleConfirm = React.useCallback(() => {
+        if (resolveRef.current) {
+            resolveRef.current(true);
+            resolveRef.current = null;
+        }
+    }, []);
+
     const close = React.useCallback(() => {
+        // Resolve as cancelled so the awaiting code can continue
+        if (resolveRef.current) {
+            resolveRef.current(false);
+            resolveRef.current = null;
+        }
         setState((prev) => ({ ...prev, isOpen: false }));
+        // Force-restore scroll in case AnimatePresence exit animation races
+        document.body.style.overflow = "";
     }, []);
 
     const DialogComponent = React.useMemo(
@@ -178,7 +198,7 @@ export function useConfirmDialog() {
             <ConfirmDialog
                 isOpen={state.isOpen}
                 onClose={close}
-                onConfirm={state.onConfirm}
+                onConfirm={handleConfirm}
                 title={state.title}
                 message={state.message}
                 variant={state.variant}
@@ -186,7 +206,7 @@ export function useConfirmDialog() {
                 cancelText={state.cancelText}
             />
         ),
-        [state, close]
+        [state, close, handleConfirm]
     );
 
     return { confirm, DialogComponent };

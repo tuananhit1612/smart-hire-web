@@ -31,18 +31,16 @@ export function ApplicantCard({ applicant, onSelect }: ApplicantCardProps) {
         return "text-red-600 bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-700/40 ring-red-500/20";
     };
 
-    const scoreColorClass = getScoreColor(applicant.aiAnalysis.matchScore);
+    const scoreColorClass = applicant.aiAnalysis 
+        ? getScoreColor(applicant.aiAnalysis.matchScore)
+        : "text-slate-600 bg-slate-50 border-slate-200";
 
     const getStatusConfig = (status: string) => {
         switch (status) {
             case ApplicationStage.APPLIED:
                 return { label: "Mới nộp", color: "bg-[#22c55e]/15 text-[#22c55e]" };
-            case ApplicationStage.SCREENING:
-                return { label: "Đang duyệt", color: "bg-purple-100 text-purple-700" };
             case ApplicationStage.INTERVIEW:
                 return { label: "Phỏng vấn", color: "bg-amber-100 text-amber-700" };
-            case ApplicationStage.OFFER:
-                return { label: "Đề nghị", color: "bg-pink-100 text-pink-700" };
             case ApplicationStage.HIRED:
                 return { label: "Đã tuyển", color: "bg-green-100 text-green-700" };
             case ApplicationStage.REJECTED:
@@ -52,7 +50,7 @@ export function ApplicantCard({ applicant, onSelect }: ApplicantCardProps) {
         }
     };
 
-    const statusConfig = getStatusConfig(applicant.status);
+    const statusConfig = getStatusConfig(applicant.stage || applicant.status || ApplicationStage.APPLIED);
 
     return (
         <motion.div 
@@ -66,14 +64,14 @@ export function ApplicantCard({ applicant, onSelect }: ApplicantCardProps) {
                 <div className="flex gap-4">
                     <div className="w-12 h-12 rounded-full bg-[rgba(145,158,171,0.1)] dark:bg-white/[0.06] flex items-center justify-center overflow-hidden border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08]">
                         {applicant.avatarUrl ? (
-                            <img src={applicant.avatarUrl} alt={applicant.name} className="w-full h-full object-cover" />
+                            <img src={applicant.avatarUrl} alt={applicant.fullName || applicant.name || "User"} className="w-full h-full object-cover" />
                         ) : (
-                            <span className="text-lg font-bold text-[#919EAB]">{applicant.name.charAt(0)}</span>
+                            <span className="text-lg font-bold text-[#919EAB]">{(applicant.fullName || applicant.name || "U").charAt(0).toUpperCase()}</span>
                         )}
                     </div>
                     <div>
                         <h3 className="font-bold text-[#1C252E] dark:text-white group-hover:text-[#22c55e] transition-colors">
-                            {applicant.name}
+                            {applicant.fullName || applicant.name || "Ứng viên ẩn danh"}
                         </h3>
                         <p className="text-sm text-[#637381] dark:text-[#919EAB] font-medium">
                             {applicant.currentTitle}
@@ -85,17 +83,24 @@ export function ApplicantCard({ applicant, onSelect }: ApplicantCardProps) {
                 </div>
 
                 {/* AI Score Badge */}
-                <div className={`flex flex-col items-center justify-center w-14 h-14 rounded-2xl border-2 ${scoreColorClass} shadow-sm`}>
-                    <Brain className="w-4 h-4 opacity-80 mb-0.5" />
-                    <span className="text-sm font-bold">{applicant.aiAnalysis.matchScore}%</span>
-                </div>
+                {applicant.aiAnalysis ? (
+                    <div className={`flex flex-col items-center justify-center w-14 h-14 rounded-2xl border-2 ${scoreColorClass} shadow-sm`}>
+                        <Brain className="w-4 h-4 opacity-80 mb-0.5" />
+                        <span className="text-sm font-bold">{applicant.aiAnalysis.matchScore}%</span>
+                    </div>
+                ) : (
+                    <div className="flex flex-col items-center justify-center w-14 h-14 rounded-2xl border-2 border-slate-200 text-slate-400 bg-slate-50 dark:bg-slate-800 shadow-sm">
+                        <Brain className="w-4 h-4 opacity-50 mb-0.5" />
+                        <span className="text-[10px] font-semibold">Chờ AI</span>
+                    </div>
+                )}
             </div>
 
             {/* AI Summary */}
             <div className="mb-4 bg-[rgba(145,158,171,0.06)] dark:bg-white/[0.04] rounded-xl p-3 border border-[rgba(145,158,171,0.1)] dark:border-white/[0.06]">
                 <p className="text-xs text-[#637381] dark:text-[#919EAB] line-clamp-2 italic">
                     <span className="font-semibold text-[#22c55e] not-italic mr-1">AI nhận xét:</span>
-                    "{applicant.aiAnalysis.summary}"
+                    {applicant.aiAnalysis ? `"${applicant.aiAnalysis.summary}"` : "Hệ thống AI đang xử lý phân tích tự động..."}
                 </p>
             </div>
 

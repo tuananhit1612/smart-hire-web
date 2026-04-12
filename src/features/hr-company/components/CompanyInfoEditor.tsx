@@ -29,11 +29,11 @@ interface CompanyInfoEditorProps {
 
 export function CompanyInfoEditor({ company, onUpdate, onClose }: CompanyInfoEditorProps) {
     const [formData, setFormData] = React.useState({
-        name: company.name,
+        name: company.name || "",
         tagline: company.tagline || "",
-        industry: company.industry,
-        size: company.size,
-        location: company.location,
+        industry: company.industry || "",
+        size: company.size || "SMALL",
+        location: company.location || "",
         address: company.address || "",
         website: company.website || "",
         email: company.email || "",
@@ -52,32 +52,16 @@ export function CompanyInfoEditor({ company, onUpdate, onClose }: CompanyInfoEdi
     };
 
     return (
-        <AnimatePresence>
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="fixed inset-0 z-50 flex items-center justify-center p-4"
-                onClick={onClose}
-            >
-                {/* Backdrop with blur */}
-                <div className="absolute inset-0 bg-gradient-to-br from-[rgba(145,158,171,0.04)] via-white to-[#22c55e]/5 backdrop-blur-md" />
-
-                <motion.div
-                    initial={{ scale: 0.9, opacity: 0, y: 20 }}
-                    animate={{ scale: 1, opacity: 1, y: 0 }}
-                    exit={{ scale: 0.9, opacity: 0, y: 20 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                    onClick={(e) => e.stopPropagation()}
-                    className="relative w-full max-w-2xl max-h-[90vh] overflow-hidden rounded-[2rem] shadow-2xl"
-                >
-                    {/* Animated gradient border */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#22c55e] via-green-500 to-[#10b981] rounded-[2rem] p-[2px] animate-gradient-x">
-                        <div className="absolute inset-[2px] bg-white dark:bg-[#1C252E] rounded-[calc(2rem-2px)]" />
-                    </div>
-
-                    {/* Content */}
-                    <div className="relative bg-white dark:bg-[#1C252E] rounded-[2rem] overflow-hidden">
+        <motion.div
+            key="editor-inline"
+            initial={{ height: 0, opacity: 0, marginTop: 0 }}
+            animate={{ height: "auto", opacity: 1, marginTop: 32 }}
+            exit={{ height: 0, opacity: 0, marginTop: 0 }}
+            className="overflow-hidden w-full relative z-20"
+        >
+            <div className="relative w-full max-w-4xl mx-auto rounded-[2rem] shadow-xl border-2 border-[#22c55e]/30 dark:border-white/10 dark:bg-[#1C252E]">
+                {/* Content */}
+                <div className="relative bg-white dark:bg-[#1C252E] rounded-[2rem] overflow-hidden">
                         {/* Header with gradient */}
                         <div className="relative px-8 pt-8 pb-6 bg-gradient-to-br from-[rgba(145,158,171,0.04)] via-white to-green-50/30 dark:from-[rgba(145,158,171,0.04)] dark:via-[#1C252E] dark:to-green-900/5">
                             {/* Decorative elements */}
@@ -115,7 +99,7 @@ export function CompanyInfoEditor({ company, onUpdate, onClose }: CompanyInfoEdi
                         </div>
 
                         {/* Form */}
-                        <form onSubmit={handleSubmit} className="p-8 space-y-6 max-h-[60vh] overflow-y-auto">
+                        <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-6">
                             {/* Section: Thông tin cơ bản */}
                             <FormSection
                                 icon={<Building2 className="w-4 h-4" />}
@@ -278,23 +262,10 @@ export function CompanyInfoEditor({ company, onUpdate, onClose }: CompanyInfoEdi
                                     Hủy bỏ
                                 </motion.button>
                             </div>
-                        </div>
                     </div>
-                </motion.div>
-            </motion.div>
-
-            {/* CSS for gradient animation */}
-            <style jsx global>{`
-                @keyframes gradient-x {
-                    0%, 100% { background-position: 0% 50%; }
-                    50% { background-position: 100% 50%; }
-                }
-                .animate-gradient-x {
-                    background-size: 200% 200%;
-                    animation: gradient-x 3s ease infinite;
-                }
-            `}</style>
-        </AnimatePresence>
+                </div>
+            </div>
+        </motion.div>
     );
 }
 

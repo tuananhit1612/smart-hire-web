@@ -6,57 +6,76 @@ import {
     Mic2,
     Search,
     Compass,
+    Loader2
 } from "lucide-react";
 import { WelcomeCard } from "@/features/dashboard/components/WelcomeCard";
 import { StatCard } from "@/features/dashboard/components/StatCard";
-import { ActivityChart } from "@/features/dashboard/components/ActivityChart";
+import dynamic from "next/dynamic";
+import { useCandidateDashboard } from "@/features/dashboard/hooks/useCandidateDashboard";
+
+const ActivityChart = dynamic(
+    () => import("@/features/dashboard/components/ActivityChart").then(mod => mod.ActivityChart),
+    { ssr: false, loading: () => <div className="h-[300px] w-full flex items-center justify-center text-gray-400">Đang tải biểu đồ...</div> }
+);
 import { RecentApplications } from "@/features/dashboard/components/RecentApplications";
 
-const STATS = [
-    {
-        title: "Tổng ứng tuyển",
-        value: 12,
-        subtitle: "+2 so với tuần trước",
-        icon: ClipboardList,
-        iconBg: "bg-gradient-to-br from-[#22C55E] to-[#16A34A]",
-        trend: { value: "20%", positive: true },
-    },
-    {
-        title: "Lượt tìm việc",
-        value: 50,
-        subtitle: "Hạn tìm kiếm tuần này",
-        icon: Search,
-        iconBg: "bg-gradient-to-br from-[#FFAB00] to-[#FFD666]",
-    },
-    {
-        title: "Trình độ ATS",
-        value: "85%",
-        subtitle: "CV hiện tại của bạn",
-        icon: FileText,
-        iconBg: "bg-gradient-to-br from-[#6366F1] to-[#8B5CF6]",
-        trend: { value: "5%", positive: true },
-    },
-    {
-        title: "Phỏng vấn AI",
-        value: 3,
-        subtitle: "Lượt luyện tập",
-        icon: Mic2,
-        iconBg: "bg-gradient-to-br from-[#F43F5E] to-[#E11D48]",
-    },
-];
-
 export default function DashboardPage() {
+    const { data, isLoading, error } = useCandidateDashboard();
+
+    if (isLoading) {
+        return (
+            <div className="w-full h-[60vh] flex flex-col items-center justify-center">
+                <Loader2 className="w-8 h-8 text-[#22C55E] animate-spin mb-4" />
+                <p className="text-[#637381] font-medium">Đang tải dữ liệu dashboard...</p>
+            </div>
+        );
+    }
+
+    if (error || !data) {
+        return (
+            <div className="w-full p-6 text-center text-red-500 bg-red-50 dark:bg-red-500/10 rounded-2xl">
+                <p>{error || "Không thể tải dữ liệu dashboard"}</p>
+            </div>
+        );
+    }
+
+    const STATS = [
+        {
+            title: "Tổng ứng tuyển",
+            value: data.totalApplications,
+            subtitle: "Tất cả các CV đã nộp",
+            icon: ClipboardList,
+            iconBg: "bg-gradient-to-br from-[#22C55E] to-[#16A34A]",
+            trend: { value: "Mới nhất", positive: true },
+        },
+        {
+            title: "Lượt tìm việc",
+            value: 50,
+            subtitle: "Hạn tìm kiếm tuần này",
+            icon: Search,
+            iconBg: "bg-gradient-to-br from-[#FFAB00] to-[#FFD666]",
+        },
+        {
+            title: "Phỏng vấn sắp tới",
+            value: data.upcomingInterviews,
+            subtitle: "Lịch phỏng vấn đã xếp",
+            icon: FileText,
+            iconBg: "bg-gradient-to-br from-[#6366F1] to-[#8B5CF6]",
+            trend: { value: "Sắp tới", positive: true },
+        },
+    ];
+
     return (
         <div className="max-w-7xl mx-auto space-y-6 animate-fade-in-up">
             {/* Welcome card */}
-            <WelcomeCard />
+            <WelcomeCard profileCompleteness={data.profileCompleteness} />
 
             {/* Stats row */}
             <div>
                 <p className="text-[#22c55e] font-bold tracking-wider uppercase text-[11px] mb-3">
                     Tổng quan hôm nay
                 </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {STATS.map((stat) => (
                         <StatCard key={stat.title} {...stat} />
                     ))}
@@ -69,10 +88,10 @@ export default function DashboardPage() {
             {/* Charts & Activity */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
                 <div className="lg:col-span-2">
-                    <ActivityChart />
+                    <ActivityChart weeklyActivity={data.weeklyActivity} />
                 </div>
                 <div className="lg:col-span-1">
-                    <RecentApplications />
+                    <RecentApplications applications={data.recentApplications} />
                 </div>
             </div>
 

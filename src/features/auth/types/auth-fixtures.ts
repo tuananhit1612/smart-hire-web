@@ -56,37 +56,46 @@ export interface LoginSuccessData {
     expiresIn: number; // seconds
 }
 
+const candidateLoginSuccess: AuthSuccess<LoginSuccessData> = {
+    ok: true,
+    data: {
+        user: mockCandidateReturning,
+        token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.mock_candidate_token",
+        refreshToken: "rt_candidate_mock_refresh_token_abc123",
+        expiresIn: 3600,
+    },
+    message: "Đăng nhập thành công! Chào mừng bạn trở lại.",
+};
+
+const employerLoginSuccess: AuthSuccess<LoginSuccessData> = {
+    ok: true,
+    data: {
+        user: mockEmployerReturning,
+        token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.mock_employer_token",
+        refreshToken: "rt_employer_mock_refresh_token_def456",
+        expiresIn: 3600,
+    },
+    message: "Đăng nhập thành công! Chào mừng nhà tuyển dụng.",
+};
+
+const adminLoginSuccess: AuthSuccess<LoginSuccessData> = {
+    ok: true,
+    data: {
+        user: mockAdmin,
+        token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.mock_admin_token",
+        refreshToken: "rt_admin_mock_refresh_token_ghi789",
+        expiresIn: 7200,
+    },
+    message: "Đăng nhập Admin thành công.",
+};
+
 export const loginSuccess: Record<UserRole, AuthSuccess<LoginSuccessData>> = {
-    candidate: {
-        ok: true,
-        data: {
-            user: mockCandidateReturning,
-            token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.mock_candidate_token",
-            refreshToken: "rt_candidate_mock_refresh_token_abc123",
-            expiresIn: 3600,
-        },
-        message: "Đăng nhập thành công! Chào mừng bạn trở lại.",
-    },
-    employer: {
-        ok: true,
-        data: {
-            user: mockEmployerReturning,
-            token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.mock_employer_token",
-            refreshToken: "rt_employer_mock_refresh_token_def456",
-            expiresIn: 3600,
-        },
-        message: "Đăng nhập thành công! Chào mừng nhà tuyển dụng.",
-    },
-    admin: {
-        ok: true,
-        data: {
-            user: mockAdmin,
-            token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.mock_admin_token",
-            refreshToken: "rt_admin_mock_refresh_token_ghi789",
-            expiresIn: 7200,
-        },
-        message: "Đăng nhập Admin thành công.",
-    },
+    candidate: candidateLoginSuccess,
+    hr: employerLoginSuccess,
+    admin: adminLoginSuccess,
+    CANDIDATE: candidateLoginSuccess,
+    HR: employerLoginSuccess,
+    ADMIN: adminLoginSuccess,
 };
 
 export const loginErrors: Record<string, AuthError> = {
@@ -149,7 +158,7 @@ export interface RegisterSuccessData {
     requiresVerification: boolean;
 }
 
-export const registerSuccess: Record<"candidate" | "employer", AuthSuccess<RegisterSuccessData>> = {
+export const registerSuccess: Record<"candidate" | "hr", AuthSuccess<RegisterSuccessData>> = {
     candidate: {
         ok: true,
         data: {
@@ -159,7 +168,7 @@ export const registerSuccess: Record<"candidate" | "employer", AuthSuccess<Regis
         },
         message: "Đăng ký thành công! Vui lòng kiểm tra email để xác thực tài khoản.",
     },
-    employer: {
+    hr: {
         ok: true,
         data: {
             user: mockEmployerNew,
@@ -276,7 +285,7 @@ export async function simulateLogin(
     if (lower.startsWith("wrong@")) return loginErrors.invalidCredentials;
     if (lower.includes("admin")) return loginSuccess.admin;
     if (lower.includes("employer") || lower.includes("techcorp") || lower.includes("company"))
-        return loginSuccess.employer;
+        return loginSuccess.hr;
     return loginSuccess.candidate;
 }
 
@@ -288,7 +297,7 @@ export async function simulateLogin(
 export async function simulateRegister(
     email: string,
     _password: string,
-    role: "candidate" | "employer",
+    role: "candidate" | "hr",
 ): Promise<AuthResponse<RegisterSuccessData>> {
     await randomDelay();
 

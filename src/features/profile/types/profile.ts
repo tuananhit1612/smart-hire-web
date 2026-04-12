@@ -10,8 +10,7 @@ export interface Certificate {
 
 export interface Project {
   id: string;
-  name: string;
-  role: string;
+  projectName: string;
   startDate: string;
   endDate?: string;
   description: string;
@@ -27,14 +26,15 @@ export interface Language {
 
 export interface Skill {
   id: string;
-  name: string;
-  level?: "Beginner" | "Intermediate" | "Advanced" | "Expert";
+  skillName: string;
+  proficiencyLevel?: "Beginner" | "Intermediate" | "Advanced" | "Expert";
 }
 
 export interface Experience {
   id: string;
-  role: string;
-  company: string;
+  title: string;
+  companyName: string;
+  isCurrent?: boolean;
   startDate: string;
   endDate?: string;
   description: string;
@@ -47,7 +47,8 @@ export interface Experience {
 export interface Education {
   id: string;
   degree: string;
-  school: string;
+  institution: string;
+  gpa?: number;
   fieldOfStudy: string;
   startDate: string;
   endDate: string;
@@ -91,7 +92,7 @@ export interface CandidateProfile {
   fullName: string;
   lastName?: string;
   headline?: string;
-  title: string;
+  title?: string;
   email: string;
   phone?: string;
   location: string;

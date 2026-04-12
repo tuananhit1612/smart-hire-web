@@ -110,9 +110,7 @@ export function RouteGuard({
     // Redirect unauthenticated users
     useEffect(() => {
         if (status === "unauthenticated" && loginPath) {
-            // In mock mode we show the login screen inline instead of redirecting
-            // Uncomment below for real auth redirect:
-            // router.replace(loginPath);
+            router.replace(loginPath);
         }
     }, [status, loginPath, router]);
 
@@ -157,7 +155,7 @@ export function CandidateGuard({ children }: { readonly children: ReactNode }) {
 
 /** Guard for employer-only pages */
 export function EmployerGuard({ children }: { readonly children: ReactNode }) {
-    return <RouteGuard allowedRoles={["employer"]}>{children}</RouteGuard>;
+    return <RouteGuard allowedRoles={["hr"]}>{children}</RouteGuard>;
 }
 
 /** Guard for admin-only pages */
@@ -167,7 +165,7 @@ export function AdminGuard({ children }: { readonly children: ReactNode }) {
 
 /** Guard for employer + admin pages */
 export function EmployerOrAdminGuard({ children }: { readonly children: ReactNode }) {
-    return <RouteGuard allowedRoles={["employer", "admin"]}>{children}</RouteGuard>;
+    return <RouteGuard allowedRoles={["hr", "admin"]}>{children}</RouteGuard>;
 }
 
 /** Guard that only requires authentication (any role) */

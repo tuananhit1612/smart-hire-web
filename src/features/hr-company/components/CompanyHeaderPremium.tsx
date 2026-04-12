@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
     MapPin,
     Globe,
@@ -25,6 +25,8 @@ import { Button } from "@/shared/components/ui/button";
 import { AnimatedCounter, StatCard } from "./ui/premium-effects";
 import { CoverUploadModal } from "./CoverUploadModal";
 import { CompanyInfoEditor } from "./CompanyInfoEditor";
+import { useCompanyStore } from "../stores/company-store";
+import { getImageUrl } from "@/shared/lib/api-client";
 
 interface CompanyHeaderProps {
     company: Company;
@@ -33,6 +35,7 @@ interface CompanyHeaderProps {
 }
 
 export function CompanyHeaderPremium({ company, onUpdate, editable = true }: CompanyHeaderProps) {
+    const { uploadLogo, uploadCover } = useCompanyStore();
     const [isQuickEdit, setIsQuickEdit] = React.useState(false);
     const [showCoverModal, setShowCoverModal] = React.useState(false);
     const [showInfoEditor, setShowInfoEditor] = React.useState(false);
@@ -57,14 +60,18 @@ export function CompanyHeaderPremium({ company, onUpdate, editable = true }: Com
         setIsQuickEdit(false);
     };
 
-    const handleCoverUpload = (_file: File | null, url?: string) => {
-        if (url) {
+    const handleCoverUpload = async (file: File | null, url?: string) => {
+        if (file) {
+            await uploadCover(file);
+        } else if (url) {
             onUpdate?.({ coverUrl: url });
         }
     };
 
-    const handleLogoChange = (urlOrFile: string | File | null) => {
-        if (typeof urlOrFile === "string") {
+    const handleLogoChange = async (urlOrFile: string | File | null) => {
+        if (urlOrFile instanceof File) {
+            await uploadLogo(urlOrFile);
+        } else if (typeof urlOrFile === "string") {
             onUpdate?.({ logoUrl: urlOrFile });
         }
     };
@@ -74,17 +81,15 @@ export function CompanyHeaderPremium({ company, onUpdate, editable = true }: Com
         ? new Date().getFullYear() - parseInt(company.founded)
         : 5;
     const employeeCount =
-        company.size === "1000+"
+        company.size === "ENTERPRISE"
             ? 1200
-            : company.size === "501-1000"
-                ? 750
-                : company.size === "201-500"
-                    ? 350
-                    : company.size === "51-200"
-                        ? 120
-                        : company.size === "11-50"
-                            ? 30
-                            : 8;
+            : company.size === "LARGE"
+                ? 350
+                : company.size === "MEDIUM"
+                    ? 120
+                    : company.size === "SMALL"
+                        ? 30
+                        : 8;
     const benefitCount = company.benefits.length;
     const techCount = company.techStack.length;
 
@@ -97,21 +102,21 @@ export function CompanyHeaderPremium({ company, onUpdate, editable = true }: Com
                 className="relative"
             >
                 <div
-                    className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-white/90 via-white/80 to-[#22c55e]/5 dark:from-[#1C252E] dark:via-[#1C252E] dark:to-[#1C252E] backdrop-blur-2xl border border-white/60 dark:border-white/[0.08] shadow-2xl shadow-[#22c55e]/20"
+                    className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-white/95 via-white/80 to-[#22c55e]/5 dark:from-[#1C252E] dark:via-[#1C252E] dark:to-[#1C252E]/90 backdrop-blur-2xl border border-[rgba(145,158,171,0.12)] dark:border-white/[0.08] shadow-2xl shadow-green-500/5 dark:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)]"
                 >
-                    {/* Animated gradient border */}
-                    <div className="absolute inset-0 rounded-[2rem] p-[1px] bg-gradient-to-r from-[#22c55e]/30 via-green-400/30 to-[#10b981]/30 animate-pulse" />
+                    {/* Static gradient border instead of animate-pulse */}
+                    <div className="absolute inset-0 rounded-[2rem] p-[1px] bg-gradient-to-r from-[#22c55e]/30 via-green-400/30 to-[#10b981]/30" />
 
                     {/* Cover Image with Parallax */}
                     <div className="h-56 sm:h-64 relative overflow-hidden">
                         {company.coverUrl ? (
                             <img
-                                src={company.coverUrl}
+                                src={getImageUrl(company.coverUrl)}
                                 alt="Company Cover"
                                 className="w-full h-full object-cover"
                             />
                         ) : (
-                            <div className="w-full h-full bg-gradient-to-br from-[#22c55e] via-[#10b981] to-[#10b981] relative overflow-hidden">
+                            <div className="w-full h-full bg-gradient-to-br from-green-200 via-emerald-200 to-teal-200 dark:from-green-900/40 dark:via-emerald-900/40 dark:to-teal-900/40 relative overflow-hidden">
                                 {/* Animated waves */}
                                 <svg
                                     className="absolute bottom-0 left-0 w-full"
@@ -185,30 +190,18 @@ export function CompanyHeaderPremium({ company, onUpdate, editable = true }: Com
 
                     {/* Content Section */}
                     <div className="relative px-8 pb-8">
-                        {/* Logo - Breathing animation */}
                         <motion.div
                             initial={{ scale: 0.8, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
                             className="absolute -top-16 left-8"
                         >
-                            <motion.div
-                                animate={{
-                                    boxShadow: [
-                                        "0 0 0 0 rgba(14, 165, 233, 0.3)",
-                                        "0 0 0 15px rgba(14, 165, 233, 0)",
-                                    ],
-                                }}
-                                transition={{ duration: 2, repeat: Infinity }}
-                                className="p-1.5 bg-white dark:bg-[#1C252E] rounded-2xl shadow-2xl"
-                            >
-                                <LogoUpload
-                                    currentLogo={company.logoUrl}
-                                    size="lg"
-                                    editable={editable}
-                                    onLogoChange={handleLogoChange}
-                                />
-                            </motion.div>
+                            <LogoUpload
+                                currentLogo={company.logoUrl}
+                                size="lg"
+                                editable={editable}
+                                onLogoChange={handleLogoChange}
+                            />
                         </motion.div>
 
                         {/* Company Info */}
@@ -304,6 +297,19 @@ export function CompanyHeaderPremium({ company, onUpdate, editable = true }: Com
                                     )}
                                 </div>
                             )}
+
+                            {/* Inline Info Editor */}
+                            <AnimatePresence>
+                                {showInfoEditor && (
+                                    <CompanyInfoEditor
+                                        company={company}
+                                        onUpdate={(updates) => {
+                                            if (onUpdate) onUpdate(updates);
+                                        }}
+                                        onClose={() => setShowInfoEditor(false)}
+                                    />
+                                )}
+                            </AnimatePresence>
 
                             {/* Quick Stats - Bento Style */}
                             <motion.div
@@ -409,15 +415,6 @@ export function CompanyHeaderPremium({ company, onUpdate, editable = true }: Com
                     currentCover={company.coverUrl}
                     onUpload={handleCoverUpload}
                     onClose={() => setShowCoverModal(false)}
-                />
-            )}
-
-            {/* Full Info Editor Modal */}
-            {showInfoEditor && (
-                <CompanyInfoEditor
-                    company={company}
-                    onUpdate={(updates) => onUpdate?.(updates)}
-                    onClose={() => setShowInfoEditor(false)}
                 />
             )}
         </>

@@ -171,52 +171,42 @@ export function CompanyTechStack({ techStack, onUpdate, editable = true }: Compa
 
             {/* Tech Stack Tags */}
             {techStack.length > 0 ? (
-                <motion.div
-                    initial="hidden"
-                    animate="visible"
-                    variants={{
-                        hidden: { opacity: 0 },
-                        visible: {
-                            opacity: 1,
-                            transition: { staggerChildren: 0.05 },
-                        },
-                    }}
-                    className="flex flex-wrap gap-3"
-                >
-                    {techStack.map((tech, index) => {
-                        const colors = getTechColor(tech);
-                        return (
-                            <motion.div
-                                key={tech}
-                                variants={{
-                                    hidden: { opacity: 0, scale: 0.5, rotate: -10 },
-                                    visible: { opacity: 1, scale: 1, rotate: 0 },
-                                }}
-                                whileHover={{ scale: 1.1, y: -4 }}
-                                className={`group relative px-5 py-2.5 bg-gradient-to-r ${colors.bg} ${colors.text} rounded-full font-semibold shadow-lg ${colors.glow} hover:shadow-xl transition-all`}
-                            >
-                                {/* Shine effect */}
-                                <div className="absolute inset-0 rounded-full overflow-hidden">
-                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                                </div>
+                <div className="flex flex-wrap gap-3">
+                    <AnimatePresence mode="popLayout">
+                        {techStack.map((tech) => {
+                            const colors = getTechColor(tech);
+                            return (
+                                <motion.div
+                                    key={tech}
+                                    layout
+                                    initial={{ opacity: 0, scale: 0.5, y: 10 }}
+                                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.5, y: -10 }}
+                                    transition={{ duration: 0.2 }}
+                                    whileHover={{ scale: 1.05, y: -2 }}
+                                    className={`group relative px-5 py-2.5 bg-gradient-to-r ${colors.bg} ${colors.text} rounded-full font-semibold shadow-lg ${colors.glow} hover:shadow-xl transition-all`}
+                                >
+                                    {/* Shine effect */}
+                                    <div className="absolute inset-0 rounded-full overflow-hidden pointer-events-none">
+                                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                                    </div>
 
-                                <span className="relative">{tech}</span>
+                                    <span className="relative z-10">{tech}</span>
 
-                                {/* Remove button */}
-                                {editable && (
-                                    <motion.button
-                                        initial={{ opacity: 0, scale: 0.5 }}
-                                        whileHover={{ scale: 1.2 }}
-                                        onClick={() => handleRemove(tech)}
-                                        className="absolute -top-1.5 -right-1.5 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all shadow-lg hover:bg-red-600"
-                                    >
-                                        <X className="w-3 h-3" />
-                                    </motion.button>
-                                )}
-                            </motion.div>
-                        );
-                    })}
-                </motion.div>
+                                    {/* Remove button */}
+                                    {editable && (
+                                        <button
+                                            onClick={() => handleRemove(tech)}
+                                            className="absolute -top-1.5 -right-1.5 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all shadow-lg hover:bg-red-600 hover:scale-110 z-20"
+                                        >
+                                            <X className="w-3 h-3" />
+                                        </button>
+                                    )}
+                                </motion.div>
+                            );
+                        })}
+                    </AnimatePresence>
+                </div>
             ) : (
                 <motion.div
                     initial={{ opacity: 0 }}

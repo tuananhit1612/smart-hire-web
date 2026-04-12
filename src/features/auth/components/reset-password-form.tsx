@@ -1,20 +1,61 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { Lock, CheckCircle2, RefreshCw, ShieldCheck } from "lucide-react";
+import { Lock, CheckCircle2, RefreshCw, ShieldCheck, XCircle, AlertCircle, ArrowLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
+import { useToastHelpers } from "@/shared/components/ui/toast";
 import { resetPasswordSchema, type ResetPasswordSchema } from "../schemas/reset-password-schema";
+import { authApi } from "../api/auth-api";
+import { isApiError } from "@/shared/lib/api-error";
 
-export function ResetPasswordForm() {
+interface ResetPasswordFormProps {
+    token: string;
+}
+
+export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
+    // UI Verification States
+    const [isVerifying, setIsVerifying] = useState(true);
+    const [isValidToken, setIsValidToken] = useState(false);
+    const [verifyError, setVerifyError] = useState<string | null>(null);
+
+    // Form submission states
     const [isLoading, setIsLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    
     const router = useRouter();
+    const toastHelpers = useToastHelpers();
+
+    useEffect(() => {
+        // Pre-validate token on mount
+        const verifyToken = async () => {
+            try {
+                await authApi.verifyResetToken(token);
+                setIsValidToken(true);
+            } catch (error) {
+                const message = isApiError(error)
+                    ? error.message
+                    : "Đã có lỗi xảy ra khi kiểm tra liên kết của bạn.";
+                setVerifyError(message);
+                setIsValidToken(false);
+            } finally {
+                setIsVerifying(false);
+            }
+        };
+
+        if (token) {
+            verifyToken();
+        } else {
+            setVerifyError("Thiếu mã xác thực trong đường dẫn.");
+            setIsVerifying(false);
+        }
+    }, [token]);
 
     const {
         register,
@@ -26,13 +67,20 @@ export function ResetPasswordForm() {
 
     const onSubmit = async (data: ResetPasswordSchema) => {
         setIsLoading(true);
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        setIsLoading(false);
-        setIsSuccess(true);
-
-        setTimeout(() => {
-            router.push("/login");
-        }, 3000);
+        try {
+            await authApi.resetPassword(token, data.password);
+            setIsSuccess(true);
+            setTimeout(() => {
+                router.push("/login");
+            }, 3000);
+        } catch (error) {
+            const message = isApiError(error)
+                ? error.message
+                : "Đã có lỗi xảy ra. Vui lòng thử lại sau.";
+            toastHelpers.error("Không thể đặt lại mật khẩu", message);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const itemVariants = {
@@ -50,7 +98,61 @@ export function ResetPasswordForm() {
             className="w-full"
         >
             <AnimatePresence mode="wait">
-                {!isSuccess ? (
+                {isVerifying ? (
+                    /* ─── Loading State ─── */
+                    <motion.div
+                        key="verifying"
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        transition={{ duration: 0.3 }}
+                        className="flex flex-col items-center justify-center py-12 text-center space-y-6"
+                    >
+                        <RefreshCw className="h-10 w-10 text-[#22C55E] animate-spin" />
+                        <div className="space-y-2">
+                            <h3 className="text-xl font-bold text-[#1C252E] dark:text-white">
+                                Đang kiểm tra liên kết
+                            </h3>
+                            <p className="text-[#637381] dark:text-[#C4CDD5] text-sm">
+                                Vui lòng đợi trong giây lát...
+                            </p>
+                        </div>
+                    </motion.div>
+                ) : !isValidToken ? (
+                    /* ─── Error State ─── */
+                    <motion.div
+                        key="invalid"
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        transition={{ duration: 0.3 }}
+                        className="flex flex-col items-center justify-center py-8 text-center space-y-6"
+                    >
+                        <div className="relative w-20 h-20 flex items-center justify-center mb-2">
+                            <div className="absolute inset-0 bg-red-500/15 blur-xl rounded-full" />
+                            <XCircle className="h-14 w-14 text-red-500 relative z-10" />
+                        </div>
+                        <div className="space-y-2">
+                            <h3 className="text-xl font-bold text-[#1C252E] dark:text-white">
+                                Liên kết không hợp lệ
+                            </h3>
+                            <p className="text-[#637381] dark:text-[#C4CDD5] text-sm max-w-sm mx-auto">
+                                {verifyError || "Liên kết đặt lại mật khẩu này đã hết hạn hoặc không tồn tại."}
+                            </p>
+                        </div>
+                        <div className="w-full pt-4">
+                            <Link href="/forgot-password" passHref className="w-full">
+                                <Button
+                                    variant="outline"
+                                    className="w-full h-12 rounded-xl text-base font-medium border-[rgba(145,158,171,0.2)] hover:bg-[#F4F6F8] dark:hover:bg-[rgba(145,158,171,0.08)]"
+                                >
+                                    <ArrowLeft className="w-4 h-4 mr-2" />
+                                    Yêu cầu liên kết mới
+                                </Button>
+                            </Link>
+                        </div>
+                    </motion.div>
+                ) : !isSuccess ? (
                     <motion.div
                         key="form"
                         initial={{ opacity: 0, x: -10 }}

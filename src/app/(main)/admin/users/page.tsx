@@ -29,9 +29,9 @@ type UserStatus = "active" | "inactive" | "banned" | "pending";
 
 interface MockUser {
     id: string;
-    name: string;
+    fullName: string;
     email: string;
-    avatar: string;
+    avatarUrl: string;
     role: Exclude<UserRole, "all">;
     status: UserStatus;
     joinedDate: string;
@@ -41,21 +41,21 @@ interface MockUser {
 
 // ─── Mock Data ───────────────────────────────────────
 const mockUsers: MockUser[] = [
-    { id: "u1", name: "Nguyễn Văn An", email: "nguyenvanan@gmail.com", avatar: "NVA", role: "candidate", status: "active", joinedDate: "2025-08-12", lastActive: "2 phút trước" },
-    { id: "u2", name: "Trần Thị Bảo", email: "tranthibao@techcorp.vn", avatar: "TTB", role: "employer", status: "active", joinedDate: "2025-06-20", lastActive: "15 phút trước", company: "TechCorp Vietnam" },
-    { id: "u3", name: "Lê Hoàng Cường", email: "lehoangcuong@admin.smarthire.ai", avatar: "LHC", role: "admin", status: "active", joinedDate: "2025-01-01", lastActive: "Đang online" },
-    { id: "u4", name: "Phạm Minh Duy", email: "phamminhduy@outlook.com", avatar: "PMD", role: "candidate", status: "inactive", joinedDate: "2025-11-05", lastActive: "30 ngày trước" },
-    { id: "u5", name: "Hoàng Thị Ema", email: "hoangthiema@designstudio.vn", avatar: "HTE", role: "employer", status: "active", joinedDate: "2025-09-15", lastActive: "1 giờ trước", company: "DesignStudio Pro" },
-    { id: "u6", name: "Vũ Đức Phong", email: "vuducphong@gmail.com", avatar: "VDP", role: "candidate", status: "banned", joinedDate: "2025-10-28", lastActive: "—" },
-    { id: "u7", name: "Đặng Ngọc Gia", email: "dangngocgia@startupxyz.vn", avatar: "DNG", role: "employer", status: "pending", joinedDate: "2026-02-14", lastActive: "3 giờ trước", company: "StartupXYZ" },
-    { id: "u8", name: "Bùi Thanh Hải", email: "buithanhai@yahoo.com", avatar: "BTH", role: "candidate", status: "active", joinedDate: "2025-07-03", lastActive: "5 phút trước" },
-    { id: "u9", name: "Cao Thị Ivy", email: "caothiivy@fintech.vn", avatar: "CTI", role: "employer", status: "active", joinedDate: "2025-12-01", lastActive: "45 phút trước", company: "FinTech Solutions" },
-    { id: "u10", name: "Đinh Quốc Khánh", email: "dinhquockhanh@gmail.com", avatar: "DQK", role: "candidate", status: "active", joinedDate: "2026-01-10", lastActive: "20 phút trước" },
-    { id: "u11", name: "Lý Minh Long", email: "lyminhlong@admin.smarthire.ai", avatar: "LML", role: "admin", status: "active", joinedDate: "2025-03-15", lastActive: "10 phút trước" },
-    { id: "u12", name: "Mai Phương Nam", email: "maiphuongnam@gmail.com", avatar: "MPN", role: "candidate", status: "inactive", joinedDate: "2025-05-20", lastActive: "60 ngày trước" },
-    { id: "u13", name: "Ngô Thị Oanh", email: "ngothioanh@edutech.vn", avatar: "NTO", role: "employer", status: "active", joinedDate: "2025-10-10", lastActive: "2 giờ trước", company: "EduTech Vietnam" },
-    { id: "u14", name: "Phan Văn Quân", email: "phanvanquan@gmail.com", avatar: "PVQ", role: "candidate", status: "active", joinedDate: "2026-02-01", lastActive: "8 phút trước" },
-    { id: "u15", name: "Trịnh Hồng Sơn", email: "trinhhongson@gmail.com", avatar: "THS", role: "candidate", status: "pending", joinedDate: "2026-02-16", lastActive: "1 giờ trước" },
+    { id: "u1", fullName: "Nguyễn Văn An", email: "nguyenvanan@gmail.com", avatarUrl: "NVA", role: "candidate", status: "active", joinedDate: "2025-08-12", lastActive: "2 phút trước" },
+    { id: "u2", fullName: "Trần Thị Bảo", email: "tranthibao@techcorp.vn", avatarUrl: "TTB", role: "employer", status: "active", joinedDate: "2025-06-20", lastActive: "15 phút trước", company: "TechCorp Vietnam" },
+    { id: "u3", fullName: "Lê Hoàng Cường", email: "lehoangcuong@admin.smarthire.ai", avatarUrl: "LHC", role: "admin", status: "active", joinedDate: "2025-01-01", lastActive: "Đang online" },
+    { id: "u4", fullName: "Phạm Minh Duy", email: "phamminhduy@outlook.com", avatarUrl: "PMD", role: "candidate", status: "inactive", joinedDate: "2025-11-05", lastActive: "30 ngày trước" },
+    { id: "u5", fullName: "Hoàng Thị Ema", email: "hoangthiema@designstudio.vn", avatarUrl: "HTE", role: "employer", status: "active", joinedDate: "2025-09-15", lastActive: "1 giờ trước", company: "DesignStudio Pro" },
+    { id: "u6", fullName: "Vũ Đức Phong", email: "vuducphong@gmail.com", avatarUrl: "VDP", role: "candidate", status: "banned", joinedDate: "2025-10-28", lastActive: "—" },
+    { id: "u7", fullName: "Đặng Ngọc Gia", email: "dangngocgia@startupxyz.vn", avatarUrl: "DNG", role: "employer", status: "pending", joinedDate: "2026-02-14", lastActive: "3 giờ trước", company: "StartupXYZ" },
+    { id: "u8", fullName: "Bùi Thanh Hải", email: "buithanhai@yahoo.com", avatarUrl: "BTH", role: "candidate", status: "active", joinedDate: "2025-07-03", lastActive: "5 phút trước" },
+    { id: "u9", fullName: "Cao Thị Ivy", email: "caothiivy@fintech.vn", avatarUrl: "CTI", role: "employer", status: "active", joinedDate: "2025-12-01", lastActive: "45 phút trước", company: "FinTech Solutions" },
+    { id: "u10", fullName: "Đinh Quốc Khánh", email: "dinhquockhanh@gmail.com", avatarUrl: "DQK", role: "candidate", status: "active", joinedDate: "2026-01-10", lastActive: "20 phút trước" },
+    { id: "u11", fullName: "Lý Minh Long", email: "lyminhlong@admin.smarthire.ai", avatarUrl: "LML", role: "admin", status: "active", joinedDate: "2025-03-15", lastActive: "10 phút trước" },
+    { id: "u12", fullName: "Mai Phương Nam", email: "maiphuongnam@gmail.com", avatarUrl: "MPN", role: "candidate", status: "inactive", joinedDate: "2025-05-20", lastActive: "60 ngày trước" },
+    { id: "u13", fullName: "Ngô Thị Oanh", email: "ngothioanh@edutech.vn", avatarUrl: "NTO", role: "employer", status: "active", joinedDate: "2025-10-10", lastActive: "2 giờ trước", company: "EduTech Vietnam" },
+    { id: "u14", fullName: "Phan Văn Quân", email: "phanvanquan@gmail.com", avatarUrl: "PVQ", role: "candidate", status: "active", joinedDate: "2026-02-01", lastActive: "8 phút trước" },
+    { id: "u15", fullName: "Trịnh Hồng Sơn", email: "trinhhongson@gmail.com", avatarUrl: "THS", role: "candidate", status: "pending", joinedDate: "2026-02-16", lastActive: "1 giờ trước" },
 ];
 
 // ─── Role Config ─────────────────────────────────────
@@ -94,7 +94,7 @@ export default function UserManagementPage() {
             const q = search.toLowerCase();
             result = result.filter(
                 (u) =>
-                    u.name.toLowerCase().includes(q) ||
+                    u.fullName.toLowerCase().includes(q) ||
                     u.email.toLowerCase().includes(q) ||
                     (u.company?.toLowerCase().includes(q) ?? false)
             );
@@ -217,11 +217,11 @@ export default function UserManagementPage() {
                                                             user.role === "employer" ? "bg-violet-100 text-violet-700" :
                                                             "bg-[#22c55e]/15 text-[#22c55e]"
                                                         )}>
-                                                            {user.avatar}
+                                                            {user.avatarUrl}
                                                         </div>
                                                         <div className="min-w-0">
                                                             <p className="text-sm font-semibold text-[#1C252E] group-hover:text-[#22c55e] transition-colors truncate">
-                                                                {user.name}
+                                                                {user.fullName}
                                                             </p>
                                                             <p className="text-[11px] text-slate-400 flex items-center gap-1 truncate">
                                                                 <Mail className="w-3 h-3 shrink-0" /> {user.email}

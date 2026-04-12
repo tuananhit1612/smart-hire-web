@@ -1,13 +1,28 @@
 "use client";
 
+import * as React from "react";
 import { motion } from "framer-motion";
-import { Experience, Education } from "../types/profile";
+import { Experience, Education, Project, Skill } from "../types/profile";
 import { Plus, Pencil, Trash2, Briefcase, GraduationCap } from "lucide-react";
 import { SectionCard } from "./profile-form-fields";
+import { useProfileStore } from "../stores/profile-store";
+import { ProfileEditExperience } from "./profile-edit-experience";
+import { ProfileEditEducation } from "./profile-edit-education";
+import { ProfileProjects } from "./profile-projects";
+import { ProfileSkills } from "./profile-skills";
+import { ProfileEditProjects } from "./profile-edit-projects";
+import { 
+    mapExperienceToApi, 
+    mapEducationToApi, 
+    mapProjectToApi, 
+    mapSkillToApi 
+} from "../utils/profile-mapper";
 
 interface Props {
     experiences: Experience[];
     educations: Education[];
+    projects: Project[];
+    skills: Skill[];
 }
 
 const stagger = {
@@ -26,12 +41,16 @@ function TimelineItem({
     dateRange,
     description,
     accentColor = "#22C55E",
+    onEdit,
+    onDelete,
 }: {
     title: string;
     subtitle: string;
     dateRange: string;
     description?: string;
     accentColor?: string;
+    onEdit?: () => void;
+    onDelete?: () => void;
 }) {
     return (
         <motion.div
@@ -53,19 +72,110 @@ function TimelineItem({
                 )}
             </div>
             {/* Action buttons on hover */}
-            <div className="absolute top-0 right-0 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button className="w-8 h-8 rounded-lg flex items-center justify-center bg-[#1C252E] dark:bg-white text-white dark:text-[#1C252E] hover:bg-[#22C55E] hover:text-white transition-all">
-                    <Pencil className="w-3.5 h-3.5" />
-                </button>
-                <button className="w-8 h-8 rounded-lg flex items-center justify-center bg-[#FF5630]/10 text-[#FF5630] hover:bg-[#FF5630] hover:text-white transition-all">
-                    <Trash2 className="w-3.5 h-3.5" />
-                </button>
+            <div className="absolute top-0 right-0 gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity flex">
+                {onEdit && (
+                    <button 
+                        onClick={onEdit}
+                        className="w-8 h-8 rounded-lg flex items-center justify-center bg-[#1C252E] dark:bg-white text-white dark:text-[#1C252E] hover:bg-[#22C55E] hover:text-white transition-all"
+                    >
+                        <Pencil className="w-3.5 h-3.5" />
+                    </button>
+                )}
+                {onDelete && (
+                    <button 
+                        onClick={onDelete}
+                        className="w-8 h-8 rounded-lg flex items-center justify-center bg-[#FF5630]/10 text-[#FF5630] hover:bg-[#FF5630] hover:text-white transition-all"
+                    >
+                        <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                )}
             </div>
         </motion.div>
     );
 }
 
-export function ProfileTabExperience({ experiences, educations }: Props) {
+export function ProfileTabExperience({ experiences, educations, projects, skills }: Props) {
+    const store = useProfileStore();
+
+    // Exp Modals
+    const [expModalOpen, setExpModalOpen] = React.useState(false);
+    const [editingExp, setEditingExp] = React.useState<Experience | null>(null);
+
+    // Edu Modals
+    const [eduModalOpen, setEduModalOpen] = React.useState(false);
+    const [editingEdu, setEditingEdu] = React.useState<Education | null>(null);
+
+    // Project Modals
+    const [projModalOpen, setProjModalOpen] = React.useState(false);
+    const [editingProj, setEditingProj] = React.useState<Project | null>(null);
+
+    const handleSaveExp = async (exp: Experience | Omit<Experience, "id">) => {
+        const payload = mapExperienceToApi(exp as Experience);
+        if ("id" in exp && !exp.id.startsWith("exp-") && !exp.id.startsWith("new-")) {
+            await store.updateExperience(exp.id, payload);
+        } else {
+            await store.addExperience(payload);
+        }
+    };
+
+    const handleDeleteExp = async (id: string) => {
+        if (confirm("Xác nhận xóa kinh nghiệm này?")) {
+            await store.deleteExperience(id);
+        }
+    };
+
+    const handleSaveEdu = async (edu: Education | Omit<Education, "id">) => {
+        const payload = mapEducationToApi(edu as Education);
+        if ("id" in edu && !edu.id.startsWith("edu-") && !edu.id.startsWith("new-")) {
+            await store.updateEducation(edu.id, payload);
+        } else {
+            await store.addEducation(payload);
+        }
+    };
+
+    const handleDeleteEdu = async (id: string) => {
+        if (confirm("Xác nhận xóa quá trình học vấn này?")) {
+            await store.deleteEducation(id);
+        }
+    };
+
+    const handleSaveProj = async (proj: Project | Omit<Project, "id">) => {
+        const payload = mapProjectToApi(proj as Project);
+        if ("id" in proj && !proj.id.startsWith("proj-") && !proj.id.startsWith("new-")) {
+            await store.updateProject(proj.id, payload);
+        } else {
+            await store.addProject(payload);
+        }
+    };
+
+    const handleDeleteProj = async (id: string) => {
+        if (confirm("Xác nhận xóa dự án này?")) {
+            await store.deleteProject(id);
+        }
+    };
+
+    // Bulk Save cho Skills vì ProfileEditSkills trả về mảng đầy đủ
+    const handleSaveSkillsBulk = async (newSkills: Skill[]) => {
+        // Find deleted skills
+        const existingIds = skills.map(s => s.id);
+        const newIds = newSkills.map(s => s.id);
+        
+        const deletedIds = existingIds.filter(id => !newIds.includes(id));
+        for (const id of deletedIds) {
+            await store.deleteSkill(id);
+        }
+
+        // Add or Update
+        for (const skill of newSkills) {
+            const payload = mapSkillToApi(skill);
+            if (skill.id.startsWith("new-") || !existingIds.includes(skill.id)) {
+                await store.addSkill(payload);
+            } else {
+                await store.updateSkill(skill.id, payload);
+            }
+        }
+    };
+
     return (
         <motion.div
             className="space-y-6"
@@ -73,11 +183,28 @@ export function ProfileTabExperience({ experiences, educations }: Props) {
             initial="hidden"
             animate="visible"
         >
-            {/* Add button */}
-            <motion.div variants={fadeUp} className="flex justify-end">
-                <button className="inline-flex items-center gap-2 h-11 px-5 bg-[#1C252E] dark:bg-white text-white dark:text-[#1C252E] text-[13px] font-bold rounded-xl hover:bg-[#1C252E]/90 dark:hover:bg-white/90 transition-all">
+            {/* Add buttons */}
+            <motion.div variants={fadeUp} className="flex flex-col sm:flex-row justify-end gap-3">
+                <button 
+                    onClick={() => { setEditingExp(null); setExpModalOpen(true); }}
+                    className="inline-flex flex-1 sm:flex-none items-center justify-center gap-2 h-11 px-5 bg-[#1C252E] dark:bg-white text-white dark:text-[#1C252E] text-[13px] font-bold rounded-xl hover:bg-[#1C252E]/90 dark:hover:bg-white/90 transition-all"
+                >
                     <Plus className="w-4 h-4" />
                     Thêm kinh nghiệm
+                </button>
+                <button 
+                    onClick={() => { setEditingEdu(null); setEduModalOpen(true); }}
+                    className="inline-flex flex-1 sm:flex-none items-center justify-center gap-2 h-11 px-5 bg-[#FFAB00]/10 text-[#FFAB00] text-[13px] font-bold rounded-xl hover:bg-[#FFAB00] hover:text-white transition-all"
+                >
+                    <Plus className="w-4 h-4" />
+                    Thêm học vấn
+                </button>
+                <button 
+                    onClick={() => { setEditingProj(null); setProjModalOpen(true); }}
+                    className="inline-flex flex-1 sm:flex-none items-center justify-center gap-2 h-11 px-5 bg-purple-500/10 text-purple-500 text-[13px] font-bold rounded-xl hover:bg-purple-500 hover:text-white transition-all"
+                >
+                    <Plus className="w-4 h-4" />
+                    Thêm dự án
                 </button>
             </motion.div>
 
@@ -99,11 +226,13 @@ export function ProfileTabExperience({ experiences, educations }: Props) {
                                 {experiences.map((exp) => (
                                     <TimelineItem
                                         key={exp.id}
-                                        title={exp.role}
-                                        subtitle={exp.company}
+                                        title={exp.title}
+                                        subtitle={exp.companyName}
                                         dateRange={`${exp.startDate} — ${exp.endDate || "Hiện tại"}`}
                                         description={exp.description}
                                         accentColor="#22C55E"
+                                        onEdit={() => { setEditingExp(exp); setExpModalOpen(true); }}
+                                        onDelete={() => handleDeleteExp(exp.id)}
                                     />
                                 ))}
                             </motion.div>
@@ -128,10 +257,12 @@ export function ProfileTabExperience({ experiences, educations }: Props) {
                                 {educations.map((edu) => (
                                     <TimelineItem
                                         key={edu.id}
-                                        title={edu.school}
+                                        title={edu.institution}
                                         subtitle={`${edu.degree} — ${edu.fieldOfStudy}`}
                                         dateRange={`${edu.startDate} — ${edu.endDate || "Hiện tại"}`}
                                         accentColor="#FFAB00"
+                                        onEdit={() => { setEditingEdu(edu); setEduModalOpen(true); }}
+                                        onDelete={() => handleDeleteEdu(edu.id)}
                                     />
                                 ))}
                             </motion.div>
@@ -139,6 +270,51 @@ export function ProfileTabExperience({ experiences, educations }: Props) {
                     </SectionCard>
                 </motion.div>
             </div>
+
+            <motion.div variants={fadeUp}>
+                <div className="relative group">
+                    <ProfileProjects projects={projects} />
+                    <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="flex flex-col gap-1">
+                            {projects.map(proj => (
+                                <div key={proj.id} className="flex gap-1 justify-end">
+                                    <button onClick={() => { setEditingProj(proj); setProjModalOpen(true); }} className="p-1.5 bg-white dark:bg-[#212B36] border border-border rounded shadow-sm hover:text-purple-500" title={`Sửa ${proj.projectName}`}>
+                                        <Pencil className="w-3.5 h-3.5" />
+                                    </button>
+                                    <button onClick={() => handleDeleteProj(proj.id)} className="p-1.5 bg-white dark:bg-[#212B36] border border-border rounded shadow-sm hover:text-red-500" title={`Xoá ${proj.projectName}`}>
+                                        <Trash2 className="w-3.5 h-3.5" />
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </motion.div>
+
+            <motion.div variants={fadeUp}>
+                <ProfileSkills skills={skills} onSave={handleSaveSkillsBulk} />
+            </motion.div>
+
+            <ProfileEditExperience 
+                open={expModalOpen}
+                onOpenChange={setExpModalOpen}
+                experience={editingExp}
+                onSave={handleSaveExp}
+            />
+
+            <ProfileEditEducation 
+                open={eduModalOpen}
+                onOpenChange={setEduModalOpen}
+                education={editingEdu}
+                onSave={handleSaveEdu}
+            />
+
+            <ProfileEditProjects 
+                open={projModalOpen}
+                onOpenChange={setProjModalOpen}
+                project={editingProj}
+                onSave={handleSaveProj}
+            />
         </motion.div>
     );
 }

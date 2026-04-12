@@ -7,13 +7,6 @@ import { cn } from "@/shared/utils/cn";
 import { CVTemplate } from "@/features/cv/types/template-types";
 import { TEMPLATE_COMPONENTS } from "@/features/cv/components/cv-templates";
 import {
-    MOCK_DATA_INTERN,
-    MOCK_DATA_LEADER,
-    MOCK_DATA_SENIOR,
-    MOCK_DATA_SALES_ADMIN,
-    MOCK_DATA_CHRO,
-    MOCK_DATA_SALES_EXEC,
-    MOCK_DATA_BA,
     getMockDataForTemplate
 } from "@/features/cv/data/mock-data";
 
