@@ -59,28 +59,16 @@ export const cvApi = {
   },
 
   /**
-   * Gọi Next.js API để render và sinh PDF file qua Puppeteer.
-   * Chú ý dùng Window Fetch chứ không dùng apiClient, vì apiClient sẽ trỏ tới Java backend (localhost:8080).
+   * Export PDF — In demo mode, we use a client-side fallback
+   * since the Puppeteer API route is not available in static export.
    */
   exportPDF: async (payload: ExportPDFPayload): Promise<Blob> => {
-    const response = await fetch("/api/cv/export", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
-
-    if (!response.ok) {
-      let errMessage = "Lỗi khi tạo file PDF từ server.";
-      try {
-        const errorData = await response.json();
-        if (errorData.error) errMessage = errorData.error;
-      } catch (e) {}
-      throw new Error(errMessage);
+    // Demo mode: use window.print() as a simple PDF fallback
+    if (typeof window !== "undefined") {
+      window.print();
     }
-
-    return response.blob(); // Trả về dạng Binary File để download
+    // Return an empty blob to satisfy the type contract
+    return new Blob(["Demo PDF Export"], { type: "application/pdf" });
   },
 
   /**

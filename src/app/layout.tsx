@@ -5,6 +5,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { ToastProvider } from "@/shared/components/ui/toast";
 import { AuthProvider } from "@/features/auth/context/auth-context";
+import { MockInit } from "@/shared/components/mock-init";
 
 const beVietnamPro = Be_Vietnam_Pro({
   subsets: ["latin", "vietnamese"],
@@ -52,6 +53,7 @@ export default function RootLayout({
         >
           <ToastProvider>
             <AuthProvider>
+              <MockInit />
               <Suspense fallback={null}>
                 {children}
               </Suspense>
