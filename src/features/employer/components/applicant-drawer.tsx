@@ -1,3 +1,5 @@
+"use client";
+
 import { AIAnalysis, EmployerApplicant } from "../types/mock-applicants";
 import { employerApplicantApi } from "../api/employer-api";
 import { interviewService } from "@/features/interview/api/interviewService";

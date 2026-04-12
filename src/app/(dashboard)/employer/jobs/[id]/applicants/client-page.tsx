@@ -1,20 +1,20 @@
 "use client";
 
-import { EmployerApplicantsClient } from "./client-page";
-
-import { useState, use } from "react";
-import type { EmployerApplicant } from "@/features/employer/types/mock-applicants";
-import { useApplicants } from "@/features/employer/hooks/use-applicants";
+import { useMemo, useState } from "react";
+import { mockEmployerApplicants, EmployerApplicant } from "@/features/employer/types/mock-applicants";
 import { ApplicantList } from "@/features/employer/components/applicant-list";
 import { ApplicantsFilter } from "@/features/employer/components/applicants-filter";
 import { ApplicantDrawer } from "@/features/employer/components/applicant-drawer";
-import { ArrowLeft, Users, Sparkles, Loader2 } from "lucide-react";
+import { ArrowLeft, Users, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
-export default function EmployerApplicantsPage({ params }: { params: Promise<{ id: string }> }) {
-    const { id } = use(params);
-    // In real app, we fetch job details using id
+interface EmployerApplicantsClientProps {
+    jobId: string;
+}
+
+export function EmployerApplicantsClient({ jobId }: EmployerApplicantsClientProps) {
+    // In real app, we fetch job details using jobId
     // For now, we simulate a job title
     const jobTitle = "Senior Frontend Developer";
 
@@ -23,7 +23,6 @@ export default function EmployerApplicantsPage({ params }: { params: Promise<{ i
     const [selectedApplicant, setSelectedApplicant] = useState<EmployerApplicant | null>(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-    // Auto-open drawer based on URL is a bit complex without useSearchParams, doing local state for now
     const handleSelectApplicant = (applicant: EmployerApplicant) => {
         setSelectedApplicant(applicant);
         setIsDrawerOpen(true);
@@ -31,14 +30,35 @@ export default function EmployerApplicantsPage({ params }: { params: Promise<{ i
 
     const handleCloseDrawer = () => {
         setIsDrawerOpen(false);
-        // Delay clearing selected applicant to allow close animation to finish
         setTimeout(() => setSelectedApplicant(null), 300);
     };
 
-    const { applicants: filteredApplicants, isLoading, refetch } = useApplicants(
-        id,
-        { search: searchQuery, sortBy }
-    );
+    const filteredApplicants = useMemo(() => {
+        let result = [...mockEmployerApplicants];
+
+        if (searchQuery) {
+            const lowerQuery = searchQuery.toLowerCase();
+            result = result.filter(app =>
+                (app.name || "").toLowerCase().includes(lowerQuery) ||
+                (app.skills || []).some(skill => skill.toLowerCase().includes(lowerQuery))
+            );
+        }
+
+        result.sort((a, b) => {
+            if (sortBy === "score-desc") {
+                return b.aiAnalysis.matchScore - a.aiAnalysis.matchScore;
+            }
+            if (sortBy === "score-asc") {
+                return a.aiAnalysis.matchScore - b.aiAnalysis.matchScore;
+            }
+            if (sortBy === "date-desc") {
+                return new Date(b.appliedAt).getTime() - new Date(a.appliedAt).getTime();
+            }
+            return 0;
+        });
+
+        return result;
+    }, [searchQuery, sortBy]);
 
     return (
         <div className="w-full bg-[#F4F6F8] dark:bg-[#141A21] pt-6 pb-12">
@@ -64,7 +84,6 @@ export default function EmployerApplicantsPage({ params }: { params: Promise<{ i
                             </p>
                         </div>
 
-                        {/* AI Stats Summary Card (Optional/Could) */}
                         <motion.div
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
@@ -77,14 +96,14 @@ export default function EmployerApplicantsPage({ params }: { params: Promise<{ i
                                 <div>
                                     <p className="text-xs font-semibold text-[#919EAB] uppercase tracking-wider">Top Match</p>
                                     <p className="text-lg font-bold text-[#1C252E] dark:text-white">
-                                        {filteredApplicants.length > 0 ? Math.max(...filteredApplicants.map(a => a.aiAnalysis.matchScore)) : 0}%
+                                        {Math.max(...mockEmployerApplicants.map(a => a.aiAnalysis.matchScore))}%
                                     </p>
                                 </div>
                                 <div className="w-px h-8 bg-[rgba(145,158,171,0.15)] dark:bg-white/[0.08]" />
                                 <div>
                                     <p className="text-xs font-semibold text-[#919EAB] uppercase tracking-wider">Trung bình</p>
                                     <p className="text-lg font-bold text-[#1C252E] dark:text-white">
-                                        {filteredApplicants.length > 0 ? Math.round(filteredApplicants.reduce((acc, curr) => acc + curr.aiAnalysis.matchScore, 0) / filteredApplicants.length) : 0}%
+                                        {Math.round(mockEmployerApplicants.reduce((acc, curr) => acc + curr.aiAnalysis.matchScore, 0) / mockEmployerApplicants.length)}%
                                     </p>
                                 </div>
                             </div>
@@ -101,25 +120,17 @@ export default function EmployerApplicantsPage({ params }: { params: Promise<{ i
                 />
 
                 {/* List */}
-                {isLoading ? (
-                    <div className="flex items-center justify-center py-20">
-                        <Loader2 className="w-8 h-8 animate-spin text-[#22c55e]" />
-                        <span className="ml-3 text-[#637381] dark:text-[#919EAB]">Đang tải danh sách ứng viên...</span>
-                    </div>
-                ) : (
-                    <ApplicantList
-                        applicants={filteredApplicants}
-                        onSelectApplicant={handleSelectApplicant}
-                    />
-                )}
+                <ApplicantList
+                    applicants={filteredApplicants}
+                    onSelectApplicant={handleSelectApplicant}
+                />
 
                 {/* Detail Drawer */}
                 <ApplicantDrawer
                     applicant={selectedApplicant}
                     isOpen={isDrawerOpen}
                     onClose={handleCloseDrawer}
-                    jobId={id}
-                    onApplicantUpdated={refetch}
+                    jobId={jobId}
                 />
             </div>
         </div>
