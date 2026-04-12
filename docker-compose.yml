@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  database:
+    image: postgres:15-alpine
+    container_name: smarthire_db
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_DB: ${DB_NAME:-smarthire}
+    ports:
+      - "5432:5432"
+    volumes:
+      - smarthire_pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./smarthire-app-backend
+      dockerfile: Dockerfile
+      args:
+        - PROFILE=prod
+    container_name: smarthire_backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - DB_HOST=database
+      - DB_PORT=5432
+      - DB_NAME=${DB_NAME:-smarthire}
+      - DB_USER=${DB_USER:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD:-postgres}
+      # The rest of the keys (JWT, Email, Gemini, GitHub) should be passed via a .env file or host environment
+      - JWT_SECRET=${JWT_SECRET}
+      - APP_FRONTEND_URL=${FRONTEND_URL:-http://localhost:3000}
+    depends_on:
+      database:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./smarthire-app
+      dockerfile: Dockerfile
+      args:
+        # In build phase, the frontend needs to know where the API is so it can bake it into the client logic
+        # For production deployment with a domain (e.g. smarthire.com), this would be https://api.smarthire.com/api/v1
+        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8080/api/v1}
+        - NEXT_PUBLIC_GITHUB_CLIENT_ID=${NEXT_PUBLIC_GITHUB_CLIENT_ID}
+    container_name: smarthire_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  smarthire_pgdata:

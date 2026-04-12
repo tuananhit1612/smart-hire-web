@@ -244,7 +244,7 @@ const JobCard = React.memo(function JobCard({ job, index, onViewApplicants }: { 
                 onClick={handleCardClick}
                 className={`relative bg-gradient-to-br from-white dark:from-[#1C252E] to-[#22c55e]/5 dark:to-[#1C252E] backdrop-blur-xl rounded-3xl border cursor-pointer transition-all duration-300 overflow-hidden hover:shadow-2xl hover:shadow-green-500/20 hover:-translate-y-1.5 hover:scale-[1.01] hover:from-[rgba(145,158,171,0.04)] hover:to-[#22c55e]/5 dark:hover:from-[#1E2C38] dark:hover:to-[#1E2C38] ${job.status === "DRAFT"
                     ? "border-[#22c55e]/30 dark:border-white/[0.06] opacity-75 grayscale-[20%]"
-                    : "border-[#22c55e]/30 dark:border-white/[0.08] shadow-lg shadow-[#22c55e]/20[0.06]"
+                    : "border-[#22c55e]/30 dark:border-white/[0.08] shadow-lg shadow-[#22c55e]/20"
                     }`}
             >
 

@@ -12,11 +12,17 @@ import SockJS from "sockjs-client";
 
 /**
  * Derive WebSocket URL from NEXT_PUBLIC_API_URL.
- * The API URL is http://localhost:8080/api but WebSocket
- * is registered at /ws (root), so we strip the /api suffix.
+ * The API URL is e.g. http://host:8080/api/v1 but WebSocket
+ * is registered at /ws (root), so we extract the origin.
  */
-const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
-const WS_URL = apiUrl.replace(/\/api\/?$/, "") + "/ws";
+const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "";
+let wsBase = "";
+try {
+  wsBase = new URL(apiUrl).origin;
+} catch {
+  wsBase = apiUrl.replace(/\/api.*$/, "");
+}
+const WS_URL = wsBase + "/ws";
 
 /**
  * Create and configure a STOMP client.

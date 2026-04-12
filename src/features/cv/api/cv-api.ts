@@ -34,7 +34,7 @@ export const cvApi = {
       templateId: payload.templateId,
       sectionsData: payload.cvData,
     };
-    const response = await apiClient.post("/v1/cv-builder", requestData);
+    const response = await apiClient.post("/cv-builder", requestData);
     return response.data;
   },
 
@@ -47,7 +47,7 @@ export const cvApi = {
       templateId: payload.templateId,
       sectionsData: payload.cvData,
     };
-    const response = await apiClient.put(`/v1/cv-builder/${cvFileId}`, requestData);
+    const response = await apiClient.put(`/cv-builder/${cvFileId}`, requestData);
     return response.data;
   },
 
@@ -55,7 +55,7 @@ export const cvApi = {
    * Lấy TẤT CẢ CV builder data của user hiện tại
    */
   getAllCVs: async () => {
-    return apiClient.get<CvBuilderApiResponse[]>("/v1/cv-builder");
+    return apiClient.get<CvBuilderApiResponse[]>("/cv-builder");
   },
 
   /**
@@ -87,5 +87,5 @@ export const cvApi = {
    * Lấy CV Builder data theo cvFileId.
    */
   getCvBuilderByCvFileId: (cvFileId: number) =>
-    apiClient.get<CvBuilderApiResponse>(`/v1/cv-builder/${cvFileId}`),
+    apiClient.get<CvBuilderApiResponse>(`/cv-builder/${cvFileId}`),
 };

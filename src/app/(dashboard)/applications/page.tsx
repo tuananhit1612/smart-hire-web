@@ -35,7 +35,9 @@ import type { InterviewResponse } from "@/features/interview/types/interview-typ
 // ─── Design Constants ─────────────────────────────────────────────────────────
 const ACTIVE_STAGES = new Set([
   ApplicationStage.APPLIED,
+  ApplicationStage.SCREENING,
   ApplicationStage.INTERVIEW,
+  ApplicationStage.OFFER,
 ]);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -58,7 +60,9 @@ function toViewApplication(raw: ApplicationTrackingResponse): Application {
 
   if (raw.currentStage !== "APPLIED") {
     const stageLabels: Record<string, string> = {
+      SCREENING: "Lọc hồ sơ",
       INTERVIEW: "Phỏng vấn",
+      OFFER: "Mời nhận việc",
       HIRED: "Đã nhận việc",
       REJECTED: "Từ chối",
     };
@@ -102,8 +106,12 @@ function StatusBadge({ status }: { status: ApplicationStatus }) {
     switch (status) {
       case ApplicationStage.APPLIED:
         return { color: "text-[#22c55e]", bg: "bg-[#22c55e]/10", border: "border-[#22c55e]/30", label: "Đã nộp hồ sơ" };
+      case ApplicationStage.SCREENING:
+        return { color: "text-blue-600", bg: "bg-blue-50", border: "border-blue-200", label: "Lọc hồ sơ" };
       case ApplicationStage.INTERVIEW:
         return { color: "text-amber-700", bg: "bg-amber-50", border: "border-amber-200", label: "Phỏng vấn" };
+      case ApplicationStage.OFFER:
+        return { color: "text-purple-700", bg: "bg-purple-50", border: "border-purple-200", label: "Mời nhận việc" };
       case ApplicationStage.HIRED:
         return { color: "text-emerald-700", bg: "bg-emerald-50", border: "border-emerald-200", label: "Đã nhận việc" };
       case ApplicationStage.REJECTED:
@@ -254,6 +262,13 @@ function ApplicationCard({ application }: { application: Application }) {
                     <FileText className="w-3.5 h-3.5" />
                     Xem CV
                   </button>
+                )}
+                {(application.status === ApplicationStage.OFFER || application.status === ApplicationStage.HIRED) && (
+                  <Link href={`/onboarding/${application.id}`} onClick={(e) => e.stopPropagation()}>
+                    <button className="px-3 py-1.5 rounded-full text-xs font-bold border transition-all duration-200 flex items-center gap-1.5 bg-gradient-to-r from-purple-500 to-indigo-500 text-white border-transparent hover:shadow-lg hover:shadow-purple-500/30 hover:-translate-y-0.5 animate-pulse">
+                      ✨ Cập nhật hồ sơ công ty
+                    </button>
+                  </Link>
                 )}
                 {withdrawError && withdrawingJobId === null && (
                   <button

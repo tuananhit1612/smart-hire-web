@@ -18,11 +18,25 @@ export async function POST(req: NextRequest) {
 
     console.log("PDF Request received. Launching Puppeteer...");
 
-    // Launch Headless Browser
+    // Launch Headless Browser with security hardening
+    const isDev = process.env.NODE_ENV === "development";
     const browser = await puppeteer.launch({
       headless: true,
-      channel: "chrome", // Fallback to system Chrome
-      args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"],
+      channel: "chrome",
+      args: [
+        // Only disable sandbox in dev (Windows dev machines often lack the kernel support)
+        // In production (Linux), sandbox MUST be enabled for security
+        ...(isDev ? ["--no-sandbox"] : []),
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        // Security hardening — block network access to external sites
+        "--disable-extensions",
+        "--disable-background-networking",
+        "--disable-default-apps",
+        "--disable-sync",
+        "--disable-translate",
+        "--no-first-run",
+      ],
     });
 
     try {

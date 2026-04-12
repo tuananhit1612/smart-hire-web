@@ -2,8 +2,8 @@
  * ═══════════════════════════════════════════════════════════
  *  Job API — Endpoint wrappers for public job search
  *
- *  GET  /jobs/public          → searchJobs (filtered list)
- *  GET  /jobs/public/{id}     → getJobDetail
+ *  GET  /public/jobs            → searchJobs (filtered list)
+ *  GET  /public/jobs/{id}       → getJobDetail
  * ═══════════════════════════════════════════════════════════
  */
 
@@ -43,7 +43,7 @@ export const jobApi = {
       query.set("salaryMax", String(params.salaryMax));
 
     const qs = query.toString();
-    const url = qs ? `/jobs/public?${qs}` : '/jobs/public';
+    const url = qs ? `/public/jobs?${qs}` : '/public/jobs';
     const res = await apiClient.get<ApiWrapper<JobResponse[]>>(url);
     return res.data.data;
   },
@@ -53,7 +53,7 @@ export const jobApi = {
    */
   getDetail: async (id: number): Promise<JobResponse> => {
     const res = await apiClient.get<ApiWrapper<JobResponse>>(
-      `/jobs/public/${id}`
+      `/public/jobs/${id}`
     );
     return res.data.data;
   },

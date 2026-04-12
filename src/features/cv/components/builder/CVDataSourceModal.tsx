@@ -147,12 +147,10 @@ export function CVDataSourceModal({ isOpen, onClose }: CVDataSourceModalProps) {
         if (fileInputRef.current) fileInputRef.current.value = "";
 
         if (!file) {
-            console.log("[CVDataSource] File dialog cancelled");
             setSelectedSource(null);
             return;
         }
 
-        console.log("[CVDataSource] File selected:", file.name, file.type, file.size);
 
         // Validate file
         const validation = validateFile(file, CV_RULES);
@@ -168,9 +166,7 @@ export function CVDataSourceModal({ isOpen, onClose }: CVDataSourceModalProps) {
 
         try {
             // 1. Upload CV
-            console.log("[CVDataSource] Uploading file...");
             const uploadRes = await onboardingApi.uploadCv(file);
-            console.log("[CVDataSource] Upload response:", uploadRes);
             setUploadProgress(30);
             setProgressText("Đang đọc nội dung file...");
 
@@ -185,9 +181,7 @@ export function CVDataSourceModal({ isOpen, onClose }: CVDataSourceModalProps) {
 
             // 2. Poll for AI parsing result
             setProgressText("AI đang phân tích kỹ năng và kinh nghiệm...");
-            console.log("[CVDataSource] Fetching parse status for cvFileId:", uploadRes.cvFileId);
             const parseRes = await onboardingApi.getParseStatus(uploadRes.cvFileId);
-            console.log("[CVDataSource] Parse response:", parseRes);
 
             clearInterval(interval);
             progressIntervalRef.current = null;
@@ -198,7 +192,6 @@ export function CVDataSourceModal({ isOpen, onClose }: CVDataSourceModalProps) {
                 setProgressText("Trích xuất thành công!");
 
                 const cvData = mapOnboardingCvToCVData(parseRes.data);
-                console.log("[CVDataSource] Mapped CV data:", cvData);
                 setCvData(cvData);
 
                 setTimeout(() => {

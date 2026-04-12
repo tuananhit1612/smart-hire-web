@@ -8,6 +8,7 @@ import { Button } from "@/shared/components/ui/button";
 import { Badge } from "@/shared/components/ui/badge";
 import { ScoreBreakdown } from "./score-breakdown";
 import { AISkeleton } from "./ai-skeleton";
+import { ApplicantOnboardingTab } from "./applicant-onboarding-tab";
 import { 
     X, 
     Mail, 
@@ -41,7 +42,7 @@ interface ApplicantDrawerProps {
 }
 
 export function ApplicantDrawer({ applicant, isOpen, onClose, jobId, onApplicantUpdated }: ApplicantDrawerProps) {
-    const [activeTab, setActiveTab] = useState<"overview" | "notes">("overview");
+    const [activeTab, setActiveTab] = useState<"overview" | "notes" | "onboarding">("overview");
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [noteText, setNoteText] = useState("");
     const [isSavingNote, setIsSavingNote] = useState(false);
@@ -169,6 +170,17 @@ export function ApplicantDrawer({ applicant, isOpen, onClose, jobId, onApplicant
                                 )}
                             >
                                 Ghi chú ({applicant.notes.length})
+                            </button>
+                            <button
+                                onClick={() => setActiveTab("onboarding")}
+                                className={cn(
+                                    "px-4 py-3 text-sm font-medium border-b-2 transition-colors",
+                                    activeTab === "onboarding" 
+                                        ? "border-[#22c55e]/30 text-[#22c55e] dark:text-[#22c55e]" 
+                                        : "border-transparent text-[#637381] dark:text-[#919EAB] hover:text-[#1C252E] dark:hover:text-white"
+                                )}
+                            >
+                                Onboarding
                             </button>
                         </div>
 
@@ -387,6 +399,10 @@ export function ApplicantDrawer({ applicant, isOpen, onClose, jobId, onApplicant
                                         </div>
                                     )}
                                 </div>
+                            )}
+
+                            {activeTab === "onboarding" && (
+                                <ApplicantOnboardingTab applicant={applicant} />
                             )}
                         </div>
 

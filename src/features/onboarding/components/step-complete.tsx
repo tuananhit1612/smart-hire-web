@@ -61,8 +61,6 @@ export function StepComplete({ preferences }: StepCompleteProps) {
                 verifiedCvData: cvData,
             };
             
-            console.log("[StepComplete] Sending payload:", JSON.stringify(payload, null, 2));
-            
             await onboardingApi.completeOnboarding(payload);
             setIsSubmitting(false);
         } catch (err: any) {

@@ -148,7 +148,7 @@ export function DashboardTopbar({ onToggleSidebar }: Props) {
                                 />
                             </div>
                             <p className="text-[14px] font-bold text-[#1C252E] dark:text-white">{user?.fullName || "Người Dùng"}</p>
-                            <p className="text-[12px] text-[#919EAB] truncate w-full text-center mt-0.5">{user?.email || "tuananhpc1612@gmail.com"}</p>
+                            <p className="text-[12px] text-[#919EAB] truncate w-full text-center mt-0.5">{user?.email || "Chưa cập nhật email"}</p>
                         </div>
 
                         {/* Menu Links */}

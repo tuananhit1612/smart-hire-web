@@ -44,6 +44,7 @@ export interface EmployerApplicant {
     readonly cvUrl?: string;
     readonly notes: ApplicantNote[];
     readonly activities: ActivityLog[];
+    readonly onboardingProgress?: string;
 }
 
 export const mockEmployerApplicants: ReadonlyArray<EmployerApplicant> = [];
