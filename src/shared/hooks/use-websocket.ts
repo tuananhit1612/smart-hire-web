@@ -46,7 +46,10 @@ export function useWebSocket(options: UseWebSocketOptions = {}) {
     clientRef.current = client;
 
     client.onConnect = () => {
-      console.info("[WebSocket] Connected as user:", user.id);
+      if (process.env.NODE_ENV === 'development') {
+        // eslint-disable-next-line no-console
+        console.info("[WebSocket] Connected as user:", user.id);
+      }
 
       // Subscribe to personal notification queue.
       // Spring's user destination prefix handles routing to the
@@ -56,7 +59,6 @@ export function useWebSocket(options: UseWebSocketOptions = {}) {
         (message: IMessage) => {
           try {
             const event: RealtimeEvent = JSON.parse(message.body);
-            console.info("[WebSocket] Received event:", event.type);
 
             // Handle NEW_NOTIFICATION events → add to store
             if (event.type === EventType.NEW_NOTIFICATION) {
@@ -82,7 +84,7 @@ export function useWebSocket(options: UseWebSocketOptions = {}) {
     };
 
     client.onWebSocketClose = () => {
-      console.info("[WebSocket] Connection closed, will auto-reconnect...");
+      // auto-reconnect is handled by STOMP client
     };
 
     // Activate (connect)
@@ -93,7 +95,6 @@ export function useWebSocket(options: UseWebSocketOptions = {}) {
       if (clientRef.current?.active) {
         clientRef.current.deactivate();
         clientRef.current = null;
-        console.info("[WebSocket] Disconnected");
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

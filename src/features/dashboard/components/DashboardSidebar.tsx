@@ -39,6 +39,7 @@ const NAV_CANDIDATE_GENERAL: NavItemType[] = [
 const NAV_CANDIDATE_TOOLS: NavItemType[] = [
     { label: "Tìm việc", href: "/jobs", icon: Briefcase },
     { label: "Đơn ứng tuyển", href: "/applications", icon: ClipboardList },
+    { label: "Hồ sơ trúng tuyển", href: "/onboarding", icon: Rocket },
     { label: "Hồ sơ CV", href: "/cv-files", icon: FileText },
     { label: "Xây dựng CV", href: "/cv-builder", icon: Edit3 },
     { label: "Đánh giá CV", href: "/cv-analysis", icon: ScanSearch },
@@ -54,6 +55,7 @@ const NAV_EMPLOYER_TOOLS: NavItemType[] = [
     { label: "Đăng tin tuyển dụng", href: "/hr/jobs", icon: Briefcase },
     { label: "Pipeline ứng viên", href: "/employer/pipeline", icon: Kanban },
     { label: "Danh sách ứng viên", href: "/employer/candidates", icon: Users },
+    { label: "Hồ sơ trúng tuyển", href: "/employer/hired-onboarding", icon: ClipboardList },
 ];
 
 /* ─── Types ─── */

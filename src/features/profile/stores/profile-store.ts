@@ -162,29 +162,21 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
           fullName: profile.fullName || "",
           phone: profile.phone || "",
         });
-        console.log("[saveProfile] ✅ /users/me updated");
-      } catch (userErr) {
-        console.warn("[saveProfile] ⚠️ /users/me failed (non-blocking):", userErr);
+      } catch {
+        // User info update failed (non-blocking)
       }
 
       // 2. Save Candidate Profile Info (Headline, Summary, etc.)
       const payload = mapProfileToApi(profile);
-      console.log("[saveProfile] Sending profile payload:", JSON.stringify(payload));
-      console.log("[saveProfile] profile.id =", JSON.stringify(profile.id));
-      
       let res;
       if (!profile.id) {
-        // No profile yet — create new
-        console.log("[saveProfile] → POST createProfile");
         res = await profileApi.createProfile(payload);
       } else {
         // Has profile — try update, fallback to create if 404
-        console.log("[saveProfile] → PUT updateProfile");
         try {
           res = await profileApi.updateProfile(payload);
         } catch (updateErr: any) {
           if (updateErr?.status === 404) {
-            console.log("[saveProfile] → Update 404, falling back to POST createProfile");
             res = await profileApi.createProfile(payload);
           } else {
             throw updateErr;
@@ -192,7 +184,6 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
         }
       }
       const updatedProfile = mapProfileFromApi(res.data.data);
-      console.log("[saveProfile] ✅ Profile saved, id =", updatedProfile.id);
 
       // 3. Sync Educations
       const eduPromises = profile.educations.map(async (edu) => {
@@ -236,11 +227,10 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
 
       // Execute all syncs
       await Promise.all([...eduPromises, ...expPromises, ...projPromises, ...skillPromises]);
-      console.log("[saveProfile] ✅ All sub-sections synced");
 
       // Re-fetch everything cleanly from the server to get real IDs
       await get().fetchProfile();
-      console.log("[saveProfile] ✅ Re-fetch complete");
+      
       
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Không thể lưu hồ sơ.";

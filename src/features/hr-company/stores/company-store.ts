@@ -51,11 +51,9 @@ export const useCompanyStore = create<CompanyStore>((set, get) => ({
                         coverUrl: res.coverUrl || undefined,
                     }
                 });
-                console.log('--- [DEBUG fetchMyCompany] Fetched successfully. Mapped company:', get().company);
             }
-        } catch (error) {
+        } catch {
             set({ error: 'Failed to fetch company data' });
-            console.error(error);
         } finally {
             set({ isLoading: false });
         }
@@ -64,9 +62,6 @@ export const useCompanyStore = create<CompanyStore>((set, get) => ({
     saveCompany: async (directUpdates?: Partial<Company>) => {
         const currentCompany = get().company;
         const companyToSave = directUpdates ? { ...currentCompany, ...directUpdates } : currentCompany;
-        
-        console.log('--- [DEBUG saveCompany] Current store company:', currentCompany);
-        console.log('--- [DEBUG saveCompany] Company to save:', companyToSave);
         
         set({ isLoading: true, error: null });
         try {
@@ -87,7 +82,6 @@ export const useCompanyStore = create<CompanyStore>((set, get) => ({
                 socialLinks: companyToSave.socialLinks,
                 coverUrl: companyToSave.coverUrl,
             };
-            console.log('--- [DEBUG saveCompany] Sending payload:', payload);
             if (companyToSave.id) {
                 await companyApi.updateCompany(Number(companyToSave.id), payload);
                 if (directUpdates) {
@@ -98,9 +92,8 @@ export const useCompanyStore = create<CompanyStore>((set, get) => ({
                 set({ company: { ...companyToSave, id: res.id.toString() }});
             }
             set({ isEditing: false });
-        } catch (error) {
+        } catch {
             set({ error: 'Failed to save company data' });
-            console.error(error);
         } finally {
             set({ isLoading: false });
         }
@@ -113,9 +106,8 @@ export const useCompanyStore = create<CompanyStore>((set, get) => ({
         try {
             const res = await companyApi.uploadLogo(Number(company.id), file);
             set({ company: { ...company, logoUrl: res.logoUrl || undefined } });
-        } catch (error) {
+        } catch {
             set({ error: 'Failed to upload logo' });
-            console.error(error);
         } finally {
             set({ isLoading: false });
         }
@@ -128,9 +120,8 @@ export const useCompanyStore = create<CompanyStore>((set, get) => ({
         try {
             const res = await companyApi.uploadCover(Number(company.id), file);
             set({ company: { ...company, coverUrl: res.coverUrl || undefined } });
-        } catch (error) {
+        } catch {
             set({ error: 'Failed to upload cover' });
-            console.error(error);
         } finally {
             set({ isLoading: false });
         }
@@ -139,7 +130,6 @@ export const useCompanyStore = create<CompanyStore>((set, get) => ({
     setCompany: (company) => set({ company }),
 
     updateField: (field, value) => {
-        console.log(`--- [DEBUG updateField] updating: ${field} = ${value}`);
         set((state) => ({
             company: { ...state.company, [field]: value },
         }));

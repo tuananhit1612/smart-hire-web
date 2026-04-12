@@ -239,12 +239,17 @@ export function getImageUrl(path: string | null | undefined): string | undefined
     return path;
   }
   
-  // Example: If NEXT_PUBLIC_API_URL is "http://localhost:8080/api"
-  // We want the base to be "http://localhost:8080"
-  let baseUrl = "http://localhost:8080";
+  // Extract the server origin from NEXT_PUBLIC_API_URL
+  // e.g. "http://localhost:8080/api/v1" → "http://localhost:8080"
+  let baseUrl = "";
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   if (apiUrl) {
-    baseUrl = apiUrl.replace(/\/api$/, "");
+    try {
+      const parsed = new URL(apiUrl);
+      baseUrl = parsed.origin;
+    } catch {
+      baseUrl = apiUrl.replace(/\/api.*$/, "");
+    }
   }
 
   const cleanPath = path.startsWith("/") ? path.substring(1) : path;

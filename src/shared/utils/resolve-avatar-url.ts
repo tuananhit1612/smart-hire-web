@@ -14,8 +14,13 @@ const DEFAULT_FALLBACK =
 
 /** Base URL without the /api suffix */
 function getUploadsBase(): string {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api";
-  return apiUrl.replace(/\/api\/?$/, "");
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (!apiUrl) return "";
+  try {
+    return new URL(apiUrl).origin;
+  } catch {
+    return apiUrl.replace(/\/api.*$/, "");
+  }
 }
 
 export function resolveAvatarUrl(

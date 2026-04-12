@@ -37,6 +37,7 @@ interface PipelineCandidate {
     appliedDate: string;
     daysInStage: number;
     tags: string[];
+    onboardingProgress?: string;
 }
 
 interface PipelineStage {
@@ -68,10 +69,10 @@ interface PendingMove {
 
 // ─── Stage Config ────────────────────────────────────
 const stages: PipelineStage[] = [
-    { id: "APPLIED",   label: "Ứng tuyển", color: "text-[#22c55e] dark:text-[#22c55e]",      bg: "bg-[#22c55e]/10 dark:bg-[#22c55e]/20",      headerBg: "bg-[#22c55e]/15 dark:bg-[#22c55e]/20",      dot: "bg-[#22c55e]" },
-    { id: "INTERVIEW", label: "Phỏng vấn", color: "text-amber-700 dark:text-amber-400",  bg: "bg-amber-50 dark:bg-amber-900/20",  headerBg: "bg-amber-100 dark:bg-amber-900/30",  dot: "bg-amber-400" },
-    { id: "HIRED",     label: "Đã tuyển",  color: "text-teal-700 dark:text-teal-400",    bg: "bg-teal-50 dark:bg-teal-900/20",    headerBg: "bg-teal-100 dark:bg-teal-900/30",    dot: "bg-teal-400" },
-    { id: "REJECTED",  label: "Từ chối",   color: "text-rose-700 dark:text-rose-400",    bg: "bg-rose-50 dark:bg-rose-900/20",    headerBg: "bg-rose-100 dark:bg-rose-900/30",    dot: "bg-rose-400" },
+    { id: "APPLIED",   label: "Ứng tuyển", color: "text-[#22c55e] dark:text-[#22c55e]",    bg: "bg-[#22c55e]/10 dark:bg-[#22c55e]/20",  headerBg: "bg-[#22c55e]/15 dark:bg-[#22c55e]/20",  dot: "bg-[#22c55e]" },
+    { id: "INTERVIEW", label: "Phỏng vấn", color: "text-amber-700 dark:text-amber-400",   bg: "bg-amber-50 dark:bg-amber-900/20",     headerBg: "bg-amber-100 dark:bg-amber-900/30",     dot: "bg-amber-400" },
+    { id: "HIRED",     label: "Đã tuyển",  color: "text-teal-700 dark:text-teal-400",     bg: "bg-teal-50 dark:bg-teal-900/20",       headerBg: "bg-teal-100 dark:bg-teal-900/30",       dot: "bg-teal-400" },
+    { id: "REJECTED",  label: "Từ chối",   color: "text-rose-700 dark:text-rose-400",     bg: "bg-rose-50 dark:bg-rose-900/20",       headerBg: "bg-rose-100 dark:bg-rose-900/30",       dot: "bg-rose-400" },
 ];
 
 const emptyBoard: Record<StageId, PipelineCandidate[]> = {
@@ -233,6 +234,11 @@ function CandidateCard({
                             <Clock className="w-2.5 h-2.5" />
                             {candidate.daysInStage > 0 ? `${candidate.daysInStage} ngày` : "Hôm nay"}
                         </div>
+                        {stageId === "HIRED" && candidate.onboardingProgress && (
+                           <div className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-teal-50 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400 text-[9px] font-bold ring-1 ring-teal-500/20">
+                              HỒ SƠ: {candidate.onboardingProgress}
+                           </div>
+                        )}
                         <ScoreBadge score={candidate.aiScore} />
                     </div>
                 </div>
@@ -264,7 +270,7 @@ export default function PipelineBoardPage() {
                 const data = res.data.data || [];
                 
                 const grouped: Record<StageId, PipelineCandidate[]> = {
-                    APPLIED: [], INTERVIEW: [], HIRED: [], REJECTED: []
+                    APPLIED: [], INTERVIEW: [], HIRED: [], REJECTED: [],
                 };
                 
                 data.forEach((app: any) => {
@@ -284,7 +290,8 @@ export default function PipelineBoardPage() {
                         aiScore: app.aiAnalysis?.matchScore || 0,
                         appliedDate: appliedDate.toLocaleDateString('vi-VN'),
                         daysInStage: days,
-                        tags: app.skills || []
+                        tags: app.skills || [],
+                        onboardingProgress: app.onboardingProgress
                     };
                     
                     if (grouped[stage]) {

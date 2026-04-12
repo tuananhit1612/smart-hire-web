@@ -12,7 +12,9 @@ import type { ApplicationStage as ApplicationStageType } from "./enums";
 /** Re-export as enum for backward compatibility with existing switch/if statements */
 export enum ApplicationStage {
     APPLIED = "APPLIED",
+    SCREENING = "SCREENING",
     INTERVIEW = "INTERVIEW",
+    OFFER = "OFFER",
     HIRED = "HIRED",
     REJECTED = "REJECTED",
 }

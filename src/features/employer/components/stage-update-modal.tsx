@@ -65,10 +65,10 @@ export interface StageUpdateData {
 
 // ─── Stage Config ────────────────────────────────────
 const STAGE_META: Record<StageId, { label: string; color: string; bg: string; dot: string }> = {
-    applied: { label: "Ứng tuyển", color: "text-[#22c55e] dark:text-[#22c55e]", bg: "bg-[#22c55e]/15 dark:bg-[#22c55e]/20", dot: "bg-[#22c55e]" },
-    interview: { label: "Phỏng vấn", color: "text-amber-700 dark:text-amber-400", bg: "bg-amber-100 dark:bg-amber-900/30", dot: "bg-amber-400" },
-    hired: { label: "Đã tuyển", color: "text-teal-700 dark:text-teal-400", bg: "bg-teal-100 dark:bg-teal-900/30", dot: "bg-teal-400" },
-    rejected: { label: "Từ chối", color: "text-rose-700 dark:text-rose-400", bg: "bg-rose-100 dark:bg-rose-900/30", dot: "bg-rose-400" },
+    applied:   { label: "Ứng tuyển", color: "text-[#22c55e] dark:text-[#22c55e]",    bg: "bg-[#22c55e]/15 dark:bg-[#22c55e]/20",    dot: "bg-[#22c55e]" },
+    interview: { label: "Phỏng vấn", color: "text-amber-700 dark:text-amber-400",  bg: "bg-amber-100 dark:bg-amber-900/30",       dot: "bg-amber-400" },
+    hired:     { label: "Đã tuyển",  color: "text-teal-700 dark:text-teal-400",    bg: "bg-teal-100 dark:bg-teal-900/30",         dot: "bg-teal-400" },
+    rejected:  { label: "Từ chối",   color: "text-rose-700 dark:text-rose-400",    bg: "bg-rose-100 dark:bg-rose-900/30",         dot: "bg-rose-400" },
 };
 
 const NOTE_TEMPLATES: Record<string, string[]> = {
@@ -109,6 +109,7 @@ export function StageUpdateModal({
     const templates = NOTE_TEMPLATES[toStage] ?? [];
     const showSchedule = toStage === "interview";
     const isRejection = toStage === "rejected";
+    const isHired = toStage === "hired";
 
     const handleConfirm = () => {
         if (!candidate) return;
@@ -195,6 +196,16 @@ export function StageUpdateModal({
                                         <AlertTriangle className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
                                         <p className="text-xs text-rose-600">
                                             Ứng viên sẽ bị từ chối và nhận thông báo qua email. Hành động này có thể hoàn tác.
+                                        </p>
+                                    </div>
+                                )}
+
+                                {/* Instruction for hired */}
+                                {isHired && (
+                                    <div className="flex items-start gap-2 bg-teal-50 dark:bg-teal-900/20 rounded-lg p-3 ring-1 ring-teal-500/20">
+                                        <CheckCircle2 className="w-4 h-4 text-teal-600 dark:text-teal-400 shrink-0 mt-0.5" />
+                                        <p className="text-xs text-teal-700 dark:text-teal-300 font-medium">
+                                            Tuyệt vời! Ứng viên sẽ nhận được thông báo trúng tuyển. <strong>Hệ thống Onboarding</strong> sẽ tự động kích hoạt để ứng viên nộp hồ sơ nhận việc.
                                         </p>
                                     </div>
                                 )}
@@ -327,7 +338,7 @@ export function StageUpdateModal({
                                     )}
                                 >
                                     <CheckCircle2 className="w-3.5 h-3.5" />
-                                    {isRejection ? "Xác nhận từ chối" : "Xác nhận chuyển"}
+                                    {isRejection ? "Xác nhận từ chối" : isHired ? "Xác nhận Tuyển dụng" : "Xác nhận chuyển"}
                                 </button>
                             </div>
                         </div>

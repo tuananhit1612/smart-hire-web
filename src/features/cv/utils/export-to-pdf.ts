@@ -60,7 +60,6 @@ export const exportToPDF = async (
     let container: HTMLDivElement | null = null;
 
     try {
-        console.log(`[PDF Export] Starting — elementId="${elementId}", template="${templateId ?? 'default'}"`);
         onProgress?.('Đang chuẩn bị...', 10);
 
         // 1. Create offscreen container

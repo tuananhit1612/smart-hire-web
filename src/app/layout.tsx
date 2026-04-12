@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Be_Vietnam_Pro, Space_Grotesk, Fira_Code } from "next/font/google";
+import { Suspense } from "react";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { ToastProvider } from "@/shared/components/ui/toast";
-
-import { ParticleBackground } from "@/shared/components/effects/ParticleBackground";
+import { AuthProvider } from "@/features/auth/context/auth-context";
 
 const beVietnamPro = Be_Vietnam_Pro({
   subsets: ["latin", "vietnamese"],
@@ -27,14 +27,10 @@ const firaCode = Fira_Code({
   display: "swap",
 });
 
-import { AuthProvider } from "@/features/auth/context/auth-context";
-
 export const metadata: Metadata = {
   title: "SmartHire - AI Recruitment Platform",
   description: "Next-generation hiring platform powered by AI. Connect with top talent and find your dream job.",
 };
-
-import { Suspense } from "react";
 
 export default function RootLayout({
   children,
@@ -54,7 +50,6 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          <ParticleBackground />
           <ToastProvider>
             <AuthProvider>
               <Suspense fallback={null}>

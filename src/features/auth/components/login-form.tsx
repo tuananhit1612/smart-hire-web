@@ -41,7 +41,10 @@ export function LoginForm() {
         }
 
         const clientId = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
-        const redirectUri = encodeURIComponent("http://localhost:8080/api/auth/github/callback");
+        const apiBase = process.env.NEXT_PUBLIC_API_URL ?? "";
+        // Strip /v1 suffix to get the base API URL for OAuth callback
+        const oauthBase = apiBase.replace(/\/v1$/, "");
+        const redirectUri = encodeURIComponent(`${oauthBase}/auth/github/callback`);
         const scope = encodeURIComponent("user:email");
         window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}`;
     };

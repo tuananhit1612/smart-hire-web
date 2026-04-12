@@ -1,6 +1,7 @@
 "use client";
 
 import { Job } from "../types/job";
+import { sanitizeHtml } from "@/shared/utils/sanitize";
 import Link from "next/link";
 import {
     ArrowLeft,
@@ -172,7 +173,7 @@ export function JobDetail({ job }: JobDetailProps) {
                             </h2>
                             <div 
                                 className="text-[14px] leading-relaxed text-[#454F5B] dark:text-[#C4CDD5] prose prose-sm dark:prose-invert max-w-none prose-p:mb-2 prose-ul:list-disc prose-ul:ml-4 prose-li:mb-1"
-                                dangerouslySetInnerHTML={{ __html: job.fullDescription || job.description }}
+                                dangerouslySetInnerHTML={{ __html: sanitizeHtml(job.fullDescription || job.description) }}
                             />
                         </motion.div>
 
@@ -218,7 +219,7 @@ export function JobDetail({ job }: JobDetailProps) {
                                 {job.requirements.length === 1 && job.requirements[0].includes('<') ? (
                                     <div 
                                         className="text-[14px] leading-relaxed text-[#454F5B] dark:text-[#C4CDD5] prose prose-sm dark:prose-invert max-w-none prose-p:mb-2 prose-ul:list-disc prose-ul:ml-4 prose-li:mb-1"
-                                        dangerouslySetInnerHTML={{ __html: job.requirements[0] }}
+                                        dangerouslySetInnerHTML={{ __html: sanitizeHtml(job.requirements[0]) }}
                                     />
                                 ) : (
                                     <ul className="space-y-3">
@@ -250,7 +251,7 @@ export function JobDetail({ job }: JobDetailProps) {
                                 {job.benefits.length === 1 && job.benefits[0].includes('<') ? (
                                     <div 
                                         className="text-[14px] leading-relaxed text-[#454F5B] dark:text-[#C4CDD5] prose prose-sm dark:prose-invert max-w-none prose-p:mb-2 prose-ul:list-disc prose-ul:ml-4 prose-li:mb-1"
-                                        dangerouslySetInnerHTML={{ __html: job.benefits[0] }}
+                                        dangerouslySetInnerHTML={{ __html: sanitizeHtml(job.benefits[0]) }}
                                     />
                                 ) : (
                                     <ul className="space-y-3">
