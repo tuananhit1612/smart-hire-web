@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { pdfCache } from "@/features/cv/api/pdf-cache";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(
   req: Request,
   { params }: { params: Promise<{ id: string }> } // In Next.js App Router API, params are now Promise
