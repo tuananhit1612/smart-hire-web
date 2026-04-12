@@ -4,6 +4,53 @@ import { ApiWrapper } from "@/shared/types/api";
 
 export type VerificationStatus = "PENDING" | "VERIFIED" | "REJECTED";
 
+export interface OnboardingCvData {
+    cvFileId: number;
+    firstName: string;
+    lastName: string;
+    phone: string;
+    email: string;
+    linkedin: string;
+    website: string;
+    country: string;
+    state: string;
+    city: string;
+    gender: string;
+    summary?: string;
+    skills?: string[];
+    experience?: {
+        company?: string;
+        title?: string;
+        startDate?: string;
+        endDate?: string;
+        description?: string;
+    }[];
+    education?: {
+        school?: string;
+        degree?: string;
+        major?: string;
+        startDate?: string;
+        endDate?: string;
+    }[];
+}
+
+export interface UploadCvResponse {
+    cvFileId: number;
+    status: string;
+    message: string;
+}
+
+export interface ParseStatusResponse {
+    status: string;
+    message: string;
+    data?: OnboardingCvData;
+}
+
+export interface CompleteOnboardingPayload {
+    roleId: string | null;
+    experienceLevel: string | null;
+    verifiedCvData?: OnboardingCvData | null;
+}
 export interface OnboardingDocumentResponse {
   id: number;
   applicationId: number;
@@ -23,6 +70,43 @@ export interface OnboardingAiVerificationResult {
 }
 
 export const onboardingApi = {
+  /**
+   * Upload CV and trigger AI Parsing
+   */
+  uploadCv: async (file: File): Promise<UploadCvResponse> => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await apiClient.post<UploadCvResponse>(
+      "/v1/onboarding/upload-cv",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response.data;
+  },
+
+  /**
+   * Poll AI Parsing status
+   */
+  getParseStatus: async (cvFileId: number): Promise<ParseStatusResponse> => {
+    const response = await apiClient.get<ParseStatusResponse>(
+      `/v1/onboarding/parse-status/${cvFileId}`,
+      { timeout: 60000 }
+    );
+    return response.data;
+  },
+
+  /**
+   * Submit all candidate data and complete onboarding
+   */
+  completeOnboarding: async (payload: CompleteOnboardingPayload): Promise<void> => {
+    await apiClient.post("/v1/onboarding/complete", payload);
+  },
+
   /**
    * Upload an onboarding document.
    * Note: Uploading ID_FRONT/ID_BACK will trigger synchronous AI Verification.
