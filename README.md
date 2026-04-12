@@ -1,153 +1,83 @@
-<div align="center">
-  <img src="public/smarthire_frontend_banner.png" alt="SmartHire Frontend Banner" width="100%" />
-</div>
+![SmartHire Frontend Banner](file:///C:/Users/Admin/.gemini/antigravity/brain/bf2e4e15-9e5b-4f89-becd-874451779a93/smarthire_frontend_banner_1776016964793.png)
 
 # SmartHire Frontend Client 🌟
 
-A comprehensive, cutting-edge Applicant Tracking System (ATS) showcasing an ultra-modern aesthetic. The SmartHire frontend is built with Next.js App Router for extreme performance, delivering a seamlessly fast, glassmorphism-inspired UI UX Pro Max experience for both Job Seekers and Employers.
+A comprehensive, cutting-edge recruitment and Applicant Tracking System (ATS) platform. The frontend application provides a seamlessly fast and beautiful experience for Candidates to find jobs/build CVs, and for Employers/HR to manage pipelines and onboard candidates.
 
-## 🛠 Tech Stack Overview
+## 🛠 Tech Stack
 
-| Category | Technology |
+| Layer | Technology |
 | :--- | :--- |
 | **Framework** | Next.js 14+ (App Router), React 18 |
-| **Language** | TypeScript (Strict Mode) |
-| **Styling** | Tailwind CSS v3, Custom CSS Variables (Glassmorphism) |
-| **Bundler** | Turbopack (Next.js) |
-| **State Mgt** | Zustand (Global App State), Context API |
-| **DevOps** | Multi-stage Docker (Standalone Mode Output) |
+| **Styling** | TailwindCSS, CSS Modules |
+| **Bundler** | Turbopack |
+| **State Management** | Zustand |
+| **Components** | Custom UI Library (Glassmorphism & Modern aesthetics) |
+| **DevOps** | Docker (Auto standalone mode), Docker Compose |
 
----
-
-## 📐 Application Architecture & Flow
-
-### Component & Routing Architecture
-The frontend leverages the robust Next.js App Router to separate marketing pages, interactive dashboards, and authentication logic seamlessly.
-
-```mermaid
-graph TD
-    A[Next.js App Router] --> B{Route Groups}
-    
-    B --> |Public| C[(main)]
-    C --> Home[Homepage / Landing]
-    C --> Jobs[Job Board]
-    
-    B --> |Auth| D[(auth)]
-    D --> Login[Login / OAuth]
-    D --> Register[Candidate / HR Registration]
-    
-    B --> |Private| E[(dashboard)]
-    E --> F[Employer Area]
-    E --> G[Candidate Area]
-    
-    F --> Pipeline[Kanban Applicant Pipeline]
-    F --> Analytics[HR Analytics]
-    
-    G --> Resume[AI CV Builder]
-    G --> Applications[Track Applications]
-
-    style A fill:#000,stroke:#333,stroke-width:2px,color:#fff
-```
-
-### Authentication & Data Flow
-```mermaid
-sequenceDiagram
-    participant User
-    participant NextJS
-    participant ZustandAuthStore
-    participant BackendAPI
-    
-    User->>NextJS: Submits Login Form
-    NextJS->>BackendAPI: POST /api/v1/auth/login
-    BackendAPI-->>NextJS: AccessToken + RefreshToken
-    NextJS->>ZustandAuthStore: Hydrate Tokens & User Data
-    ZustandAuthStore->>NextJS: Re-render Protected Routes
-    NextJS-->>User: Redirect to `/dashboard`
-```
-
----
-
-## 📁 Project Structure Deep-Dive
+## 📐 Architecture & Project Structure
 
 ```text
-smart-hire-web/
-├── public/                 # Static assets, branding, and images
-│   └── smarthire_frontend_banner.png
+smarthire-app/
 ├── src/
-│   ├── app/                # File-based routing (App Router)
-│   │   ├── (auth)/         # Authentication endpoints
-│   │   ├── (dashboard)/    # Secure layout wrapped routes
-│   │   └── (main)/         # Public landing, Jobs, About pages
-│   ├── features/           # Domain-driven feature design
-│   │   ├── auth/           # Login, Register, OAuth flows
-│   │   ├── cv/             # Resume Builder, Templates, AI parsers
-│   │   ├── employer/       # Kanban boards, Applicant Drawers
-│   │   └── onboarding/     # Document verification steps
-│   ├── shared/             # Reusable UI primitives, utils, API clients
-│   │   ├── components/     # Buttons, Modals, Inputs, Cards
-│   │   ├── store/          # Zustand states
-│   │   └── lib/            # Axios interceptors, Token refresh logic
-│   └── styles/             # Global CSS and Tailwind directives
-├── Dockerfile              # Highly-optimized container spec
-└── next.config.ts          # Turbopack, standalone mode, images config
+│   ├── app/               # Next.js App Router (Pages & Layouts)
+│   ├── features/          # Domain-specific components (dashboard, onboarding, cv, employer)
+│   ├── shared/            # Shared components, hooks, utils, and lib
+│   ├── public/            # Static assets
+│   └── styles/            # Global CSS / Tailwind directives
+├── next.config.ts         # Next.js & Turbopack configurations
+├── package.json           # Dependencies & NPM Scripts
+├── Dockerfile             # Multi-stage production Docker build
+└── docker-compose.yml     # Orchestration entrypoint
 ```
 
----
+## ✨ Core Features
 
-## ✨ Elite Core Features
+### 👨‍💼 Candidate Experience
+- **🚀 AI Resume Builder**: Visually stunning CV builder with dynamic templates.
+- **📄 Resume Parsing**: Upload existing CVs and allow the system to extract data via AI backend parsing.
+- **💼 Job Search & Apply**: Browse and seamlessly apply to modern job postings.
+- **📈 Application Tracking**: Track the status of active applications in real-time.
 
-### 👨‍💼 For Candidates (Job Seekers)
-- **🚀 AI Resume Builder Studio**: A meticulously crafted, visually stunning CV builder supporting dynamic layouts and instant real-time previews.
-- **📄 Smart Document Parsing**: Upload legacy CVs and let the backend AI extract structural data seamlessly into the builder.
-- **💼 Cinematic Job Discovery**: Browse job openings in a beautiful BENTO grid architecture.
-- **📈 Real-time Application Tracking**: Visual timeline of exactly where your application sits in the queue.
-
-### 🏢 For Employers & HR
-- **👀 Interactive Applicant Board**: Comprehensive Kanban-style pipeline to drag-and-drop candidates through hiring stages with fluid animations.
-- **📑 Digital Onboarding Hub**: Complete end-to-end onboarding for new hires, including Identity Document (ID_FRONT, ID_BACK) secure uploads and AI verification states.
-- **📊 HR Analytics Dashboard**: Real-time KPI graphics on job conversions and pipeline drop-offs.
-
----
+### 🏢 Employer & HR Admin
+- **👀 Applicant Board**: Kanban-style pipeline to drag-and-drop candidates through stages.
+- **📑 Verification & Onboarding**: Complete end-to-end digital onboarding for hired candidates, verifying documents (ID, diplomas).
+- **📊 HR Dashboard**: Analytics on job views, conversions, and hiring trends.
 
 ## 📦 Getting Started
 
-### 1. Local Development (NPM)
+### Prerequisites
+- Node.js (v20+ recommended)
+- NPM or PNPM
+- Docker (for containerized deployment)
+
+### 1. Local Setup
 ```bash
 git clone https://github.com/khoazandev/smart-hire-web.git
 cd smart-hire-web
 
-# Install dependencies (Ignore scripts if facing upstream issues)
-npm install --ignore-scripts
+# Install dependencies
+npm install
 
-# Populate local environment
-cp .env.docker.example .env.local
-
-# Run Development Server with Turbopack for ultra-fast HMR
+# Start Development Server (Turbopack)
 npm run dev
-# Accessible at http://localhost:3000
+# App runs on http://localhost:3000
 ```
 
-### 2. Production Docker Deployment
-The frontend uses Next.js `output: 'standalone'` feature via a multi-stage Docker build to keep image sizes tiny and startup times instant.
-
+### 2. Docker Deployment
 ```bash
-# Build the highly optimized Docker container
+# Build and run using Docker Compose
 docker-compose up -d --build
 ```
 
----
+## 🔑 Environment Variables
 
-## 🔑 Environment Configuration
+| Variable | Description |
+| :--- | :--- |
+| `NEXT_PUBLIC_API_URL` | Base URL of the SmartHire Backend API |
+| `NEXT_PUBLIC_GITHUB_CLIENT_ID`| Client ID for GitHub OAuth Login |
 
-Ensure these are properly set in your `.env` physically or logically injected into your deployment container:
+*Note: Create a `.env.local` file based on `.env.docker.example` for testing.*
 
-| Variable | Description | Default |
-| :--- | :--- | :--- |
-| `NEXT_PUBLIC_API_URL` | The external URL pointing to the Backend API | `http://localhost:8080` |
-| `NEXT_PUBLIC_GITHUB_CLIENT_ID`| Required to trigger the OAuth2 flow from the client | *Your GitHub App ID* |
-| `NEXT_TELEMETRY_DISABLED` | Privacy control for Next.js metrics | `1` |
-
----
-<div align="center">
-  <i>Redefining Recruitment Through Design & Data</i><br/>
-</div>
+<br />
+<p align="center"><i>Powered by Next.js, React & TailwindCSS</i></p>
