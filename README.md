@@ -1,102 +1,83 @@
-# SmartHire Frontend 🎨
+![SmartHire Frontend Banner](file:///C:/Users/Admin/.gemini/antigravity/brain/bf2e4e15-9e5b-4f89-becd-874451779a93/smarthire_frontend_banner_1776016964793.png)
 
-The user-facing portal for SmartHire, a premium Applicant Tracking System (ATS). Built to deliver a blazing-fast, highly responsive, and beautiful user experience for both Job Seekers and HR Professionals.
+# SmartHire Frontend Client 🌟
 
----
+A comprehensive, cutting-edge recruitment and Applicant Tracking System (ATS) platform. The frontend application provides a seamlessly fast and beautiful experience for Candidates to find jobs/build CVs, and for Employers/HR to manage pipelines and onboard candidates.
 
-## 🏗️ Architecture
+## 🛠 Tech Stack
 
-![Frontend Architecture](C:\Users\Admin\.gemini\antigravity\brain\2a6b98ce-fdb0-4f36-9483-7af3be51eff5\frontend_architecture_1774850596747.png)
+| Layer | Technology |
+| :--- | :--- |
+| **Framework** | Next.js 14+ (App Router), React 18 |
+| **Styling** | TailwindCSS, CSS Modules |
+| **Bundler** | Turbopack |
+| **State Management** | Zustand |
+| **Components** | Custom UI Library (Glassmorphism & Modern aesthetics) |
+| **DevOps** | Docker (Auto standalone mode), Docker Compose |
 
-The Frontend is built using the latest Next.js 15 App Router paradigm, featuring highly optimized static rendering and secure state management. The codebase follows a "Feature-Sliced Design" methodology for extreme scalability.
+## 📐 Architecture & Project Structure
 
----
-
-## 🛠️ Tech Stack
-
-- **Framework**: React 19, Next.js 15 (App Router)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS v4, Framer Motion (Animations), shadcn/ui (Radix UI)
-- **State Management**: Zustand (Global), React Hook Form (Forms)
-- **Data Fetching**: Axios
-- **Real-time**: StompJS / SockJS
-- **PDF Generation**: html2canvas, jspdf, puppeteer
-
----
-
-## 📁 Project Structure
-
-```
+```text
 smarthire-app/
 ├── src/
-│   ├── app/           # Next.js App Router (Pages & Layouts routing)
-│   ├── features/      # Feature modules (auth, jobs, hr-company, cv, etc.)
-│   ├── shared/        # Reusable UI components (Tailwind classes, buttons)
-│   ├── lib/           # Utility functions, API configs, Zustand stores
-│   └── styles/        # Global CSS variables
+│   ├── app/               # Next.js App Router (Pages & Layouts)
+│   ├── features/          # Domain-specific components (dashboard, onboarding, cv, employer)
+│   ├── shared/            # Shared components, hooks, utils, and lib
+│   ├── public/            # Static assets
+│   └── styles/            # Global CSS / Tailwind directives
+├── next.config.ts         # Next.js & Turbopack configurations
+├── package.json           # Dependencies & NPM Scripts
+├── Dockerfile             # Multi-stage production Docker build
+└── docker-compose.yml     # Orchestration entrypoint
 ```
 
----
+## ✨ Core Features
 
-## ✨ Features
+### 👨‍💼 Candidate Experience
+- **🚀 AI Resume Builder**: Visually stunning CV builder with dynamic templates.
+- **📄 Resume Parsing**: Upload existing CVs and allow the system to extract data via AI backend parsing.
+- **💼 Job Search & Apply**: Browse and seamlessly apply to modern job postings.
+- **📈 Application Tracking**: Track the status of active applications in real-time.
 
-- **Dynamic Role-Based Dashboards**: Seamlessly switches between the minimal Job Seeker flow and the data-heavy HR Recruiter pipeline.
-- **CV Builder & Exporter**: Construct a CV via UI and export beautiful templates to PDF instantly.
-- **Kanban Board**: Drag-and-drop interactive kanban boards using `@dnd-kit` for application stage tracking.
-- **Glassmorphism UI**: Uses cutting-edge styling, dynamic animations (`framer-motion`), and rich aesthetics.
-- **Real-Time Notifications**: WebSocket connections ensure immediate updates on interview schedules and application status.
+### 🏢 Employer & HR Admin
+- **👀 Applicant Board**: Kanban-style pipeline to drag-and-drop candidates through stages.
+- **📑 Verification & Onboarding**: Complete end-to-end digital onboarding for hired candidates, verifying documents (ID, diplomas).
+- **📊 HR Dashboard**: Analytics on job views, conversions, and hiring trends.
 
----
+## 📦 Getting Started
 
-## 🚀 Getting Started
+### Prerequisites
+- Node.js (v20+ recommended)
+- NPM or PNPM
+- Docker (for containerized deployment)
 
-### Environment Variables
-
-Create a `.env.local` file at the root of the project:
-
-```env
-NEXT_PUBLIC_API_URL=http://localhost:8080/api
-NEXT_PUBLIC_WS_URL=ws://localhost:8080/ws
-```
-
-### Run Locally
-
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
-2. Start the fast development server:
-   ```bash
-   npm run dev
-   ```
-3. Open `http://localhost:3000` in your browser.
-
-### Run with Docker
-
-Deploy easily using the provided Dockerfile:
-
+### 1. Local Setup
 ```bash
-docker build -t smarthire-frontend .
-docker run -p 3000:3000 smarthire-frontend
+git clone https://github.com/khoazandev/smart-hire-web.git
+cd smart-hire-web
+
+# Install dependencies
+npm install
+
+# Start Development Server (Turbopack)
+npm run dev
+# App runs on http://localhost:3000
 ```
 
----
+### 2. Docker Deployment
+```bash
+# Build and run using Docker Compose
+docker-compose up -d --build
+```
 
-## 🧪 Unit Tests
+## 🔑 Environment Variables
 
-- **Tools**: Jest, React Testing Library.
-- **Execution**: Run `npm run test` or `npm run test:watch`.
-- Tests focus on verifying complex UI component behavior, Zustand reducer states, and utility logic.
+| Variable | Description |
+| :--- | :--- |
+| `NEXT_PUBLIC_API_URL` | Base URL of the SmartHire Backend API |
+| `NEXT_PUBLIC_GITHUB_CLIENT_ID`| Client ID for GitHub OAuth Login |
 
----
+*Note: Create a `.env.local` file based on `.env.docker.example` for testing.*
 
-## 🔄 CI/CD Pipeline
-
-The frontend pipeline guarantees a functional UI deployment.
-
-**Pipeline Stages:**
-1. **Typecheck & Lint**: Runs `tsc --noEmit` and `eslint` to ensure strict typing/formatting.
-2. **Build Optimization**: Executes `next build` to verify standard build integrity.
-3. **Unit Tests**: Runs Jest UI test suites.
-4. **Deploy Preview**: Automatically spins up a staging preview URL for Pull Requests (via Vercel).
-5. **Production Deploy**: Pushes the optimized bundle to Edge Network CDN on a `main` merge.
+<br />
+<p align="center"><i>Powered by Next.js, React & TailwindCSS</i></p>
