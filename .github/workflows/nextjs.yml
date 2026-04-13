@@ -30,8 +30,6 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
-        with:
-          static_site_generator: next
 
       - name: Restore cache
         uses: actions/cache@v4
@@ -46,6 +44,10 @@ jobs:
 
       - name: Build with Next.js
         run: npx --no-install next build
+        env:
+          NEXT_PUBLIC_API_URL: https://demo.smarthire.vn/api
+          NEXT_PUBLIC_GOOGLE_CLIENT_ID: demo
+          NEXT_PUBLIC_GITHUB_CLIENT_ID: demo
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
