@@ -13,6 +13,7 @@ import {
   MOCK_CANDIDATE_USER,
   MOCK_HR_USER,
   MOCK_LOGIN_RESPONSE,
+  MOCK_HR_LOGIN_RESPONSE,
   MOCK_JOBS,
   MOCK_APPLICATIONS,
   MOCK_COMPANY,
@@ -64,7 +65,21 @@ const mockRoutes: { method: string; pattern: RegExp; handler: MockHandler }[] = 
   {
     method: "post",
     pattern: /\/auth\/login$/,
-    handler: (config) => fakeResponse(wrap(MOCK_LOGIN_RESPONSE), config),
+    handler: (config) => {
+      // Detect HR login by checking email in request body
+      let isHR = false;
+      try {
+        const body = typeof config.data === "string" ? JSON.parse(config.data) : config.data;
+        const email = (body?.email || "").toLowerCase();
+        isHR = email.includes("hr");
+      } catch { /* ignore */ }
+      const response = isHR ? MOCK_HR_LOGIN_RESPONSE : MOCK_LOGIN_RESPONSE;
+      // Save role to localStorage for session
+      if (typeof window !== "undefined") {
+        localStorage.setItem("smarthire-session", JSON.stringify({ role: response.role }));
+      }
+      return fakeResponse(wrap(response), config);
+    },
   },
   {
     method: "post",

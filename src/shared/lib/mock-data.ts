@@ -46,6 +46,17 @@ export const MOCK_LOGIN_RESPONSE = {
   isOnboarded: true,
 };
 
+export const MOCK_HR_LOGIN_RESPONSE = {
+  accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwiZW1haWwiOiJockB0ZWNoY29ycC52biIsInJvbGUiOiJIUiIsImlhdCI6MTcxNDU1NjgwMCwiZXhwIjoxNzE0NjQzMjAwfQ.demo-hr-token",
+  refreshToken: "mock-hr-refresh-token-xxxx-yyyy-zzzz",
+  tokenType: "Bearer",
+  userId: 2,
+  email: "hr@techcorp.vn",
+  fullName: "Trần Thị Bích",
+  role: "HR",
+  isOnboarded: true,
+};
+
 // ─── Jobs ────────────────────────────────────────────────
 
 export const MOCK_JOBS = [
