@@ -161,9 +161,10 @@ Ensure these are properly set in your `.env` physically or logically injected in
 
 | Variable | Description | Default |
 | :--- | :--- | :--- |
-| `NEXT_PUBLIC_API_URL` | The external URL pointing to the Backend API | `http://localhost:8080` |
+| `NEXT_PUBLIC_API_URL` | The external URL pointing to the Backend API, including `/api/v1` | `http://localhost:8080/api/v1` |
 | `NEXT_PUBLIC_GITHUB_CLIENT_ID`| Required to trigger the OAuth2 flow from the client | *Your GitHub App ID* |
 | `NEXT_PUBLIC_BASE_PATH` | Optional subpath for static/subpath hosting. Leave empty for normal domain or Docker deployments. | empty |
+| `NEXT_PUBLIC_ENABLE_MOCK_API` | Enables the static demo mock API interceptor. Keep `false` for normal local, Docker, and production deployments. | `false` |
 | `NEXT_TELEMETRY_DISABLED` | Privacy control for Next.js metrics | `1` |
 
 ---

@@ -78,7 +78,7 @@ export const onboardingApi = {
     formData.append("file", file);
 
     const response = await apiClient.post<UploadCvResponse>(
-      "/v1/onboarding/upload-cv",
+      "/onboarding/upload-cv",
       formData,
       {
         headers: {
@@ -94,7 +94,7 @@ export const onboardingApi = {
    */
   getParseStatus: async (cvFileId: number): Promise<ParseStatusResponse> => {
     const response = await apiClient.get<ParseStatusResponse>(
-      `/v1/onboarding/parse-status/${cvFileId}`,
+      `/onboarding/parse-status/${cvFileId}`,
       { timeout: 60000 }
     );
     return response.data;
@@ -104,7 +104,7 @@ export const onboardingApi = {
    * Submit all candidate data and complete onboarding
    */
   completeOnboarding: async (payload: CompleteOnboardingPayload): Promise<void> => {
-    await apiClient.post("/v1/onboarding/complete", payload);
+    await apiClient.post("/onboarding/complete", payload);
   },
 
   /**

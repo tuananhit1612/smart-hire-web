@@ -52,7 +52,7 @@ export function ActivityChart({ weeklyActivity }: ActivityChartProps) {
                 </div>
             </div>
 
-            <div className="flex-1 min-h-[240px] w-full">
+            <div className="h-[260px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
                         data={data}
