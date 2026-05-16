@@ -1,10 +1,10 @@
 "use client";
 
-import * as React from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { Wand2, ChevronRight, ChevronLeft } from "lucide-react";
 import { VersionHistoryDialog } from "@/features/cv/components/history/VersionHistoryDialog";
 import { CVData } from "@/features/cv/types/types";
+import { AnimatePresence,motion } from "framer-motion";
+import { ChevronLeft,ChevronRight,Wand2 } from "lucide-react";
+import * as React from "react";
 
 interface CVPreviewToolbarProps {
     zoomLevel: number;

@@ -1,14 +1,14 @@
-import { 
-    CandidateProfile, 
-    Education as ProfileEducation, 
-    Experience as ProfileExperience, 
-    Project as ProfileProject, 
-    Skill as ProfileSkill,
-    Language as ProfileLanguage,
-    Certificate as ProfileCertificate,
-    SocialLink as ProfileSocialLink
+import { Certification,CVData,DEFAULT_CV_DATA,Education,Experience,Language,Project,Skill,SocialLink } from "@/features/cv/types/types";
+import {
+CandidateProfile,
+Certificate as ProfileCertificate,
+Education as ProfileEducation,
+Experience as ProfileExperience,
+Language as ProfileLanguage,
+Project as ProfileProject,
+Skill as ProfileSkill,
+SocialLink as ProfileSocialLink
 } from "@/features/profile/types/profile";
-import { CVData, Education, Experience, Project, Skill, SocialLink, Language, Certification, DEFAULT_CV_DATA } from "@/features/cv/types/types";
 
 export function mapProfileToCVData(profile: CandidateProfile | null | undefined): CVData {
     if (!profile) return DEFAULT_CV_DATA;

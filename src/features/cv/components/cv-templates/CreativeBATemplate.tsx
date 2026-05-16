@@ -1,19 +1,17 @@
 "use client";
 
-import React from 'react';
-import { CVData } from '../../types/types';
-import { Mail, Phone, MapPin, Linkedin, Calendar, Globe, Award, FileText, Languages, ShieldCheck } from 'lucide-react';
-import { formatDateRange } from '../../utils/format-date';
-import type { TemplateProps } from './template-props';
+import { Award,Calendar,Globe,Languages,Mail,MapPin,Phone } from 'lucide-react';
 import { useEditableCV } from '../../hooks/useEditableCV';
-import { useSectionLayout, CVSection } from '../../hooks/useSectionLayout';
+import { CVSection,useSectionLayout } from '../../hooks/useSectionLayout';
+import { formatDateRange } from '../../utils/format-date';
 import { CVSectionWrapper } from '../CVSectionWrapper';
 import { CVItemWrapper } from '../inline-edit/CVItemWrapper';
+import type { TemplateProps } from './template-props';
 
 export function CreativeBATemplate({ data, editable, onDataChange, sectionOrder, hiddenSections, showSectionToolbar, onSectionAction }: TemplateProps) {
     const { personalInfo, summary, experience, education, skills, projects, languages, certifications, awards } = data;
     const e = useEditableCV({ data, editable, onDataChange });
-    const { isVisible, sectionIndex, totalVisible } = useSectionLayout(sectionOrder, hiddenSections);
+    const { isVisible, sectionIndex, totalVisible: _totalVisible } = useSectionLayout(sectionOrder, hiddenSections);
 
     const mainSections: { key: CVSection; visible: boolean }[] = [
         { key: 'summary', visible: isVisible('summary') && !!summary },

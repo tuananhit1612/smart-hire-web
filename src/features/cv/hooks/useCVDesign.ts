@@ -1,11 +1,11 @@
 "use client";
 
-import * as React from "react";
 import {
-    CVDesignTokens,
-    CVSection,
-    DEFAULT_DESIGN_TOKENS,
+CVDesignTokens,
+CVSection,
+DEFAULT_DESIGN_TOKENS,
 } from "@/features/cv/types/types";
+import * as React from "react";
 
 const STORAGE_KEY = "cv_design_tokens";
 

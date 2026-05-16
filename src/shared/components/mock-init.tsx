@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
 import { installMockInterceptor } from "@/shared/lib/mock-interceptor";
+import { useEffect } from "react";
 
 /**
  * Client-side component that initializes the mock API interceptor.

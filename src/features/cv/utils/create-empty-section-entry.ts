@@ -1,4 +1,4 @@
-import { CVData, CVSection, Education, Experience, Skill, Language, Certification, Award, Project } from '../types/types';
+import { Award,Certification,CVData,CVSection,Education,Experience,Language,Project,Skill } from '../types/types';
 
 /**
  * Generates a unique ID for new entries.

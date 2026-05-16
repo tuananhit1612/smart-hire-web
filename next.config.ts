@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "export",
+  output: "standalone",
   basePath: "/smart-hire-web",
   images: {
     unoptimized: true,
@@ -10,10 +10,6 @@ const nextConfig = {
         hostname: "images.unsplash.com",
       },
     ],
-  },
-  typescript: {
-    // TODO: Fix TypeScript errors and remove this
-    ignoreBuildErrors: true,
   },
 };
 

@@ -1,22 +1,21 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { EmployerApplicant } from "../types/mock-applicants";
-import { onboardingApi, OnboardingDocumentResponse, VerificationStatus } from "@/features/onboarding/api/onboarding-api";
-import { DocumentType as AppDocumentType } from "@/shared/types/enums";
-import { 
-    FileText, 
-    CheckCircle2, 
-    XCircle, 
-    Loader2, 
-    ExternalLink,
-    AlertTriangle,
-    Eye,
-    ShieldCheck,
-    MessageSquare
-} from "lucide-react";
-import { Button } from "@/shared/components/ui/button";
+import { onboardingApi,OnboardingDocumentResponse,VerificationStatus } from "@/features/onboarding/api/onboarding-api";
 import { Badge } from "@/shared/components/ui/badge";
+import { Button } from "@/shared/components/ui/button";
+import { DocumentType as AppDocumentType } from "@/shared/types/enums";
+import {
+AlertTriangle,
+CheckCircle2,
+Eye,
+FileText,
+Loader2,
+MessageSquare,
+ShieldCheck,
+XCircle
+} from "lucide-react";
+import { useCallback,useEffect,useState } from "react";
+import { EmployerApplicant } from "../types/mock-applicants";
 
 interface ApplicantOnboardingTabProps {
     applicant: EmployerApplicant;
@@ -39,7 +38,7 @@ export function ApplicantOnboardingTab({ applicant }: ApplicantOnboardingTabProp
     const [rejectReason, setRejectReason] = useState("");
     const [updatingId, setUpdatingId] = useState<number | null>(null);
 
-    const fetchDocuments = async () => {
+    const fetchDocuments = useCallback(async () => {
         setIsLoading(true);
         try {
             const res = await onboardingApi.getDocuments(applicant.id);
@@ -49,11 +48,11 @@ export function ApplicantOnboardingTab({ applicant }: ApplicantOnboardingTabProp
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [applicant.id]);
 
     useEffect(() => {
         fetchDocuments();
-    }, [applicant.id]);
+    }, [fetchDocuments]);
 
     const handleDownload = async (docId: number, typeLabel: string) => {
         try {
@@ -137,7 +136,7 @@ export function ApplicantOnboardingTab({ applicant }: ApplicantOnboardingTabProp
                 </p>
             </div>
 
-            {slots.map((slot, index) => {
+            {slots.map((slot, _index) => {
                 const label = docTypeLabels[slot.type] || slot.type;
                 const doc = slot.doc;
 

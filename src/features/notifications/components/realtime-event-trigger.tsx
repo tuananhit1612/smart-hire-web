@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Zap, Briefcase, Calendar, BrainCircuit, Sparkles, Bell } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { useToastHelpers } from "@/shared/components/ui/toast";
 import { cn } from "@/shared/utils/cn";
+import { AnimatePresence,motion } from "framer-motion";
+import { Bell,BrainCircuit,Briefcase,Calendar,Sparkles,Zap } from "lucide-react";
+import { useState } from "react";
 
 interface MockEvent {
     readonly label: string;

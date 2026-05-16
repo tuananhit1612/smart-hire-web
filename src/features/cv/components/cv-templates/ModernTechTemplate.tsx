@@ -1,15 +1,14 @@
 "use client";
 
+import { Globe,Mail,MapPin,Phone } from 'lucide-react';
 import React from 'react';
-import { CVData, CVSection } from '../../types/types';
-import { Mail, Phone, MapPin, Globe, Linkedin, Github } from 'lucide-react';
-import { cn } from '@/shared/utils/cn';
-import { formatDateRange } from '../../utils/format-date';
-import type { TemplateProps } from './template-props';
 import { useEditableCV } from '../../hooks/useEditableCV';
 import { useSectionLayout } from '../../hooks/useSectionLayout';
+import { CVSection } from '../../types/types';
+import { formatDateRange } from '../../utils/format-date';
 import { CVSectionWrapper } from '../CVSectionWrapper';
 import { CVItemWrapper } from '../inline-edit/CVItemWrapper';
+import type { TemplateProps } from './template-props';
 
 /** Sections that live in the left sidebar column */
 const SIDEBAR_SECTIONS = new Set<CVSection>(['education', 'skills', 'languages', 'certifications']);
@@ -17,7 +16,7 @@ const SIDEBAR_SECTIONS = new Set<CVSection>(['education', 'skills', 'languages',
 export function ModernTechTemplate({ data, editable, onDataChange, sectionOrder, hiddenSections, showSectionToolbar, onSectionAction }: TemplateProps) {
     const { personalInfo, summary, experience, education, skills, projects, languages, certifications, awards } = data;
     const e = useEditableCV({ data, editable, onDataChange });
-    const { visibleSections, sectionIndex, totalVisible } = useSectionLayout(sectionOrder, hiddenSections);
+    const { visibleSections, sectionIndex: _sectionIndex, totalVisible: _totalVisible } = useSectionLayout(sectionOrder, hiddenSections);
 
     const renderSection = (section: CVSection, columnItems: CVSection[]): React.ReactNode => {
         const colIndex = columnItems.indexOf(section);

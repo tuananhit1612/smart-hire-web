@@ -1,9 +1,9 @@
 "use client";
 
-import { Sparkles, ArrowRight, Target } from "lucide-react";
-import Link from "next/link";
-import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/features/auth/context/auth-context";
+import { Sparkles,Target } from "lucide-react";
+import Link from "next/link";
+import { useContext,useEffect,useState } from "react";
 
 interface WelcomeCardProps {
     profileCompleteness?: number;

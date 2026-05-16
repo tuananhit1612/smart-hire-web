@@ -1,28 +1,28 @@
 "use client";
 
-import { Job } from "../types/job";
-import { sanitizeHtml } from "@/shared/utils/sanitize";
-import Link from "next/link";
-import {
-    ArrowLeft,
-    MapPin,
-    Briefcase,
-    Clock,
-    DollarSign,
-    Users,
-    Calendar,
-    Globe,
-    Building2,
-    Mail,
-    Phone,
-    Send,
-    Bookmark,
-    Share2,
-    CheckCircle2,
-} from "lucide-react";
 import { cn } from "@/shared/utils/cn";
+import { sanitizeHtml } from "@/shared/utils/sanitize";
 import { motion } from "framer-motion";
+import {
+ArrowLeft,
+Bookmark,
+Briefcase,
+Building2,
+Calendar,
+CheckCircle2,
+Clock,
+DollarSign,
+Globe,
+Mail,
+MapPin,
+Phone,
+Send,
+Share2,
+Users,
+} from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
+import { Job } from "../types/job";
 import { ApplyModal } from "./apply-modal";
 
 interface JobDetailProps {

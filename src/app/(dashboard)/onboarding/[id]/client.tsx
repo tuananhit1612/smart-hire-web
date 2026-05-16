@@ -1,14 +1,14 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import { UploadCloud, CheckCircle2, AlertTriangle, AlertCircle, FileType, Check, Loader2, ArrowLeft } from "lucide-react";
-import Link from "next/link";
-import { onboardingApi, OnboardingDocumentResponse, VerificationStatus } from "@/features/onboarding/api/onboarding-api";
-import { DocumentType } from "@/shared/types/enums";
-import { useApplicationStore } from "@/features/jobs/stores/application-store";
+import { onboardingApi,OnboardingDocumentResponse } from "@/features/onboarding/api/onboarding-api";
+import { getErrorMessage } from "@/shared/lib/api-error";
 import { cn } from "@/shared/lib/utils";
+import { DocumentType } from "@/shared/types/enums";
+import { motion } from "framer-motion";
+import { AlertCircle,ArrowLeft,FileType,Loader2,UploadCloud } from "lucide-react";
+import Link from "next/link";
+import { useParams,useRouter } from "next/navigation";
+import { useCallback,useEffect,useState } from "react";
 
 // Mapping các giấy tờ với tiêu đề và thông điệp hướng dẫn rõ ràng
 const REQUIRED_DOCS = [
@@ -64,7 +64,7 @@ const REQUIRED_DOCS = [
 
 export function OnboardingClient() {
   const params = useParams();
-  const router = useRouter();
+  const _router = useRouter();
   const applicationId = Number(params.id);
 
   const [documents, setDocuments] = useState<OnboardingDocumentResponse[]>([]);
@@ -80,7 +80,7 @@ export function OnboardingClient() {
       if (res.success && res.data) {
         setDocuments(res.data);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Failed to fetch documents:", err);
     } finally {
       setLoadingInitial(false);
@@ -106,10 +106,10 @@ export function OnboardingClient() {
       } else {
         setErrorState((prev) => ({ ...prev, [docType]: res.message || "Tải lên thất bại." }));
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       setErrorState((prev) => ({ 
         ...prev, 
-        [docType]: err?.response?.data?.message || err.message || "Lỗi giao tiếp máy chủ" 
+        [docType]: getErrorMessage(err, "Lỗi giao tiếp máy chủ" )
       }));
     } finally {
       setUploadingState((prev) => ({ ...prev, [docType]: false }));

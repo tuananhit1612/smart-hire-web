@@ -1,10 +1,10 @@
 "use client";
 
-import * as React from "react";
-import { motion, HTMLMotionProps } from "framer-motion";
-import { Slot } from "@radix-ui/react-slot";
 import { cn } from "@/shared/utils/cn";
+import { Slot } from "@radix-ui/react-slot";
+import { HTMLMotionProps,motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
+import * as React from "react";
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: "primary" | "secondary" | "outline" | "ghost" | "glass" | "danger" | "link" | "cta" | "gradient" | "yellow";

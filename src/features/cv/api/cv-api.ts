@@ -1,6 +1,5 @@
-import { apiClient } from "@/shared/lib/api-client";
 import { CVData } from "@/features/cv/types/types";
-import { ApiWrapper } from "@/shared/types/api";
+import { apiClient } from "@/shared/lib/api-client";
 
 export interface SaveCVPayload {
   title?: string;
@@ -11,7 +10,7 @@ export interface SaveCVPayload {
 export interface ExportPDFPayload {
   templateId: string;
   cvData: CVData;
-  design?: any; // To pass CSS variables info
+  design?: unknown; // To pass CSS variables info
 }
 
 export interface CvBuilderApiResponse {
@@ -62,7 +61,7 @@ export const cvApi = {
    * Export PDF — In demo mode, we use a client-side fallback
    * since the Puppeteer API route is not available in static export.
    */
-  exportPDF: async (payload: ExportPDFPayload): Promise<Blob> => {
+  exportPDF: async (_payload: ExportPDFPayload): Promise<Blob> => {
     // Demo mode: use window.print() as a simple PDF fallback
     if (typeof window !== "undefined") {
       window.print();

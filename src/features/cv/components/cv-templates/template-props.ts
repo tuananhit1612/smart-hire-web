@@ -1,4 +1,4 @@
-import { CVData, CVSection } from '../../types/types';
+import { CVData,CVSection } from '../../types/types';
 import type { SectionAction } from '../CVSectionToolbar';
 
 /**

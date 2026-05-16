@@ -1,18 +1,18 @@
 "use client";
 
-import { motion } from "framer-motion";
-import {
-    Users,
-    FileSearch,
-    Video,
-    Gift,
-    UserCheck,
-    ArrowDown,
-    TrendingUp,
-    TrendingDown,
-} from "lucide-react";
 import { cn } from "@/shared/utils/cn";
 import { fmtNumber } from "@/shared/utils/format";
+import { motion } from "framer-motion";
+import {
+ArrowDown,
+FileSearch,
+Gift,
+TrendingDown,
+TrendingUp,
+UserCheck,
+Users,
+Video,
+} from "lucide-react";
 
 // ─── Stage Data ──────────────────────────────────────
 export interface FunnelStage {

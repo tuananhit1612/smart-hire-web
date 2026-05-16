@@ -7,24 +7,24 @@
  * ═══════════════════════════════════════════════════════════
  */
 
+import type { AxiosResponse,InternalAxiosRequestConfig } from "axios";
 import { apiClient } from "./api-client";
-import type { AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import {
-  MOCK_CANDIDATE_USER,
-  MOCK_HR_USER,
-  MOCK_LOGIN_RESPONSE,
-  MOCK_HR_LOGIN_RESPONSE,
-  MOCK_JOBS,
-  MOCK_APPLICATIONS,
-  MOCK_COMPANY,
-  MOCK_HR_DASHBOARD,
-  MOCK_CANDIDATE_DASHBOARD,
-  MOCK_CV_DATA,
-  MOCK_NOTIFICATIONS,
-  MOCK_PROFILE_EDUCATIONS,
-  MOCK_PROFILE_EXPERIENCES,
-  MOCK_PROFILE_SKILLS,
-  MOCK_PROFILE_PROJECTS,
+MOCK_APPLICATIONS,
+MOCK_CANDIDATE_DASHBOARD,
+MOCK_CANDIDATE_USER,
+MOCK_COMPANY,
+MOCK_CV_DATA,
+MOCK_HR_DASHBOARD,
+MOCK_HR_LOGIN_RESPONSE,
+MOCK_HR_USER,
+MOCK_JOBS,
+MOCK_LOGIN_RESPONSE,
+MOCK_NOTIFICATIONS,
+MOCK_PROFILE_EDUCATIONS,
+MOCK_PROFILE_EXPERIENCES,
+MOCK_PROFILE_PROJECTS,
+MOCK_PROFILE_SKILLS,
 } from "./mock-data";
 
 // ─── Helpers ─────────────────────────────────────────────

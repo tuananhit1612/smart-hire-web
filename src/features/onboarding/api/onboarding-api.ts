@@ -1,6 +1,6 @@
 import { apiClient } from "@/shared/lib/api-client";
-import { DocumentType } from "@/shared/types/enums";
 import { ApiWrapper } from "@/shared/types/api";
+import { DocumentType } from "@/shared/types/enums";
 
 export type VerificationStatus = "PENDING" | "VERIFIED" | "REJECTED";
 

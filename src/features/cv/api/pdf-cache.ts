@@ -2,8 +2,8 @@ import fs from "fs";
 import path from "path";
 
 export interface CachedCVPayload {
-  cvData: any;
-  design?: any;
+  cvData: unknown;
+  design?: unknown;
   templateId: string;
 }
 

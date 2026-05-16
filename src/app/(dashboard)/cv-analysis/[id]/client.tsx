@@ -1,6 +1,6 @@
 "use client";
-import { useParams } from "next/navigation";
 import { CVAnalysisBoard } from "@/features/cv/components/analysis/CVAnalysisBoard";
+import { useParams } from "next/navigation";
 
 export function CVAnalysisClient() {
     const params = useParams();

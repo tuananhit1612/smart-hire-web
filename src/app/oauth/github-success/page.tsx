@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useToastHelpers } from "@/shared/components/ui/toast";
 import { tokenStorage } from "@/features/auth/lib/token-storage";
+import { useToastHelpers } from "@/shared/components/ui/toast";
+import { useRouter,useSearchParams } from "next/navigation";
+import { useEffect,useRef } from "react";
 export default function GitHubOAuthCallbackSuccess() {
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -14,10 +14,21 @@ export default function GitHubOAuthCallbackSuccess() {
         if (hasCalledAuth.current) return;
         hasCalledAuth.current = true;
 
-        const accessToken = searchParams.get("access_token");
-        const refreshToken = searchParams.get("refresh_token");
-        const role = searchParams.get("role");
-        const onboarded = searchParams.get("onboarded") === "true";
+        const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+        const accessToken = hashParams.get("access_token") ?? searchParams.get("access_token");
+        const refreshToken = hashParams.get("refresh_token") ?? searchParams.get("refresh_token");
+        const role = hashParams.get("role") ?? searchParams.get("role");
+        const onboarded = (hashParams.get("onboarded") ?? searchParams.get("onboarded")) === "true";
+        const returnedState = hashParams.get("state") ?? searchParams.get("state");
+        const expectedState = sessionStorage.getItem("smarthire-github-oauth-state");
+
+        if (expectedState && returnedState !== expectedState) {
+             sessionStorage.removeItem("smarthire-github-oauth-state");
+             toast.error("Lá»—i Ä‘Äƒng nháº­p", "PhiÃªn Ä‘Äƒng nháº­p GitHub khÃ´ng há»£p lá»‡.");
+             router.replace("/login");
+             return;
+        }
+        sessionStorage.removeItem("smarthire-github-oauth-state");
 
         if (!accessToken || !refreshToken) {
              toast.error("Lỗi đăng nhập", "Không nhận được token xác thực.");
@@ -35,26 +46,23 @@ export default function GitHubOAuthCallbackSuccess() {
              // Note: User profile is partially recreated from token payload for the cookie.
              // Usually, useAuth hook fetches the full profile later via /me
              const sessionCookie = {
-                 user: {
-                     role: role ? role.toLowerCase() : null,
-                     isOnboarded: onboarded
-                 },
-                 accessToken: accessToken,
-                 refreshToken: refreshToken,
+                 role: role ? role.toLowerCase() : null,
+                 isNewUser: !onboarded,
                  exp: payloadContent.exp
              };
-             
-             document.cookie = `smarthire-session=${encodeURIComponent(JSON.stringify(sessionCookie))}; path=/; max-age=604800; SameSite=Lax`;
+
+             const secure = window.location.protocol === "https:" ? "; Secure" : "";
+             document.cookie = `smarthire-session=${encodeURIComponent(JSON.stringify(sessionCookie))}; path=/; max-age=604800; SameSite=Lax${secure}`;
 
              toast.success("Đăng nhập GitHub thành công!");
-             
+
              if (role && role.toLowerCase() === "candidate" && !onboarded) {
                  window.location.href = "/dashboard/onboarding";
              } else {
                  window.location.href = "/dashboard";
              }
              
-        } catch (err: any) {
+        } catch (_err: unknown) {
              toast.error("Đăng nhập thất bại", "Lỗi xử lý phiên bản đăng nhập.");
              router.replace("/login");
         }

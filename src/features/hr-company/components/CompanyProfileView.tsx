@@ -1,15 +1,15 @@
 "use client";
 
-import * as React from "react";
+import { useToast } from "@/shared/components/ui/toast";
 import { motion } from "framer-motion";
+import * as React from "react";
 import { useCompanyStore } from "../stores/company-store";
-import { CompanyHeader } from "./CompanyHeader";
+import { Company } from "../types/company";
 import { CompanyAbout } from "./CompanyAbout";
 import { CompanyBenefits } from "./CompanyBenefits";
-import { CompanyTechStack } from "./CompanyTechStack";
+import { CompanyHeader } from "./CompanyHeader";
 import { CompanySocialLinks } from "./CompanySocialLinks";
-import { Company } from "../types/company";
-import { useToast } from "@/shared/components/ui/toast";
+import { CompanyTechStack } from "./CompanyTechStack";
 
 export function CompanyProfileView() {
     const { company, updateField, fetchMyCompany, saveCompany } = useCompanyStore();

@@ -1,25 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { cn } from "@/shared/utils/cn";
 import { motion } from "framer-motion";
 import {
-    Settings,
-    Bell,
-    Shield,
-    Globe,
-    Cpu,
-    Database,
-    Mail,
-    Lock,
-    Eye,
-    Palette,
-    Clock,
-    Zap,
-    AlertTriangle,
-    Save,
-    RotateCcw,
+AlertTriangle,
+Bell,
+Clock,
+Cpu,
+Database,
+Eye,
+Globe,
+Lock,
+Mail,
+Palette,
+RotateCcw,
+Save,
+Settings,
+Shield,
+Zap,
 } from "lucide-react";
-import { cn } from "@/shared/utils/cn";
+import { useState } from "react";
 
 // ─── Types ───────────────────────────────────────────
 interface SettingToggle {

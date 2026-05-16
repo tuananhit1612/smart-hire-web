@@ -1,10 +1,9 @@
 "use client";
 
-import * as React from "react";
-import { motion } from "framer-motion";
-import { Code2, Palette, TrendingUp, Briefcase, MoreHorizontal, Check } from "lucide-react";
+import { JobPosition,POSITIONS,TEMPLATES } from "@/features/cv/types/template-types";
 import { cn } from "@/shared/utils/cn";
-import { JobPosition, POSITIONS, TEMPLATES } from "@/features/cv/types/template-types";
+import { motion } from "framer-motion";
+import { Briefcase,Check,Code2,MoreHorizontal,Palette,TrendingUp } from "lucide-react";
 
 const iconMap = {
     Code2,

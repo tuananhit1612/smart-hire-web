@@ -1,11 +1,11 @@
 "use client";
 
-import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { X, Plus, Sparkles } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/shared/components/ui/dialog";
 import { Button } from "@/shared/components/ui/button";
+import { Dialog,DialogContent,DialogDescription,DialogFooter,DialogHeader,DialogTitle } from "@/shared/components/ui/dialog";
 import { Input } from "@/shared/components/ui/input";
+import { AnimatePresence,motion } from "framer-motion";
+import { Plus,Sparkles,X } from "lucide-react";
+import * as React from "react";
 import { Skill } from "../types/profile";
 
 interface ProfileEditSkillsProps {

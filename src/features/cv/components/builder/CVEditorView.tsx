@@ -1,26 +1,34 @@
 "use client";
 
-import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-    Undo2, Redo2, Eye, Save, Download,
-    PaintBucket, ListChecks, LayoutGrid, Replace,
-    Sparkles, FolderOpen, X, ChevronLeft,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
-import { useCVBuilderStore, type SidebarTab } from "@/features/cv/stores/cv-builder-store";
-import { TEMPLATE_COMPONENTS } from "@/features/cv/components/cv-templates";
+import { TEMPLATE_COMPONENTS,TEMPLATE_REGISTRY } from "@/features/cv/components/cv-templates";
+import { CVDesignPanel } from "@/features/cv/components/CVDesignPanel";
 import { CVDesignPreviewWrapper } from "@/features/cv/components/CVDesignPreviewWrapper";
 import { CVPageBreakOverlay } from "@/features/cv/components/CVPageBreakOverlay";
 import type { SectionAction } from "@/features/cv/components/CVSectionToolbar";
-import { getEmptySections } from "@/features/cv/utils/get-empty-sections";
-import { addEmptySectionEntry } from "@/features/cv/utils/create-empty-section-entry";
-import { CVDesignPanel } from "@/features/cv/components/CVDesignPanel";
 import { usePDFExport } from "@/features/cv/hooks/usePDFExport";
+import { useCVBuilderStore,type SidebarTab } from "@/features/cv/stores/cv-builder-store";
 import { useCvFileStore } from "@/features/cv/stores/cv-file-store";
-import { useToast } from "@/shared/components/ui/toast";
 import { CVSection } from "@/features/cv/types/types";
-import { TEMPLATE_REGISTRY } from "@/features/cv/components/cv-templates";
+import { addEmptySectionEntry } from "@/features/cv/utils/create-empty-section-entry";
+import { getEmptySections } from "@/features/cv/utils/get-empty-sections";
+import { cn } from "@/lib/utils";
+import { useToast } from "@/shared/components/ui/toast";
+import { AnimatePresence,motion } from "framer-motion";
+import {
+ChevronLeft,
+Download,
+FolderOpen,
+LayoutGrid,
+ListChecks,
+PaintBucket,
+Redo2,
+Replace,
+Save,
+Sparkles,
+Undo2,
+X
+} from "lucide-react";
+import * as React from "react";
 import { CVDataSourceModal } from "./CVDataSourceModal";
 
 /* ─────────────────────────────────────────── */
@@ -46,8 +54,8 @@ export function CVEditorView() {
         isEditing, zoomLevel, showSidebar, activeSidebarTab,
         autosaveStatus,
         setCvData, setCvName, setView,
-        setSidebarTab, toggleSidebar, setShowSidebar,
-        setIsEditing, setZoomLevel,
+        setSidebarTab, toggleSidebar: _toggleSidebar, setShowSidebar,
+        setIsEditing: _setIsEditing, setZoomLevel,
         updateToken, toggleSectionVisibility, reorderSectionOrder,
         resetDesignTokens, setDesignTokens,
         isDataSourceModalOpen, setDataSourceModalOpen,
@@ -541,7 +549,7 @@ function LayoutTab() {
 
 /** Templates tab — switch template without losing data */
 function TemplatesTab() {
-    const { selectedTemplateId, selectTemplate, setView } = useCVBuilderStore();
+    const { selectedTemplateId, selectTemplate: _selectTemplate, setView: _setView } = useCVBuilderStore();
 
     const templateEntries = React.useMemo(
         () => Object.entries(TEMPLATE_REGISTRY).map(([id, entry]) => ({

@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useCallback, useRef, useEffect } from "react";
-import { CVData } from "../types/types";
-import { EditableText } from "../components/inline-edit/EditableText";
+import React,{ useCallback,useEffect,useRef } from "react";
 import { EditableAvatar } from "../components/inline-edit/EditableAvatar";
+import { EditableText } from "../components/inline-edit/EditableText";
+import { CVData } from "../types/types";
 
 /* ─────────────────────────────────────────────────────────── */
 /*  useEditableCV — provides helper functions that templates   */

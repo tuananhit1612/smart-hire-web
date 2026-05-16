@@ -1,5 +1,5 @@
 import { apiClient } from '@/shared/lib/api-client';
-import { CompanyResponse, CreateCompanyRequest, UpdateCompanyRequest } from '../types/company-api-types';
+import { CompanyResponse,CreateCompanyRequest,UpdateCompanyRequest } from '../types/company-api-types';
 
 export const companyApi = {
     createCompany: async (data: CreateCompanyRequest): Promise<CompanyResponse> => {

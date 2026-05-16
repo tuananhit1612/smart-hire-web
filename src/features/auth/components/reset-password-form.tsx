@@ -1,19 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
-import { Lock, CheckCircle2, RefreshCw, ShieldCheck, XCircle, AlertCircle, ArrowLeft } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence,motion } from "framer-motion";
+import { ArrowLeft,CheckCircle2,Lock,RefreshCw,ShieldCheck,XCircle } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect,useState } from "react";
+import { useForm } from "react-hook-form";
 
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { useToastHelpers } from "@/shared/components/ui/toast";
-import { resetPasswordSchema, type ResetPasswordSchema } from "../schemas/reset-password-schema";
-import { authApi } from "../api/auth-api";
 import { isApiError } from "@/shared/lib/api-error";
+import { authApi } from "../api/auth-api";
+import { resetPasswordSchema,type ResetPasswordSchema } from "../schemas/reset-password-schema";
 
 interface ResetPasswordFormProps {
     token: string;

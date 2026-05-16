@@ -1,10 +1,10 @@
 "use client";
 
-import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, ChevronLeft } from "lucide-react";
-import { Button } from "./button";
 import { cn } from "@/lib/utils";
+import { AnimatePresence,motion } from "framer-motion";
+import { ChevronLeft,ChevronRight } from "lucide-react";
+import * as React from "react";
+import { Button } from "./button";
 
 // Mascot SVG Component - Cute robot guide
 // (Moved to bottom to avoid clutter)

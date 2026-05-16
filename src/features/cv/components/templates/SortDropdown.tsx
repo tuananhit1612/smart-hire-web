@@ -1,9 +1,9 @@
 "use client";
 
-import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, TrendingUp, Clock, SortAsc, Check } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
+import { AnimatePresence,motion } from "framer-motion";
+import { Check,ChevronDown,Clock,SortAsc,TrendingUp } from "lucide-react";
+import * as React from "react";
 
 export type SortOption = 'popular' | 'newest' | 'name';
 

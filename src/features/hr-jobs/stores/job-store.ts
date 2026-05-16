@@ -1,7 +1,8 @@
+import { getErrorMessage } from '@/shared/lib/api-error';
 import { create } from 'zustand';
-import { Job, JobStatus, JobType, DEFAULT_JOB } from '../types/job';
 import { hrJobApi } from '../api/hr-job-api';
-import { mapHrJobToFeJob, mapFeJobToCreateRequest, mapFeJobToUpdateRequest } from '../utils/hr-job-mapper';
+import { Job,JobStatus,JobType } from '../types/job';
+import { mapFeJobToCreateRequest,mapFeJobToUpdateRequest,mapHrJobToFeJob } from '../utils/hr-job-mapper';
 
 import { useCompanyStore } from '../../hr-company/stores/company-store';
 
@@ -68,8 +69,8 @@ export const useJobStore = create<JobStore>((set, get) => ({
         try {
             const data = await hrJobApi.getMyJobs();
             set({ jobs: data.map(mapHrJobToFeJob) });
-        } catch (error: any) {
-            set({ error: error.message || 'Lỗi khi tải danh sách công việc' });
+        } catch (error: unknown) {
+            set({ error: getErrorMessage(error, 'Lỗi khi tải danh sách công việc') });
         } finally {
             set({ isLoading: false });
         }
@@ -88,8 +89,8 @@ export const useJobStore = create<JobStore>((set, get) => ({
             const data = await hrJobApi.createJob(req);
             const newJob = mapHrJobToFeJob(data);
             set((state) => ({ jobs: [newJob, ...state.jobs], isFormOpen: false }));
-        } catch (error: any) {
-            set({ error: error.message || 'Lỗi khi tạo công việc' });
+        } catch (error: unknown) {
+            set({ error: getErrorMessage(error, 'Lỗi khi tạo công việc') });
             throw error;
         } finally {
             set({ isLoading: false });
@@ -110,8 +111,8 @@ export const useJobStore = create<JobStore>((set, get) => ({
                 isFormOpen: false,
                 selectedJob: state.selectedJob?.id === id ? updatedJob : state.selectedJob
             }));
-        } catch (error: any) {
-            set({ error: error.message || 'Lỗi khi cập nhật công việc' });
+        } catch (error: unknown) {
+            set({ error: getErrorMessage(error, 'Lỗi khi cập nhật công việc') });
             throw error;
         } finally {
             set({ isLoading: false });
@@ -127,8 +128,8 @@ export const useJobStore = create<JobStore>((set, get) => ({
             set((state) => ({
                 jobs: state.jobs.map((job) => (job.id === id ? updatedJob : job)),
             }));
-        } catch (error: any) {
-            set({ error: error.message || 'Lỗi khi đóng công việc' });
+        } catch (error: unknown) {
+            set({ error: getErrorMessage(error, 'Lỗi khi đóng công việc') });
         } finally {
             set({ isLoading: false });
         }
@@ -143,8 +144,8 @@ export const useJobStore = create<JobStore>((set, get) => ({
                 jobs: state.jobs.filter((job) => job.id !== id),
                 selectedJob: state.selectedJob?.id === id ? null : state.selectedJob,
             }));
-        } catch (error: any) {
-            set({ error: error.message || 'Lỗi khi xóa công việc' });
+        } catch (error: unknown) {
+            set({ error: getErrorMessage(error, 'Lỗi khi xóa công việc') });
         } finally {
             set({ isLoading: false });
         }
@@ -159,8 +160,8 @@ export const useJobStore = create<JobStore>((set, get) => ({
             set((state) => ({
                 jobs: state.jobs.map((job) => (job.id === id ? updatedJob : job)),
             }));
-        } catch (error: any) {
-            set({ error: error.message || 'Lỗi khi khôi phục công việc' });
+        } catch (error: unknown) {
+            set({ error: getErrorMessage(error, 'Lỗi khi khôi phục công việc') });
         } finally {
             set({ isLoading: false });
         }
@@ -177,8 +178,8 @@ export const useJobStore = create<JobStore>((set, get) => ({
             set((state) => ({
                 jobs: state.jobs.map((j) => (j.id === id ? updatedJob : j)),
             }));
-        } catch (error: any) {
-            set({ error: error.message || 'Lỗi khi chuyển trạng thái' });
+        } catch (error: unknown) {
+            set({ error: getErrorMessage(error, 'Lỗi khi chuyển trạng thái') });
         } finally {
             set({ isLoading: false });
         }

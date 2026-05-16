@@ -1,8 +1,8 @@
 "use client";
 
+import { AnimatePresence,motion } from "framer-motion";
+import { FileText,Pencil,X } from "lucide-react";
 import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { X, FileText, Pencil } from "lucide-react";
 
 interface RenameDialogProps {
     isOpen: boolean;

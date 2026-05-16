@@ -1,8 +1,8 @@
 "use client";
 
+import { AnimatePresence,motion,Variants } from "framer-motion";
+import { Briefcase,ChevronDown,FileText,User } from "lucide-react";
 import { useState } from "react";
-import { motion, AnimatePresence, Variants } from "framer-motion";
-import { ChevronDown, Briefcase, FileText, User } from "lucide-react";
 
 // ============================================
 // FAQs PAGE — SmartHire Design System

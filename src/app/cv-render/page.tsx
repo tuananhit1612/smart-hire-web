@@ -1,8 +1,8 @@
 "use client";
 
-import * as React from "react";
 import { TEMPLATE_COMPONENTS } from "@/features/cv/components/cv-templates";
 import { CVDesignPreviewWrapper } from "@/features/cv/components/CVDesignPreviewWrapper";
+import { DEFAULT_DESIGN_TOKENS,type CVData,type CVDesignTokens } from "@/features/cv/types/types";
 import { MOCK_CV_DATA } from "@/shared/lib/mock-data";
 
 /**
@@ -12,23 +12,13 @@ import { MOCK_CV_DATA } from "@/shared/lib/mock-data";
 export default function CVRenderPage() {
   const TemplateComponent = TEMPLATE_COMPONENTS["modern-tech"];
 
-  const designTokens = {
-    fontFamily: "int",
+  const designTokens: CVDesignTokens = {
+    ...DEFAULT_DESIGN_TOKENS,
+    fontFamily: "sans",
     fontSize: 1,
     accentColor: "#3b82f6",
     spacing: "normal",
-    sectionOrder: [
-      "personal",
-      "summary",
-      "experience",
-      "education",
-      "skills",
-      "projects",
-      "languages",
-      "certifications",
-      "awards",
-    ],
-    hiddenSections: [] as string[],
+    hiddenSections: [],
     columnLayout: "2-col",
   };
 
@@ -37,7 +27,7 @@ export default function CVRenderPage() {
       <CVDesignPreviewWrapper designTokens={designTokens}>
         <div id="cv-export-content" className="w-[210mm]">
           <TemplateComponent
-            data={MOCK_CV_DATA as any}
+            data={MOCK_CV_DATA as unknown as CVData}
             editable={false}
             sectionOrder={designTokens.sectionOrder}
             hiddenSections={designTokens.hiddenSections}

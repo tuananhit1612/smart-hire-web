@@ -1,9 +1,9 @@
 "use client";
 
-import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Search, X, Minimize2, Palette, Code, Briefcase, TrendingUp, LayoutGrid, Zap } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
+import { AnimatePresence,motion } from "framer-motion";
+import { Briefcase,Code,LayoutGrid,Minimize2,Palette,Search,TrendingUp,X,Zap } from "lucide-react";
+import * as React from "react";
 
 interface SearchBarProps {
     value: string;

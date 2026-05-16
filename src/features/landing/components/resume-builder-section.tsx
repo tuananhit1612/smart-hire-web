@@ -1,10 +1,9 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { FileText, CheckCircle, TrendingUp, Sparkles } from "lucide-react";
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
+import { motion } from "framer-motion";
+import { ArrowRight,CheckCircle,FileText,Sparkles,TrendingUp } from "lucide-react";
+import Link from "next/link";
 
 
 const resumeFeatures = [

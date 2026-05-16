@@ -1,11 +1,11 @@
-import { CVData, CVSection } from '../../types/types';
-import type { TemplateProps } from './template-props';
-import { ModernTechTemplate } from './ModernTechTemplate';
-import { MinimalCleanTemplate } from './MinimalCleanTemplate';
-import { ProfessionalSalesTemplate } from './ProfessionalSalesTemplate';
-import { ExecutiveHRTemplate } from './ExecutiveHRTemplate';
-import { ModernSalesTemplate } from './ModernSalesTemplate';
+import { CVSection } from '../../types/types';
 import { CreativeBATemplate } from './CreativeBATemplate';
+import { ExecutiveHRTemplate } from './ExecutiveHRTemplate';
+import { MinimalCleanTemplate } from './MinimalCleanTemplate';
+import { ModernSalesTemplate } from './ModernSalesTemplate';
+import { ModernTechTemplate } from './ModernTechTemplate';
+import { ProfessionalSalesTemplate } from './ProfessionalSalesTemplate';
+import type { TemplateProps } from './template-props';
 
 // ---------------------------------------------------------------------------
 // TemplateManifest — runtime metadata that travels with each template

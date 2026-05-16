@@ -1,10 +1,9 @@
 "use client";
 
-import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowUp, ArrowDown, Plus, Trash2, Eye } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
-import { CVSection, CV_SECTIONS } from "@/features/cv/types/types";
+import { motion } from "framer-motion";
+import { ArrowDown,ArrowUp,Plus,Trash2 } from "lucide-react";
+import * as React from "react";
 
 export type SectionAction = "delete" | "moveUp" | "moveDown";
 

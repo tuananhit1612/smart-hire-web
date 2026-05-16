@@ -1,15 +1,15 @@
 "use client";
 
-import { motion } from "framer-motion";
-import {
-    TrendingUp,
-    TrendingDown,
-    Minus,
-    ChevronRight,
-    BarChart3,
-} from "lucide-react";
 import { cn } from "@/shared/utils/cn";
 import { fmtNumber } from "@/shared/utils/format";
+import { motion } from "framer-motion";
+import {
+BarChart3,
+ChevronRight,
+Minus,
+TrendingDown,
+TrendingUp,
+} from "lucide-react";
 
 import type { PassRateRow } from "@/features/employer/api/dashboard-api";
 

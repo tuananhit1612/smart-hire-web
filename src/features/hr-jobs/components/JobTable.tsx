@@ -1,26 +1,24 @@
 "use client";
 
-import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-    MoreHorizontal,
-    Edit3,
-    Eye,
-    Trash2,
-    Copy,
-    ToggleLeft,
-    ToggleRight,
-    MapPin,
-    Clock,
-    Users,
-    Briefcase,
-    Calendar,
-    ChevronRight,
-    Building2,
-} from "lucide-react";
-import { Job, JOB_TYPES, JOB_LEVELS, JOB_STATUSES, JOB_REMOTES } from "../types/job";
-import { useJobStore } from "../stores/job-store";
 import { useToastHelpers } from "@/shared/components/ui/toast";
+import { AnimatePresence,motion } from "framer-motion";
+import {
+Briefcase,
+ChevronRight,
+Clock,
+Copy,
+Edit3,
+Eye,
+MapPin,
+MoreHorizontal,
+ToggleLeft,
+ToggleRight,
+Trash2,
+Users
+} from "lucide-react";
+import * as React from "react";
+import { useJobStore } from "../stores/job-store";
+import { Job,JOB_LEVELS,JOB_STATUSES,JOB_TYPES } from "../types/job";
 
 interface JobTableProps {
     jobs: Job[];
@@ -138,7 +136,7 @@ function ActionMenu({ job, onClose }: { job: Job; onClose: () => void }) {
 function JobTableRow({ job, index }: { job: Job; index: number }) {
     const [showMenu, setShowMenu] = React.useState(false);
     const menuRef = React.useRef<HTMLDivElement>(null);
-    const { selectJob, setPreviewOpen, toggleJobStatus } = useJobStore();
+    const { selectJob, setPreviewOpen, toggleJobStatus: _toggleJobStatus } = useJobStore();
 
     React.useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
@@ -224,7 +222,7 @@ function JobTableRow({ job, index }: { job: Job; index: number }) {
 
 // Grid Card component
 function JobGridCard({ job, index }: { job: Job; index: number }) {
-    const { selectJob, setPreviewOpen, toggleJobStatus } = useJobStore();
+    const { selectJob, setPreviewOpen, toggleJobStatus: _toggleJobStatus } = useJobStore();
 
     const handleClick = () => {
         selectJob(job);

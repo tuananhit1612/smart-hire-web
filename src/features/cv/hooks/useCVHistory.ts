@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useCallback,useEffect,useState } from "react";
 import { CVData } from "../types/types";
 
 export interface CVSnapshot {
@@ -13,7 +13,7 @@ const EVENT_KEY = "cv-history-local-change";
 
 export function useCVHistory() {
     const [history, setHistory] = useState<CVSnapshot[]>([]);
-    const [isLoaded, setIsLoaded] = useState(false);
+    const [_isLoaded, setIsLoaded] = useState(false);
 
     // Helpers to read/write directly to Storage (Source of Truth)
     const getStoredHistory = (): CVSnapshot[] => {

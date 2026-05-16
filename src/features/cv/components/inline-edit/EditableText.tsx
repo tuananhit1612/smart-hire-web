@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useRef, useCallback, useState, useEffect } from "react";
 import { cn } from "@/shared/utils/cn";
+import React,{ useCallback,useEffect,useRef,useState } from "react";
 
 /* ─────────────────────────────────────────────────────────── */
 /*  EditableText — inline WYSIWYG text editing on CV preview  */

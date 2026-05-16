@@ -1,26 +1,27 @@
 "use client";
 
-import { useState, useMemo, useRef, useCallback, useEffect } from "react";
-import { createPortal } from "react-dom";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-    Kanban,
-    Search,
-    Clock,
-    MoreHorizontal,
-    ArrowRight,
-    ArrowLeft,
-    ChevronDown,
-    GripVertical,
-    Briefcase,
-} from "lucide-react";
-import { cn } from "@/shared/utils/cn";
-import { ScoreBadge } from "@/shared/components/ui/status-badge";
-import { AvatarInitials } from "@/shared/components/ui/avatar-initials";
 import { PageSection } from "@/shared/components/layout/page-section";
+import { AvatarInitials } from "@/shared/components/ui/avatar-initials";
+import { ScoreBadge } from "@/shared/components/ui/status-badge";
+import { cn } from "@/shared/utils/cn";
+import { AnimatePresence,motion } from "framer-motion";
+import {
+ArrowLeft,
+ArrowRight,
+Briefcase,
+ChevronDown,
+Clock,
+GripVertical,
+Kanban,
+MoreHorizontal,
+Search,
+} from "lucide-react";
+import { useCallback,useEffect,useMemo,useRef,useState } from "react";
+import { createPortal } from "react-dom";
 
 import { employerApplicantApi } from "@/features/employer/api/employer-api";
-import { StageUpdateModal, type StageUpdateData } from "@/features/employer/components/stage-update-modal";
+import { StageUpdateModal,type StageUpdateData } from "@/features/employer/components/stage-update-modal";
+import type { EmployerApplicant } from "@/features/employer/types/mock-applicants";
 import { interviewService } from "@/features/interview/api/interviewService";
 
 // ─── Types ───────────────────────────────────────────
@@ -273,8 +274,8 @@ export default function PipelineBoardPage() {
                     APPLIED: [], INTERVIEW: [], HIRED: [], REJECTED: [],
                 };
                 
-                data.forEach((app: any) => {
-                    const stage = app.status as StageId || "APPLIED";
+                data.forEach((app: EmployerApplicant) => {
+                    const stage = (app.status || app.stage || "APPLIED") as StageId;
                     
                     const appliedDate = new Date(app.appliedAt || new Date());
                     const diffTime = Math.abs(new Date().getTime() - appliedDate.getTime());
@@ -283,7 +284,7 @@ export default function PipelineBoardPage() {
                     const candidate: PipelineCandidate = {
                         id: String(app.id),
                         jobId: String(app.jobId),
-                        name: app.name || "Unknown",
+                        name: app.name || app.fullName || "Unknown",
                         avatar: app.name ? app.name.slice(0, 2).toUpperCase() : "?",
                         email: app.email,
                         position: app.jobTitle || "Vị trí",

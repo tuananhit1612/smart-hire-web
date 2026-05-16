@@ -2,7 +2,7 @@
 
 import { TEMPLATE_COMPONENTS } from "@/features/cv/components/cv-templates";
 import { CVDesignPreviewWrapper } from "@/features/cv/components/CVDesignPreviewWrapper";
-import { DEFAULT_SECTION_ORDER } from "@/features/cv/types/types";
+import { DEFAULT_DESIGN_TOKENS,DEFAULT_SECTION_ORDER,type CVData } from "@/features/cv/types/types";
 import { MOCK_CV_DATA } from "@/shared/lib/mock-data";
 
 /**
@@ -25,10 +25,10 @@ export default function CVPdfRenderPage() {
             }
         }
       `}} />
-      <CVDesignPreviewWrapper designTokens={{}}>
+      <CVDesignPreviewWrapper designTokens={DEFAULT_DESIGN_TOKENS}>
           <div id="rendering-cv-content" className="w-[210mm] min-h-[297mm] bg-white text-black p-0 m-0 shadow-none">
               <TemplateComponent
-                  data={MOCK_CV_DATA as any}
+                  data={MOCK_CV_DATA as unknown as CVData}
                   editable={false}
                   onDataChange={() => {}}
                   sectionOrder={DEFAULT_SECTION_ORDER}

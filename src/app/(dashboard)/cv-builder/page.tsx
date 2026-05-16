@@ -1,9 +1,9 @@
 "use client";
 
-import * as React from "react";
-import { useCVBuilderStore, initBuilderAutosave } from "@/features/cv/stores/cv-builder-store";
-import { CVGalleryView } from "@/features/cv/components/builder/CVGalleryView";
 import { CVEditorView } from "@/features/cv/components/builder/CVEditorView";
+import { CVGalleryView } from "@/features/cv/components/builder/CVGalleryView";
+import { initBuilderAutosave,useCVBuilderStore } from "@/features/cv/stores/cv-builder-store";
+import * as React from "react";
 
 function CVBuilderContent() {
     const currentView = useCVBuilderStore((s) => s.currentView);

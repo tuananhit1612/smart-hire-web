@@ -1,52 +1,49 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
 import {
-    Users,
-    Briefcase,
-    FileSearch,
-    TrendingUp,
-    TrendingDown,
-    Clock,
-    UserCheck,
-    BarChart3,
-    Activity,
-    ArrowUpRight,
-    Star,
-    Sparkles,
-    CalendarDays,
-    Loader2,
-    AlertCircle,
-    CheckCircle2,
-    XCircle,
-    Download,
-} from "lucide-react";
-import {
-    AreaChart,
-    Area,
-    XAxis,
-    Tooltip,
-    ResponsiveContainer,
-} from "recharts";
-import { cn } from "@/shared/utils/cn";
-import { downloadBlob } from "@/shared/utils/download-file";
-import { useToastHelpers } from "@/shared/components/ui/toast";
-import FunnelByStage, {
-    type FunnelStage,
-    defaultFunnelStages,
+dashboardApi,
+type HrDashboardOverview,
+type StageFunnelItem,
+type WeeklyTrendItem
+} from "@/features/employer/api/dashboard-api";
+import FunnelByStage,{
+defaultFunnelStages,
+type FunnelStage,
 } from "@/features/employer/components/funnel-by-stage";
 import PassRateTable from "@/features/employer/components/pass-rate-table";
 import TopMissingSkills from "@/features/employer/components/top-missing-skills";
 import { useDashboardOverview } from "@/features/employer/hooks/use-dashboard-overview";
+import { useToastHelpers } from "@/shared/components/ui/toast";
+import { cn } from "@/shared/utils/cn";
+import { downloadBlob } from "@/shared/utils/download-file";
+import { motion } from "framer-motion";
 import {
-    dashboardApi,
-    type HrDashboardOverview,
-    type StageFunnelItem,
-    type WeeklyTrendItem,
-    type TopJobItem,
-    type RecentActivityItem,
-} from "@/features/employer/api/dashboard-api";
+Activity,
+AlertCircle,
+ArrowUpRight,
+BarChart3,
+Briefcase,
+CalendarDays,
+CheckCircle2,
+Clock,
+Download,
+FileSearch,
+Loader2,
+Sparkles,
+Star,
+TrendingUp,
+UserCheck,
+Users,
+XCircle
+} from "lucide-react";
+import { useState } from "react";
+import {
+Area,
+AreaChart,
+ResponsiveContainer,
+Tooltip,
+XAxis,
+} from "recharts";
 
 // ─── Animation Presets ───────────────────────────────
 const premiumEase = [0.22, 1, 0.36, 1] as const;
@@ -133,7 +130,7 @@ const STAGE_LABELS: Record<string, string> = {
 };
 
 function mapStageFunnelToUI(items: StageFunnelItem[]): FunnelStage[] {
-    return items.map((item, idx) => {
+    return items.map((item, _idx) => {
         const vis = STAGE_VISUAL[item.stage] ?? STAGE_VISUAL.APPLIED;
         return {
             id: item.stage.toLowerCase(),
@@ -238,7 +235,7 @@ export default function HRDashboardPage() {
             const filename = `hr_applications_${new Date().toISOString().slice(0, 10)}.csv`;
             downloadBlob(blob, filename);
             toast.success("Đã xuất báo cáo CSV Ứng viên thành công!", "Tệp tải xuống nằm trong thư mục Downloads.");
-        } catch (err) {
+        } catch (_err) {
             toast.error("Xuất báo cáo thất bại", "Vui lòng thử lại sau.");
         } finally {
             setExportingApps(false);
@@ -252,7 +249,7 @@ export default function HRDashboardPage() {
             const filename = `hr_jobs_${new Date().toISOString().slice(0, 10)}.csv`;
             downloadBlob(blob, filename);
             toast.success("Đã xuất báo cáo CSV Tin tuyển dụng thành công!", "Tệp tải xuống nằm trong thư mục Downloads.");
-        } catch (err) {
+        } catch (_err) {
             toast.error("Xuất báo cáo thất bại", "Vui lòng thử lại sau.");
         } finally {
             setExportingJobs(false);

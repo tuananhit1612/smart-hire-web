@@ -8,13 +8,13 @@
  * ═══════════════════════════════════════════════════════════
  */
 
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { JobDetail } from "@/features/jobs/components/job-detail";
 import { jobApi } from "@/features/jobs/api/job-api";
-import { mapJobResponseToJob } from "@/features/jobs/utils/job-mapper";
-import { Loader2, AlertCircle, ArrowLeft } from "lucide-react";
+import { JobDetail } from "@/features/jobs/components/job-detail";
 import type { Job } from "@/features/jobs/types/job";
+import { mapJobResponseToJob } from "@/features/jobs/utils/job-mapper";
+import { AlertCircle,ArrowLeft,Loader2 } from "lucide-react";
+import { useParams,useRouter } from "next/navigation";
+import { useEffect,useState } from "react";
 
 export function JobDetailClient() {
   const params = useParams();

@@ -1,18 +1,18 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AnimatePresence,motion } from "framer-motion";
+import { ArrowLeft,CheckCircle2,KeyRound,Mail } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
-import { Mail, ArrowLeft, CheckCircle2, KeyRound } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { useToastHelpers } from "@/shared/components/ui/toast";
-import { forgotPasswordSchema, type ForgotPasswordSchema } from "../schemas/forgot-password-schema";
-import { authApi } from "../api/auth-api";
 import { isApiError } from "@/shared/lib/api-error";
+import { authApi } from "../api/auth-api";
+import { forgotPasswordSchema,type ForgotPasswordSchema } from "../schemas/forgot-password-schema";
 
 export function ForgotPasswordForm() {
     const [isLoading, setIsLoading] = useState(false);

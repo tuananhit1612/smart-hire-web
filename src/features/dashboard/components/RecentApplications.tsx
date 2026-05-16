@@ -1,15 +1,15 @@
 "use client";
 
-import { Building2, Clock, CheckCircle2, XCircle, Briefcase } from "lucide-react";
-import type { RecentApplicationItem } from "../api/candidate-dashboard-api";
-import { formatDistanceToNow, parseISO } from "date-fns";
+import { formatDistanceToNow,parseISO } from "date-fns";
 import { vi } from "date-fns/locale";
+import { Briefcase,Building2,CheckCircle2,Clock,type LucideIcon,XCircle } from "lucide-react";
+import type { RecentApplicationItem } from "../api/candidate-dashboard-api";
 
 interface RecentApplicationsProps {
     applications?: RecentApplicationItem[];
 }
 
-const STAGE_MAP: Record<string, { label: string; icon: any; color: string; bg: string }> = {
+const STAGE_MAP: Record<string, { label: string; icon: LucideIcon; color: string; bg: string }> = {
     APPLIED: {
         label: "Đã ứng tuyển",
         icon: Clock,
@@ -81,7 +81,7 @@ export function RecentApplications({ applications = [] }: RecentApplicationsProp
                             if (app.appliedAt) {
                                 dateText = formatDistanceToNow(parseISO(app.appliedAt), { addSuffix: true, locale: vi });
                             }
-                        } catch (e) {
+                        } catch (_e) {
                             dateText = app.appliedAt || "";
                         }
 

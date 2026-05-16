@@ -1,4 +1,4 @@
-import { ALLOWED_FILE_TYPES, MAX_FILE_SIZE, AllowedMimeType } from '../types';
+import { ALLOWED_FILE_TYPES,AllowedMimeType,MAX_FILE_SIZE } from '../types';
 
 export interface ValidationResult {
     isValid: boolean;

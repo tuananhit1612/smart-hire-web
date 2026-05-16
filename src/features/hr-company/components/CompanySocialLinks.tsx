@@ -1,10 +1,10 @@
 "use client";
 
-import * as React from "react";
-import { motion } from "framer-motion";
-import { Linkedin, Facebook, Twitter, Globe, ExternalLink, Plus, X } from "lucide-react";
-import { SocialLink } from "../types/company";
 import { Button } from "@/shared/components/ui/button";
+import { motion } from "framer-motion";
+import { ExternalLink,Facebook,Globe,Linkedin,Plus,Twitter,X } from "lucide-react";
+import * as React from "react";
+import { SocialLink } from "../types/company";
 
 interface CompanySocialLinksProps {
     socialLinks: SocialLink[];

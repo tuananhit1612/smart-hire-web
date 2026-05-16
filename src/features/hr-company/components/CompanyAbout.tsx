@@ -1,9 +1,8 @@
 "use client";
 
+import { AnimatePresence,motion } from "framer-motion";
+import { Check,Eye,FileText,Pencil,Quote,Target,X } from "lucide-react";
 import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { FileText, Pencil, Check, X, Target, Eye, Sparkles, Quote } from "lucide-react";
-import { Button } from "@/shared/components/ui/button";
 
 interface CompanyAboutProps {
     about: string;

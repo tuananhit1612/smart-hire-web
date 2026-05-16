@@ -1,5 +1,5 @@
+import { Award,ExternalLink } from "lucide-react";
 import { Certificate } from "../types/profile";
-import { Award, ExternalLink } from "lucide-react";
 
 interface ProfileCertificatesProps {
   certificates: Certificate[];

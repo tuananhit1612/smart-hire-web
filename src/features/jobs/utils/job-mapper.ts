@@ -7,9 +7,9 @@
  * ═══════════════════════════════════════════════════════════
  */
 
-import type { Job, JobType, JobLevel } from "../types/job";
+import type { JobLevel as ApiJobLevel,JobType as ApiJobType } from "@/shared/types/enums";
+import type { Job,JobLevel,JobType } from "../types/job";
 import type { JobResponse } from "../types/job-api-types";
-import type { JobType as ApiJobType, JobLevel as ApiJobLevel } from "@/shared/types/enums";
 
 // ─── Enum Mappings ──────────────────────────────────────
 

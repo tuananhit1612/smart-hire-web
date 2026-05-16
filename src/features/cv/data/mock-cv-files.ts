@@ -1,4 +1,4 @@
-import { CVFile, CVFileVersion } from '../types/cv-file-types';
+import { CVFile } from '../types/cv-file-types';
 
 export const MOCK_CV_FILES: CVFile[] = [];
 

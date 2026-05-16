@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { HelpCircle } from "lucide-react";
 import { useProfileStore } from "../stores/profile-store";
-import { FormField, FormSelect, SaveButton, SectionCard } from "./profile-form-fields";
+import { FormField,FormSelect,SaveButton,SectionCard } from "./profile-form-fields";
 
 const stagger = {
     hidden: {},

@@ -10,15 +10,15 @@
  * ═══════════════════════════════════════════════════════════
  */
 
-import { useEffect, useRef } from "react";
-import type { Client, IMessage } from "@stomp/stompjs";
-import { createStompClient } from "@/shared/lib/websocket-client";
-import { tokenStorage } from "@/features/auth/lib/token-storage";
 import { useAuth } from "@/features/auth/hooks/use-auth";
-import { useNotificationStore } from "@/features/notifications/stores/notification-store";
-import type { RealtimeEvent } from "@/shared/types/realtime";
+import { tokenStorage } from "@/features/auth/lib/token-storage";
 import type { NotificationDto } from "@/features/notifications/api/notification-api";
+import { useNotificationStore } from "@/features/notifications/stores/notification-store";
+import { createStompClient } from "@/shared/lib/websocket-client";
+import type { RealtimeEvent } from "@/shared/types/realtime";
 import { EventType } from "@/shared/types/realtime";
+import type { Client,IMessage } from "@stomp/stompjs";
+import { useEffect,useRef } from "react";
 
 interface UseWebSocketOptions {
   /** Callback when any realtime event arrives */
@@ -47,7 +47,6 @@ export function useWebSocket(options: UseWebSocketOptions = {}) {
 
     client.onConnect = () => {
       if (process.env.NODE_ENV === 'development') {
-        // eslint-disable-next-line no-console
         console.info("[WebSocket] Connected as user:", user.id);
       }
 

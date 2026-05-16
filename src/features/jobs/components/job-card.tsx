@@ -1,8 +1,8 @@
 "use client";
 
+import { Briefcase,Clock,Heart,MapPin } from "lucide-react";
 import Link from "next/link";
 import { Job } from "../types/job";
-import { MapPin, Heart, Clock, Briefcase } from "lucide-react";
 
 interface JobCardProps {
   job: Job;

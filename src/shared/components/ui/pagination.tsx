@@ -1,8 +1,7 @@
 "use client";
 
-import * as React from "react";
 import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
+import { ChevronLeft,ChevronRight,MoreHorizontal } from "lucide-react";
 
 export interface PaginationProps {
     currentPage: number;

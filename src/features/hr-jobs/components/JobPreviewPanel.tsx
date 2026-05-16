@@ -1,39 +1,32 @@
 "use client";
 
-import * as React from "react";
+import { useToastHelpers } from "@/shared/components/ui/toast";
+import { getImageUrl } from "@/shared/lib/api-client";
 import { motion } from "framer-motion";
 import {
-    X,
-    Briefcase,
-    MapPin,
-    Clock,
-    Users,
-    Eye,
-    DollarSign,
-    Building2,
-    Star,
-    Sparkles,
-    CheckCircle2,
-    Share2,
-    Heart,
-    Calendar,
-    Target,
-    Zap,
-    Bookmark,
-    ChevronRight,
-    ArrowRight,
-    Edit3,
-    Trash2,
-    Copy,
-    Pause,
-    Play,
+Briefcase,
+Building2,
+Calendar,
+CheckCircle2,
+Clock,
+DollarSign,
+Edit3,
+Eye,
+Heart,
+MapPin,
+Pause,
+Play,
+Sparkles,
+Star,
+Target,
+Trash2,
+Users,
+X
 } from "lucide-react";
-import { useJobStore } from "../stores/job-store";
-import { JOB_TYPES, JOB_LEVELS, Job } from "../types/job";
-import { getImageUrl } from "@/shared/lib/api-client";
 import { MOCK_COMPANIES } from "../../hr-company/data/mock-companies";
 import { useCompanyStore } from "../../hr-company/stores/company-store";
-import { useToastHelpers } from "@/shared/components/ui/toast";
+import { useJobStore } from "../stores/job-store";
+import { JOB_LEVELS,JOB_TYPES,Job } from "../types/job";
 
 export function JobPreviewPanel({ onViewApplicants }: { onViewApplicants?: (job: Job) => void }) {
     const { selectedJob, setPreviewOpen, selectJob, toggleJobStatus, deleteJob } = useJobStore();
@@ -44,7 +37,7 @@ export function JobPreviewPanel({ onViewApplicants }: { onViewApplicants?: (job:
 
     const job = selectedJob;
     // Fallback to storeCompany, or empty object to prevent crash
-    const company = storeCompany?.id ? storeCompany : (MOCK_COMPANIES[0] || {} as any);
+    const company = storeCompany?.id ? storeCompany : (MOCK_COMPANIES[0] || {} as unknown);
 
     const handleClose = () => {
         setPreviewOpen(false);

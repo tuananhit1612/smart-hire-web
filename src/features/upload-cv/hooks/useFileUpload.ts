@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useCallback, useRef, useEffect } from 'react';
-import { CVFile, MAX_FILES } from '../types';
+import { getErrorMessage } from "@/shared/lib/api-error";
+import { useCallback,useEffect,useRef,useState } from 'react';
+import { CVFile,MAX_FILES } from '../types';
 import { validateFile } from '../utils/fileValidation';
 
 export function useFileUpload() {
@@ -13,45 +14,14 @@ export function useFileUpload() {
 
     // Cleanup all pending timeouts on unmount
     useEffect(() => {
+        const timeouts = validationTimeouts.current;
         return () => {
-            validationTimeouts.current.forEach((t) => clearTimeout(t));
-            validationTimeouts.current.clear();
+            timeouts.forEach((t) => clearTimeout(t));
+            timeouts.clear();
         };
     }, []);
 
     const generateId = () => `cv-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-
-    const addFiles = useCallback((newFiles: FileList | File[]) => {
-        const fileArray = Array.from(newFiles);
-
-        setFiles((prev) => {
-            const remainingSlots = MAX_FILES - prev.length;
-            if (remainingSlots <= 0) return prev;
-
-            const filesToAdd = fileArray.slice(0, remainingSlots).map((file): CVFile => {
-                const validation = validateFile(file);
-
-                return {
-                    id: generateId(),
-                    name: file.name,
-                    size: file.size,
-                    type: file.type,
-                    uploadedAt: new Date(),
-                    status: validation.isValid ? 'uploading' : 'error',
-                    progress: 0,
-                    errorMessage: validation.error,
-                    rawFile: file,
-                };
-            });
-
-            // Simulate progress then real upload for valid files
-            filesToAdd
-                .filter((f) => f.status === 'uploading')
-                .forEach((f) => simulateUpload(f.id, f.name, f.rawFile));
-
-            return [...prev, ...filesToAdd];
-        });
-    }, []);
 
     const simulateUpload = useCallback((fileId: string, fileName: string, rawFile?: File) => {
         let progress = 0;
@@ -88,8 +58,8 @@ export function useFileUpload() {
                             const { useCvFileStore } = await import('@/features/cv/stores/cv-file-store');
                             const res = await useCvFileStore.getState().uploadCvFile(rawFile);
                             setFiles((prev) => prev.map((f) => f.id === fileId ? { ...f, status: 'success' as const, backendId: res?.id } : f));
-                        } catch (err: any) {
-                            setFiles((prev) => prev.map((f) => f.id === fileId ? { ...f, status: 'error' as const, errorMessage: err.message || 'Lỗi khi tải lên máy chủ' } : f));
+                        } catch (err: unknown) {
+                            setFiles((prev) => prev.map((f) => f.id === fileId ? { ...f, status: 'error' as const, errorMessage: getErrorMessage(err, 'Lỗi khi tải lên máy chủ') } : f));
                         }
                     } else {
                         setFiles((prev) => prev.map((f) => f.id === fileId ? { ...f, status: 'success' as const } : f));
@@ -106,6 +76,38 @@ export function useFileUpload() {
             }
         }, 200);
     }, []);
+
+    const addFiles = useCallback((newFiles: FileList | File[]) => {
+        const fileArray = Array.from(newFiles);
+
+        setFiles((prev) => {
+            const remainingSlots = MAX_FILES - prev.length;
+            if (remainingSlots <= 0) return prev;
+
+            const filesToAdd = fileArray.slice(0, remainingSlots).map((file): CVFile => {
+                const validation = validateFile(file);
+
+                return {
+                    id: generateId(),
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                    uploadedAt: new Date(),
+                    status: validation.isValid ? 'uploading' : 'error',
+                    progress: 0,
+                    errorMessage: validation.error,
+                    rawFile: file,
+                };
+            });
+
+            // Simulate progress then real upload for valid files
+            filesToAdd
+                .filter((f) => f.status === 'uploading')
+                .forEach((f) => simulateUpload(f.id, f.name, f.rawFile));
+
+            return [...prev, ...filesToAdd];
+        });
+    }, [simulateUpload]);
 
     const removeFile = useCallback((fileId: string) => {
         // Clear any pending validation timeout for this file

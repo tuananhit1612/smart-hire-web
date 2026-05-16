@@ -1,15 +1,15 @@
-import * as React from "react";
-import { useConfirmDialog } from "@/shared/components/ui/confirm-dialog";
-import { format, formatDistanceToNow } from "date-fns";
-import { vi } from "date-fns/locale";
-import { History, Save, RotateCcw, Trash2, Clock, Sparkles, X, Eye, Check } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/shared/components/ui/dialog";
 import { Button } from "@/shared/components/ui/button";
+import { useConfirmDialog } from "@/shared/components/ui/confirm-dialog";
+import { Dialog,DialogContent,DialogHeader,DialogTitle,DialogTrigger } from "@/shared/components/ui/dialog";
 import { Input } from "@/shared/components/ui/input";
+import { cn } from "@/shared/utils/cn";
+import { format,formatDistanceToNow } from "date-fns";
+import { vi } from "date-fns/locale";
+import { AnimatePresence,motion } from "framer-motion";
+import { Check,Clock,History,RotateCcw,Save,Sparkles,Trash2,X } from "lucide-react";
+import * as React from "react";
 import { useCVHistory } from "../../hooks/useCVHistory";
 import { CVData } from "../../types/types";
-import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "@/shared/utils/cn";
 
 export interface VersionHistoryDialogProps {
     currentData: CVData;
@@ -243,7 +243,7 @@ export function VersionHistoryDialog({ currentData, Template, onRestore }: Versi
                                     {history.map((item, index) => {
                                         const isLatest = index === 0;
                                         const isSelected = selectedIds.has(item.id);
-                                        const timeAgo = formatDistanceToNow(new Date(item.timestamp), { addSuffix: true, locale: vi });
+                                        const _timeAgo = formatDistanceToNow(new Date(item.timestamp), { addSuffix: true, locale: vi });
 
                                         return (
                                             <motion.div
@@ -259,7 +259,7 @@ export function VersionHistoryDialog({ currentData, Template, onRestore }: Versi
                                                         (isLatest ? "border-green-200 ring-2 ring-green-50 shadow-md" : "border-slate-200 shadow-sm")
                                                 )}
                                                 draggable
-                                                onDragStart={(e) => handleDragStart(e as any, item.id)}
+                                                onDragStartCapture={(e) => handleDragStart(e, item.id)}
                                                 onDragEnd={handleDragEnd}
                                                 onClick={(e) => toggleSelection(item.id, e.ctrlKey || e.metaKey)}
                                             >

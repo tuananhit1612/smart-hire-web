@@ -1,9 +1,10 @@
 "use client";
 
-import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { X, Upload, FileText, CheckCircle, AlertCircle, Loader2, Star } from "lucide-react";
+import { getErrorMessage } from "@/shared/lib/api-error";
 import { useCvFileStore } from "@/features/cv/stores/cv-file-store";
+import { AnimatePresence,motion } from "framer-motion";
+import { AlertCircle,CheckCircle,FileText,Loader2,Star,Upload,X } from "lucide-react";
+import * as React from "react";
 
 interface UploadCVModalProps {
     isOpen: boolean;
@@ -97,9 +98,9 @@ export function UploadCVModal({ isOpen, onClose, onUpload }: UploadCVModalProps)
                 onUpload();
                 onClose();
             }, 1200);
-        } catch (err: any) {
+        } catch (err: unknown) {
             setUploadState("error");
-            setError(err.message || "Có lỗi xảy ra khi tải CV lên");
+            setError(getErrorMessage(err, "Có lỗi xảy ra khi tải CV lên"));
         }
     };
 

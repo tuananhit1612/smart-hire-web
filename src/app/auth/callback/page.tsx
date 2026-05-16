@@ -11,10 +11,10 @@
  *  5. Redirect to the correct page based on role + onboarding state
  */
 
-import { Suspense, useEffect, useRef } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { tokenStorage } from "@/features/auth/lib/token-storage";
 import { authApi } from "@/features/auth/api/auth-api";
+import { tokenStorage } from "@/features/auth/lib/token-storage";
+import { useRouter,useSearchParams } from "next/navigation";
+import { Suspense,useEffect,useRef } from "react";
 
 const SESSION_COOKIE_NAME = "smarthire-session";
 
@@ -26,7 +26,8 @@ function clearSessionCookie() {
 function setSessionCookie(role: string, isNewUser: boolean) {
     if (typeof document === "undefined") return;
     const value = encodeURIComponent(JSON.stringify({ role, isNewUser }));
-    document.cookie = `${SESSION_COOKIE_NAME}=${value}; path=/; SameSite=Lax; max-age=${60 * 60 * 24 * 7}`;
+    const secure = window.location.protocol === "https:" ? "; Secure" : "";
+    document.cookie = `${SESSION_COOKIE_NAME}=${value}; path=/; SameSite=Lax; max-age=${60 * 60 * 24 * 7}${secure}`;
 }
 
 function Spinner() {

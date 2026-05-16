@@ -1,29 +1,28 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-    ScrollText,
-    Search,
-    Filter,
-    Clock,
-    User,
-    Building2,
-    Shield,
-    Server,
-    AlertTriangle,
-    FileText,
-    LogIn,
-    LogOut,
-    Pencil,
-    Trash2,
-    Plus,
-    Eye,
-    Ban,
-    CheckCircle2,
-    ChevronDown,
-} from "lucide-react";
 import { cn } from "@/shared/utils/cn";
+import { AnimatePresence,motion } from "framer-motion";
+import {
+Ban,
+Building2,
+CheckCircle2,
+ChevronDown,
+Clock,
+Eye,
+FileText,
+Filter,
+LogIn,
+LogOut,
+Pencil,
+Plus,
+ScrollText,
+Search,
+Server,
+Shield,
+Trash2,
+User
+} from "lucide-react";
+import { useMemo,useState } from "react";
 
 // ─── Types ───────────────────────────────────────────
 type LogCategory = "all" | "auth" | "user" | "content" | "system" | "security";

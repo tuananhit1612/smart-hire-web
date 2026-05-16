@@ -15,26 +15,26 @@
  */
 
 import type {
-  Gender,
-  CandidateProfileResponse,
-  ProfilePayload,
-  EducationResponse,
-  EducationPayload,
-  ExperienceResponse,
-  ExperiencePayload,
-  ProjectResponse,
-  ProjectPayload,
-  SkillResponse,
-  SkillPayload,
-  ProficiencyLevel,
+CandidateProfileResponse,
+EducationPayload,
+EducationResponse,
+ExperiencePayload,
+ExperienceResponse,
+Gender,
+ProficiencyLevel,
+ProfilePayload,
+ProjectPayload,
+ProjectResponse,
+SkillPayload,
+SkillResponse,
 } from "../types/profile-api-types";
 
 import type {
-  CandidateProfile,
-  Education,
-  Experience,
-  Project,
-  Skill,
+CandidateProfile,
+Education,
+Experience,
+Project,
+Skill,
 } from "../types/profile";
 
 // ─── Helpers ─────────────────────────────────────────────
@@ -86,7 +86,7 @@ function toStr(id: number | string): string {
   return String(id);
 }
 
-function toNum(id: string | number): number {
+function _toNum(id: string | number): number {
   return typeof id === "number" ? id : parseInt(id, 10);
 }
 

@@ -10,7 +10,7 @@
  */
 
 import { apiClient } from "@/shared/lib/api-client";
-import type { ApiWrapper, PageResponse } from "@/shared/types/api";
+import type { ApiWrapper,PageResponse } from "@/shared/types/api";
 
 // ─── DTO Mirrors ─────────────────────────────────────────
 

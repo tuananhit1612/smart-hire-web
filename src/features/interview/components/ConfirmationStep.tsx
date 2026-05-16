@@ -1,8 +1,8 @@
 "use client";
 
-import { FileText, Sparkles } from "lucide-react";
 import type { CVVersion } from "@/features/cv/types/cv-versions";
 import type { Job } from "@/features/jobs/types/job";
+import { FileText,Sparkles } from "lucide-react";
 
 interface ConfirmationStepProps {
     readonly cv: CVVersion;

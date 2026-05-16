@@ -1,16 +1,16 @@
 "use client";
 
-import * as React from "react";
-import { CVData, DEFAULT_CV_DATA } from "@/features/cv/types/types";
-import { useSearchParams } from "next/navigation";
-import { getMockDataForTemplate, MOCK_DATA_MAP } from "@/features/cv/data/mock-data";
 import { TEMPLATE_COMPONENTS } from "@/features/cv/components/cv-templates";
-import { useToast } from "@/shared/components/ui/toast";
+import { getMockDataForTemplate } from "@/features/cv/data/mock-data";
 import { useCVAutoFill } from "@/features/cv/hooks/useCVAutoFill";
 import { useCVHistory } from "@/features/cv/hooks/useCVHistory";
-import { format } from "date-fns";
-import { useProfileStore } from "@/features/profile/stores/profile-store";
+import { CVData,DEFAULT_CV_DATA } from "@/features/cv/types/types";
 import { mapProfileToCVData } from "@/features/cv/utils/profile-to-cv-mapper";
+import { useProfileStore } from "@/features/profile/stores/profile-store";
+import { useToast } from "@/shared/components/ui/toast";
+import { format } from "date-fns";
+import { useSearchParams } from "next/navigation";
+import * as React from "react";
 
 interface UseCVDataReturn {
     cvData: CVData;

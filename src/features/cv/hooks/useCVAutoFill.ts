@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CVData, DEFAULT_CV_DATA } from '../types/types';
+import { CVData,DEFAULT_CV_DATA } from '../types/types';
 
 // Helper to wait
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));

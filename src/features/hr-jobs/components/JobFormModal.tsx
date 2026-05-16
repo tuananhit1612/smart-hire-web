@@ -1,46 +1,40 @@
 "use client";
 
-import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-    X,
-    Briefcase,
-    MapPin,
-    DollarSign,
-    FileText,
-    Sparkles,
-    Plus,
-    Trash2,
-    Save,
-    Eye,
-    Building2,
-    Target,
-    Star,
-    CheckCircle2,
-    ChevronRight,
-    Zap,
-    Users,
-    Clock,
-    Calendar,
-    Heart,
-    Share2,
-    Layers,
-    Globe,
-} from "lucide-react";
 import { CustomSelect } from "@/shared/components/ui/custom-select";
+import { motion } from "framer-motion";
+import {
+Briefcase,
+Building2,
+Calendar,
+CheckCircle2,
+Clock,
+DollarSign,
+Eye,
+Globe,
+Heart,
+Layers,
+MapPin,
+Plus,
+Save,
+Sparkles,
+Star,
+Target,
+X,
+Zap
+} from "lucide-react";
+import * as React from "react";
+import { useCompanyStore } from "../../hr-company/stores/company-store";
+import type { Company } from "../../hr-company/types/company";
 import { useJobStore } from "../stores/job-store";
 import {
-    Job,
-    Skill,
-    JOB_TYPES,
-    JOB_LEVELS,
-    JOB_REMOTES,
-    DEPARTMENTS,
-    SKILL_LEVELS,
-    DEFAULT_JOB,
-    SkillLevel,
+DEFAULT_JOB,
+DEPARTMENTS,
+Job,
+JOB_LEVELS,
+JOB_REMOTES,
+JOB_TYPES,
+Skill
 } from "../types/job";
-import { useCompanyStore } from "../../hr-company/stores/company-store";
 
 // Modern input field - larger and cleaner
 function FormField({
@@ -214,7 +208,7 @@ function SkillTagInput({
 }
 
 // Live Preview Component
-function LivePreview({ formData, company }: { formData: Omit<Job, 'id' | 'createdAt' | 'updatedAt'>; company: any }) {
+function LivePreview({ formData, company }: { formData: Omit<Job, 'id' | 'createdAt' | 'updatedAt'>; company: Pick<Company, "name"> }) {
     const formatSalary = (min?: number, max?: number) => {
         if (!min && !max) return "Thỏa thuận";
         const format = (n: number) => n.toLocaleString('vi-VN');

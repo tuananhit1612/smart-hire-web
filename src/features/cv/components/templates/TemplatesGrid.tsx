@@ -1,13 +1,12 @@
 "use client";
 
-import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { FileText, Plus, Crown } from "lucide-react";
-import { cn } from "@/shared/utils/cn";
-import { CVTemplate, filterTemplates, TEMPLATES, JobPosition, TemplateStyle } from "@/features/cv/types/template-types";
-import { TemplateCard } from "./TemplateCard";
-import { SortDropdown, SortOption } from "./SortDropdown";
+import { CVTemplate,filterTemplates,JobPosition,TEMPLATES,TemplateStyle } from "@/features/cv/types/template-types";
 import { SkeletonTemplateGrid } from "@/shared/components/ui/skeleton";
+import { AnimatePresence,motion } from "framer-motion";
+import { Crown,FileText,Plus } from "lucide-react";
+import * as React from "react";
+import { SortDropdown,SortOption } from "./SortDropdown";
+import { TemplateCard } from "./TemplateCard";
 
 interface TemplatesGridProps {
     selectedPosition: JobPosition | null;

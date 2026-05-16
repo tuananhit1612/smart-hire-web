@@ -1,8 +1,8 @@
 'use client';
 
-import { useRef } from 'react';
+import { CloudArrowUpIcon,DocumentIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
-import { CloudArrowUpIcon, DocumentIcon } from '@heroicons/react/24/outline';
+import { useRef } from 'react';
 
 interface DropZoneProps {
     isDragging: boolean;

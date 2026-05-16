@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
-import { motion } from "framer-motion";
-import { Button } from "@/shared/components/ui/button";
-import { CheckCircle, Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { getErrorMessage } from "@/shared/lib/api-error";
 import { useAuth } from "@/features/auth/hooks/use-auth";
-import { onboardingApi, OnboardingCvData, CompleteOnboardingPayload } from "../api/onboarding-api";
+import { Button } from "@/shared/components/ui/button";
+import { motion } from "framer-motion";
+import { CheckCircle,Loader2 } from "lucide-react";
+import { useCallback,useEffect,useRef,useState } from "react";
+import { CompleteOnboardingPayload,onboardingApi,OnboardingCvData } from "../api/onboarding-api";
 
 interface StepCompleteProps {
     preferences: {
@@ -28,13 +28,12 @@ const mapExperience = (label: string | null) => {
 };
 
 export function StepComplete({ preferences }: StepCompleteProps) {
-    const router = useRouter();
     const { completeOnboarding: authCompleteOnboarding } = useAuth();
     const [isSubmitting, setIsSubmitting] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const hasSubmitted = useRef(false);
 
-    const submitData = async () => {
+    const submitData = useCallback(async () => {
         setIsSubmitting(true);
         setError(null);
         hasSubmitted.current = true;
@@ -63,18 +62,18 @@ export function StepComplete({ preferences }: StepCompleteProps) {
             
             await onboardingApi.completeOnboarding(payload);
             setIsSubmitting(false);
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error("Lỗi khi hoàn tất onboarding:", err);
             setIsSubmitting(false);
-            setError(err?.message || "Đã xảy ra lỗi khi lưu thông tin. Vui lòng thử lại.");
+            setError(getErrorMessage(err, "Đã xảy ra lỗi khi lưu thông tin. Vui lòng thử lại."));
         }
-    };
+    }, [preferences]);
 
     useEffect(() => {
         if (!hasSubmitted.current) {
             submitData();
         }
-    }, []);
+    }, [submitData]);
 
     const handleGoToDashboard = () => {
         // Mark onboarding complete in auth context

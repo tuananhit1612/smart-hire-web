@@ -1,15 +1,15 @@
 "use client";
 
-import * as React from "react";
-import { motion, useSpring, useTransform } from "framer-motion";
-import { Check, X, ChevronRight, Sparkles } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
+import { motion,useSpring,useTransform } from "framer-motion";
+import { Check,ChevronRight,Sparkles,X } from "lucide-react";
 import Link from "next/link";
+import * as React from "react";
 import { CandidateProfile } from "../types/profile";
 import {
-  calculateProfileCompletion,
-  getCompletionLevel,
-  CompletionSection,
+calculateProfileCompletion,
+CompletionSection,
+getCompletionLevel,
 } from "../utils/profile-completion-utils";
 
 interface ProfileCompletionWidgetProps {

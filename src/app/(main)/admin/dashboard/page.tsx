@@ -1,33 +1,33 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import {
-    Users,
-    Building2,
-    Briefcase,
-    FileText,
-    ShieldCheck,
-    TrendingUp,
-    TrendingDown,
-    Activity,
-    Clock,
-    AlertTriangle,
-    CheckCircle2,
-    XCircle,
-    UserPlus,
-    BarChart3,
-    Globe,
-    Server,
-    Loader2,
-    Download,
-} from "lucide-react";
-import { cn } from "@/shared/utils/cn";
-import { downloadBlob } from "@/shared/utils/download-file";
-import { useToastHelpers } from "@/shared/components/ui/toast";
-import { fmtNumber } from "@/shared/utils/format";
 import { adminDashboardApi } from "@/features/admin/api/admin-dashboard-api";
 import type { AdminDashboardResponse } from "@/features/admin/types/admin-dashboard-types";
+import { useToastHelpers } from "@/shared/components/ui/toast";
+import { cn } from "@/shared/utils/cn";
+import { downloadBlob } from "@/shared/utils/download-file";
+import { fmtNumber } from "@/shared/utils/format";
+import { motion } from "framer-motion";
+import {
+Activity,
+AlertTriangle,
+BarChart3,
+Briefcase,
+Building2,
+CheckCircle2,
+Clock,
+Download,
+FileText,
+Globe,
+Loader2,
+Server,
+ShieldCheck,
+TrendingDown,
+TrendingUp,
+UserPlus,
+Users,
+XCircle,
+} from "lucide-react";
+import { useEffect,useState } from "react";
 
 // ─── Stat Cards ──────────────────────────────────────
 interface AdminStat {
@@ -225,7 +225,7 @@ export default function AdminDashboardPage() {
             const filename = `admin_applications_${new Date().toISOString().slice(0, 10)}.csv`;
             downloadBlob(blob, filename);
             toast.success("Đã xuất báo cáo CSV Ứng viên toàn hệ thống thành công!", "Tệp tải xuống nằm trong thư mục Downloads.");
-        } catch (err) {
+        } catch (_err) {
             toast.error("Xuất báo cáo thất bại", "Vui lòng kiểm tra lại kết nối hoặc phân quyền.");
         } finally {
             setExportingApps(false);
@@ -239,7 +239,7 @@ export default function AdminDashboardPage() {
             const filename = `admin_jobs_${new Date().toISOString().slice(0, 10)}.csv`;
             downloadBlob(blob, filename);
             toast.success("Đã xuất báo cáo CSV Việc làm toàn hệ thống thành công!", "Tệp tải xuống nằm trong thư mục Downloads.");
-        } catch (err) {
+        } catch (_err) {
             toast.error("Xuất báo cáo thất bại", "Vui lòng kiểm tra lại kết nối hoặc phân quyền.");
         } finally {
             setExportingJobs(false);

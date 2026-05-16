@@ -8,9 +8,9 @@
  * ═══════════════════════════════════════════════════════════
  */
 
-import { type ReactNode } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/shared/utils/cn";
+import { AnimatePresence,motion } from "framer-motion";
+import { type ReactNode } from "react";
 
 interface ModalOverlayProps {
     /** Whether the overlay is visible */

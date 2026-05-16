@@ -1,7 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Button } from "@/shared/components/ui/button";
+import { motion } from "framer-motion";
 
 interface StepWelcomeProps {
     onNext: () => void;

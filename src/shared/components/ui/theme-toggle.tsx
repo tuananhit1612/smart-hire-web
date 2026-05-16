@@ -1,13 +1,13 @@
 "use client";
 
-import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
-import { Moon, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Moon,Sun } from "lucide-react";
+import { useTheme } from "next-themes";
+import { useEffect,useState } from "react";
 
 export function ThemeToggle({ className }: { className?: string }) {
   const [mounted, setMounted] = useState(false);
-  const { theme, setTheme, resolvedTheme } = useTheme();
+  const { theme: _theme, setTheme, resolvedTheme } = useTheme();
 
   // Wait for mount to avoid hydration mismatch
   useEffect(() => {

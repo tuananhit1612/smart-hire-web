@@ -8,7 +8,7 @@
  * ═════════════════════════════════════════════════════════
  */
 
-import { useState, useCallback, useRef } from "react";
+import { useCallback,useRef,useState } from "react";
 
 // ─── Types ───────────────────────────────────────────
 export type StageId = "applied" | "interview" | "hired" | "rejected";

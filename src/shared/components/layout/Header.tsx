@@ -1,19 +1,18 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import {
-    Menu,
-    X,
-    ChevronDown,
-} from "lucide-react";
-import { motion, useMotionValueEvent, useScroll, AnimatePresence } from "framer-motion";
-import { Button } from "@/shared/components/ui/button";
-import { ThemeToggle } from "@/shared/components/ui/theme-toggle";
-import { AvatarInitials } from "@/shared/components/ui/avatar-initials";
 import { useAuth } from "@/features/auth/hooks/use-auth";
 import { cn } from "@/lib/utils";
+import { AvatarInitials } from "@/shared/components/ui/avatar-initials";
+import { ThemeToggle } from "@/shared/components/ui/theme-toggle";
+import { AnimatePresence,motion,useMotionValueEvent,useScroll } from "framer-motion";
+import {
+ChevronDown,
+Menu,
+X,
+} from "lucide-react";
+import Link from "next/link";
+import { usePathname,useRouter } from "next/navigation";
+import { useState } from "react";
 
 // ─── Nav Links ─────────────────────────────────────
 export type NavItem = {
@@ -50,7 +49,7 @@ export function Header() {
     const [lastScrollY, setLastScrollY] = useState(0);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const { scrollY } = useScroll();
-    const { user, isLoading, logout } = useAuth();
+    const { user, isLoading: _isLoading, logout } = useAuth();
     const router = useRouter();
     const pathname = usePathname();
 
