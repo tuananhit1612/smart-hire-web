@@ -1,15 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-    ChevronDown,
-    Star,
-    ArrowRight,
-} from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
+import { AnimatePresence,motion } from "framer-motion";
+import {
+ArrowRight,
+ChevronDown,
+Star,
+} from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
 
 // ============================================
 // AI JOB APPLICATION PAGE — SmartHire Design System

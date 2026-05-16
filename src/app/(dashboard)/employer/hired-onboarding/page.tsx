@@ -1,24 +1,21 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { 
-    ClipboardList, 
-    Search, 
-    User, 
-    CheckCircle2, 
-    Clock, 
-    AlertCircle, 
-    ChevronRight,
-    Loader2,
-    FileText,
-    ArrowRight
-} from "lucide-react";
 import { employerApplicantApi } from "@/features/employer/api/employer-api";
-import { EmployerApplicant } from "@/features/employer/types/mock-applicants";
 import { ApplicantDrawer } from "@/features/employer/components/applicant-drawer";
+import { EmployerApplicant } from "@/features/employer/types/mock-applicants";
 import { Badge } from "@/shared/components/ui/badge";
 import { cn } from "@/shared/lib/utils";
+import { motion } from "framer-motion";
+import {
+CheckCircle2,
+ChevronRight,
+ClipboardList,
+Clock,
+Loader2,
+Search,
+User
+} from "lucide-react";
+import { useEffect,useMemo,useState } from "react";
 
 export default function EmployerOnboardingPage() {
     const [applicants, setApplicants] = useState<EmployerApplicant[]>([]);
@@ -31,7 +28,7 @@ export default function EmployerOnboardingPage() {
         setIsLoading(true);
         try {
             const res = await employerApplicantApi.getAll();
-            const responseData = (res as any).data;
+            const responseData = res.data;
             if (responseData.success && responseData.data) {
                 // Filter only HIRED status
                 const hiredOnly = responseData.data.filter((a: EmployerApplicant) => a.status === "HIRED" || a.stage === "HIRED");

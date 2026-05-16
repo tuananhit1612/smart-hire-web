@@ -1,14 +1,13 @@
 "use client";
 
-import { motion } from "framer-motion";
-import Link from "next/link";
-import { Sparkles, TrendingUp, MapPin, Briefcase, ChevronRight } from "lucide-react";
-import { Job } from "../types/job";
-import { mockJobs } from "../types/mock-jobs";
-import { getRecommendedJobs, JobMatchResult } from "../utils/job-recommendation-utils";
 import { CandidateProfile } from "@/features/profile/types/profile";
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
+import { motion } from "framer-motion";
+import { Briefcase,ChevronRight,MapPin,Sparkles,TrendingUp } from "lucide-react";
+import Link from "next/link";
+import { mockJobs } from "../types/mock-jobs";
+import { getRecommendedJobs,JobMatchResult } from "../utils/job-recommendation-utils";
 
 interface JobRecommendationWidgetProps {
   profile: CandidateProfile;

@@ -1,27 +1,25 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-    Users,
-    Search,
-    Filter,
-    ChevronRight,
-    Shield,
-    Building2,
-    User,
-    MoreHorizontal,
-    Mail,
-    CalendarDays,
-    CheckCircle2,
-    XCircle,
-    Clock,
-    Eye,
-    Ban,
-    Pencil,
-} from "lucide-react";
 import { cn } from "@/shared/utils/cn";
 import { fmtNumber } from "@/shared/utils/format";
+import { AnimatePresence,motion } from "framer-motion";
+import {
+Ban,
+Building2,
+CalendarDays,
+CheckCircle2,
+Clock,
+Eye,
+Filter,
+Mail,
+MoreHorizontal,
+Pencil,
+Search,
+Shield,
+User,
+Users
+} from "lucide-react";
+import { useMemo,useState } from "react";
 
 // ─── Types ───────────────────────────────────────────
 type UserRole = "all" | "candidate" | "employer" | "admin";

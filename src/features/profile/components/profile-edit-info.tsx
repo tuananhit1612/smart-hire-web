@@ -1,12 +1,12 @@
 "use client";
 
-import * as React from "react";
-import { User, Mail, Phone, MapPin, Globe, Plus, Trash2, Link as LinkIcon } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/shared/components/ui/dialog";
 import { Button } from "@/shared/components/ui/button";
+import { Dialog,DialogContent,DialogDescription,DialogFooter,DialogHeader,DialogTitle } from "@/shared/components/ui/dialog";
 import { Input } from "@/shared/components/ui/input";
-import { CandidateProfile, SocialLink } from "../types/profile";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence,motion } from "framer-motion";
+import { Link as LinkIcon,Mail,MapPin,Phone,Plus,Trash2,User } from "lucide-react";
+import * as React from "react";
+import { CandidateProfile,SocialLink } from "../types/profile";
 
 interface ProfileEditInfoProps {
   open: boolean;
@@ -157,7 +157,7 @@ export function ProfileEditInfo({
                         <select
                           className="w-full h-10 rounded-xl border border-border bg-card px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
                           value={link.platform}
-                          onChange={(e) => updateSocialLink(index, "platform", e.target.value as any)}
+                          onChange={(e) => updateSocialLink(index, "platform", e.target.value as SocialLink["platform"])}
                         >
                           {SOCIAL_PLATFORMS.map(p => <option key={p} value={p}>{p}</option>)}
                         </select>

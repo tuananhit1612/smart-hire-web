@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import { Company, DEFAULT_COMPANY } from '../types/company';
 import { companyApi } from '../api/company-api';
+import { Company,DEFAULT_COMPANY,type SocialLink } from '../types/company';
 
 interface CompanyStore {
     company: Company;
@@ -46,7 +46,7 @@ export const useCompanyStore = create<CompanyStore>((set, get) => ({
                         founded: res.founded || '',
                         techStack: res.techStack || [],
                         benefits: res.benefits || [],
-                        socialLinks: (res.socialLinks as any) || [],
+                        socialLinks: (res.socialLinks as SocialLink[]) || [],
                         logoUrl: res.logoUrl || undefined,
                         coverUrl: res.coverUrl || undefined,
                     }

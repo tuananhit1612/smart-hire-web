@@ -1,12 +1,12 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Mail, MapPin, Phone, Linkedin, Github, Globe, Twitter, CheckCircle2, Camera, X, Upload, Loader2 } from "lucide-react";
-import { CandidateProfile, SocialLink } from "../types/profile";
-import { useProfileStore } from "../stores/profile-store";
 import { useAuth } from "@/features/auth/hooks/use-auth";
 import { resolveAvatarUrl } from "@/shared/utils/resolve-avatar-url";
+import { AnimatePresence,motion } from "framer-motion";
+import { Camera,CheckCircle2,Github,Globe,Linkedin,Loader2,Mail,MapPin,Phone,Twitter,Upload,X } from "lucide-react";
+import { useEffect,useRef,useState } from "react";
+import { useProfileStore } from "../stores/profile-store";
+import { CandidateProfile,SocialLink } from "../types/profile";
 
 interface ProfileHeaderProps {
   profile: CandidateProfile;

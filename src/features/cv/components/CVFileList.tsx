@@ -1,21 +1,22 @@
 "use client";
 
-import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-    Upload,
-    Search,
-    SortAsc,
-    FileText,
-    Plus,
-    FolderOpen,
-    Sparkles,
-    Star,
-    Loader2
-} from "lucide-react";
+import { getErrorMessage } from "@/shared/lib/api-error";
 import { useCvFileStore } from "@/features/cv/stores/cv-file-store";
 import type { CvFileResponse } from "@/features/profile/types/profile-api-types";
 import { useToastHelpers } from "@/shared/components/ui/toast";
+import { AnimatePresence,motion } from "framer-motion";
+import {
+FileText,
+FolderOpen,
+Loader2,
+Plus,
+Search,
+SortAsc,
+Sparkles,
+Star,
+Upload
+} from "lucide-react";
+import * as React from "react";
 import { CVFileCard } from "./cv-files/CVFileCard";
 import { DeleteConfirmDialog } from "./cv-files/DeleteConfirmDialog";
 import { UploadCVModal } from "./cv-files/UploadCVModal";
@@ -109,8 +110,8 @@ export function CVFileList() {
     const handleView = async (file: CvFileResponse) => {
         try {
             await useCvFileStore.getState().viewCvFile(file.id, file.fileType);
-        } catch (err: any) {
-            toast.error(err.message || "Lỗi khi xem CV");
+        } catch (err: unknown) {
+            toast.error(getErrorMessage(err, "Lỗi khi xem CV"));
         }
     };
 
@@ -118,8 +119,8 @@ export function CVFileList() {
         try {
             await downloadCvFile(file.id, file.fileName);
             toast.success("Đã tải xuống CV");
-        } catch (err: any) {
-            toast.error(err.message || "Lỗi khi tải CV");
+        } catch (err: unknown) {
+            toast.error(getErrorMessage(err, "Lỗi khi tải CV"));
         }
     };
 
@@ -132,8 +133,8 @@ export function CVFileList() {
         try {
             await setPrimaryCv(file.id);
             toast.success("Đã đặt làm CV mặc định");
-        } catch (err: any) {
-            toast.error(err.message || "Không thể đặt làm mặc định");
+        } catch (err: unknown) {
+            toast.error(getErrorMessage(err, "Không thể đặt làm mặc định"));
         }
     };
 
@@ -144,8 +145,8 @@ export function CVFileList() {
                 toast.success("Đã xoá CV");
                 setDeleteDialogOpen(false);
                 setSelectedFile(null);
-            } catch (err: any) {
-                toast.error(err.message || "Lỗi khi xoá CV");
+            } catch (err: unknown) {
+                toast.error(getErrorMessage(err, "Lỗi khi xoá CV"));
             }
         }
     };

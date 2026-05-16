@@ -1,23 +1,22 @@
 "use client";
 
-import {
-    FileText,
-    ClipboardList,
-    Mic2,
-    Search,
-    Compass,
-    Loader2
-} from "lucide-react";
-import { WelcomeCard } from "@/features/dashboard/components/WelcomeCard";
+import { RecentApplications } from "@/features/dashboard/components/RecentApplications";
 import { StatCard } from "@/features/dashboard/components/StatCard";
-import dynamic from "next/dynamic";
+import { WelcomeCard } from "@/features/dashboard/components/WelcomeCard";
 import { useCandidateDashboard } from "@/features/dashboard/hooks/useCandidateDashboard";
+import {
+ClipboardList,
+Compass,
+FileText,
+Loader2,
+Search
+} from "lucide-react";
+import dynamic from "next/dynamic";
 
 const ActivityChart = dynamic(
     () => import("@/features/dashboard/components/ActivityChart").then(mod => mod.ActivityChart),
     { ssr: false, loading: () => <div className="h-[300px] w-full flex items-center justify-center text-gray-400">Đang tải biểu đồ...</div> }
 );
-import { RecentApplications } from "@/features/dashboard/components/RecentApplications";
 
 export default function DashboardPage() {
     const { data, isLoading, error } = useCandidateDashboard();

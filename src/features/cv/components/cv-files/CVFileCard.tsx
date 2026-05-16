@@ -1,18 +1,18 @@
 "use client";
 
-import * as React from "react";
-import { createPortal } from "react-dom";
+import type { CvFileResponse } from "@/features/profile/types/profile-api-types";
 import { motion } from "framer-motion";
 import {
-    FileText,
-    MoreVertical,
-    Download,
-    Trash2,
-    Star,
-    Eye,
-    Clock,
+Clock,
+Download,
+Eye,
+FileText,
+MoreVertical,
+Star,
+Trash2,
 } from "lucide-react";
-import type { CvFileResponse } from "@/features/profile/types/profile-api-types";
+import * as React from "react";
+import { createPortal } from "react-dom";
 import { formatRelativeTime } from "../../data/mock-cv-files";
 
 export function formatFileSize(bytes: number): string {

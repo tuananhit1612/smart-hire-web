@@ -7,15 +7,15 @@
  */
 
 import type {
-  Gender,
-  JobLevel,
-  ProficiencyLevel,
-  CvFileType,
-  CvSource,
+CvFileType,
+CvSource,
+Gender,
+JobLevel,
+ProficiencyLevel,
 } from "@/shared/types/enums";
 
 // Re-export for convenience
-export type { Gender, JobLevel, ProficiencyLevel, CvFileType, CvSource };
+export type { CvFileType,CvSource,Gender,JobLevel,ProficiencyLevel };
 
 // ─── Candidate Profile ───────────────────────────────────
 

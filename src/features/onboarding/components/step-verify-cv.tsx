@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
 import { Button } from "@/shared/components/ui/button";
-import { OnboardingCvData } from "../api/onboarding-api";
 import { Input } from "@/shared/components/ui/input";
+import { motion } from "framer-motion";
+import { useState } from "react";
+import { OnboardingCvData } from "../api/onboarding-api";
 
 interface StepVerifyCVProps {
     cvData: OnboardingCvData;
@@ -15,7 +15,7 @@ interface StepVerifyCVProps {
 export function StepVerifyCV({ cvData, onNext, onBack }: StepVerifyCVProps) {
     const [formData, setFormData] = useState<OnboardingCvData>(cvData);
 
-    const handleChange = (field: keyof OnboardingCvData, value: any) => {
+    const handleChange = (field: keyof OnboardingCvData, value: unknown) => {
         setFormData((prev) => ({ ...prev, [field]: value }));
     };
 

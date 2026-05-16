@@ -1,15 +1,15 @@
 "use client";
 
-import { useState, useMemo, useEffect, useCallback, Suspense } from "react";
+import { AlertTriangle,Loader2,RefreshCw,Search } from "lucide-react";
+import { Suspense,useCallback,useEffect,useMemo,useState } from "react";
+import { jobApi,JobSearchParams } from "../api/job-api";
+import { useJobFilters } from "../hooks/useJobFilters";
 import { Job } from "../types/job";
+import { JobResponse } from "../types/job-api-types";
+import { ApplyModal } from "./apply-modal";
 import { JobCard } from "./job-card";
 import { JobFilter } from "./job-filter";
 import { JobPagination } from "./job-pagination";
-import { jobApi, JobSearchParams } from "../api/job-api";
-import { JobResponse } from "../types/job-api-types";
-import { useJobFilters } from "../hooks/useJobFilters";
-import { Search, Loader2, AlertTriangle, RefreshCw } from "lucide-react";
-import { ApplyModal } from "./apply-modal";
 
 const PAGE_SIZE = 9; // 3×3 grid
 

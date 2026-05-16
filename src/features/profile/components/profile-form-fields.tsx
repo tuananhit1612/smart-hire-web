@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { getErrorMessage } from "@/shared/lib/api-error";
 import { cn } from "@/lib/utils";
-import { useProfileStore } from "../stores/profile-store";
 import { useToastHelpers } from "@/shared/components/ui/toast";
 import { Loader2 } from "lucide-react";
+import { useState } from "react";
+import { useProfileStore } from "../stores/profile-store";
 
 /* ─── Form Field (Text Input) ─── */
 interface FormFieldProps {
@@ -125,9 +126,9 @@ export function SaveButton({ label = "Lưu thay đổi" }: { label?: string }) {
         try {
             await saveProfile();
             toast.success("Lưu thành công", "Hồ sơ của bạn đã được cập nhật.");
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error("[SaveButton] Error:", err);
-            toast.error("Lưu thất bại", err?.message || "Đã xảy ra lỗi khi lưu hồ sơ.");
+            toast.error("Lưu thất bại", getErrorMessage(err, "Đã xảy ra lỗi khi lưu hồ sơ."));
         } finally {
             setIsSaving(false);
         }

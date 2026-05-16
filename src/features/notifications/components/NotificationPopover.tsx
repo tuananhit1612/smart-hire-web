@@ -1,24 +1,25 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
-import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
-import { 
-    Bell, 
-    CheckCheck, 
-    Inbox, 
-    ChevronRight,
-    Briefcase,
-    Calendar,
-    BrainCircuit,
-    Sparkles
-} from "lucide-react";
 import { cn } from "@/shared/utils/cn";
-import { useNotificationStore } from "../stores/notification-store";
+import { AnimatePresence,motion } from "framer-motion";
+import {
+Bell,
+BrainCircuit,
+Briefcase,
+Calendar,
+CheckCheck,
+ChevronRight,
+Inbox,
+type LucideIcon,
+Sparkles
+} from "lucide-react";
+import Link from "next/link";
+import { useEffect,useRef } from "react";
 import type { NotificationDto } from "../api/notification-api";
+import { useNotificationStore } from "../stores/notification-store";
 
 // Re-use logic from NotificationCard but condensed
-const ICON_CONFIG: Record<string, { icon: any; color: string; bg: string }> = {
+const ICON_CONFIG: Record<string, { icon: LucideIcon; color: string; bg: string }> = {
     "APPLICATION_STATUS": {
         icon: Briefcase,
         color: "text-[#22c55e]",

@@ -1,30 +1,26 @@
 "use client";
 
-import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useCompanyStore } from "../stores/company-store";
-import { CompanyHeaderPremium } from "./CompanyHeaderPremium";
-import { CompanyAbout } from "./CompanyAbout";
-import { CompanyBenefits } from "./CompanyBenefits";
-import { CompanyTechStack } from "./CompanyTechStack";
-import { CompanySocialLinks } from "./CompanySocialLinks";
-import { Company } from "../types/company";
 import { useToast } from "@/shared/components/ui/toast";
-import { FloatingElements, BentoItem, ParallaxWrapper } from "./ui/premium-effects";
+import { motion } from "framer-motion";
 import {
-    Briefcase,
-    MapPin,
-    Clock,
-    Users,
-    Star,
-    ChevronRight,
-    Zap,
-    Target,
-    Heart,
-    Coffee,
-    Rocket,
+ChevronRight,
+Coffee,
+Heart,
+Rocket,
+Star,
+Target,
+Zap
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import * as React from "react";
+import { useCompanyStore } from "../stores/company-store";
+import { Company } from "../types/company";
+import { CompanyAbout } from "./CompanyAbout";
+import { CompanyBenefits } from "./CompanyBenefits";
+import { CompanyHeaderPremium } from "./CompanyHeaderPremium";
+import { CompanySocialLinks } from "./CompanySocialLinks";
+import { CompanyTechStack } from "./CompanyTechStack";
+import { BentoItem } from "./ui/premium-effects";
 
 // Feature highlight data
 const COMPANY_HIGHLIGHTS = [

@@ -8,8 +8,8 @@
 
 import { create } from "zustand";
 import {
-  notificationApi,
-  type NotificationDto,
+notificationApi,
+type NotificationDto,
 } from "../api/notification-api";
 
 interface NotificationState {

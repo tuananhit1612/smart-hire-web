@@ -1,12 +1,12 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import {
-    SparklesIcon,
-    DocumentMagnifyingGlassIcon,
-    ShieldCheckIcon,
-    ClockIcon,
+ClockIcon,
+DocumentMagnifyingGlassIcon,
+ShieldCheckIcon,
+SparklesIcon,
 } from '@heroicons/react/24/outline';
+import { motion } from 'framer-motion';
 
 const features = [
     {

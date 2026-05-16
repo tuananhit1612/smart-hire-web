@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useRef, useState } from "react";
-import { Camera, Trash2, User } from "lucide-react";
-import { validateFile, AVATAR_RULES } from "@/shared/utils/file-validation";
+import { AVATAR_RULES,validateFile } from "@/shared/utils/file-validation";
+import { Camera,Trash2,User } from "lucide-react";
+import React,{ useRef,useState } from "react";
 
 interface EditableAvatarProps {
     src?: string;

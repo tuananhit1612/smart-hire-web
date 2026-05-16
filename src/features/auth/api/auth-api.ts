@@ -9,12 +9,12 @@
 
 import { apiClient } from "@/shared/lib/api-client";
 import type {
-    AuthLoginResponse,
-    AuthMessageResponse,
-    ChangePasswordPayload,
-    RegisterPayload,
-    UpdateProfilePayload,
-    UserResponse,
+AuthLoginResponse,
+AuthMessageResponse,
+ChangePasswordPayload,
+RegisterPayload,
+UpdateProfilePayload,
+UserResponse,
 } from "../types/auth-types";
 
 export const authApi = {
@@ -67,14 +67,14 @@ export const authApi = {
      * Fetch current user profile using stored access token.
      * Used on app mount to revalidate a persisted session.
      */
-    getMe: () => apiClient.get<UserResponse>("/auth/me"),
+    getMe: () => apiClient.get<UserResponse>("/users/me"),
 
     /**
      * Update current user's profile (fullName, phone, avatarUrl).
      * Returns the updated UserData object.
      */
     updateMe: (data: UpdateProfilePayload) =>
-        apiClient.put<UserResponse>("/auth/me", data),
+        apiClient.put<UserResponse>("/users/me", data),
 
     /**
      * Change current user's password.
@@ -90,7 +90,7 @@ export const authApi = {
     uploadAvatar: (file: File) => {
         const formData = new FormData();
         formData.append("file", file);
-        return apiClient.post<string>("/auth/me/avatar", formData, {
+        return apiClient.post<UserResponse>("/users/me/avatar", formData, {
             headers: { "Content-Type": "multipart/form-data" },
         });
     },

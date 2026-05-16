@@ -1,23 +1,22 @@
 "use client";
 
+import { SAMPLE_CV_DATA } from "@/features/cv/data/mock-data";
+import {
+Award,
+Certification,
+CVData,
+CVDesignTokens,
+CVSection,
+DEFAULT_CV_DATA,
+DEFAULT_DESIGN_TOKENS,
+Education,
+Experience,
+Language,
+Project,
+Skill
+} from "@/features/cv/types/types";
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
-import {
-    CVData,
-    CVSection,
-    CVDesignTokens,
-    DEFAULT_CV_DATA,
-    DEFAULT_DESIGN_TOKENS,
-    DEFAULT_SECTION_ORDER,
-    Education,
-    Experience,
-    Skill,
-    Project,
-    Language,
-    Certification,
-    Award,
-} from "@/features/cv/types/types";
-import { SAMPLE_CV_DATA } from "@/features/cv/data/mock-data";
 
 /* ─────────────────────────────────────────────────────────── */
 /*  Types                                                      */

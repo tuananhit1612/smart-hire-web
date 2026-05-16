@@ -1,7 +1,7 @@
 "use client";
 
-import { LucideIcon, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { LucideIcon,TrendingUp } from "lucide-react";
 
 interface Props {
     title: string;

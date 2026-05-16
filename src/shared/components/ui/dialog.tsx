@@ -1,11 +1,9 @@
 "use client";
 
-import * as React from "react";
+import { cn } from "@/shared/utils/cn";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "@/shared/utils/cn";
-import { Button } from "./button";
+import * as React from "react";
 
 const Dialog = DialogPrimitive.Root;
 
@@ -108,13 +106,5 @@ const DialogDescription = React.forwardRef<
 DialogDescription.displayName = DialogPrimitive.Description.displayName;
 
 export {
-  Dialog,
-  DialogPortal,
-  DialogOverlay,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogFooter,
-  DialogTitle,
-  DialogDescription,
+Dialog,DialogContent,DialogDescription,DialogFooter,DialogHeader,DialogOverlay,DialogPortal,DialogTitle,DialogTrigger
 };

@@ -1,5 +1,5 @@
-import { Job, JobType, JobLevel, JobStatus, Skill, JobRemote } from "../types/job";
-import { HrJobResponse, CreateJobRequest, UpdateJobRequest, JobSkillDto } from "../types/hr-job-api-types";
+import { CreateJobRequest,HrJobResponse,JobSkillDto,UpdateJobRequest } from "../types/hr-job-api-types";
+import { Job,JobLevel,JobStatus,JobType,Skill } from "../types/job";
 
 /** Convert Backend Job DTO to Frontend Job State */
 export function mapHrJobToFeJob(dto: HrJobResponse): Job {

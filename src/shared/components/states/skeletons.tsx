@@ -9,9 +9,9 @@
  * ═══════════════════════════════════════════════════════════
  */
 
-import { motion } from "framer-motion";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { cn } from "@/shared/utils/cn";
+import { motion } from "framer-motion";
 
 // ─── Card Skeleton ───────────────────────────────────────
 

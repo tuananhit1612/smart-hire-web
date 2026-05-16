@@ -1,22 +1,22 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
 import { profileApi } from '@/features/profile/api/profile-api';
 import type { CvFileResponse } from '@/features/profile/types/profile-api-types';
+import { AnimatePresence,motion } from 'framer-motion';
 import {
-  ScanSearch,
-  FileText,
-  ArrowRight,
-  Loader2,
-  AlertTriangle,
-  Star,
-  Clock,
-  Sparkles,
-  PenTool,
-  Upload,
+AlertTriangle,
+ArrowRight,
+Clock,
+FileText,
+Loader2,
+PenTool,
+ScanSearch,
+Sparkles,
+Star,
+Upload,
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useEffect,useState } from 'react';
 
 export default function CVAnalysisListPage() {
   const router = useRouter();

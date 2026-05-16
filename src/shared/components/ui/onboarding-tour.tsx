@@ -1,10 +1,10 @@
 "use client";
 
-import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { X, ChevronRight, ChevronLeft, Sparkles, GripVertical, Calendar, Save, Eye, Lightbulb } from "lucide-react";
-import { Button } from "./button";
 import { cn } from "@/lib/utils";
+import { AnimatePresence,motion } from "framer-motion";
+import { Calendar,ChevronLeft,ChevronRight,Eye,GripVertical,Lightbulb,Save,Sparkles,X } from "lucide-react";
+import * as React from "react";
+import { Button } from "./button";
 
 interface TourStep {
     id: string;

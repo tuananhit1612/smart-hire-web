@@ -1,11 +1,11 @@
 "use client";
 
-import Link from "next/link";
-import { motion, useScroll, useTransform, useMotionValue, useSpring, type Variants } from "framer-motion";
-import Image from "next/image";
-import { Star, Play, Zap, Search, FileText, Sparkles, ArrowRight, CheckCircle } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
-import { useRef, useState, useEffect } from "react";
+import { motion,useScroll,useTransform,type Variants } from "framer-motion";
+import { ArrowRight,CheckCircle,FileText,Play,Search,Sparkles,Star,Zap } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRef } from "react";
 
 import { AnimatedBackground } from "@/shared/components/effects/AnimatedBackground";
 
@@ -103,36 +103,6 @@ const FloatingCards = () => {
             </motion.div>
         </div>
     );
-};
-
-// Typing Effect Component
-const TypingEffect = ({ texts }: { texts: string[] }) => {
-    const [currentTextIndex, setCurrentTextIndex] = useState(0);
-    const [currentText, setCurrentText] = useState("");
-    const [isDeleting, setIsDeleting] = useState(false);
-
-    useEffect(() => {
-        const timeout = setTimeout(() => {
-            const fullText = texts[currentTextIndex];
-
-            if (!isDeleting) {
-                setCurrentText(fullText.substring(0, currentText.length + 1));
-                if (currentText === fullText) {
-                    setTimeout(() => setIsDeleting(true), 2000);
-                }
-            } else {
-                setCurrentText(fullText.substring(0, currentText.length - 1));
-                if (currentText === "") {
-                    setIsDeleting(false);
-                    setCurrentTextIndex((prev) => (prev + 1) % texts.length);
-                }
-            }
-        }, isDeleting ? 50 : 100);
-
-        return () => clearTimeout(timeout);
-    }, [currentText, isDeleting, currentTextIndex, texts]);
-
-    return <span className="text-green-500 dark:text-green-400">{currentText}</span>;
 };
 
 // Reviews Badge Component

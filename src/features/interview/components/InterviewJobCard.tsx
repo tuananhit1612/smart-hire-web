@@ -1,9 +1,9 @@
 "use client";
 
+import type { Job } from "@/features/jobs/types/job";
+import { cn } from "@/shared/utils/cn";
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
-import { cn } from "@/shared/utils/cn";
-import type { Job } from "@/features/jobs/types/job";
 
 interface JobCardProps {
     readonly job: Job;

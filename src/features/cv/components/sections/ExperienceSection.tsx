@@ -1,13 +1,12 @@
 "use client";
 
-import * as React from "react";
-import { motion } from "framer-motion";
-import { Briefcase, Plus, Trash2, Building, MapPin } from "lucide-react";
-import { Input } from "@/shared/components/ui/input";
 import { Button } from "@/shared/components/ui/button";
-import { DatePicker } from "@/shared/components/ui/date-picker";
 import { useConfirmDialog } from "@/shared/components/ui/confirm-dialog";
+import { DatePicker } from "@/shared/components/ui/date-picker";
+import { Input } from "@/shared/components/ui/input";
 import { SortableList } from "@/shared/components/ui/sortable-list";
+import { motion } from "framer-motion";
+import { Briefcase,Building,MapPin,Plus,Trash2 } from "lucide-react";
 import { Experience } from "../../types/types";
 
 interface ExperienceSectionProps {

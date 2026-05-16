@@ -1,17 +1,17 @@
 "use client";
 
-import * as React from "react";
-import { motion } from "framer-motion";
-import {
-    Save,
-    CloudOff,
-    Cloud,
-    Loader2,
-    Eye,
-    Wand2,
-} from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { format } from "date-fns";
+import { motion } from "framer-motion";
+import {
+Cloud,
+CloudOff,
+Eye,
+Loader2,
+Save,
+Wand2,
+} from "lucide-react";
+import * as React from "react";
 
 interface CVBuilderLayoutProps {
     /** Section tab bar (CVSectionNav) — rendered above the form */

@@ -9,10 +9,10 @@
 
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback,useEffect,useState } from "react";
 import {
-    candidateDashboardApi,
-    type CandidateDashboardOverview,
+candidateDashboardApi,
+type CandidateDashboardOverview,
 } from "../api/candidate-dashboard-api";
 
 interface UseCandidateDashboardReturn {

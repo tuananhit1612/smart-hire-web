@@ -1,21 +1,21 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { Fingerprint, Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { Eye,EyeOff,Fingerprint,Lock,Mail } from "lucide-react";
+import Link from "next/link";
+import { useRouter,useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 // GitHub SVG icon (inline — no extra dep needed)
 
 import { Button } from "@/shared/components/ui/button";
+import { getErrorMessage } from "@/shared/lib/api-error";
 import { Input } from "@/shared/components/ui/input";
 import { useToastHelpers } from "@/shared/components/ui/toast";
 import { useAuth } from "../hooks/use-auth";
 import { tokenStorage } from "../lib/token-storage";
-import { cn } from "@/lib/utils";
 
 const loginSchema = z.object({
     email: z.string().email("Vui lòng nhập địa chỉ email hợp lệ"),
@@ -28,7 +28,7 @@ export function LoginForm() {
     const toastHelpers = useToastHelpers();
     const router = useRouter();
     const searchParams = useSearchParams();
-    const { login, user } = useAuth();
+    const { login, user: _user } = useAuth();
 
     // Show GitHub error from redirect (e.g. ?error=...)
     const githubError = searchParams.get("error");
@@ -46,7 +46,9 @@ export function LoginForm() {
         const oauthBase = apiBase.replace(/\/v1$/, "");
         const redirectUri = encodeURIComponent(`${oauthBase}/auth/github/callback`);
         const scope = encodeURIComponent("user:email");
-        window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}`;
+        const state = crypto.randomUUID();
+        sessionStorage.setItem("smarthire-github-oauth-state", state);
+        window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&state=${encodeURIComponent(state)}`;
     };
 
     const {
@@ -72,8 +74,8 @@ export function LoginForm() {
             } else {
                 router.push("/dashboard");
             }
-        } catch (error: any) {
-            toastHelpers.error("Đăng nhập thất bại", error.message || "Vui lòng kiểm tra lại email hoặc mật khẩu.");
+        } catch (error: unknown) {
+            toastHelpers.error("Đăng nhập thất bại", getErrorMessage(error, "Vui lòng kiểm tra lại email hoặc mật khẩu."));
         } finally {
             setIsLoading(false);
         }

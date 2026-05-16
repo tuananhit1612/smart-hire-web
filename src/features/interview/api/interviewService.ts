@@ -9,10 +9,10 @@
 import { apiClient } from "@/shared/lib/api-client";
 import type { ApiWrapper } from "@/shared/types/api";
 import type {
-    InterviewResponse,
-    CreateInterviewRequest,
-    UpdateInterviewRequest,
-    InterviewStatus,
+CreateInterviewRequest,
+InterviewResponse,
+InterviewStatus,
+UpdateInterviewRequest,
 } from "../types/interview-types";
 
 const BASE = "/interviews";

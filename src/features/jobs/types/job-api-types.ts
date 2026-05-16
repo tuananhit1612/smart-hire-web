@@ -6,10 +6,10 @@
  * ═══════════════════════════════════════════════════════════
  */
 
-import type { JobType, JobLevel, JobStatus, SkillType } from "@/shared/types/enums";
+import type { JobLevel,JobStatus,JobType,SkillType } from "@/shared/types/enums";
 
 // Re-export for convenience
-export type { JobType, JobLevel, JobStatus };
+export type { JobLevel,JobStatus,JobType };
 
 // ─── Backend DTOs ────────────────────────────────────────
 

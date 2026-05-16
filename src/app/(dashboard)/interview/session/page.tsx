@@ -1,23 +1,23 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-    BrainCircuit,
-    Send,
-    Lightbulb,
-    Clock,
-    MessageSquare,
-    CheckCircle2,
-    ArrowLeft,
-} from "lucide-react";
-import Link from "next/link";
+import { ChatBubble,TypingIndicator } from "@/features/interview/components/ChatBubble";
+import { useCreateInterview } from "@/features/interview/hooks/useInterviewService";
+import type { ChatMessage,InterviewQuestion } from "@/features/interview/types/interview-ui-types";
+import { mockInterviewQuestions } from "@/features/interview/types/mock-questions";
 import { Button } from "@/shared/components/ui/button";
 import { cn } from "@/shared/utils/cn";
-import { mockInterviewQuestions } from "@/features/interview/types/mock-questions";
-import { ChatBubble, TypingIndicator } from "@/features/interview/components/ChatBubble";
-import type { ChatMessage, InterviewQuestion } from "@/features/interview/types/interview-ui-types";
-import { useCreateInterview } from "@/features/interview/hooks/useInterviewService";
+import { AnimatePresence,motion } from "framer-motion";
+import {
+ArrowLeft,
+BrainCircuit,
+CheckCircle2,
+Clock,
+Lightbulb,
+MessageSquare,
+Send,
+} from "lucide-react";
+import Link from "next/link";
+import { useCallback,useEffect,useMemo,useRef,useState } from "react";
 
 export default function InterviewSessionPage() {
     const [messages, setMessages] = useState<ChatMessage[]>([]);

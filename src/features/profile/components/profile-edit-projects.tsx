@@ -1,11 +1,10 @@
 "use client";
 
-import * as React from "react";
-import { motion } from "framer-motion";
-import { FolderGit2 } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/shared/components/ui/dialog";
 import { Button } from "@/shared/components/ui/button";
+import { Dialog,DialogContent,DialogDescription,DialogFooter,DialogHeader,DialogTitle } from "@/shared/components/ui/dialog";
 import { Input } from "@/shared/components/ui/input";
+import { FolderGit2 } from "lucide-react";
+import * as React from "react";
 import { Project } from "../types/profile";
 
 interface ProfileEditProjectsProps {
@@ -41,7 +40,7 @@ export function ProfileEditProjects({
         }
     }, [open, initialProject]);
 
-    const handleChange = (field: keyof Project, value: any) => {
+    const handleChange = (field: keyof Project, value: unknown) => {
         setProj(prev => ({ ...prev, [field]: value }));
     };
 

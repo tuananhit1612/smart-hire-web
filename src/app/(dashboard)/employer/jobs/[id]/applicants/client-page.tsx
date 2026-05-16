@@ -1,13 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { mockEmployerApplicants, EmployerApplicant } from "@/features/employer/types/mock-applicants";
+import { ApplicantDrawer } from "@/features/employer/components/applicant-drawer";
 import { ApplicantList } from "@/features/employer/components/applicant-list";
 import { ApplicantsFilter } from "@/features/employer/components/applicants-filter";
-import { ApplicantDrawer } from "@/features/employer/components/applicant-drawer";
-import { ArrowLeft, Users, Sparkles } from "lucide-react";
-import Link from "next/link";
+import { EmployerApplicant,mockEmployerApplicants } from "@/features/employer/types/mock-applicants";
 import { motion } from "framer-motion";
+import { ArrowLeft,Sparkles,Users } from "lucide-react";
+import Link from "next/link";
+import { useMemo,useState } from "react";
 
 interface EmployerApplicantsClientProps {
     jobId: string;

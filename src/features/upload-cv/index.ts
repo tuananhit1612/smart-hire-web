@@ -2,11 +2,11 @@
 // Export all components, hooks, types, and utils
 
 // Components
-export { UploadCVPage } from './components/UploadCVPage';
 export { DropZone } from './components/DropZone';
+export { FeatureCards } from './components/FeatureCards';
 export { FileCard } from './components/FileCard';
 export { FileList } from './components/FileList';
-export { FeatureCards } from './components/FeatureCards';
+export { UploadCVPage } from './components/UploadCVPage';
 
 // Hooks
 export { useFileUpload } from './hooks/useFileUpload';

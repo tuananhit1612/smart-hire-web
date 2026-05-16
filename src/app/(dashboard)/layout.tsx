@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useAuth } from "@/features/auth/hooks/use-auth";
 import { DashboardSidebar } from "@/features/dashboard/components/DashboardSidebar";
 import { DashboardTopbar } from "@/features/dashboard/components/DashboardTopbar";
-import { RealtimeProvider } from "@/shared/components/layout/RealtimeProvider";
-import { useAuth } from "@/features/auth/hooks/use-auth";
 import { useCompanyStore } from "@/features/hr-company/stores/company-store";
+import { RealtimeProvider } from "@/shared/components/layout/RealtimeProvider";
 import { motion } from "framer-motion";
+import { usePathname,useRouter } from "next/navigation";
+import { useEffect,useState } from "react";
 
 export default function DashboardLayout({
     children,

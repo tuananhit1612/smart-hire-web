@@ -1,9 +1,9 @@
 "use client";
 
-import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Check, X, AlertTriangle, Info, Bell, XCircle, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { AnimatePresence,motion } from "framer-motion";
+import { AlertTriangle,Check,Info,RotateCcw,X,XCircle } from "lucide-react";
+import * as React from "react";
 
 // Toast types
 type ToastType = "success" | "error" | "warning" | "info";

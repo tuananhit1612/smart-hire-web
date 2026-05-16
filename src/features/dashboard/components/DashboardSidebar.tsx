@@ -1,27 +1,27 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useAuth } from "@/features/auth/hooks/use-auth";
+import { cn } from "@/lib/utils";
+import { AnimatePresence,motion } from "framer-motion";
+import {
+Briefcase,
+Building2,
+ChevronLeft,
+ChevronRight,
+ClipboardList,
+Edit3,
+FileText,
+Kanban,
+LayoutDashboard,
+Rocket,
+ScanSearch,
+User,
+Users,
+type LucideIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-    LayoutDashboard,
-    Briefcase,
-    FileText,
-    Edit3,
-    ClipboardList,
-    ScanSearch,
-    User,
-    ChevronLeft,
-    ChevronRight,
-    Rocket,
-    Building2,
-    Users,
-    Kanban,
-    type LucideIcon,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
-import { useAuth } from "@/features/auth/hooks/use-auth";
+import { useEffect,useState } from "react";
 
 /* ─── Nav Item Type ─── */
 interface NavItemType {

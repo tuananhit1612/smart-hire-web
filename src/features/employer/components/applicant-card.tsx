@@ -1,22 +1,16 @@
 // src/features/employer/components/applicant-card.tsx
 "use client";
 
-import { EmployerApplicant } from "../types/mock-applicants";
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
-import { 
-    Brain, 
-    CheckCircle2, 
-    Clock, 
-    XCircle, 
-    MoreHorizontal, 
-    Mail,
-    Phone,
-    MapPin,
-    FileText
-} from "lucide-react";
-import { motion } from "framer-motion";
 import { ApplicationStage } from "@/shared/types/application";
+import { motion } from "framer-motion";
+import {
+Brain,
+FileText,
+Mail
+} from "lucide-react";
+import { EmployerApplicant } from "../types/mock-applicants";
 
 interface ApplicantCardProps {
     applicant: EmployerApplicant;

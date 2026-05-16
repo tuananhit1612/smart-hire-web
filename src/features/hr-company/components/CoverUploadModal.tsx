@@ -1,10 +1,10 @@
 "use client";
 
-import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Upload, Image, X, Check, Camera } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { getImageUrl } from "@/shared/lib/api-client";
+import { AnimatePresence,motion } from "framer-motion";
+import { Check,Image as ImageIcon,Upload,X } from "lucide-react";
+import * as React from "react";
 
 interface CoverUploadModalProps {
     currentCover?: string;
@@ -84,7 +84,7 @@ export function CoverUploadModal({ currentCover, onUpload, onClose }: CoverUploa
                     {/* Header */}
                     <div className="sticky top-0 z-10 flex items-center justify-between p-6 bg-white dark:bg-[#1C252E] border-b border-[rgba(145,158,171,0.12)] dark:border-white/[0.08]">
                         <h2 className="text-xl font-bold text-[#1C252E] dark:text-white flex items-center gap-2">
-                            <Image className="w-5 h-5 text-[#22c55e]" />
+                            <ImageIcon className="w-5 h-5 text-[#22c55e]" />
                             Đổi ảnh bìa
                         </h2>
                         <button

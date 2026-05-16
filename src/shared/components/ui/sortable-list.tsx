@@ -1,25 +1,25 @@
 "use client";
 
-import * as React from "react";
+import { cn } from "@/shared/utils/cn";
 import {
-    DndContext,
-    closestCenter,
-    KeyboardSensor,
-    PointerSensor,
-    useSensor,
-    useSensors,
-    DragEndEvent,
+closestCenter,
+DndContext,
+DragEndEvent,
+KeyboardSensor,
+PointerSensor,
+useSensor,
+useSensors,
 } from "@dnd-kit/core";
 import {
-    arrayMove,
-    SortableContext,
-    sortableKeyboardCoordinates,
-    useSortable,
-    verticalListSortingStrategy,
+arrayMove,
+SortableContext,
+sortableKeyboardCoordinates,
+useSortable,
+verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical } from "lucide-react";
-import { cn } from "@/shared/utils/cn";
+import * as React from "react";
 
 interface SortableListProps<T extends { id: string }> {
     items: T[];

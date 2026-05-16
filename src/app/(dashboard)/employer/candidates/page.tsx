@@ -1,16 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { PageSection } from "@/shared/components/layout/page-section";
-import { ApplicantsFilter } from "@/features/employer/components/applicants-filter";
-import { ApplicantList } from "@/features/employer/components/applicant-list";
 import { ApplicantDrawer } from "@/features/employer/components/applicant-drawer";
+import { ApplicantList } from "@/features/employer/components/applicant-list";
+import { ApplicantsFilter } from "@/features/employer/components/applicants-filter";
 import { useApplicants } from "@/features/employer/hooks/use-applicants";
+import { EmployerApplicant } from "@/features/employer/types/mock-applicants";
 import { hrJobApi } from "@/features/hr-jobs/api/hr-job-api";
 import { HrJobResponse } from "@/features/hr-jobs/types/hr-job-api-types";
-import { EmployerApplicant } from "@/features/employer/types/mock-applicants";
+import { PageSection } from "@/shared/components/layout/page-section";
+import { useEffect,useState } from "react";
 // Icons
-import { Briefcase, Loader2 } from "lucide-react";
+import { Briefcase,Loader2 } from "lucide-react";
 
 export default function EmployerCandidatesPage() {
     const [selectedJobId, setSelectedJobId] = useState<string>("ALL");

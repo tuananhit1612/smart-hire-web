@@ -11,10 +11,10 @@
  * ═══════════════════════════════════════════════════════════
  */
 
-import { type ReactNode } from "react";
-import { motion } from "framer-motion";
-import { AlertTriangle, RefreshCw, WifiOff, ServerCrash, type LucideIcon } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
+import { motion } from "framer-motion";
+import { AlertTriangle,RefreshCw,ServerCrash,WifiOff,type LucideIcon } from "lucide-react";
+import { type ReactNode } from "react";
 
 // ─── Props ───────────────────────────────────────────────
 

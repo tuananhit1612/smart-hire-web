@@ -1,13 +1,11 @@
 "use client";
 
-import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { X, Check, ChevronLeft, ChevronRight, Download, ExternalLink } from "lucide-react";
-import { cn } from "@/shared/utils/cn";
-import { CVTemplate } from "@/features/cv/types/template-types";
 import { TEMPLATE_COMPONENTS } from "@/features/cv/components/cv-templates";
+import { CVTemplate } from "@/features/cv/types/template-types";
+import { AnimatePresence,motion } from "framer-motion";
+import { Check,X } from "lucide-react";
+import * as React from "react";
 
-import { CVData } from "@/features/cv/types/types";
 
 interface TemplatePreviewModalProps {
     template: CVTemplate | null;

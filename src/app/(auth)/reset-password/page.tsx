@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
 import { AuthLayout } from "@/features/auth/components/auth-layout";
-import { Suspense } from "react";
 import { ResetPasswordPageContent } from "@/features/auth/components/reset-password-page-content";
+import type { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
     title: "Đặt lại mật khẩu | SmartHire",

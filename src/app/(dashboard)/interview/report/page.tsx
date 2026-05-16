@@ -1,25 +1,25 @@
 "use client";
 
-import { motion } from "framer-motion";
-import Link from "next/link";
-import {
-    ArrowLeft,
-    Star,
-    Target,
-    BrainCircuit,
-    AlertTriangle,
-    TrendingUp,
-    RotateCcw,
-    FileText,
-    ShieldCheck,
-    ShieldAlert,
-    ShieldQuestion,
-} from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { cn } from "@/shared/utils/cn";
+import { motion } from "framer-motion";
+import {
+AlertTriangle,
+ArrowLeft,
+BrainCircuit,
+FileText,
+RotateCcw,
+ShieldAlert,
+ShieldCheck,
+ShieldQuestion,
+Star,
+Target,
+TrendingUp,
+} from "lucide-react";
+import Link from "next/link";
 
+import { RecommendationCard,SkillBar,StrengthCard,WeaknessCard } from "@/features/interview/components/ReportCards";
 import { mockInterviewReport } from "@/features/interview/types/mock-report";
-import { SkillBar, StrengthCard, WeaknessCard, RecommendationCard } from "@/features/interview/components/ReportCards";
 
 // ─── Verdict Config ──────────────────────────────────
 

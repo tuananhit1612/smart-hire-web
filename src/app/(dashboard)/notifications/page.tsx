@@ -1,16 +1,16 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { BellRing, CheckCheck, Inbox, Loader2 } from "lucide-react";
-import { Button } from "@/shared/components/ui/button";
 import { NotificationCard } from "@/features/notifications/components/notification-card";
 import {
-    NotificationFilters,
-    NotificationFilter,
+NotificationFilter,
+NotificationFilters,
 } from "@/features/notifications/components/notification-filters";
-import { useNotificationStore } from "@/features/notifications/stores/notification-store";
 import { RealtimeEventTrigger } from "@/features/notifications/components/realtime-event-trigger";
+import { useNotificationStore } from "@/features/notifications/stores/notification-store";
+import { Button } from "@/shared/components/ui/button";
+import { AnimatePresence,motion } from "framer-motion";
+import { BellRing,CheckCheck,Inbox,Loader2 } from "lucide-react";
+import { useEffect,useMemo,useState } from "react";
 
 export default function NotificationsPage() {
     const { 
@@ -121,7 +121,7 @@ export default function NotificationsPage() {
                                 {filteredNotifications.map((notification, index) => (
                                     <NotificationCard
                                         key={notification.id}
-                                        notification={notification as any}
+                                        notification={notification}
                                         onMarkRead={(id) => markAsRead(Number(id))}
                                         index={index}
                                     />
@@ -176,7 +176,7 @@ export default function NotificationsPage() {
 }
 
 // Internal cn helper if not available from shared utility
-function cn(...inputs: any[]) {
+function cn(...inputs: unknown[]) {
     return inputs.filter(Boolean).join(" ");
 }
 

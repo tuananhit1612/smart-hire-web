@@ -1,11 +1,11 @@
 "use client";
 
+import { cn } from "@/lib/utils";
+import { Button } from "@/shared/components/ui/button";
 import { motion } from "framer-motion";
-import { User, Building2, ArrowRight, CheckCircle } from "lucide-react";
+import { ArrowRight,Building2,CheckCircle,User } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { Button } from "@/shared/components/ui/button";
-import { cn } from "@/lib/utils";
 import type { UserRole } from "../types/auth-types";
 
 interface RegisterRoleSelectionProps {

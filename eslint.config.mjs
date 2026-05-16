@@ -17,10 +17,18 @@ const eslintConfig = defineConfig([
     rules: {
       "react/no-unescaped-entities": "off",
       "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-unused-vars": ["warn", {
+        args: "none",
+        caughtErrors: "none",
+        destructuredArrayIgnorePattern: "^_",
+        ignoreRestSiblings: true,
+        varsIgnorePattern: "^_"
+      }],
       "react-hooks/set-state-in-effect": "off",
       "react-hooks/purity": "off",
       "@typescript-eslint/ban-ts-comment": "off",
-      "react-hooks/immutability": "off"
+      "react-hooks/immutability": "off",
+      "@next/next/no-img-element": "off"
     }
   }
 ]);

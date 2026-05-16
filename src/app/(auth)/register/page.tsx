@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import { AuthLayout } from "@/features/auth/components/auth-layout";
-import { RegisterRoleSelection } from "@/features/auth/components/register-role-selection";
 import { RegisterForm } from "@/features/auth/components/register-form";
+import { RegisterRoleSelection } from "@/features/auth/components/register-role-selection";
 import type { UserRole } from "@/features/auth/types/auth-types";
+import { AnimatePresence,motion } from "framer-motion";
+import { useState } from "react";
 
 export default function RegisterPage() {
     const [step, setStep] = useState<"role" | "form">("role");

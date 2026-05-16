@@ -1,26 +1,26 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useRouter } from "next/navigation";
-import {
-    BrainCircuit,
-    FileText,
-    Briefcase,
-    ChevronRight,
-    Sparkles,
-    ArrowRight,
-    Search,
-} from "lucide-react";
-import { Button } from "@/shared/components/ui/button";
-import { cn } from "@/shared/utils/cn";
 import { mockCVVersions } from "@/features/cv/types/cv-versions";
 import { mockJobs } from "@/features/jobs/types/mock-jobs";
+import { Button } from "@/shared/components/ui/button";
+import { cn } from "@/shared/utils/cn";
+import { AnimatePresence,motion } from "framer-motion";
+import {
+ArrowRight,
+BrainCircuit,
+Briefcase,
+ChevronRight,
+FileText,
+Search,
+Sparkles,
+} from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useMemo,useState } from "react";
 
-import { StepIndicator } from "@/features/interview/components/StepIndicator";
+import { ConfirmationStep } from "@/features/interview/components/ConfirmationStep";
 import { CVCard } from "@/features/interview/components/CVCard";
 import { InterviewJobCard } from "@/features/interview/components/InterviewJobCard";
-import { ConfirmationStep } from "@/features/interview/components/ConfirmationStep";
+import { StepIndicator } from "@/features/interview/components/StepIndicator";
 
 export default function InterviewSetupPage() {
     const router = useRouter();

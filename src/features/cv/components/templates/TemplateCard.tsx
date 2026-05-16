@@ -1,14 +1,14 @@
 "use client";
 
-import * as React from "react";
-import { motion } from "framer-motion";
-import { Eye, Check, Star, Zap } from "lucide-react";
-import { cn } from "@/shared/utils/cn";
-import { CVTemplate } from "@/features/cv/types/template-types";
 import { TEMPLATE_COMPONENTS } from "@/features/cv/components/cv-templates";
 import {
-    getMockDataForTemplate
+getMockDataForTemplate
 } from "@/features/cv/data/mock-data";
+import { CVTemplate } from "@/features/cv/types/template-types";
+import { cn } from "@/shared/utils/cn";
+import { motion } from "framer-motion";
+import { Check,Eye,Star,Zap } from "lucide-react";
+import * as React from "react";
 
 interface TemplateCardProps {
     template: CVTemplate;

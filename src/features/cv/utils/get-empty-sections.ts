@@ -1,4 +1,4 @@
-import type { CVData, CVSection } from '../types/types';
+import type { CVData,CVSection } from '../types/types';
 
 /**
  * Returns an array of CVSection ids whose data is empty.

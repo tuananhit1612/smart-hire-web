@@ -9,22 +9,21 @@
  * ═════════════════════════════════════════════════════════
  */
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-    X,
-    ArrowRight,
-    MessageSquare,
-    Calendar,
-    Clock,
-    Star,
-    CheckCircle2,
-    AlertTriangle,
-    User,
-    Video,
-    MapPin,
-} from "lucide-react";
 import { cn } from "@/shared/utils/cn";
+import { AnimatePresence,motion } from "framer-motion";
+import {
+AlertTriangle,
+ArrowRight,
+Calendar,
+CheckCircle2,
+MapPin,
+MessageSquare,
+Star,
+User,
+Video,
+X
+} from "lucide-react";
+import { useState } from "react";
 
 // ─── Types ───────────────────────────────────────────
 type StageId = "applied" | "interview" | "hired" | "rejected";

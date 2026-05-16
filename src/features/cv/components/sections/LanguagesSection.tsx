@@ -1,13 +1,13 @@
 "use client";
 
-import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Globe, Plus, X, ChevronDown, Check } from "lucide-react";
-import { Input } from "@/shared/components/ui/input";
+import { cn } from "@/lib/utils";
 import { Button } from "@/shared/components/ui/button";
 import { useConfirmDialog } from "@/shared/components/ui/confirm-dialog";
+import { Input } from "@/shared/components/ui/input";
+import { AnimatePresence,motion } from "framer-motion";
+import { Check,ChevronDown,Globe,Plus,X } from "lucide-react";
+import * as React from "react";
 import { Language } from "../../types/types";
-import { cn } from "@/lib/utils";
 
 interface LanguagesSectionProps {
     data: Language[];

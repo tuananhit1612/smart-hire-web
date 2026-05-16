@@ -3,14 +3,12 @@
 
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
-import { 
-    Search, 
-    Filter, 
-    ArrowDownWideNarrow, 
-    ArrowUpWideNarrow,
-    Sparkles
+import {
+ArrowDownWideNarrow,
+Filter,
+Search,
+Sparkles
 } from "lucide-react";
-import { useState } from "react";
 
 interface ApplicantsFilterProps {
     searchQuery: string;

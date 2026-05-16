@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, ChevronUp, Star, TrendingUp } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
-import type { AnswerEvaluation, RubricScore } from "../types/interview-ui-types";
+import { AnimatePresence,motion } from "framer-motion";
+import { ChevronDown,ChevronUp,Star,TrendingUp } from "lucide-react";
+import { useState } from "react";
+import type { AnswerEvaluation,RubricScore } from "../types/interview-ui-types";
 import { CATEGORY_LABELS } from "../types/interview-ui-types";
 
 // ─── Rubric Score Bar ────────────────────────────────

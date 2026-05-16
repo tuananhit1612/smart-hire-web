@@ -1,4 +1,4 @@
-import { ApplicationStatus, ApplicationStage } from "@/shared/types/application";
+import { ApplicationStage } from "@/shared/types/application";
 
 export interface AIAnalysis {
     readonly matchScore: number;

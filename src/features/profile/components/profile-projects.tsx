@@ -1,5 +1,5 @@
+import { FolderGit2,Link as LinkIcon } from "lucide-react";
 import { Project } from "../types/profile";
-import { FolderGit2, Link as LinkIcon } from "lucide-react";
 
 interface ProfileProjectsProps {
   projects: Project[];

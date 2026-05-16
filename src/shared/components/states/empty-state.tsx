@@ -9,10 +9,10 @@
  * ═══════════════════════════════════════════════════════════
  */
 
-import { type ReactNode } from "react";
-import { motion } from "framer-motion";
-import { Inbox, type LucideIcon } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
+import { motion } from "framer-motion";
+import { Inbox,type LucideIcon } from "lucide-react";
+import { type ReactNode } from "react";
 
 // ─── Props ───────────────────────────────────────────────
 

@@ -1,10 +1,10 @@
 "use client";
 
-import * as React from "react";
-import { motion } from "framer-motion";
-import { Sparkles, Pencil } from "lucide-react";
-import { Skill } from "../types/profile";
 import { Button } from "@/shared/components/ui/button";
+import { motion } from "framer-motion";
+import { Pencil,Sparkles } from "lucide-react";
+import * as React from "react";
+import { Skill } from "../types/profile";
 import { ProfileEditSkills } from "./profile-edit-skills";
 
 interface ProfileSkillsProps {

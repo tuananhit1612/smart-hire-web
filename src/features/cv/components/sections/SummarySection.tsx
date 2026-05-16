@@ -1,9 +1,8 @@
 "use client";
 
-import * as React from "react";
-import { motion } from "framer-motion";
-import { FileText, Sparkles } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
+import { motion } from "framer-motion";
+import { FileText,Sparkles } from "lucide-react";
 
 interface SummarySectionProps {
     data: string;

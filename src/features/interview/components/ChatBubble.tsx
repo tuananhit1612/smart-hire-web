@@ -1,9 +1,9 @@
 "use client";
 
+import { cn } from "@/shared/utils/cn";
 import { motion } from "framer-motion";
 import { BrainCircuit } from "lucide-react";
-import { cn } from "@/shared/utils/cn";
-import type { ChatMessage, QuestionCategory } from "../types/interview-ui-types";
+import type { ChatMessage } from "../types/interview-ui-types";
 import { CATEGORY_LABELS } from "../types/interview-ui-types";
 
 // ─── Typing Indicator ────────────────────────────────

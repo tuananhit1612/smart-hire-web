@@ -1,10 +1,9 @@
 "use client";
 
-import * as React from "react";
-import { motion } from "framer-motion";
-import { LayoutGrid, Award, Sparkles, Minus, ScanLine } from "lucide-react";
+import { STYLES,TemplateStyle } from "@/features/cv/types/template-types";
 import { cn } from "@/shared/utils/cn";
-import { TemplateStyle, STYLES } from "@/features/cv/types/template-types";
+import { motion } from "framer-motion";
+import { Award,LayoutGrid,Minus,ScanLine,Sparkles } from "lucide-react";
 
 const iconMap = {
     LayoutGrid,

@@ -7,29 +7,28 @@
  * ═══════════════════════════════════════════════════════════
  */
 
-import { create } from "zustand";
-import { CandidateProfile } from "@/features/profile/types/profile";
 import { profileApi } from "@/features/profile/api/profile-api";
-import { useAuth } from "@/features/auth/hooks/use-auth";
-import { apiClient } from "@/shared/lib/api-client";
+import { CandidateProfile } from "@/features/profile/types/profile";
 import type {
-  EducationPayload,
-  ExperiencePayload,
-  ProjectPayload,
-  SkillPayload,
+EducationPayload,
+ExperiencePayload,
+ProjectPayload,
+SkillPayload,
 } from "@/features/profile/types/profile-api-types";
 import {
-  mapProfileFromApi,
-  mapEducationFromApi,
-  mapExperienceFromApi,
-  mapProjectFromApi,
-  mapSkillFromApi,
-  mapProfileToApi,
-  mapEducationToApi,
-  mapExperienceToApi,
-  mapProjectToApi,
-  mapSkillToApi,
+mapEducationFromApi,
+mapEducationToApi,
+mapExperienceFromApi,
+mapExperienceToApi,
+mapProfileFromApi,
+mapProfileToApi,
+mapProjectFromApi,
+mapProjectToApi,
+mapSkillFromApi,
+mapSkillToApi,
 } from "@/features/profile/utils/profile-mapper";
+import { apiClient } from "@/shared/lib/api-client";
+import { create } from "zustand";
 
 interface ProfileStore {
   profile: CandidateProfile;
@@ -131,7 +130,7 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
       const projects = results[2].status === "fulfilled" ? (results[2].value.data.data ?? []).map(mapProjectFromApi) : [];
       const skills = results[3].status === "fulfilled" ? (results[3].value.data.data ?? []).map(mapSkillFromApi) : [];
 
-      set((state) => ({
+      set((_state) => ({
         profile: {
           ...emptyProfile,
           ...profileData,
@@ -175,15 +174,15 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
         // Has profile — try update, fallback to create if 404
         try {
           res = await profileApi.updateProfile(payload);
-        } catch (updateErr: any) {
-          if (updateErr?.status === 404) {
+        } catch (updateErr: unknown) {
+          if (updateErr instanceof Error && "status" in updateErr && updateErr.status === 404) {
             res = await profileApi.createProfile(payload);
           } else {
             throw updateErr;
           }
         }
       }
-      const updatedProfile = mapProfileFromApi(res.data.data);
+      const _updatedProfile = mapProfileFromApi(res.data.data);
 
       // 3. Sync Educations
       const eduPromises = profile.educations.map(async (edu) => {

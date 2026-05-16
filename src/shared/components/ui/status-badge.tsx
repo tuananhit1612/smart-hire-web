@@ -68,5 +68,5 @@ export function StatusBadge({ label, variant = "neutral", showDot = false, size 
     );
 }
 
-export { getScoreColor, STATUS_COLORS, type StatusVariant };
+export { getScoreColor,STATUS_COLORS,type StatusVariant };
 

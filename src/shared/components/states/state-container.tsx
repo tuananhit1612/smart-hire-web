@@ -14,11 +14,11 @@
  * ═══════════════════════════════════════════════════════════
  */
 
+import { Inbox,type LucideIcon } from "lucide-react";
 import { type ReactNode } from "react";
-import { Inbox, type LucideIcon } from "lucide-react";
-import { LoadingState, type LoadingStateProps } from "./loading-state";
-import { ErrorState, type ErrorStateProps } from "./error-state";
-import { EmptyState, type EmptyStateProps } from "./empty-state";
+import { EmptyState } from "./empty-state";
+import { ErrorState,type ErrorStateProps } from "./error-state";
+import { LoadingState,type LoadingStateProps } from "./loading-state";
 
 // ─── Props ───────────────────────────────────────────────
 

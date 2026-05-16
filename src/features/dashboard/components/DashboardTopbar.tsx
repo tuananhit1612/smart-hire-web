@@ -1,17 +1,17 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useEffect,useRef,useState } from "react";
 
-import { usePathname } from "next/navigation";
-import { Menu, Bell, Moon, Sun, Search, Home, User, Settings as SettingsIcon, LogOut } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Bell,Home,LogOut,Menu,Moon,Search,Settings as SettingsIcon,Sun,User } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { usePathname } from "next/navigation";
 
 // ... giữ nguyên phần đầu, thêm import
 import { useAuth } from "@/features/auth/hooks/use-auth";
-import { useRouter } from "next/navigation";
 import { resolveAvatarUrl } from "@/shared/utils/resolve-avatar-url";
+import { useRouter } from "next/navigation";
 
 interface Props {
     onToggleSidebar: () => void;

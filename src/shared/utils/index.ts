@@ -2,13 +2,9 @@
  * Shared utilities — barrel export
  */
 export { cn } from "./cn";
-export { fmtNumber, fmtPercent, fmtCompact } from "./format";
 export {
-  validateFile,
-  formatFileSize,
-  getFileExtension,
-  AVATAR_RULES,
-  CV_RULES,
-  type FileValidationRule,
-  type FileValidationResult,
+AVATAR_RULES,
+CV_RULES,formatFileSize,
+getFileExtension,validateFile,type FileValidationResult,type FileValidationRule
 } from "./file-validation";
+export { fmtCompact,fmtNumber,fmtPercent } from "./format";

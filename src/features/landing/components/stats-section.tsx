@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
-import { motion, useInView } from "framer-motion";
-import { Users, Building2, UserCircle, Clock, ArrowUpRight } from "lucide-react";
+import { motion,useInView } from "framer-motion";
+import { ArrowUpRight,Building2,Clock,type LucideIcon,UserCircle,Users } from "lucide-react";
+import { useEffect,useRef,useState } from "react";
 
 // CountUp Hook for Number Animation
 const useCountUp = (end: number, duration: number = 2) => {
@@ -39,7 +39,7 @@ interface BentoCardProps {
     suffix: string;
     label: string;
     description: string;
-    icon: any;
+    icon: LucideIcon;
     colorClass: string;
     bgHoverClass: string;
     textHoverClass: string;

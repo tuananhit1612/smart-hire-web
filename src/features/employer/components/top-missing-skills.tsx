@@ -1,15 +1,15 @@
 "use client";
 
+import { cn } from "@/shared/utils/cn";
 import { motion } from "framer-motion";
 import {
-    AlertTriangle,
-    Puzzle,
-    Users,
-    TrendingUp,
-    BookOpen,
-    ExternalLink,
+AlertTriangle,
+BookOpen,
+ExternalLink,
+Puzzle,
+TrendingUp,
+Users,
 } from "lucide-react";
-import { cn } from "@/shared/utils/cn";
 
 import type { MissingSkill } from "@/features/employer/api/dashboard-api";
 

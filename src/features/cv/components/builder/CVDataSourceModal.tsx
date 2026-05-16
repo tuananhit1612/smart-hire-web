@@ -1,18 +1,23 @@
 "use client";
 
-import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-    X, PenLine, User, Upload, ArrowRight, CheckCircle2,
-    Loader2, AlertCircle
-} from "lucide-react";
-import { useCVBuilderStore } from "@/features/cv/stores/cv-builder-store";
+import { getErrorMessage } from "@/shared/lib/api-error";
 import { getMockDataForTemplate } from "@/features/cv/data/mock-data";
-import { useProfileStore } from "@/features/profile/stores/profile-store";
-import { mapProfileToCVData } from "@/features/cv/utils/profile-to-cv-mapper";
+import { useCVBuilderStore } from "@/features/cv/stores/cv-builder-store";
 import { mapOnboardingCvToCVData } from "@/features/cv/utils/onboarding-cv-to-cv-mapper";
+import { mapProfileToCVData } from "@/features/cv/utils/profile-to-cv-mapper";
 import { onboardingApi } from "@/features/onboarding/api/onboarding-api";
-import { validateFile, CV_RULES } from "@/shared/utils/file-validation";
+import { useProfileStore } from "@/features/profile/stores/profile-store";
+import { CV_RULES,validateFile } from "@/shared/utils/file-validation";
+import { AnimatePresence,motion } from "framer-motion";
+import {
+AlertCircle,
+ArrowRight,CheckCircle2,
+PenLine,
+Upload,
+User,
+X
+} from "lucide-react";
+import * as React from "react";
 
 interface CVDataSourceModalProps {
     isOpen: boolean;
@@ -55,7 +60,7 @@ const DATA_SOURCES = [
 
 export function CVDataSourceModal({ isOpen, onClose }: CVDataSourceModalProps) {
     const { selectedTemplateId, setCvData } = useCVBuilderStore();
-    const { profile, fetchProfile } = useProfileStore();
+    const { profile: _profile, fetchProfile } = useProfileStore();
     const [selectedSource, setSelectedSource] = React.useState<SourceId | null>(null);
     const [phase, setPhase] = React.useState<ModalPhase>("select");
     const [uploadProgress, setUploadProgress] = React.useState(0);
@@ -204,14 +209,14 @@ export function CVDataSourceModal({ isOpen, onClose }: CVDataSourceModalProps) {
                 setPhase("error");
                 setErrorMsg(parseRes.message || "AI không thể phân tích file này. Vui lòng thử file khác.");
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error("[CVDataSource] Upload/parse error:", error);
             if (progressIntervalRef.current) {
                 clearInterval(progressIntervalRef.current);
                 progressIntervalRef.current = null;
             }
             setPhase("error");
-            const msg = error?.response?.data?.message || error?.message || "Đã xảy ra lỗi khi tải lên. Vui lòng thử lại.";
+            const msg = getErrorMessage(error, "Đã xảy ra lỗi khi tải lên. Vui lòng thử lại.");
             setErrorMsg(msg);
         }
     };

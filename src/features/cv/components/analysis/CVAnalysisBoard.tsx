@@ -1,29 +1,36 @@
 "use client";
 
-import React, { useEffect, useState, useRef, useMemo, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { AnimatePresence,motion } from "framer-motion";
 import {
-  Loader2, ChevronDown, X, ArrowRight, RotateCcw,
-  Save, Download, Check, ChevronRight,
+ArrowRight,
+Check,
+ChevronDown,
+ChevronRight,
+Download,
+Loader2,
+RotateCcw,
+Save,
+X,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useCallback,useEffect,useMemo,useRef,useState } from "react";
 import {
-  cvAiApi,
-  type AiCvReviewResponse,
-  type ReviewSection,
-  type ReviewItem,
-  type TopIssue,
-  type OptimizeResponse,
-  type DataCompleteness,
+cvAiApi,
+type AiCvReviewResponse,
+type DataCompleteness,
+type OptimizeResponse,
+type ReviewItem,
+type ReviewSection,
+type TopIssue,
 } from "../../api/cv-ai-api";
-import { motion, AnimatePresence } from "framer-motion";
 
 
 // CV Builder imports
-import { TEMPLATE_COMPONENTS, DefaultTemplate } from "../cv-templates";
-import { CVDesignPreviewWrapper } from "../CVDesignPreviewWrapper";
-import { cvApi, type CvBuilderApiResponse } from "../../api/cv-api";
-import { DEFAULT_DESIGN_TOKENS } from "../../types/types";
+import { cvApi } from "../../api/cv-api";
 import type { CVData } from "../../types/types";
+import { DEFAULT_DESIGN_TOKENS } from "../../types/types";
+import { DefaultTemplate,TEMPLATE_COMPONENTS } from "../cv-templates";
+import { CVDesignPreviewWrapper } from "../CVDesignPreviewWrapper";
 
 /* ═══════════════════════════════════════════════════════════════
    HELPERS
@@ -399,7 +406,7 @@ export function CVAnalysisBoard({ cvFileId }: CVAnalysisBoardProps) {
 
   // CV data fetched from API by cvFileId (NOT from local store)
   const [cvData, setCvData] = useState<CVData | null>(null);
-  const [originalCvData, setOriginalCvData] = useState<CVData | null>(null);
+  const [_originalCvData, setOriginalCvData] = useState<CVData | null>(null);
   const [templateId, setTemplateId] = useState<string | null>(null);
   const [cvDataLoading, setCvDataLoading] = useState(true);
   const designTokens = DEFAULT_DESIGN_TOKENS;
@@ -521,8 +528,6 @@ export function CVAnalysisBoard({ cvFileId }: CVAnalysisBoardProps) {
 
     const normalizedSearch = text.toLowerCase().trim().substring(0, 60);
     const walker = document.createTreeWalker(cvPreviewRef.current, NodeFilter.SHOW_TEXT, null);
-    let found = false;
-
     while (walker.nextNode()) {
       const node = walker.currentNode;
       const nodeText = (node.textContent || "").toLowerCase();
@@ -547,7 +552,6 @@ export function CVAnalysisBoard({ cvFileId }: CVAnalysisBoardProps) {
         const scrollOffset = elTop - containerTop - scrollContainer.clientHeight / 3;
         scrollContainer.scrollBy({ top: scrollOffset, behavior: "smooth" });
 
-        found = true;
         break;
       }
     }
@@ -582,7 +586,7 @@ export function CVAnalysisBoard({ cvFileId }: CVAnalysisBoardProps) {
   const normalize = useCallback((s: string) =>
     s.replace(/\s+/g, " ").trim().toLowerCase(), []);
 
-  const fuzzyReplaceInObj = useCallback((obj: any, originalText: string, replacementText: string): boolean => {
+  const fuzzyReplaceInObj = useCallback((obj: unknown, originalText: string, replacementText: string): boolean => {
     if (typeof obj === "string") return false;
     const normOriginal = normalize(originalText);
     const prefix = normOriginal.length > 40 ? normOriginal.substring(0, 40) : null;
@@ -609,23 +613,24 @@ export function CVAnalysisBoard({ cvFileId }: CVAnalysisBoardProps) {
       return false;
     }
     if (typeof obj === "object" && obj !== null) {
-      for (const key of Object.keys(obj)) {
-        if (typeof obj[key] === "string") {
-          if (obj[key].includes(originalText)) {
-            obj[key] = obj[key].replace(originalText, replacementText);
+      const record = obj as Record<string, unknown>;
+      for (const key of Object.keys(record)) {
+        if (typeof record[key] === "string") {
+          if (record[key].includes(originalText)) {
+            record[key] = record[key].replace(originalText, replacementText);
             return true;
           }
-          const normValue = normalize(obj[key]);
+          const normValue = normalize(record[key]);
           if (normValue.includes(normOriginal)) {
-            obj[key] = replacementText;
+            record[key] = replacementText;
             return true;
           }
           if (prefix && normValue.includes(prefix)) {
-            obj[key] = replacementText;
+            record[key] = replacementText;
             return true;
           }
         }
-        if (fuzzyReplaceInObj(obj[key], originalText, replacementText)) return true;
+        if (fuzzyReplaceInObj(record[key], originalText, replacementText)) return true;
       }
     }
     return false;

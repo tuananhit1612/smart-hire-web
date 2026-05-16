@@ -1,8 +1,8 @@
 "use client";
 
+import { AnimatePresence,motion } from "framer-motion";
+import { Check,Code2,Plus,Sparkles,X,Zap } from "lucide-react";
 import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Code2, Plus, X, Sparkles, Zap, Check } from "lucide-react";
 
 interface CompanyTechStackProps {
     techStack: string[];

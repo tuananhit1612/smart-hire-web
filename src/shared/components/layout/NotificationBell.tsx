@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { Bell } from "lucide-react";
-import { cn } from "@/shared/utils/cn";
-import { useNotificationStore } from "@/features/notifications/stores/notification-store";
 import { NotificationPopover } from "@/features/notifications/components/NotificationPopover";
+import { useNotificationStore } from "@/features/notifications/stores/notification-store";
+import { cn } from "@/shared/utils/cn";
+import { Bell } from "lucide-react";
+import { useState } from "react";
 
 /**
  * Notification bell icon with unread count badge and popover.

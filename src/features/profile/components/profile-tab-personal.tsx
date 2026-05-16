@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useEffect,useState } from "react";
 import { useProfileStore } from "../stores/profile-store";
-import { FormField, FormSelect, SaveButton, SectionCard } from "./profile-form-fields";
+import { FormField,FormSelect,SaveButton,SectionCard } from "./profile-form-fields";
 
 const stagger = {
     hidden: {},

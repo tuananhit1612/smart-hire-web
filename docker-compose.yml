@@ -2,42 +2,40 @@ version: '3.8'
 
 services:
   database:
-    image: postgres:15-alpine
+    image: mysql:8.0
     container_name: smarthire_db
     environment:
-      POSTGRES_USER: ${DB_USER:-postgres}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
-      POSTGRES_DB: ${DB_NAME:-smarthire}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required}
+      MYSQL_DATABASE: ${DB_NAME:-smart_hire}
     ports:
-      - "5432:5432"
+      - "3306:3306"
     volumes:
-      - smarthire_pgdata:/var/lib/postgresql/data
+      - smarthire_mysql_data:/var/lib/mysql
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$${MYSQL_ROOT_PASSWORD}"]
       interval: 10s
       timeout: 5s
       retries: 5
 
   backend:
     build:
-      context: ./smarthire-app-backend
+      context: ../smarthire-app-backend
       dockerfile: Dockerfile
-      args:
-        - PROFILE=prod
     container_name: smarthire_backend
     ports:
       - "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - DB_HOST=database
-      - DB_PORT=5432
-      - DB_NAME=${DB_NAME:-smarthire}
-      - DB_USER=${DB_USER:-postgres}
-      - DB_PASSWORD=${DB_PASSWORD:-postgres}
+      - DB_PORT=3306
+      - DB_NAME=${DB_NAME:-smart_hire}
+      - DB_USERNAME=${DB_USERNAME:-root}
+      - DB_PASSWORD=${DB_PASSWORD:?DB_PASSWORD is required}
       # The rest of the keys (JWT, Email, Gemini, GitHub) should be passed via a .env file or host environment
-      - JWT_SECRET=${JWT_SECRET}
-      - APP_FRONTEND_URL=${FRONTEND_URL:-http://localhost:3000}
+      - JWT_SECRET=${JWT_SECRET:?JWT_SECRET is required}
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:3000}
+      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS:-http://localhost:3000}
     depends_on:
       database:
         condition: service_healthy
@@ -45,7 +43,7 @@ services:
 
   frontend:
     build:
-      context: ./smarthire-app
+      context: .
       dockerfile: Dockerfile
       args:
         # In build phase, the frontend needs to know where the API is so it can bake it into the client logic
@@ -62,4 +60,4 @@ services:
     restart: unless-stopped
 
 volumes:
-  smarthire_pgdata:
+  smarthire_mysql_data:

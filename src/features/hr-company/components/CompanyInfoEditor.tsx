@@ -1,25 +1,24 @@
 "use client";
 
-import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence,motion } from "framer-motion";
 import {
-    Building2,
-    MapPin,
-    Globe,
-    Mail,
-    Phone,
-    Calendar,
-    Users,
-    Pencil,
-    Check,
-    X,
-    ChevronDown,
-    Sparkles,
-    Briefcase,
-    Zap,
+Briefcase,
+Building2,
+Calendar,
+Check,
+ChevronDown,
+Globe,
+Mail,
+MapPin,
+Pencil,
+Phone,
+Sparkles,
+Users,
+X,
+Zap,
 } from "lucide-react";
-import { Company, COMPANY_SIZES, INDUSTRIES } from "../types/company";
-import { Button } from "@/shared/components/ui/button";
+import * as React from "react";
+import { Company,COMPANY_SIZES,INDUSTRIES } from "../types/company";
 
 interface CompanyInfoEditorProps {
     company: Company;

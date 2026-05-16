@@ -1,5 +1,5 @@
-import { Job, JobLevel } from "../types/job";
 import { CandidateProfile } from "@/features/profile/types/profile";
+import { Job,JobLevel } from "../types/job";
 
 export interface JobMatchResult {
   job: Job;

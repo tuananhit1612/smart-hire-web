@@ -1,12 +1,12 @@
 "use client";
 
-import * as React from "react";
-import { motion } from "framer-motion";
-import { User, Mail, Phone, MapPin, Linkedin, Globe, Camera, AlertCircle, Briefcase, Plus, Trash2, Github, Facebook, Instagram, Twitter, Dribbble } from "lucide-react";
-import { Input } from "@/shared/components/ui/input";
-import { Button } from "@/shared/components/ui/button";
-import { PersonalInfo } from "../../types/types";
 import { cn } from "@/lib/utils";
+import { Button } from "@/shared/components/ui/button";
+import { Input } from "@/shared/components/ui/input";
+import { motion } from "framer-motion";
+import { AlertCircle,Briefcase,Camera,Dribbble,Facebook,Github,Globe,Instagram,Linkedin,Mail,MapPin,Phone,Plus,Trash2,Twitter,User } from "lucide-react";
+import * as React from "react";
+import { PersonalInfo, type SocialLink } from "../../types/types";
 
 interface PersonalInfoSectionProps {
     data: PersonalInfo;
@@ -28,7 +28,7 @@ const validatePhone = (phone: string): string | null => {
     return null;
 };
 
-const validateUrl = (url: string): string | null => {
+const _validateUrl = (url: string): string | null => {
     if (!url) return null;
     try {
         const fullUrl = url.startsWith("http") ? url : `https://${url}`;
@@ -217,7 +217,7 @@ export function PersonalInfoSection({ data, onChange }: PersonalInfoSectionProps
     const [touched, setTouched] = React.useState<Record<string, boolean>>({});
     const [errors, setErrors] = React.useState<Record<string, string | null>>({});
 
-    const handleChange = (field: keyof PersonalInfo, value: any) => {
+    const handleChange = (field: keyof PersonalInfo, value: unknown) => {
         onChange({ ...data, [field]: value });
     };
 
@@ -383,7 +383,7 @@ export function PersonalInfoSection({ data, onChange }: PersonalInfoSectionProps
                                         value={social.network}
                                         onChange={(value) => {
                                             const newSocials = [...(data.socials || [])];
-                                            newSocials[index].network = value as any;
+                                            newSocials[index].network = value as SocialLink["network"];
                                             handleChange('socials', newSocials);
                                         }}
                                     />

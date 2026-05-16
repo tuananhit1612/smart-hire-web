@@ -1,17 +1,35 @@
 "use client";
 
-import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence,motion } from "framer-motion";
 import {
-    X, User, Mail, Phone, Briefcase, DollarSign, Star, Clock,
-    FileText, CheckCircle2, XCircle, Eye, Building2, Sparkles,
-    Award, TrendingUp, Send, Download, Search, ChevronLeft,
-    UserCheck, UserX, GraduationCap, FolderKanban, Zap,
-    MapPin, Globe, ArrowRight, Heart, MessageCircle,
+Award,
+Briefcase,
+Building2,
+CheckCircle2,
+ChevronLeft,
+Clock,
+DollarSign,
+Download,
+FileText,
+FolderKanban,
+GraduationCap,
+Mail,
+MapPin,
+Phone,
+Search,
+Sparkles,
+Star,
+TrendingUp,
+User,
+UserCheck,UserX,
+X,
+XCircle,
+Zap
 } from "lucide-react";
-import { Job } from "../types/job";
-import { Applicant, APPLICANT_STATUSES, getApplicantsByJobId } from "../data/mock-applicants";
+import * as React from "react";
 import type { CVData } from "../../cv/types/types";
+import { Applicant,APPLICANT_STATUSES,getApplicantsByJobId } from "../data/mock-applicants";
+import { Job } from "../types/job";
 
 // ─────────────────────────────────────────────────
 // Compact Applicant Card (Left Panel)
@@ -139,7 +157,7 @@ function ApplicantRow({
 // ─────────────────────────────────────────────────
 // Inline CV Viewer (Right Panel) — DESIGN_STANDARD colors
 // ─────────────────────────────────────────────────
-function InlineCVViewer({ cvData, applicant }: { cvData: CVData; applicant: Applicant }) {
+function InlineCVViewer({ cvData, applicant: _applicant }: { cvData: CVData; applicant: Applicant }) {
     const { personalInfo, summary, experience, education, skills, projects } = cvData;
 
     return (

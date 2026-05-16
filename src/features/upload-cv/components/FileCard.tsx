@@ -1,16 +1,16 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import {
-    DocumentIcon,
-    XMarkIcon,
-    CheckCircleIcon,
-    ExclamationCircleIcon,
-    ArrowPathIcon,
+ArrowPathIcon,
+CheckCircleIcon,
+DocumentIcon,
+ExclamationCircleIcon,
+XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { DocumentTextIcon } from '@heroicons/react/24/solid';
+import { motion } from 'framer-motion';
 import { CVFile } from '../types';
-import { formatFileSize, isPDF, isWord } from '../utils/fileValidation';
+import { formatFileSize } from '../utils/fileValidation';
 
 interface FileCardProps {
     file: CVFile;

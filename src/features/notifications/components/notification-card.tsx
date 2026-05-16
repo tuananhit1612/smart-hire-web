@@ -1,15 +1,15 @@
 "use client";
 
+import { cn } from "@/shared/utils/cn";
 import { motion } from "framer-motion";
 import {
-    Briefcase,
-    Calendar,
-    BrainCircuit,
-    Sparkles,
-    Bell,
-    ChevronRight,
+Bell,
+BrainCircuit,
+Briefcase,
+Calendar,
+ChevronRight,
+Sparkles,
 } from "lucide-react";
-import { cn } from "@/shared/utils/cn";
 import { NotificationDto } from "../api/notification-api";
 
 const ICON_CONFIG: Record<string, { icon: typeof Bell; color: string; bg: string }> = {

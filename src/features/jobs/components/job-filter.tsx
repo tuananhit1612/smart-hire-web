@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, MapPin, X } from "lucide-react";
+import { MapPin,Search,X } from "lucide-react";
 
 interface JobFilterProps {
   searchQuery: string;

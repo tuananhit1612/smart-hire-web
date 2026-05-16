@@ -1,26 +1,27 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { motion } from "framer-motion";
+import {
+ArrowLeft,
+ArrowRight,
+Eye,
+EyeOff,
+Lock,
+Mail,
+User,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-    User,
-    Mail,
-    Lock,
-    ArrowLeft,
-    ArrowRight,
-    Eye,
-    EyeOff,
-} from "lucide-react";
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 import { Button } from "@/shared/components/ui/button";
+import { getErrorMessage } from "@/shared/lib/api-error";
 import { Input } from "@/shared/components/ui/input";
 import { useToastHelpers } from "@/shared/components/ui/toast";
 import { useAuth } from "../hooks/use-auth";
-import { registerSchema, type RegisterSchema } from "../schemas/register-schema";
+import { registerSchema,type RegisterSchema } from "../schemas/register-schema";
 import type { UserRole } from "../types/auth-types";
 interface RegisterFormProps {
     role: UserRole;
@@ -62,8 +63,8 @@ export function RegisterForm({ role, onBack }: RegisterFormProps) {
                 `Tài khoản ${roleName} đã được tạo. Vui lòng đăng nhập.`
             );
             router.push("/login");
-        } catch (error: any) {
-            const message = error instanceof Error ? error.message : error?.message || "Vui lòng thử lại sau.";
+        } catch (error: unknown) {
+            const message = getErrorMessage(error, "Vui lòng thử lại sau.");
             toast.error("Đăng ký thất bại", message);
         } finally {
             setIsLoading(false);

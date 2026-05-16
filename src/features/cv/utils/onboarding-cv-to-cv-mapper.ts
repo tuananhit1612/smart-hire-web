@@ -6,9 +6,9 @@
  * ═══════════════════════════════════════════════════════════
  */
 
-import type { OnboardingCvData } from "@/features/onboarding/api/onboarding-api";
 import type { CVData } from "@/features/cv/types/types";
 import { DEFAULT_CV_DATA } from "@/features/cv/types/types";
+import type { OnboardingCvData } from "@/features/onboarding/api/onboarding-api";
 
 export function mapOnboardingCvToCVData(
     data: OnboardingCvData | null | undefined

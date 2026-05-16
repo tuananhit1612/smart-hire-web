@@ -6,12 +6,10 @@
  * ═══════════════════════════════════════════════════════════
  */
 
-import type { JobType, JobLevel, JobStatus, SkillType } from "@/shared/types/enums";
+import type { JobLevel,JobStatus,JobType,SkillType } from "@/shared/types/enums";
 
 // Re-export for convenience
-export type { JobType as HrJobType };
-export type { JobLevel as HrJobLevel };
-export type { JobStatus as HrJobStatus };
+export type { JobLevel as HrJobLevel,JobStatus as HrJobStatus,JobType as HrJobType };
 
 /** Mirrors JobSkillDto.java */
 export interface JobSkillDto {

@@ -1,12 +1,12 @@
 "use client";
 
-import * as React from "react";
-import { AnimatePresence } from "framer-motion";
+import { CVSection,CV_SECTIONS } from "@/features/cv/types/types";
 import { cn } from "@/shared/utils/cn";
-import { CVSection, CV_SECTIONS } from "@/features/cv/types/types";
+import { AnimatePresence } from "framer-motion";
+import * as React from "react";
 import {
-    CVSectionToolbar,
-    type SectionAction,
+CVSectionToolbar,
+type SectionAction,
 } from "./CVSectionToolbar";
 
 interface CVSectionWrapperProps {
