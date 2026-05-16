@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   database:
     image: mysql:8.0
@@ -49,7 +47,8 @@ services:
         # In build phase, the frontend needs to know where the API is so it can bake it into the client logic
         # For production deployment with a domain (e.g. smarthire.com), this would be https://api.smarthire.com/api/v1
         - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8080/api/v1}
-        - NEXT_PUBLIC_GITHUB_CLIENT_ID=${NEXT_PUBLIC_GITHUB_CLIENT_ID}
+        - NEXT_PUBLIC_GITHUB_CLIENT_ID=${NEXT_PUBLIC_GITHUB_CLIENT_ID:-}
+        - NEXT_PUBLIC_BASE_PATH=${NEXT_PUBLIC_BASE_PATH:-}
     container_name: smarthire_frontend
     ports:
       - "3000:3000"

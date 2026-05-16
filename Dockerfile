@@ -1,6 +1,4 @@
-# ═══════════════════════════════════════════════════════════
-#  SmartHire Frontend — Dockerfile (Multi-stage + Standalone)
-# ═══════════════════════════════════════════════════════════
+# SmartHire Frontend Dockerfile (multi-stage + standalone)
 
 # Stage 1: Install dependencies
 FROM node:20-alpine AS deps
@@ -22,8 +20,10 @@ COPY . .
 # Pass build-time variables via ARG (defined in docker-compose.yml)
 ARG NEXT_PUBLIC_API_URL
 ARG NEXT_PUBLIC_GITHUB_CLIENT_ID
+ARG NEXT_PUBLIC_BASE_PATH
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_GITHUB_CLIENT_ID=$NEXT_PUBLIC_GITHUB_CLIENT_ID
+ENV NEXT_PUBLIC_BASE_PATH=$NEXT_PUBLIC_BASE_PATH
 
 # Disable Next.js telemetry
 ENV NEXT_TELEMETRY_DISABLED=1

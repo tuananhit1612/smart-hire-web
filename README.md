@@ -163,6 +163,7 @@ Ensure these are properly set in your `.env` physically or logically injected in
 | :--- | :--- | :--- |
 | `NEXT_PUBLIC_API_URL` | The external URL pointing to the Backend API | `http://localhost:8080` |
 | `NEXT_PUBLIC_GITHUB_CLIENT_ID`| Required to trigger the OAuth2 flow from the client | *Your GitHub App ID* |
+| `NEXT_PUBLIC_BASE_PATH` | Optional subpath for static/subpath hosting. Leave empty for normal domain or Docker deployments. | empty |
 | `NEXT_TELEMETRY_DISABLED` | Privacy control for Next.js metrics | `1` |
 
 ---

@@ -1,7 +1,14 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from "next";
+
+const configuredBasePath = process.env.NEXT_PUBLIC_BASE_PATH?.trim();
+const basePath =
+  configuredBasePath && configuredBasePath !== "/"
+    ? configuredBasePath.replace(/\/$/, "")
+    : undefined;
+
+const nextConfig: NextConfig = {
   output: "standalone",
-  basePath: "/smart-hire-web",
+  ...(basePath ? { basePath } : {}),
   images: {
     unoptimized: true,
     remotePatterns: [
