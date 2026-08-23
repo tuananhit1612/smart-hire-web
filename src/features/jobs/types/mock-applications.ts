@@ -1,5 +1,5 @@
+import { ApplicationStatus } from "@/shared/types/application";
 import { Job } from "./job";
-import { ApplicationStatus, ApplicationStage } from "@/shared/types/application";
 
 export interface ApplicationTimelineEvent {
   readonly id: string;

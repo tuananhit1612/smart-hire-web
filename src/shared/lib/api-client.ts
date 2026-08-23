@@ -11,9 +11,9 @@
  * ═══════════════════════════════════════════════════════════
  */
 
-import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios";
-import { ApiError } from "./api-error";
 import { tokenStorage } from "@/features/auth/lib/token-storage";
+import axios,{ type AxiosError,type InternalAxiosRequestConfig } from "axios";
+import { ApiError } from "./api-error";
 
 // ─── Constants ───────────────────────────────────────────
 const SESSION_STORAGE_KEY = "smarthire-session";

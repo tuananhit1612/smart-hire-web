@@ -1,12 +1,12 @@
 "use client";
 
+import { useMyInterviews } from "@/features/interview/hooks/useInterviewService";
 import { BackButton } from "@/shared/components/ui/back-button";
+import { Button } from "@/shared/components/ui/button";
 import { motion } from "framer-motion";
-import { Mic2, BrainCircuit, ArrowRight, Calendar, Clock, ExternalLink, Video } from "lucide-react";
+import { ArrowRight,BrainCircuit,Calendar,Clock,Mic2,Video } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Button } from "@/shared/components/ui/button";
-import { useMyInterviews } from "@/features/interview/hooks/useInterviewService";
 
 function InterviewHistoryItem({ interview }: { readonly interview: { id: number; roomName: string; scheduledAt: string; status: string; durationMinutes: number; meetingUrl?: string | null; } }) {
     const router = useRouter();

@@ -1,13 +1,13 @@
 "use client";
 
-import * as React from "react";
-import { motion } from "framer-motion";
-import { Sparkles, Search, FileEdit, ArrowRight } from "lucide-react";
-import { ParticleBackground } from "@/shared/components/effects/ParticleBackground";
-import { TEMPLATES, filterTemplates, type CVTemplate, type TemplateStyle } from "@/features/cv/types/template-types";
 import { TEMPLATE_REGISTRY } from "@/features/cv/components/cv-templates";
-import { useCVBuilderStore } from "@/features/cv/stores/cv-builder-store";
 import { getMockDataForTemplate } from "@/features/cv/data/mock-data";
+import { useCVBuilderStore } from "@/features/cv/stores/cv-builder-store";
+import { TEMPLATES,filterTemplates,type CVTemplate,type TemplateStyle } from "@/features/cv/types/template-types";
+import { ParticleBackground } from "@/shared/components/effects/ParticleBackground";
+import { motion } from "framer-motion";
+import { ArrowRight,FileEdit,Search,Sparkles } from "lucide-react";
+import * as React from "react";
 
 /* ─── Style tags ─── */
 const STYLE_TAGS: { id: TemplateStyle | "all"; label: string }[] = [

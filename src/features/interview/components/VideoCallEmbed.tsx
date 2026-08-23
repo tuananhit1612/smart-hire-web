@@ -1,8 +1,8 @@
 "use client";
 
-import { AlertCircle, ExternalLink } from "lucide-react";
-import Link from "next/link";
 import { Button } from "@/shared/components/ui/button";
+import { AlertCircle,ExternalLink } from "lucide-react";
+import Link from "next/link";
 
 interface VideoCallEmbedProps {
     meetingUrl: string;

@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/shared/components/ui/button";
-import { Loader2, FileText, CheckCircle2 } from "lucide-react";
-import { onboardingApi, OnboardingCvData } from "../api/onboarding-api";
+import { AnimatePresence,motion } from "framer-motion";
+import { CheckCircle2 } from "lucide-react";
+import { useCallback,useEffect,useRef,useState } from "react";
+import { onboardingApi,OnboardingCvData } from "../api/onboarding-api";
 
 interface StepActivationProps {
     onNext: (option: "ai" | "manual", cvData?: OnboardingCvData) => void;
@@ -19,12 +19,17 @@ export function StepActivation({ onNext, onBack }: StepActivationProps) {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
+    const clearPollingInterval = useCallback(() => {
+        if (pollingIntervalRef.current) {
+            clearInterval(pollingIntervalRef.current);
+            pollingIntervalRef.current = null;
+        }
+    }, []);
+
     // Cleanup interval on unmount
     useEffect(() => {
-        return () => {
-            if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
-        };
-    }, []);
+        return clearPollingInterval;
+    }, [clearPollingInterval]);
 
     const handleContinue = () => {
         if (!selectedOption) return;
@@ -53,7 +58,8 @@ export function StepActivation({ onNext, onBack }: StepActivationProps) {
             setProgressText("Đang đọc nội dung file...");
             
             // Start visual progress while waiting for AI (since it runs synchronously in polling)
-            const interval = setInterval(() => {
+            clearPollingInterval();
+            pollingIntervalRef.current = setInterval(() => {
                 setUploadProgress((prev) => {
                     if (prev >= 90) return 90;
                     return prev + Math.random() * 5;
@@ -64,7 +70,7 @@ export function StepActivation({ onNext, onBack }: StepActivationProps) {
             setProgressText("Đang phân tích kỹ năng và kinh nghiệm...");
             const parseRes = await onboardingApi.getParseStatus(uploadRes.cvFileId);
             
-            clearInterval(interval);
+            clearPollingInterval();
             
             // 3. Handle result
             if (parseRes.status === "COMPLETED" && parseRes.data) {

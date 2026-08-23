@@ -18,25 +18,25 @@
  * ═══════════════════════════════════════════════════════════
  */
 
-import React, {
-    createContext,
-    useCallback,
-    useEffect,
-    useMemo,
-    useState,
-} from "react";
-import type {
-    SessionUser,
-    AuthStatus,
-    AuthLoginData,
-    RegisterPayload,
-    UpdateProfilePayload,
-    ChangePasswordPayload,
-    UserData,
-} from "../types/auth-types";
-import { authApi } from "../api/auth-api";
 import { getErrorMessage } from "@/shared/lib/api-error";
+import React,{
+createContext,
+useCallback,
+useEffect,
+useMemo,
+useState,
+} from "react";
+import { authApi } from "../api/auth-api";
 import { tokenStorage } from "../lib/token-storage";
+import type {
+AuthLoginData,
+AuthStatus,
+ChangePasswordPayload,
+RegisterPayload,
+SessionUser,
+UpdateProfilePayload,
+UserData,
+} from "../types/auth-types";
 
 // ─── Helpers ─────────────────────────────────────────────
 
@@ -76,7 +76,8 @@ function setSessionCookie(user: SessionUser) {
     const value = encodeURIComponent(
         JSON.stringify({ role: user.role, isNewUser: user.isNewUser ?? false })
     );
-    document.cookie = `${SESSION_COOKIE_NAME}=${value}; path=/; SameSite=Lax; max-age=${60 * 60 * 24 * 7}`;
+    const secure = window.location.protocol === "https:" ? "; Secure" : "";
+    document.cookie = `${SESSION_COOKIE_NAME}=${value}; path=/; SameSite=Lax; max-age=${60 * 60 * 24 * 7}${secure}`;
 }
 
 function clearSessionCookie() {

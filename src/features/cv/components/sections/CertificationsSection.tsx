@@ -1,11 +1,10 @@
 "use client";
 
-import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ShieldCheck, Plus, X, ExternalLink } from "lucide-react";
-import { Input } from "@/shared/components/ui/input";
 import { Button } from "@/shared/components/ui/button";
 import { useConfirmDialog } from "@/shared/components/ui/confirm-dialog";
+import { Input } from "@/shared/components/ui/input";
+import { AnimatePresence,motion } from "framer-motion";
+import { ExternalLink,Plus,ShieldCheck,X } from "lucide-react";
 import { Certification } from "../../types/types";
 
 const generateId = () => Math.random().toString(36).substr(2, 9);

@@ -1,8 +1,8 @@
 "use client";
 
-import * as React from "react";
-import { motion, HTMLMotionProps } from "framer-motion";
 import { cn } from "@/shared/utils/cn";
+import { motion } from "framer-motion";
+import * as React from "react";
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
     variant?: "default" | "glass" | "bordered" | "elevated" | "premium";
@@ -114,4 +114,4 @@ const CardFooter = React.forwardRef<
 ));
 CardFooter.displayName = "CardFooter";
 
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent };
+export { Card,CardContent,CardDescription,CardFooter,CardHeader,CardTitle };

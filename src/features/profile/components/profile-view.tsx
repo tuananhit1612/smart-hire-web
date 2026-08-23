@@ -1,15 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
+import { AnimatePresence,motion } from "framer-motion";
+import { Briefcase,Contact,FileText,HelpCircle } from "lucide-react";
+import { useEffect,useState } from "react";
 import { useProfileStore } from "../stores/profile-store";
 import { ProfileHeader } from "./profile-header";
-import { ProfileTabPersonal } from "./profile-tab-personal";
-import { ProfileTabJobPreference } from "./profile-tab-job-preference";
 import { ProfileTabExperience } from "./profile-tab-experience";
+import { ProfileTabJobPreference } from "./profile-tab-job-preference";
+import { ProfileTabPersonal } from "./profile-tab-personal";
 import { ProfileTabQuestions } from "./profile-tab-questions";
-import { cn } from "@/lib/utils";
-import { Contact, FileText, Briefcase, HelpCircle } from "lucide-react";
 
 /* ─── Tabs Config ─── */
 const TABS = [

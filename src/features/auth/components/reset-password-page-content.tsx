@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams, redirect } from "next/navigation";
+import { redirect,useSearchParams } from "next/navigation";
 import { ResetPasswordForm } from "./reset-password-form";
 
 export function ResetPasswordPageContent() {

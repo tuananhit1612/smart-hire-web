@@ -1,9 +1,9 @@
 "use client";
 
-import * as React from "react";
-import { motion } from "framer-motion";
-import { Upload, Camera, X, Check } from "lucide-react";
 import { getImageUrl } from "@/shared/lib/api-client";
+import { motion } from "framer-motion";
+import { Camera,Check,Upload } from "lucide-react";
+import * as React from "react";
 
 interface LogoUploadProps {
     currentLogo?: string;
@@ -20,7 +20,7 @@ export function LogoUpload({
 }: LogoUploadProps) {
     const [preview, setPreview] = React.useState<string | null>(null);
     const [isDragging, setIsDragging] = React.useState(false);
-    const [isHovered, setIsHovered] = React.useState(false);
+    const [_isHovered, _setIsHovered] = React.useState(false);
     const inputRef = React.useRef<HTMLInputElement>(null);
 
     const sizeClasses = {
@@ -75,7 +75,7 @@ export function LogoUpload({
         if (file) handleFileSelect(file);
     };
 
-    const clearLogo = (e: React.MouseEvent) => {
+    const _clearLogo = (e: React.MouseEvent) => {
         e.stopPropagation();
         setPreview(null);
         onLogoChange?.(null);

@@ -1,29 +1,29 @@
 "use client";
 
-import * as React from "react";
-import { motion, AnimatePresence, Reorder } from "framer-motion";
-import {
-    LayoutGrid,
-    Palette,
-    Type,
-    Layers,
-    GripVertical,
-    Eye,
-    EyeOff,
-    RotateCcw,
-    Check,
-    Minus,
-    Plus,
-} from "lucide-react";
-import { cn } from "@/shared/utils/cn";
-import {
-    CVSection,
-    CVDesignTokens,
-    CV_SECTIONS,
-    FONT_OPTIONS,
-    ACCENT_PRESETS,
-} from "@/features/cv/types/types";
 import type { UseCVDesignReturn } from "@/features/cv/hooks/useCVDesign";
+import {
+ACCENT_PRESETS,
+CVDesignTokens,
+CVSection,
+CV_SECTIONS,
+FONT_OPTIONS,
+} from "@/features/cv/types/types";
+import { cn } from "@/shared/utils/cn";
+import { AnimatePresence,Reorder,motion } from "framer-motion";
+import {
+Check,
+Eye,
+EyeOff,
+GripVertical,
+Layers,
+LayoutGrid,
+Minus,
+Palette,
+Plus,
+RotateCcw,
+Type,
+} from "lucide-react";
+import * as React from "react";
 
 // ─── Tabs ───────────────────────────────────────────────────────────────────
 

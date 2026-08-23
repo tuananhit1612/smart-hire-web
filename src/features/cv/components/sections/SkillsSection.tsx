@@ -1,13 +1,13 @@
 "use client";
 
-import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Zap, Plus, X, Code, Users, ChevronDown, Check } from "lucide-react";
-import { Input } from "@/shared/components/ui/input";
+import { cn } from "@/lib/utils";
 import { Button } from "@/shared/components/ui/button";
 import { useConfirmDialog } from "@/shared/components/ui/confirm-dialog";
+import { Input } from "@/shared/components/ui/input";
+import { AnimatePresence,motion } from "framer-motion";
+import { Check,ChevronDown,Code,Plus,Users,X,Zap } from "lucide-react";
+import * as React from "react";
 import { Skill } from "../../types/types";
-import { cn } from "@/lib/utils";
 
 interface SkillsSectionProps {
     data: Skill[];
@@ -227,11 +227,11 @@ export function SkillsSection({ data, onChange }: SkillsSectionProps) {
         setShowSoftSuggestions(false);
     };
 
-    const getLevelIndex = (level: Skill["level"]) => {
+    const _getLevelIndex = (level: Skill["level"]) => {
         return SKILL_LEVELS.findIndex((l) => l.value === level);
     };
 
-    const getLevelInfo = (level: Skill["level"]) => {
+    const _getLevelInfo = (level: Skill["level"]) => {
         return SKILL_LEVELS.find((l) => l.value === level) || SKILL_LEVELS[1];
     };
     return (

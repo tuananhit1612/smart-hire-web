@@ -1,8 +1,8 @@
 "use client";
 
-import * as React from "react";
-import { motion } from "framer-motion";
 import { cn } from "@/shared/utils/cn";
+import { motion } from "framer-motion";
+import * as React from "react";
 
 interface SkeletonProps {
     className?: string;

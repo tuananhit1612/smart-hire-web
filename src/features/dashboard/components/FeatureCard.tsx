@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
-import { LucideIcon, ArrowRight, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ArrowRight,LucideIcon,Sparkles } from "lucide-react";
+import Link from "next/link";
 
 interface Props {
     title: string;

@@ -1,9 +1,9 @@
 "use client";
 
-import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Cloud, CloudOff, Loader2, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { AnimatePresence,motion } from "framer-motion";
+import { Check,Cloud,CloudOff,Loader2 } from "lucide-react";
+import * as React from "react";
 
 type SaveStatus = "idle" | "saving" | "saved" | "error";
 

@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
-import { Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Trash2 } from "lucide-react";
+import React from "react";
 
 interface CVItemWrapperProps {
     children: React.ReactNode;

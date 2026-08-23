@@ -1,17 +1,17 @@
 'use client';
 
+import {
+ArrowRightIcon,
+DocumentTextIcon,
+SparklesIcon,
+} from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import {
-    DocumentTextIcon,
-    ArrowRightIcon,
-    SparklesIcon,
-} from '@heroicons/react/24/outline';
 import { useFileUpload } from '../hooks/useFileUpload';
-import { DropZone } from './DropZone';
-import { FileList } from './FileList';
-import { FeatureCards } from './FeatureCards';
 import { MAX_FILES } from '../types';
+import { DropZone } from './DropZone';
+import { FeatureCards } from './FeatureCards';
+import { FileList } from './FileList';
 
 export function UploadCVPage() {
     const {

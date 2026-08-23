@@ -1,16 +1,16 @@
 "use client";
-import React from 'react';
-import { CVData, CVSection } from '../../types/types';
-import { Mail, Phone, MapPin, Globe, ExternalLink, Terminal, Code2, Database } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { formatDateRange } from '../../utils/format-date';
-import type { TemplateProps } from './template-props';
+import { Code2,Database,ExternalLink,Terminal } from 'lucide-react';
+import React from 'react';
 import { useEditableCV } from '../../hooks/useEditableCV';
 import { useSectionLayout } from '../../hooks/useSectionLayout';
+import { CVSection } from '../../types/types';
+import { formatDateRange } from '../../utils/format-date';
 import { CVSectionWrapper } from '../CVSectionWrapper';
 import { CVItemWrapper } from '../inline-edit/CVItemWrapper';
+import type { TemplateProps } from './template-props';
 
-export function AestheticDeveloperTemplate({ data, editable, onDataChange, sectionOrder, hiddenSections, showSectionToolbar, onSectionAction, onRestoreSection }: TemplateProps) {
+export function AestheticDeveloperTemplate({ data, editable, onDataChange, sectionOrder, hiddenSections, showSectionToolbar, onSectionAction, onRestoreSection: _onRestoreSection }: TemplateProps) {
     const { personalInfo, summary, experience, education, skills, projects, languages, certifications, awards } = data;
     const e = useEditableCV({ data, editable, onDataChange });
 

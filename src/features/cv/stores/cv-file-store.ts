@@ -5,9 +5,10 @@
  * ═══════════════════════════════════════════════════════════
  */
 
-import { create } from "zustand";
 import { profileApi } from "@/features/profile/api/profile-api";
 import type { CvFileResponse } from "@/features/profile/types/profile-api-types";
+import { getErrorMessage } from "@/shared/lib/api-error";
+import { create } from "zustand";
 
 interface CvFileStore {
   cvFiles: CvFileResponse[];
@@ -33,10 +34,10 @@ export const useCvFileStore = create<CvFileStore>((set, get) => ({
     try {
       const res = await profileApi.getCvFiles();
       set({ cvFiles: res.data.data, isLoading: false });
-    } catch (err: any) {
+    } catch (err: unknown) {
       set({
         isLoading: false,
-        error: err.response?.data?.message || "Lỗi khi tải danh sách CV",
+        error: getErrorMessage(err, "Lỗi khi tải danh sách CV"),
       });
     }
   },
@@ -48,10 +49,10 @@ export const useCvFileStore = create<CvFileStore>((set, get) => ({
       // Reload list after upload
       await get().fetchCvFiles();
       return res.data.data;
-    } catch (err: any) {
+    } catch (err: unknown) {
       set({
         isLoading: false,
-        error: err.response?.data?.message || "Lỗi khi tải lên CV",
+        error: getErrorMessage(err, "Lỗi khi tải lên CV"),
       });
       throw err;
     }
@@ -63,10 +64,10 @@ export const useCvFileStore = create<CvFileStore>((set, get) => ({
       await profileApi.setCvFilePrimary(id);
       // Reload list to update primary status of all items
       await get().fetchCvFiles();
-    } catch (err: any) {
+    } catch (err: unknown) {
       set({
         isLoading: false,
-        error: err.response?.data?.message || "Lỗi khi đặt CV mặc định",
+        error: getErrorMessage(err, "Lỗi khi đặt CV mặc định"),
       });
       throw err;
     }
@@ -81,10 +82,10 @@ export const useCvFileStore = create<CvFileStore>((set, get) => ({
         cvFiles: state.cvFiles.filter((cv) => cv.id !== id),
         isLoading: false,
       }));
-    } catch (err: any) {
+    } catch (err: unknown) {
       set({
         isLoading: false,
-        error: err.response?.data?.message || "Lỗi khi xoá CV",
+        error: getErrorMessage(err, "Lỗi khi xoá CV"),
       });
       throw err;
     }
@@ -103,7 +104,7 @@ export const useCvFileStore = create<CvFileStore>((set, get) => ({
       link.click();
       link.parentNode?.removeChild(link);
       window.URL.revokeObjectURL(url);
-    } catch (err: any) {
+    } catch (err: unknown) {
       set({ error: "Lỗi khi tải file CV" });
       throw err;
     }
@@ -121,7 +122,7 @@ export const useCvFileStore = create<CvFileStore>((set, get) => ({
       // Cleanup after a delay since window.open is async
       setTimeout(() => window.URL.revokeObjectURL(url), 10000);
       set({ isLoading: false });
-    } catch (err: any) {
+    } catch (err: unknown) {
       set({ error: "Lỗi khi xem file CV", isLoading: false });
       throw err;
     }

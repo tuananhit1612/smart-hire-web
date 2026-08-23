@@ -10,8 +10,8 @@
  * ═══════════════════════════════════════════════════════════
  */
 
-import { useState, useCallback, useRef, useEffect } from "react";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { usePathname,useRouter,useSearchParams } from "next/navigation";
+import { useCallback,useEffect,useRef,useState } from "react";
 
 export interface JobFiltersState {
   keyword: string;

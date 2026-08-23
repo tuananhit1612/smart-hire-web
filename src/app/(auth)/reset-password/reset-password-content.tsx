@@ -1,7 +1,7 @@
 "use client";
 
-import { useSearchParams, redirect } from "next/navigation";
 import { ResetPasswordForm } from "@/features/auth/components/reset-password-form";
+import { redirect,useSearchParams } from "next/navigation";
 
 export default function ResetPasswordContent() {
     const searchParams = useSearchParams();

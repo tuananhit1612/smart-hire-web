@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { AIQuestion } from "../types/profile";
-import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { FormTextarea, SaveButton, SectionCard } from "./profile-form-fields";
+import { AnimatePresence,motion } from "framer-motion";
+import { ChevronDown } from "lucide-react";
+import { useState } from "react";
+import { AIQuestion } from "../types/profile";
+import { FormTextarea,SaveButton,SectionCard } from "./profile-form-fields";
 
 interface Props {
     questions?: AIQuestion[];

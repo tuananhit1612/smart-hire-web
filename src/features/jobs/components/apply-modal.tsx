@@ -1,29 +1,29 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  X,
-  FileText,
-  Check,
-  Upload,
-  Sparkles,
-  Eye,
-  CheckCircle2,
-  XCircle,
-  AlertTriangle,
-  Briefcase,
-  PartyPopper,
-  ArrowRight,
-  Trash2
-} from "lucide-react";
-import { Button } from "@/shared/components/ui/button";
 import { Job } from "@/features/jobs/types/job";
 import { profileApi } from "@/features/profile/api/profile-api";
 import { CvFileResponse } from "@/features/profile/types/profile-api-types";
-import { useRouter } from "next/navigation";
-import { useApplicationStore } from "../stores/application-store";
+import { Button } from "@/shared/components/ui/button";
+import { AnimatePresence,motion } from "framer-motion";
+import {
+AlertTriangle,
+ArrowRight,
+Briefcase,
+Check,
+CheckCircle2,
+Eye,
+FileText,
+PartyPopper,
+Sparkles,
+Trash2,
+Upload,
+X,
+XCircle
+} from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect,useRef,useState } from "react";
+import { useApplicationStore } from "../stores/application-store";
 
 type ModalState = "form" | "submitting" | "success" | "already-applied" | "job-closed";
 

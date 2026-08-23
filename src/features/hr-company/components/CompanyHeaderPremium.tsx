@@ -1,32 +1,31 @@
 "use client";
 
-import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-    MapPin,
-    Globe,
-    Building2,
-    Users,
-    Calendar,
-    Mail,
-    Phone,
-    Pencil,
-    Check,
-    X,
-    Sparkles,
-    Star,
-    TrendingUp,
-    Award,
-    Settings,
-} from "lucide-react";
-import { Company, COMPANY_SIZES } from "../types/company";
-import { LogoUpload } from "./LogoUpload";
 import { Button } from "@/shared/components/ui/button";
-import { AnimatedCounter, StatCard } from "./ui/premium-effects";
-import { CoverUploadModal } from "./CoverUploadModal";
-import { CompanyInfoEditor } from "./CompanyInfoEditor";
-import { useCompanyStore } from "../stores/company-store";
 import { getImageUrl } from "@/shared/lib/api-client";
+import { AnimatePresence,motion } from "framer-motion";
+import {
+Award,
+Building2,
+Calendar,
+Check,
+Globe,
+Mail,
+MapPin,
+Pencil,
+Phone,
+Settings,
+Sparkles,
+TrendingUp,
+Users,
+X
+} from "lucide-react";
+import * as React from "react";
+import { useCompanyStore } from "../stores/company-store";
+import { Company } from "../types/company";
+import { CompanyInfoEditor } from "./CompanyInfoEditor";
+import { CoverUploadModal } from "./CoverUploadModal";
+import { LogoUpload } from "./LogoUpload";
+import { StatCard } from "./ui/premium-effects";
 
 interface CompanyHeaderProps {
     company: Company;

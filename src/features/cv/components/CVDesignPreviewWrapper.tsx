@@ -1,7 +1,7 @@
 "use client";
 
+import { CVDesignTokens,FONT_OPTIONS } from "@/features/cv/types/types";
 import * as React from "react";
-import { CVDesignTokens, FONT_OPTIONS } from "@/features/cv/types/types";
 
 /**
  * Wraps the CV template preview and injects design-token CSS custom properties.

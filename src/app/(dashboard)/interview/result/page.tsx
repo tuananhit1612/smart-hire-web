@@ -1,14 +1,14 @@
 "use client";
 
-import { motion } from "framer-motion";
-import Link from "next/link";
-import { Trophy, ArrowLeft, RotateCcw, BrainCircuit, Sparkles } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { cn } from "@/shared/utils/cn";
+import { motion } from "framer-motion";
+import { ArrowLeft,BrainCircuit,RotateCcw,Sparkles,Trophy } from "lucide-react";
+import Link from "next/link";
 
-import { mockInterviewResult } from "@/features/interview/types/mock-evaluation";
 import { CircularScore } from "@/features/interview/components/CircularScore";
 import { EvaluationCard } from "@/features/interview/components/EvaluationCard";
+import { mockInterviewResult } from "@/features/interview/types/mock-evaluation";
 
 // ─── Grade Badge Config ──────────────────────────────
 

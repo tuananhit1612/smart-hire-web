@@ -1,5 +1,5 @@
-import { Language } from "../types/profile";
 import { Languages } from "lucide-react";
+import { Language } from "../types/profile";
 
 interface ProfileLanguagesProps {
   languages: Language[];

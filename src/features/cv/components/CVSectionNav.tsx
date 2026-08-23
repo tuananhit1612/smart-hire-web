@@ -1,21 +1,21 @@
 "use client";
 
-import * as React from "react";
-import { motion, LayoutGroup } from "framer-motion";
-import { CVSection, CV_SECTIONS } from "../types/types";
 import { cn } from "@/lib/utils";
+import { LayoutGroup,motion } from "framer-motion";
 import {
-    User,
-    FileText,
-    GraduationCap,
-    Briefcase,
-    Zap,
-    FolderKanban,
-    Globe,
-    Award,
-    Trophy,
-    Check,
+Award,
+Briefcase,
+Check,
+FileText,
+FolderKanban,
+Globe,
+GraduationCap,
+Trophy,
+User,
+Zap,
 } from "lucide-react";
+import * as React from "react";
+import { CVSection,CV_SECTIONS } from "../types/types";
 
 interface CVSectionNavProps {
     activeSection: CVSection;
@@ -49,7 +49,7 @@ export function CVSectionNav({
         if (btn && navRef.current) {
             const nav = navRef.current;
             const btnRect = btn.getBoundingClientRect();
-            const navRect = nav.getBoundingClientRect();
+            const _navRect = nav.getBoundingClientRect();
             const scrollLeft =
                 btn.offsetLeft - nav.offsetWidth / 2 + btnRect.width / 2;
             nav.scrollTo({ left: scrollLeft, behavior: "smooth" });

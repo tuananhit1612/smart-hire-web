@@ -1,8 +1,8 @@
 "use client";
 
+import { AnimatePresence,motion } from "framer-motion";
+import { AlertTriangle,X } from "lucide-react";
 import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { AlertTriangle, X } from "lucide-react";
 import { Button } from "./button";
 
 interface ConfirmDialogProps {

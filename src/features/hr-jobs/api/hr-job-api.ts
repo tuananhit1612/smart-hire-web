@@ -1,12 +1,12 @@
 import { apiClient } from "@/shared/lib/api-client";
-import { 
-    CreateJobRequest, 
-    UpdateJobRequest, 
-    ChangeJobStatusRequest, 
-    HrJobResponse,
-    HrJobStatus
-} from "../types/hr-job-api-types";
 import { ApiWrapper } from "@/shared/types/api";
+import {
+ChangeJobStatusRequest,
+CreateJobRequest,
+HrJobResponse,
+HrJobStatus,
+UpdateJobRequest
+} from "../types/hr-job-api-types";
 
 export const hrJobApi = {
     /** Lấy danh sách job do HR hiện tại tạo */

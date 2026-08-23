@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { mockCVVersions } from "@/features/cv/types/cv-versions";
 import { TEMPLATE_COMPONENTS } from "@/features/cv/components/cv-templates";
 import { CVDesignPreviewWrapper } from "@/features/cv/components/CVDesignPreviewWrapper";
 import { useCVBuilderStore } from "@/features/cv/stores/cv-builder-store";
+import { mockCVVersions } from "@/features/cv/types/cv-versions";
 import { Loader2 } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { useEffect,useState } from "react";
 
 export default function CVDowloadRenderer() {
     const searchParams = useSearchParams();

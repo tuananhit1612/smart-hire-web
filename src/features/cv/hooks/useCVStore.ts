@@ -1,19 +1,19 @@
 "use client";
 
+import {
+Award,
+Certification,
+CVData,
+CVSection,
+DEFAULT_CV_DATA,
+Education,
+Experience,
+Language,
+Project,
+Skill,
+} from "@/features/cv/types/types";
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
-import {
-    CVData,
-    CVSection,
-    DEFAULT_CV_DATA,
-    Education,
-    Experience,
-    Skill,
-    Project,
-    Language,
-    Certification,
-    Award,
-} from "@/features/cv/types/types";
 
 /* ─────────────────────────────────────────────────────────────── */
 /*  useCVStore — Zustand store, sole source of truth for CV data  */
@@ -93,7 +93,7 @@ export interface CVStoreState {
 // ── Store implementation ───────────────────────────────────────
 
 export const useCVStore = create<CVStoreState>()(
-    subscribeWithSelector((set, get) => ({
+    subscribeWithSelector((set, _get) => ({
         /* ── Initial state ─────────────────────────────────── */
         cvData: DEFAULT_CV_DATA,
         activeEditPath: null,

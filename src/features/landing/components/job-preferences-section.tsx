@@ -1,9 +1,9 @@
 "use client";
 
+import { Button } from "@/shared/components/ui/button";
+import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import { Button } from "@/shared/components/ui/button";
 
 
 

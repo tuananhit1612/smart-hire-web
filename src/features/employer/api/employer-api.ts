@@ -9,8 +9,7 @@
 
 import { apiClient } from "@/shared/lib/api-client";
 import type { ApiWrapper } from "@/shared/types/api";
-import type { EmployerApplicant } from "../types/mock-applicants";
-import type { AIAnalysis } from "../types/mock-applicants";
+import type { AIAnalysis,EmployerApplicant } from "../types/mock-applicants";
 
 // ─── Request / Response Types ────────────────────────────
 
@@ -124,7 +123,7 @@ export const employerApplicantApi = {
    * Add an internal note to an applicant.
    */
   addNote: (jobId: string, applicantId: string, text: string) =>
-    apiClient.post<ApiWrapper<any>>(
+    apiClient.post<ApiWrapper<unknown>>(
       `/employer/jobs/${jobId}/applicants/${applicantId}/notes`,
       { text }
     ),

@@ -2,13 +2,13 @@
 
 import { useMemo } from "react";
 import {
-    AreaChart,
-    Area,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    ResponsiveContainer,
+Area,
+AreaChart,
+CartesianGrid,
+ResponsiveContainer,
+Tooltip,
+XAxis,
+YAxis,
 } from "recharts";
 import type { WeeklyActivityItem } from "../api/candidate-dashboard-api";
 

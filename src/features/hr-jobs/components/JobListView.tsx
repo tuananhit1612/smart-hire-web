@@ -1,49 +1,40 @@
 "use client";
 
-import * as React from "react";
-import { motion, AnimatePresence, useMotionValue, useTransform, useSpring, useMotionValueEvent } from "framer-motion";
-import {
-    Briefcase,
-    Plus,
-    Search,
-    TrendingUp,
-    Users,
-    Eye,
-    CheckCircle2,
-    Clock,
-    ChevronDown,
-    Sparkles,
-    Zap,
-    Target,
-    Filter,
-    LayoutGrid,
-    List,
-    MoreHorizontal,
-    Edit3,
-    Trash2,
-    Copy,
-    MapPin,
-    DollarSign,
-    Star,
-    ArrowUpRight,
-    Building2,
-    Calendar,
-    Pause,
-    Play,
-    ChevronRight,
-    X,
-    RotateCcw,
-    Archive,
-    AlertTriangle,
-} from "lucide-react";
-import { useJobStore } from "../stores/job-store";
-import { JobFormModal } from "./JobFormModal";
-import { JobPreviewPanel } from "./JobPreviewPanel";
-import { ApplicantPanel } from "./ApplicantPanel";
-import { Job, JOB_TYPES, JOB_STATUSES, JOB_LEVELS, JobStatus, JobType, DEPARTMENTS } from "../types/job";
-import { FloatingElements, BentoItem } from "../../hr-company/components/ui/premium-effects";
 import { Pagination } from "@/shared/components/ui/pagination";
 import { useToastHelpers } from "@/shared/components/ui/toast";
+import { AnimatePresence,motion,useMotionValue,useMotionValueEvent,useSpring,useTransform } from "framer-motion";
+import {
+Archive,
+ArrowUpRight,
+Briefcase,
+Building2,
+CheckCircle2,
+ChevronDown,
+Clock,
+DollarSign,
+Edit3,
+Eye,
+Filter,
+LayoutGrid,
+MapPin,
+Pause,
+Plus,
+RotateCcw,
+Search,
+Sparkles,
+Trash2,
+TrendingUp,
+Users,
+X,
+Zap
+} from "lucide-react";
+import * as React from "react";
+import { BentoItem } from "../../hr-company/components/ui/premium-effects";
+import { useJobStore } from "../stores/job-store";
+import { Job,JOB_STATUSES,JOB_TYPES,JobStatus } from "../types/job";
+import { ApplicantPanel } from "./ApplicantPanel";
+import { JobFormModal } from "./JobFormModal";
+import { JobPreviewPanel } from "./JobPreviewPanel";
 
 type SortOption = "newest" | "oldest" | "applicants" | "views";
 const SORT_OPTIONS: { value: SortOption; label: string }[] = [
@@ -177,11 +168,11 @@ const DEPT_GRADIENTS: Record<string, { bg: string; text: string; accent: string;
 const DEFAULT_DEPT = { bg: "from-[#22c55e] via-[#10b981] to-[#10b981]", text: "text-[#22c55e]", accent: "bg-[#22c55e]", icon: "bg-[#22c55e]/15 text-[#22c55e]" };
 
 // Job Card component - Ultra Premium design
-const JobCard = React.memo(function JobCard({ job, index, onViewApplicants }: { job: Job; index: number; onViewApplicants: (job: Job) => void }) {
-    const { selectJob, setPreviewOpen, toggleJobStatus, deleteJob, restoreJob, cloneJob, setFormOpen } = useJobStore();
+const JobCard = React.memo(function JobCard({ job, index, onViewApplicants: _onViewApplicants }: { job: Job; index: number; onViewApplicants: (job: Job) => void }) {
+    const { selectJob, setPreviewOpen, toggleJobStatus, deleteJob, restoreJob, cloneJob, setFormOpen: _setFormOpen } = useJobStore();
     const toast = useToastHelpers();
     const deadlineInfo = getDeadlineInfo(job.deadline);
-    const dept = DEPT_GRADIENTS[job.department] || DEFAULT_DEPT;
+    const _dept = DEPT_GRADIENTS[job.department] || DEFAULT_DEPT;
 
     const statusConfig = JOB_STATUSES[job.status] || JOB_STATUSES['DRAFT'];
     const statusColors: Record<string, string> = {
@@ -203,9 +194,9 @@ const JobCard = React.memo(function JobCard({ job, index, onViewApplicants }: { 
         setPreviewOpen(true);
     };
 
-    const pauseTitle = job.status === "OPEN" ? "Tạm dừng" : "Mở tin";
+    const _pauseTitle = job.status === "OPEN" ? "Tạm dừng" : "Mở tin";
 
-    const handlePause = (e: React.MouseEvent) => {
+    const _handlePause = (e: React.MouseEvent) => {
         e.stopPropagation();
         const wasDraft = job.status === "DRAFT";
         toggleJobStatus(job.id);
@@ -216,7 +207,7 @@ const JobCard = React.memo(function JobCard({ job, index, onViewApplicants }: { 
         );
     };
 
-    const handleDelete = (e: React.MouseEvent) => {
+    const _handleDelete = (e: React.MouseEvent) => {
         e.stopPropagation();
         deleteJob(job.id);
         toast.warning(
@@ -226,7 +217,7 @@ const JobCard = React.memo(function JobCard({ job, index, onViewApplicants }: { 
         );
     };
 
-    const handleClone = (e: React.MouseEvent) => {
+    const _handleClone = (e: React.MouseEvent) => {
         e.stopPropagation();
         cloneJob(job.id);
         toast.success("Đã nhân bản tin tuyển dụng", `${job.title} (Bản sao)`);

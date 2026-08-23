@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion, useMotionValue, useTransform } from "framer-motion";
+import { motion,useMotionValue,useTransform } from "framer-motion";
+import { useEffect,useState } from "react";
 
 // Particle colors based on design system
-const PARTICLE_COLORS = [
+const _PARTICLE_COLORS = [
     { primary: "#7635dc", light: "#B985F4", name: "purple" },
     { primary: "#FFAB00", light: "#FFD666", name: "yellow" },
     { primary: "#22C55E", light: "#86EFAC", name: "green" },

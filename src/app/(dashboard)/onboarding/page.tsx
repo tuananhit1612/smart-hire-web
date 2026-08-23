@@ -1,25 +1,20 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { 
-    Rocket, 
-    Search, 
-    CheckCircle2, 
-    Clock, 
-    AlertCircle, 
-    ChevronRight,
-    Loader2,
-    Briefcase,
-    Building2,
-    ArrowRight,
-    FileType
+import { useApplicationStore } from "@/features/jobs/stores/application-store";
+import { Badge } from "@/shared/components/ui/badge";
+import { motion } from "framer-motion";
+import {
+AlertCircle,
+ArrowRight,
+Building2,
+Clock,
+FileType,
+Loader2,
+Rocket,
+Search
 } from "lucide-react";
 import Link from "next/link";
-import { useApplicationStore } from "@/features/jobs/stores/application-store";
-import { ApplicationStatus, ApplicationStage } from "@/shared/types/application";
-import { Badge } from "@/shared/components/ui/badge";
-import { cn } from "@/shared/lib/utils";
+import { useEffect,useMemo,useState } from "react";
 
 export default function CandidateOnboardingListPage() {
     const { serverApplications, isLoadingApplications, fetchApplications } = useApplicationStore();
@@ -27,7 +22,7 @@ export default function CandidateOnboardingListPage() {
 
     useEffect(() => {
         fetchApplications();
-    }, []);
+    }, [fetchApplications]);
 
     // Filter only HIRED applications
     const onboardingApps = useMemo(() => {

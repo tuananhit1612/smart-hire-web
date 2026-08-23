@@ -1,9 +1,9 @@
 "use client";
 
-import * as React from "react";
-import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import { Calendar,ChevronLeft,ChevronRight } from "lucide-react";
+import * as React from "react";
 
 interface DatePickerProps {
     label?: string;

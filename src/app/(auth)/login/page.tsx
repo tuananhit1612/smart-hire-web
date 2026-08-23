@@ -1,7 +1,7 @@
-import { Metadata } from "next";
-import { Suspense } from "react";
 import { AuthLayout } from "@/features/auth/components/auth-layout";
 import { LoginForm } from "@/features/auth/components/login-form";
+import { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
     title: "Đăng nhập | SmartHire",

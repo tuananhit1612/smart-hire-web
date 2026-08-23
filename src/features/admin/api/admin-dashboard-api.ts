@@ -7,8 +7,8 @@
 
 import { apiClient } from "@/shared/lib/api-client";
 import type {
-  ApiWrapper,
-  AdminDashboardResponse,
+AdminDashboardResponse,
+ApiWrapper,
 } from "../types/admin-dashboard-types";
 
 const BASE = "/admin/dashboard";

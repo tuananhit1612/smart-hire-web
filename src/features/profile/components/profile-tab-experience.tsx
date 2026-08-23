@@ -1,22 +1,22 @@
 "use client";
 
-import * as React from "react";
 import { motion } from "framer-motion";
-import { Experience, Education, Project, Skill } from "../types/profile";
-import { Plus, Pencil, Trash2, Briefcase, GraduationCap } from "lucide-react";
-import { SectionCard } from "./profile-form-fields";
+import { Briefcase,GraduationCap,Pencil,Plus,Trash2 } from "lucide-react";
+import * as React from "react";
 import { useProfileStore } from "../stores/profile-store";
-import { ProfileEditExperience } from "./profile-edit-experience";
+import { Education,Experience,Project,Skill } from "../types/profile";
+import {
+mapEducationToApi,
+mapExperienceToApi,
+mapProjectToApi,
+mapSkillToApi
+} from "../utils/profile-mapper";
 import { ProfileEditEducation } from "./profile-edit-education";
+import { ProfileEditExperience } from "./profile-edit-experience";
+import { ProfileEditProjects } from "./profile-edit-projects";
+import { SectionCard } from "./profile-form-fields";
 import { ProfileProjects } from "./profile-projects";
 import { ProfileSkills } from "./profile-skills";
-import { ProfileEditProjects } from "./profile-edit-projects";
-import { 
-    mapExperienceToApi, 
-    mapEducationToApi, 
-    mapProjectToApi, 
-    mapSkillToApi 
-} from "../utils/profile-mapper";
 
 interface Props {
     experiences: Experience[];

@@ -1,8 +1,8 @@
 "use client";
 
+import { AnimatePresence,motion } from "framer-motion";
+import { Check,Gift,Plus,Sparkles,X } from "lucide-react";
 import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Gift, Plus, X, Sparkles, Check } from "lucide-react";
 import { Benefit } from "../types/company";
 
 interface CompanyBenefitsProps {

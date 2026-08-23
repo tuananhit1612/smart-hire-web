@@ -1,36 +1,35 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  Search,
-  MapPin,
-  Briefcase,
-  Calendar,
-  ArrowRight,
-  Trash2,
-  Loader2,
-  Eye,
-  FileText,
-  Video,
-  ExternalLink,
-  Clock
-} from "lucide-react";
-import { useState, useMemo, useEffect } from "react";
-import Link from "next/link";
-import { Button } from "@/shared/components/ui/button";
-import { Input } from "@/shared/components/ui/input";
-import {
-  mockApplications,
-  Application,
-  ApplicationTimelineEvent
-} from "@/features/jobs/types/mock-applications";
-import { ApplicationTrackingResponse } from "@/features/jobs/api/application-api";
-import { ApplicationStatus, ApplicationStage } from "@/shared/types/application";
-import { cn } from "@/shared/lib/utils";
-import { useApplicationStore } from "@/features/jobs/stores/application-store";
-import { CheckCircle2 } from "lucide-react";
 import { interviewService } from "@/features/interview/api/interviewService";
 import type { InterviewResponse } from "@/features/interview/types/interview-types";
+import { ApplicationTrackingResponse } from "@/features/jobs/api/application-api";
+import { useApplicationStore } from "@/features/jobs/stores/application-store";
+import {
+Application,
+ApplicationTimelineEvent,
+mockApplications
+} from "@/features/jobs/types/mock-applications";
+import { Button } from "@/shared/components/ui/button";
+import { Input } from "@/shared/components/ui/input";
+import { cn } from "@/shared/lib/utils";
+import { ApplicationStage,ApplicationStatus } from "@/shared/types/application";
+import { AnimatePresence,motion } from "framer-motion";
+import {
+ArrowRight,
+Briefcase,
+Calendar,
+CheckCircle2,
+Clock,
+ExternalLink,
+FileText,
+Loader2,
+MapPin,
+Search,
+Trash2,
+Video
+} from "lucide-react";
+import Link from "next/link";
+import { useEffect,useMemo,useState } from "react";
 
 // ─── Design Constants ─────────────────────────────────────────────────────────
 const ACTIVE_STAGES = new Set([

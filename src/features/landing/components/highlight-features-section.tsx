@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Layers, Search, CheckCheck } from "lucide-react";
+import { CheckCheck,Layers,Search } from "lucide-react";
 
 
 const featureItems = [

@@ -11,13 +11,14 @@
  * ═══════════════════════════════════════════════════════════
  */
 
-import React, { useEffect } from "react";
-import { useWebSocket } from "@/shared/hooks/use-websocket";
 import { useAuth } from "@/features/auth/hooks/use-auth";
+import type { NotificationResponse } from "@/features/notifications/api/notification-api";
 import { useNotificationStore } from "@/features/notifications/stores/notification-store";
 import { useToastHelpers } from "@/shared/components/ui/toast";
+import { useWebSocket } from "@/shared/hooks/use-websocket";
 import type { RealtimeEvent } from "@/shared/types/realtime";
 import { EventType } from "@/shared/types/realtime";
+import React,{ useEffect } from "react";
 
 /** Human-readable labels for toast messages */
 const EVENT_LABELS: Record<string, { title: string; description: (p: Record<string, unknown>) => string }> = {
@@ -57,7 +58,7 @@ export function RealtimeProvider({
     onEvent: (event: RealtimeEvent) => {
       // 1. Handle Notifications specifically
       if (event.type === EventType.NEW_NOTIFICATION) {
-        const notification = event.payload as any; // NotificationDto
+        const notification = event.payload as NotificationResponse;
         useNotificationStore.getState().addRealtimeNotification(notification);
       }
 

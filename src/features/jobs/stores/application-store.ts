@@ -16,10 +16,10 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import {
-  applicationApi,
-  type ApplicationTrackingResponse,
-  type ApplyResponse,
-  type ApplyPayload,
+applicationApi,
+type ApplicationTrackingResponse,
+type ApplyPayload,
+type ApplyResponse,
 } from "../api/application-api";
 
 import { getErrorMessage } from "@/shared/lib/api-error";

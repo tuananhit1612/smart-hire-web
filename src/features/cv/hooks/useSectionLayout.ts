@@ -1,5 +1,5 @@
+import { CVSection,DEFAULT_SECTION_ORDER } from '@/features/cv/types/types';
 import { useMemo } from 'react';
-import { CVSection, DEFAULT_SECTION_ORDER } from '@/features/cv/types/types';
 
 export type { CVSection };
 
@@ -17,8 +17,8 @@ export function useSectionLayout(
     sectionOrder?: CVSection[],
     hiddenSections?: CVSection[],
 ) {
-    const hidden = hiddenSections ?? [];
-    const order = sectionOrder ?? DEFAULT_SECTION_ORDER;
+    const hidden = useMemo(() => hiddenSections ?? [], [hiddenSections]);
+    const order = useMemo(() => sectionOrder ?? DEFAULT_SECTION_ORDER, [sectionOrder]);
 
     const visibleSections = useMemo(
         () => order.filter((s) => !hidden.includes(s)),

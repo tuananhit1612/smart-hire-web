@@ -1,23 +1,23 @@
 "use client";
 
-import * as React from "react";
+import { Button } from "@/shared/components/ui/button";
 import { motion } from "framer-motion";
 import {
-    MapPin,
-    Globe,
-    Building2,
-    Users,
-    Calendar,
-    Mail,
-    Phone,
-    Pencil,
-    Check,
-    X,
+Building2,
+Calendar,
+Check,
+Globe,
+Mail,
+MapPin,
+Pencil,
+Phone,
+Users,
+X,
 } from "lucide-react";
-import { Company, COMPANY_SIZES } from "../types/company";
-import { LogoUpload } from "./LogoUpload";
-import { Button } from "@/shared/components/ui/button";
+import * as React from "react";
 import { useCompanyStore } from "../stores/company-store";
+import { Company,COMPANY_SIZES } from "../types/company";
+import { LogoUpload } from "./LogoUpload";
 
 interface CompanyHeaderProps {
     company: Company;

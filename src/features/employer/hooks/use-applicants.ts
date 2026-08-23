@@ -10,7 +10,8 @@
 
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { getErrorMessage } from "@/shared/lib/api-error";
+import { useCallback,useEffect,useState } from "react";
 import { employerApplicantApi } from "../api/employer-api";
 import type { EmployerApplicant } from "../types/mock-applicants";
 
@@ -105,9 +106,9 @@ export function useApplicants(
         if (!cancelled) {
           setData(resultData);
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (!cancelled) {
-          setError(err.message || "Failed to load applicants");
+          setError(getErrorMessage(err, "Failed to load applicants"));
         }
       } finally {
         if (!cancelled) {

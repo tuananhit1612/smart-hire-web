@@ -9,17 +9,17 @@
 import { apiClient } from "@/shared/lib/api-client";
 import { ApiWrapper } from "@/shared/types/api";
 import type {
-  CandidateProfileResponse,
-  ProfilePayload,
-  EducationResponse,
-  EducationPayload,
-  ExperienceResponse,
-  ExperiencePayload,
-  ProjectResponse,
-  ProjectPayload,
-  SkillResponse,
-  SkillPayload,
-  CvFileResponse,
+CandidateProfileResponse,
+CvFileResponse,
+EducationPayload,
+EducationResponse,
+ExperiencePayload,
+ExperienceResponse,
+ProfilePayload,
+ProjectPayload,
+ProjectResponse,
+SkillPayload,
+SkillResponse,
 } from "../types/profile-api-types";
 
 const BASE = "/candidate/profile";
@@ -41,7 +41,7 @@ export const profileApi = {
 
   /** PUT /users/me — update root user identity (name, phone) */
   updateUserIdentity: (data: { fullName?: string; phone?: string }) =>
-    apiClient.put<ApiWrapper<any>>(`/users/me`, data),
+    apiClient.put<ApiWrapper<unknown>>(`/users/me`, data),
 
   /** POST /users/me/avatar — upload avatar (multipart/form-data) */
   uploadAvatar: (file: File) => {

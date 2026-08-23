@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { Mic, MicOff, Video, VideoOff, CheckCircle2, AlertCircle } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { motion } from "framer-motion";
+import { AlertCircle,CheckCircle2,Mic,MicOff,Video,VideoOff } from "lucide-react";
+import { useEffect,useRef,useState } from "react";
 
 interface DeviceTestProps {
     onComplete: () => void;
@@ -26,8 +26,8 @@ export function DeviceTest({ onComplete }: DeviceTestProps) {
                 if (videoRef.current) {
                     videoRef.current.srcObject = s;
                 }
-            } catch (err: any) {
-                setError(err.name === "NotAllowedError" ? "Vui lòng cấp quyền truy cập Camera và Microphone." : "Không tìm thấy Camera hoặc Microphone.");
+            } catch (err: unknown) {
+                setError(err instanceof DOMException && err.name === "NotAllowedError" ? "Vui lòng cấp quyền truy cập Camera và Microphone." : "Không tìm thấy Camera hoặc Microphone.");
             }
         }
         setupDevices();

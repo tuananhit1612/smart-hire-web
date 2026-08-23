@@ -1,8 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Check } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
+import { Check } from "lucide-react";
 
 interface StepIndicatorProps {
     readonly current: 1 | 2 | 3;

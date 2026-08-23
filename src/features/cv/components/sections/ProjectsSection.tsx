@@ -1,12 +1,12 @@
 "use client";
 
-import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { FolderKanban, Plus, Trash2, Link as LinkIcon, X } from "lucide-react";
-import { Input } from "@/shared/components/ui/input";
 import { Button } from "@/shared/components/ui/button";
 import { useConfirmDialog } from "@/shared/components/ui/confirm-dialog";
+import { Input } from "@/shared/components/ui/input";
 import { SortableList } from "@/shared/components/ui/sortable-list";
+import { AnimatePresence,motion } from "framer-motion";
+import { FolderKanban,Link as LinkIcon,Plus,Trash2,X } from "lucide-react";
+import * as React from "react";
 import { Project } from "../../types/types";
 
 interface ProjectsSectionProps {

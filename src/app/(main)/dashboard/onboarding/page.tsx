@@ -1,15 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import { AnimatePresence } from "framer-motion";
-import { OnboardingLayout } from "@/features/onboarding/components/onboarding-layout";
-import { StepWelcome } from "@/features/onboarding/components/step-welcome";
-import { StepActivation } from "@/features/onboarding/components/step-activation";
-import { StepRole } from "@/features/onboarding/components/step-role";
-import { StepExperience } from "@/features/onboarding/components/step-experience";
-import { StepVerifyCV } from "@/features/onboarding/components/step-verify-cv";
-import { StepComplete } from "@/features/onboarding/components/step-complete";
 import { OnboardingCvData } from "@/features/onboarding/api/onboarding-api";
+import { OnboardingLayout } from "@/features/onboarding/components/onboarding-layout";
+import { StepActivation } from "@/features/onboarding/components/step-activation";
+import { StepComplete } from "@/features/onboarding/components/step-complete";
+import { StepExperience } from "@/features/onboarding/components/step-experience";
+import { StepRole } from "@/features/onboarding/components/step-role";
+import { StepVerifyCV } from "@/features/onboarding/components/step-verify-cv";
+import { StepWelcome } from "@/features/onboarding/components/step-welcome";
+import { AnimatePresence } from "framer-motion";
+import { useState } from "react";
 
 export default function OnboardingPage() {
     const [currentStep, setCurrentStep] = useState(0);

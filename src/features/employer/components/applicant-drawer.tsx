@@ -1,37 +1,34 @@
 "use client";
 
-import { AIAnalysis, EmployerApplicant } from "../types/mock-applicants";
-import { employerApplicantApi } from "../api/employer-api";
 import { interviewService } from "@/features/interview/api/interviewService";
 import type { InterviewResponse } from "@/features/interview/types/interview-types";
-import { Button } from "@/shared/components/ui/button";
 import { Badge } from "@/shared/components/ui/badge";
-import { ScoreBreakdown } from "./score-breakdown";
+import { Button } from "@/shared/components/ui/button";
+import { cn } from "@/shared/utils/cn"; // Assuming utility exists, otherwise will import from wherever
+import { AnimatePresence,motion } from "framer-motion";
+import {
+AlertTriangle,
+Brain,
+Calendar,
+CheckCircle2,
+Clock,
+ExternalLink,
+Loader2,
+Mail,
+Phone,
+RefreshCcw,
+Send,
+ThumbsUp,
+Video,
+X,
+XCircle
+} from "lucide-react";
+import { useEffect,useState } from "react";
+import { employerApplicantApi } from "../api/employer-api";
+import { EmployerApplicant } from "../types/mock-applicants";
 import { AISkeleton } from "./ai-skeleton";
 import { ApplicantOnboardingTab } from "./applicant-onboarding-tab";
-import { 
-    X, 
-    Mail, 
-    Phone, 
-    FileText, 
-    Calendar,
-    CheckCircle2,
-    XCircle,
-    Send,
-    MessageSquare,
-    Brain,
-    ThumbsUp,
-    AlertTriangle,
-    RefreshCcw,
-    Loader2,
-    Video,
-    ExternalLink,
-    Clock
-} from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect } from "react";
-import { ApplicationStage } from "@/shared/types/application";
-import { cn } from "@/shared/utils/cn"; // Assuming utility exists, otherwise will import from wherever
+import { ScoreBreakdown } from "./score-breakdown";
 
 interface ApplicantDrawerProps {
     applicant: EmployerApplicant | null;
@@ -48,14 +45,15 @@ export function ApplicantDrawer({ applicant, isOpen, onClose, jobId, onApplicant
     const [isSavingNote, setIsSavingNote] = useState(false);
     const [isUpdatingStage, setIsUpdatingStage] = useState(false);
     const [interviews, setInterviews] = useState<InterviewResponse[]>([]);
+    const applicantId = applicant?.id;
 
     // Fetch interviews whenever the drawer opens for a specific applicant
     useEffect(() => {
-        if (!isOpen || !applicant) return;
-        interviewService.getByApplication(Number(applicant.id))
+        if (!isOpen || !applicantId) return;
+        interviewService.getByApplication(Number(applicantId))
             .then(setInterviews)
             .catch(() => setInterviews([]));
-    }, [isOpen, applicant?.id]);
+    }, [isOpen, applicantId]);
 
     const handleUpdateStage = async (newStage: string) => {
         if (!applicant) return;

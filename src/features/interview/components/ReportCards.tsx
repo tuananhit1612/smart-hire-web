@@ -1,23 +1,22 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-    Star,
-    Zap,
-    Target,
-    Trophy,
-    BrainCircuit,
-    AlertTriangle,
-    TrendingUp,
-    ChevronDown,
-    ChevronUp,
-    CheckCircle2,
-    Bookmark,
-    Sparkles,
-} from "lucide-react";
 import { cn } from "@/shared/utils/cn";
-import type { ReportStrength, ReportWeakness, Recommendation } from "../types/interview-ui-types";
+import { AnimatePresence,motion } from "framer-motion";
+import {
+AlertTriangle,
+Bookmark,
+BrainCircuit,
+CheckCircle2,
+ChevronDown,
+ChevronUp,
+Sparkles,
+Star,
+Target,
+Trophy,
+Zap
+} from "lucide-react";
+import { useState } from "react";
+import type { Recommendation,ReportStrength,ReportWeakness } from "../types/interview-ui-types";
 
 // ─── Config Maps ─────────────────────────────────────
 

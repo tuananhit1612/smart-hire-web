@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft,ChevronRight } from "lucide-react";
 
 interface JobPaginationProps {
   currentPage: number; // 1-based

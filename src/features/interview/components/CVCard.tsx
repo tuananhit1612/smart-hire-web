@@ -1,9 +1,9 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { FileText, Check } from "lucide-react";
-import { cn } from "@/shared/utils/cn";
 import type { CVVersion } from "@/features/cv/types/cv-versions";
+import { cn } from "@/shared/utils/cn";
+import { motion } from "framer-motion";
+import { Check,FileText } from "lucide-react";
 
 interface CVCardProps {
     readonly cv: CVVersion;

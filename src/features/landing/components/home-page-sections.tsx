@@ -1,10 +1,9 @@
 "use client";
 
-import Link from "next/link";
-import { motion } from "framer-motion";
-import { Star, ArrowRight, Target, Rocket, Brain, Search, FileText, Users, Briefcase, MessageSquare, Zap } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
-import { ParticleBackground } from "@/shared/components/effects/ParticleBackground";
+import { motion } from "framer-motion";
+import { ArrowRight,Brain,Briefcase,FileText,MessageSquare,Rocket,Search,Star,Target,Users,Zap } from "lucide-react";
+import Link from "next/link";
 
 // ============================================
 // HOMEPAGE - SmartHire Design System

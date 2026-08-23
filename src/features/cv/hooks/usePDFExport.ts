@@ -1,9 +1,9 @@
 "use client";
 
-import * as React from "react";
 import { cvApi } from "@/features/cv/api/cv-api";
+import { CVData,CVDesignTokens } from "@/features/cv/types/types";
 import { useToast } from "@/shared/components/ui/toast";
-import { CVData, CVDesignTokens } from "@/features/cv/types/types";
+import * as React from "react";
 
 interface UsePDFExportReturn {
     isExporting: boolean;
@@ -18,7 +18,7 @@ export function usePDFExport(
     const [isExporting, setIsExporting] = React.useState(false);
     const { addToast } = useToast();
 
-    const handleExportPDF = async (fileName: string) => {
+    const handleExportPDF = async (_fileName: string) => {
         if (!cvData || !templateId) {
             addToast("Dữ liệu không đầy đủ để xuất PDF.", "error");
             return;

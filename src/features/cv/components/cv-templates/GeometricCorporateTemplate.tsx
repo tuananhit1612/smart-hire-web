@@ -1,16 +1,15 @@
 "use client";
+import { ChevronRight,ExternalLink,Globe,Mail,MapPin,Phone,Square } from 'lucide-react';
 import React from 'react';
-import { CVData, CVSection } from '../../types/types';
-import { Mail, Phone, MapPin, Globe, ExternalLink, ChevronRight, Hexagon, Square } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { formatDateRange } from '../../utils/format-date';
-import type { TemplateProps } from './template-props';
 import { useEditableCV } from '../../hooks/useEditableCV';
 import { useSectionLayout } from '../../hooks/useSectionLayout';
+import { CVSection } from '../../types/types';
+import { formatDateRange } from '../../utils/format-date';
 import { CVSectionWrapper } from '../CVSectionWrapper';
 import { CVItemWrapper } from '../inline-edit/CVItemWrapper';
+import type { TemplateProps } from './template-props';
 
-export function GeometricCorporateTemplate({ data, editable, onDataChange, sectionOrder, hiddenSections, showSectionToolbar, onSectionAction, onRestoreSection }: TemplateProps) {
+export function GeometricCorporateTemplate({ data, editable, onDataChange, sectionOrder, hiddenSections, showSectionToolbar, onSectionAction, onRestoreSection: _onRestoreSection }: TemplateProps) {
     const { personalInfo, summary, experience, education, skills, projects, languages, certifications, awards } = data;
     const e = useEditableCV({ data, editable, onDataChange });
 
@@ -23,7 +22,7 @@ export function GeometricCorporateTemplate({ data, editable, onDataChange, secti
     const visibleSidebar = visibleSections.filter(s => sidebarSections.includes(s));
     const visibleMain = visibleSections.filter(s => mainSections.includes(s));
 
-    const renderSection = (section: CVSection, isSidebar: boolean): React.ReactNode => {
+    const renderSection = (section: CVSection, _isSidebar: boolean): React.ReactNode => {
         switch (section) {
             case 'experience':
                 if (experience.length === 0) return null;

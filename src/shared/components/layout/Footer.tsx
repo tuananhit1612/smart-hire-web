@@ -1,7 +1,7 @@
 "use client";
 
+import { Github,Linkedin,Twitter } from "lucide-react";
 import Link from "next/link";
-import { Layers, Globe2, Github, Twitter, Linkedin } from "lucide-react";
 
 export function Footer() {
     const footerLinks = {

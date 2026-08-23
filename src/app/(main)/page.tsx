@@ -1,5 +1,5 @@
-import { HeroSection, FeaturesSection, HowItWorksSection, TestimonialsSection, StatsSection } from "@/features/landing/components/home-page-sections";
 import { HighlightFeaturesSection } from "@/features/landing/components/highlight-features-section";
+import { FeaturesSection,HeroSection,HowItWorksSection,StatsSection,TestimonialsSection } from "@/features/landing/components/home-page-sections";
 import { ResumeBuilderSection } from "@/features/landing/components/resume-builder-section";
 import { ParticleBackground } from "@/shared/components/effects/ParticleBackground";
 

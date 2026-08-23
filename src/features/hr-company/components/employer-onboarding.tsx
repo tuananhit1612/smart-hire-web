@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence, Variants } from "framer-motion";
-import { Building2, Globe, Users, ArrowRight, CheckCircle, ChevronRight } from "lucide-react";
 import { useAuth } from "@/features/auth/hooks/use-auth";
+import { AnimatePresence,motion,Variants } from "framer-motion";
+import { ArrowRight,Building2,CheckCircle,ChevronRight,Globe,Users } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { companyApi } from "../api/company-api";
 
 /* ─── Animation Variants (Design System §9) ─── */
@@ -80,7 +80,7 @@ function StepIndicator({ current, total }: { current: number; total: number }) {
 /* ─── Main Component ─── */
 export function EmployerOnboarding() {
     const [step, setStep] = useState(1);
-    const { completeOnboarding, user } = useAuth();
+    const { completeOnboarding, user: _user } = useAuth();
     const router = useRouter();
 
     const [formData, setFormData] = useState({

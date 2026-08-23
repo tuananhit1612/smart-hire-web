@@ -1,19 +1,18 @@
 "use client";
 
-import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
-import { CVData, CVSection, CV_SECTIONS, DEFAULT_CV_DATA } from "../types/types";
-import { PersonalInfoSection } from "./sections/PersonalInfoSection";
-import { SummarySection } from "./sections/SummarySection";
+import { AnimatePresence,motion } from "framer-motion";
+import { ChevronLeft,ChevronRight } from "lucide-react";
+import { CVData,CVSection,CV_SECTIONS,DEFAULT_CV_DATA } from "../types/types";
+import { AwardsSection } from "./sections/AwardsSection";
+import { CertificationsSection } from "./sections/CertificationsSection";
 import { EducationSection } from "./sections/EducationSection";
 import { ExperienceSection } from "./sections/ExperienceSection";
-import { SkillsSection } from "./sections/SkillsSection";
-import { ProjectsSection } from "./sections/ProjectsSection";
 import { LanguagesSection } from "./sections/LanguagesSection";
-import { CertificationsSection } from "./sections/CertificationsSection";
-import { AwardsSection } from "./sections/AwardsSection";
+import { PersonalInfoSection } from "./sections/PersonalInfoSection";
+import { ProjectsSection } from "./sections/ProjectsSection";
+import { SkillsSection } from "./sections/SkillsSection";
+import { SummarySection } from "./sections/SummarySection";
 
 interface CVBuilderFormProps {
     data?: CVData;
@@ -52,7 +51,7 @@ export function CVBuilderForm({
     };
 
     // Helper to safely update data
-    const updateData = (section: keyof CVData, value: any) => {
+    const updateData = (section: keyof CVData, value: unknown) => {
         if (onDataChange) {
             onDataChange({
                 ...data,

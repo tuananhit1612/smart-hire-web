@@ -1,4 +1,3 @@
-import { Job } from '../types/job';
 import { CVData } from '../../cv/types/types';
 
 export interface Applicant {
